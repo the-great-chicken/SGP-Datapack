@@ -1,0 +1,2 @@
+$tellraw @s [{"text":"Débloque le kit ", "bold":false, "color":"aqua"}, {"text":"$(kit)", "bold":true, "color":"$(kit_color)"}, {"text":" en le trouvant dans la map !", "bold":false, "color":"aqua"}, {"text":"\nIndice : ", "color":"gray"}, {"text":"$(hint)", "color":"$(hint_color)", "bold":true}]
+$scoreboard players set @s veut_$(kit) 0

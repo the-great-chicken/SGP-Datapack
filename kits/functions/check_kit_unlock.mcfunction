@@ -1,0 +1,9 @@
+execute as @a[scores={roi_found=2}] run function kits:unlocking_kit {kit:roi, kit_color:yellow, fw_color:"14602026"}
+execute as @a[scores={pigeon_found=2}] run function kits:unlocking_kit {kit:pigeon, kit_color:dark_gray, fw_color:"4408131"}
+execute as @a[scores={tank_found=2}] run function kits:unlocking_kit {kit:tank, kit_color:dark_blue, fw_color:"2437522"}
+execute as @a[scores={pyromane_found=2}] run function kits:unlocking_kit {kit:pyromane, kit_color:gold, fw_color:"15435844"}
+execute as @a[scores={poseidon_found=2}] run function kits:unlocking_kit {kit:poseidon, kit_color:dark_aqua, fw_color:"2651799"}
+execute as @a[scores={eclaireur_found=2}] run function kits:unlocking_kit {kit:eclaireur, kit_color:aqua, fw_color:"6719955"}
+execute as @a[scores={cancer_found=2}] run function kits:unlocking_kit {kit:cancer, kit_color:dark_red, fw_color:"11743532"}
+execute as @a[scores={enderman_found=2}] run function kits:unlocking_kit {kit:enderman, kit_color:dark_purple, fw_color:"8073150"}
+execute as @a[scores={alchimiste_found=2}] run function kits:unlocking_kit {kit:alchimiste, kit_color:light_purple, fw_color:"12801229"}

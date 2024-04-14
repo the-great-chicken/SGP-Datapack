@@ -1,0 +1,2025 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_helmet",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:255}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "C",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "a",
+                  "color": "#a9047c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#9b087f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#8d0b83",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#7f0f86",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e ",
+                  "color": "#711389",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#63178c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#541a90",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#461e93",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#382296",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#2a2699",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#1c299d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#0e2da0",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "------------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ],
+              "replace": false
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[0]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[2]",
+                  "target": "Enchantments[{id:\"minecraft:protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[2]",
+                  "target": "display.Lore[1]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.5
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[3]",
+                  "target": "Enchantments[{id:\"minecraft:projectile_protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[3]",
+                  "target": "display.Lore[2]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.5
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Potion Resistance II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_chestplate",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:255}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "P",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "l",
+                  "color": "#ab037c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "a",
+                  "color": "#9f077f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#920a81",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#860d84",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "r",
+                  "color": "#7a1087",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "o",
+                  "color": "#6e148a",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "n ",
+                  "color": "#62178d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#551a8f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#491d92",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#3d2195",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#312498",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#25279b",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#182a9d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#0c2ea0",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "--------------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ],
+              "replace": false
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[0]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[2]",
+                  "target": "Enchantments[{id:\"minecraft:protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[2]",
+                  "target": "display.Lore[1]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.35
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[3]",
+                  "target": "Enchantments[{id:\"minecraft:projectile_protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[3]",
+                  "target": "display.Lore[2]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.35
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Potion Resistance II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Blaze's Curse",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.15
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Combustion II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.15
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_leggings",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:255}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "J",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "a",
+                  "color": "#ac037b",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "m",
+                  "color": "#a1067e",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "b",
+                  "color": "#970980",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#8c0c83",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "è",
+                  "color": "#810e85",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "r",
+                  "color": "#761188",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#6c148a",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s ",
+                  "color": "#61178d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#561a8f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#4b1d92",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#412094",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#362397",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#2b2599",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#20289c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#162b9e",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0b2ea1",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "----------------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ],
+              "replace": false
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[0]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[2]",
+                  "target": "Enchantments[{id:\"minecraft:protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[2]",
+                  "target": "display.Lore[1]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.425
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[3]",
+                  "target": "Enchantments[{id:\"minecraft:projectile_protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[3]",
+                  "target": "display.Lore[2]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.425
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Glide III",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Potion Resistance II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_boots",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:255}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "B",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "o",
+                  "color": "#aa047c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#9d077f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#900b82",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#830e85",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s ",
+                  "color": "#761288",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#69158b",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#5c198e",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#4e1c91",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#412094",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#342397",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#27279a",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#1a2a9d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0d2ea0",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "-------------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ],
+              "replace": false
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[0]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[2]",
+                  "target": "Enchantments[{id:\"minecraft:protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[2]",
+                  "target": "display.Lore[1]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.325
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[2].tag.Enchantments[3]",
+                  "target": "Enchantments[{id:\"minecraft:projectile_protection\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[2].tag.display.Lore[3]",
+                  "target": "display.Lore[2]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.325
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Jump II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Speed I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Spikes III",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.8
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:totem_of_undying",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Enchantments:[{id:protection,lvl:1}],HideFlags:1b,display:{Name:'{\"text\":\"Totem\",\"color\":\"gold\",\"italic\":false,\"bold\":true}'}}"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_golden_apple",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Pomme d\\'or Enchantée\",\"color\":\"light_purple\",\"italic\":false,\"bold\":true}',Lore:['[{\"text\":\"Régénère \",\"color\":\"gray\",\"italic\":false},{\"text\":\"entièrement\",\"color\":\"red\",\"italic\":false},{\"text\":\" + 8\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"yellow\",\"italic\":false}]','[{\"text\":\"Donne aussi \",\"color\":\"gray\",\"italic\":false},{\"text\":\"🔥 Résistance\",\"color\":\"#D0853A\",\"italic\":false}]']}}"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:strong_healing"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:regeneration"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "minecraft:cake",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "text": "Gâteau",
+                "color": "white",
+                "bold": true,
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "C'est délicieux",
+                  "color": "light_purple",
+                  "italic": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "minecraft:golden_apple",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Pomme d\\'or\",\"color\":\"white\",\"italic\":false,\"bold\":true}',Lore:['[{\"text\":\"Régénère jusqu\\'à 6\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"red\",\"italic\":false},{\"text\":\" + 2\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"yellow\",\"italic\":false}]']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 8,
+          "name": "minecraft:golden_carrot",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Carrote Dorée\",\"color\":\"white\",\"italic\":false,\"bold\":true}',Lore:['[{\"text\":\"Régénère jusqu\\'à 5,5\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"red\",\"italic\":false}]']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 8,
+          "name": "minecraft:cooked_beef",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Steak\",\"color\":\"white\",\"italic\":false,\"bold\":true}',Lore:['[{\"text\":\"Régénère jusqu\\'à 5\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"red\",\"italic\":false}]']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 4,
+                "max": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stone_sword",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:7b,AttributeModifiers:[{Slot:\"mainhand\", AttributeName:\"generic.attack_speed\", Name:\"generic.attack_speed\", Amount:1000.0, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]},{AttributeName:\"generic.attack_damage\",Name:\"Damage\",Slot:\"mainhand\",Amount:6.0,Operation:0,UUIDLeast:222l,UUIDMost:222l}]}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "É",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "p",
+                  "color": "#a6047d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "é",
+                  "color": "#960981",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e ",
+                  "color": "#850d84",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#741288",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#64168c",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#531b90",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#431f94",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#322498",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#21289b",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#112d9f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "----------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[1].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[1].tag.display.Lore[0]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[1].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[1].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[1].tag.Enchantments[2]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[1].tag.display.Lore[2]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.25
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Force I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Ice Aspect I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Rainbow Slam I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Reaper II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Siphon II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Toxic I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Stationary",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.12
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "6 dégats",
+                  "color": "blue",
+                  "italic": false
+                }
+              ],
+              "replace": false
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.8
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "minecraft:arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 12
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "name": "minecraft:spectral_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tipped_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Potion:\"minecraft:water\",custom_potion_effects:[{id:\"slowness\",amplifier:1,duration:1760}],HideFlags:63b,display:{Name:'{\"text\":\"Flèche de Lenteur\",\"color\":\"#555555\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"------------------\",\"color\":\"#C0C0C0\",\"italic\":false}','{\"text\":\"⬳ Lenteur II (1:28)\",\"color\":\"#555555\",\"italic\":false}']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tipped_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Potion:\"minecraft:long_poison\",HideFlags:63b,display:{Name:'{\"text\":\"Flèche de Poison\",\"color\":\"#55741B\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"-----------------\",\"color\":\"#C0C0C0\",\"italic\":false}','{\"text\":\"☠ Poison (0:11)\",\"color\":\"#55741B\",\"italic\":false}']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tipped_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{custom_potion_effects:[{id:\"blindness\",amplifier:3,duration:256}],CustomPotionColor:14219765,HideFlags:63b,display:{Name:'{\"text\":\"Flèche de Lévitation\",\"color\":\"#F2F3F4\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"--------------------\",\"color\":\"#C0C0C0\",\"italic\":false}','{\"text\":\"⟰ Lévitation IV (0:13)\",\"color\":\"#F2F3F4\",\"italic\":false}']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tipped_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Potion:\"minecraft:harming\",HideFlags:63b,display:{Name:'{\"text\":\"Flèche de Dégats\",\"color\":\"dark_red\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"------------------\",\"color\":\"#C0C0C0\",\"italic\":false}','{\"text\":\"⚔ Dégats Instantanés\",\"color\":\"dark_red\",\"italic\":false}']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tipped_arrow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{custom_potion_effects:[{id:\"blindness\",amplifier:0,duration:120}],CustomPotionColor:9143689,HideFlags:63b,display:{Name:'{\"text\":\"Flèche de Cécité\",\"color\":\"#8B8589\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"--------------------\",\"color\":\"#C0C0C0\",\"italic\":false}','{\"text\":\"👁 Cécité (0:06)\",\"color\":\"#8B8589\",\"italic\":false}']}}"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bow",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:7b}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "A",
+                  "color": "#b70079",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "r",
+                  "color": "#a5057d",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "c ",
+                  "color": "#920a81",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "M",
+                  "color": "#800f86",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "y",
+                  "color": "#6e148a",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "s",
+                  "color": "#5c198e",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "t",
+                  "color": "#491d92",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "i",
+                  "color": "#372296",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "q",
+                  "color": "#25279b",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "u",
+                  "color": "#122c9f",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "e",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": false
+                },
+                {
+                  "text": "O",
+                  "color": "#222222",
+                  "bold": false,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "---------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[0].tag.Enchantments[1]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[0].tag.display.Lore[1]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[0].tag.Enchantments[2]",
+                  "target": "Enchantments[{id:\"minecraft:power\"}]",
+                  "op": "replace"
+                },
+                {
+                  "source": "tag[0].tag.display.Lore[3]",
+                  "target": "display.Lore[1]",
+                  "op": "replace"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[0].tag.Enchantments[0]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[0].tag.display.Lore[2]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.2
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[0].tag.Enchantments[3]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[0].tag.display.Lore[4]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.25
+                }
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": {
+                "type": "minecraft:storage",
+                "source": "minecraft:1"
+              },
+              "ops": [
+                {
+                  "source": "tag[0].tag.Enchantments[4]",
+                  "target": "Enchantments",
+                  "op": "append"
+                },
+                {
+                  "source": "tag[0].tag.display.Lore[5]",
+                  "target": "display.Lore",
+                  "op": "append"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.05
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Quick Shot",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "replace": false,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Burst I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Blizzard I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Firestorm I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Fireworks IV",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.05
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Potion II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Reaper II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Toxic I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Tracer I",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.07
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Tracer II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.03
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.8
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+execute as @s run trigger spawn1 set 0
+execute as @s run trigger spawn2 set 0
+execute as @s run trigger spawn3 set 0
+execute as @s run trigger spawn4 set 0
+execute as @s run trigger spawn5 set 0
+execute as @s run trigger spawn6 set 0
+execute as @s run trigger spawn7 set 0
+execute as @s run trigger spawn8 set 0
+execute as @s run trigger spawn9 set 0
+execute as @s run trigger spawn10 set 0
+execute as @s run trigger spawn11 set 0
+execute as @s run trigger spawn_random set 0
+execute as @s run trigger spawn_vers_kits set 0

@@ -1,0 +1,13 @@
+setblock 2437 208 2142 air
+setblock 2521 221 2138 air
+setblock 2500 239 2162 air
+setblock 2432 219 2187 air
+setblock 2509 236 2179 air
+setblock 2474 220 2152 air
+setblock 2488 227 2181 air
+setblock 2516 242 2152 air
+setblock 2510 206 2152 air
+setblock 2498 234 2151 air
+setblock 2464 239 2194 air
+setblock 2461 205 2164 air
+setblock 2439 231 2142 air
