@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:void_air",
+    "minecraft:player_head",
+    "minecraft:bubble_column",
+    "#minecraft:all_signs",
+    "#minecraft:wool_carpets",
+    "minecraft:spruce_slab",
+    "minecraft:dark_oak_slab",
+    "#minecraft:doors",
+    "#minecraft:trapdoors",
+    "minecraft:moving_piston",
+    "minecraft:light"
+  ]
+}
