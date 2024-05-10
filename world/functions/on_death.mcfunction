@@ -5,4 +5,4 @@ scoreboard players set @s kills_give_2 0
 scoreboard players set @s kills_give_3 0
 function cosm:disable_triggers_cosm
 scoreboard players set @s entre_kits 1
-scoreboard players set @a death_reset_tags 0
+scoreboard players set @s death_reset_tags 0
