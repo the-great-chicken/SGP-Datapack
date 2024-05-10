@@ -24,6 +24,6 @@ execute if score #kit_id_kill_run test matches 1 run scoreboard players operatio
 execute if score #kit_id_kill_run test matches 1 run scoreboard players operation #kit_id_tueur test += #kit_id_victime test
 execute if score #kit_id_kill_run test matches 1 store result storage minecraft:kill_counter HandItems[0].tag.provKillUpdate int 1 run scoreboard players get #kit_id_tueur test
 execute if score #kit_id_kill_run test matches 1 run data modify storage minecraft:kill_counter HandItems[0].tag.KillUpdates append from storage minecraft:kill_counter HandItems[0].tag.provKillUpdate
-execute if score #kit_id_kill_run test matches 1 run scoreboard players set #kit_id_victime test -1
+scoreboard players set #kit_id_victime test -1
 execute if score #kit_id_kill_run test matches 1 run scoreboard players set #kit_id_tueur test -1
 execute if score #kit_id_kill_run test matches 1 run scoreboard players set #kit_id_kill_run test 0
