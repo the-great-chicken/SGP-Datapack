@@ -11,3 +11,4 @@ execute in minisjeux_crea run function world:run_lieux_trouves
 execute in minisjeux_crea run function cosm:ench_particle_cycle
 execute in minisjeux_crea as @a[scores={death_reset_tags=1..}] run function world:on_death
 execute in minisjeux_crea run function world:kill_counter
+execute in minisjeux_crea run function world:temple_teleporter
