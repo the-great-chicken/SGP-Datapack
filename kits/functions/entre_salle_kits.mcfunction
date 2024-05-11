@@ -1,3 +1,6 @@
+clear @s
+effect clear @s
+tp @s 2423 251.5 2145.5 0 0
 scoreboard players enable @s veut_combattant
 scoreboard players enable @s veut_roi
 scoreboard players enable @s veut_pigeon
@@ -15,6 +18,5 @@ scoreboard players enable @s sort_kits
 scoreboard players enable @s kits_vers_spawn
 execute if entity @s[scores={entre_kits=1..}] as @s run trigger entre_cosm set 0
 execute if entity @s[scores={entre_kits=1..}] run scoreboard players set @s entre_kits 0
-setblock 2413 245 2135 redstone_block
+execute if entity @s[scores={spawn_vers_kits=1..}] as @s run function spawns:disable_triggers
 execute if entity @s[scores={spawn_vers_kits=1..}] run scoreboard players set @s spawn_vers_kits 0
-setblock 2415 245 2136 redstone_block
