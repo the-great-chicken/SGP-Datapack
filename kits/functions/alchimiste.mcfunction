@@ -11,7 +11,7 @@ item replace entity @s armor.feet with chainmail_boots{Trim:{pattern:sentry, mat
 tag @s add alchimiste_voulu
 scoreboard players set @s reset_tags 1
 scoreboard players set @s kit_id 8
-item replace entity @s hotbar.1 from entity @e[type=armor_stand, name="alchimiste_potion_stacker", limit=1] weapon.mainhand
-item replace entity @s hotbar.2 from entity @e[type=armor_stand, name="alchimiste_potion_stacker", limit=1] weapon.offhand
+item replace entity @s hotbar.1 from entity @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1] weapon.mainhand
+item replace entity @s hotbar.2 from entity @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1] weapon.offhand
 scoreboard players set @s veut_alchimiste 0
 scoreboard players set @s kitPrefixSet 0
