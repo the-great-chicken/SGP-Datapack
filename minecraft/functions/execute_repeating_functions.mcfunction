@@ -33,6 +33,12 @@ execute in minisjeux_crea run function world:run_lieux_trouves
 execute in minisjeux_crea as @a[scores={death_reset_tags=1..}] run function world:on_death
 execute in minisjeux_crea run function world:kill_counter
 execute in minisjeux_crea run function world:temple_teleporter
+execute in minisjeux_crea at @e[type=marker,name="Lootdrop"] if block ~ ~ ~ minecraft:trapped_chest run particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
+execute in minisjeux_crea as @e[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run damage @s 6 minecraft:hot_floor
+execute if score #128_ticks_clock test matches 0 run function world:kill_streaks_management
+execute if score #128_ticks_clock test matches 0 as @a run function world:kd_buff_and_debuffs
+scoreboard players add #128_ticks_clock test 1
+execute if score #128_ticks_clock test matches 128 run scoreboard players set #128_ticks_clock test 0
 
 
 # Cosmétiques
