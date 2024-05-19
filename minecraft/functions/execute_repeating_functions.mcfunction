@@ -1,5 +1,6 @@
 execute in minisjeux_crea run function even_tick_functions
 
+execute in minisjeux_crea as @a[scores={death_reset_tags=1..}] run function world:on_death
 
 # Trigger Rewards
 execute in minisjeux_crea run function world:reward_laby
@@ -22,7 +23,7 @@ execute in minisjeux_crea as @p[scores={veut_random=1..}] run function kits:rand
 execute in minisjeux_crea run function kits:check_kills_give
 execute in minisjeux_crea run function kits:tags_management
 execute in minisjeux_crea as @a[x=2422.5,y=251.5,z=2136.5,distance=..1.5] unless score @s entre_kits > 0 test run scoreboard players enable @s entre_kits
-execute in minisjeux_crea as @a[nbt={Pos:[2422.5d,251.5d,2136.5d]}] run function kits:sort_salle_kits
+execute in minisjeux_crea as @a[nbt={Pos:[2422.5d, 251.5d, 2136.5d]}] run function kits:sort_salle_kits
 execute in minisjeux_crea as @a[scores={entre_kits=1..}] run function kits:entre_salle_kits
 execute in minisjeux_crea as @a[scores={sort_kits=1..}] unless predicate majeurs:event_in_progress run function kits:sort_salle_kits
 execute in minisjeux_crea as @a[scores={sort_kits=1..}] if predicate majeurs:event_in_progress run function majeurs:cannot_tp_to_lobby
@@ -30,7 +31,6 @@ execute in minisjeux_crea as @a[scores={sort_kits=1..}] if predicate majeurs:eve
 
 # Miscellaneous
 execute in minisjeux_crea run function world:run_lieux_trouves
-execute in minisjeux_crea as @a[scores={death_reset_tags=1..}] run function world:on_death
 execute in minisjeux_crea run function world:kill_counter
 execute in minisjeux_crea run function world:temple_teleporter
 execute in minisjeux_crea at @e[type=marker,name="Lootdrop"] if block ~ ~ ~ minecraft:trapped_chest run particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
@@ -51,3 +51,17 @@ execute in minisjeux_crea run function cosm:check_and_run_update_cosm
 execute in minisjeux_crea as @a[scores={sort_cosm=1..}] run function cosm:sort_cosm
 execute in minisjeux_crea as @a[scores={entre_cosm=1..}] run function cosm:entre_cosm
 execute in minisjeux_crea as @a[x=2422.5,y=251.5,z=2136.5,distance=..1.5] unless score @s entre_cosm > 0 test run scoreboard players enable @s entre_cosm
+
+
+# ------ Events Majeurs ------
+# Protéger le Roi
+execute in minisjeux_crea if entity @a[scores={devenirroibleu=1..}] run function majeurs:protect_devenir_roi_bleu
+execute in minisjeux_crea if entity @a[scores={devenirroirouge=1..}] run function majeurs:protect_devenir_roi_rouge
+execute in minisjeux_crea unless entity @a[team=!bleue,team=!rouge] run function majeurs:protect_running
+
+# PCO
+execute if predicate majeurs:pco_ongoing run function majeurs_pco:empower
+execute if predicate majeurs:pco_ongoing run function majeurs_pco:check_death
+execute if predicate majeurs:pco_ongoing run function majeurs_pco:running
+execute if predicate majeurs:pco_ongoing run function majeurs_pco:add_cabane_time
+execute if predicate majeurs:pco_ongoing run function majeurs_pco:dans_cabane
