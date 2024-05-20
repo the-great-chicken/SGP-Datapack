@@ -50,4 +50,6 @@ execute unless score @s laby_fin >= 0 dummy run scoreboard players set @s laby_f
 execute unless score @s jump_hardest_done >= 0 dummy run scoreboard players set @s jump_hardest_done 0
 execute unless score @s jump_diff_2_done >= 0 dummy run scoreboard players set @s jump_diff_2_done 0
 
+execute unless score @s teleporteur >= 0 dummy run scoreboard players set @s teleporteur 0
+
 bossbar set minecraft:1 players @a

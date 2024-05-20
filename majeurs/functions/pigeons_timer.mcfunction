@@ -11,11 +11,11 @@ execute if score #pigeons_secondes timer matches 60 run scoreboard players set #
 
 # ------ Après 10 minutes ------
 # Si suffisament de kills de chasseurs
-execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues nbr_de_joueurs >= #pigeons nbr_de_joueurs run tellraw @a [{"text":"Les Pigeons ont gagné !","color":"gray","bold":true}]
-execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues nbr_de_joueurs >= #pigeons nbr_de_joueurs run title @a title [{"text":"Les Pigeons ont gagné !","bold":true,"color":"gray"}]
+execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues dummy >= #pigeons_joueurs dummy run tellraw @a [{"text":"Les Pigeons ont gagné !","color":"gray","bold":true}]
+execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues dummy >= #pigeons_joueurs dummy run title @a title [{"text":"Les Pigeons ont gagné !","bold":true,"color":"gray"}]
 
 # Si insuffisament de kills de chasseurs
-execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues nbr_de_joueurs < #pigeons nbr_de_joueurs run tellraw @a [{"text":"Les Pigeons n'ont pas atteint le nombre de kills minimum, ÉGALITÉ","color":"yellow","bold":true}]
-execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues nbr_de_joueurs < #pigeons nbr_de_joueurs run title @a title [{"text":"ÉGALITÉ","color":"yellow","bold":true}]
+execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues dummy < #pigeons_joueurs dummy run tellraw @a [{"text":"Les Pigeons n'ont pas atteint le nombre de kills minimum, ÉGALITÉ","color":"yellow","bold":true}]
+execute if score #pigeons_minutes timer matches 10 if score #chasseurs_tues dummy < #pigeons_joueurs dummy run title @a title [{"text":"ÉGALITÉ","color":"yellow","bold":true}]
 
 execute if score #pigeons_minutes timer matches 10 run function majeurs:pigeons_stop

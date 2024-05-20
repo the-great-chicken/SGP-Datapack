@@ -1,5 +1,5 @@
 # Kill d'un chasseur
-execute as @a[tag=!pigeon] if score @s death_reset_tags matches 1 run scoreboard players add #chasseurs_tues nbr_de_joueurs 1
+execute as @a[tag=!pigeon] if score @s death_reset_tags matches 1 run scoreboard players add #chasseurs_tues dummy 1
 execute as @a[tag=!pigeon] if score @s death_reset_tags matches 1 run function majeurs:pigeons_on_death
 execute as @a[tag=!pigeon] if score @s death_reset_tags matches 1 run scoreboard players set @s death_reset_tags 0
 

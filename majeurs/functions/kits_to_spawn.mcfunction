@@ -5,8 +5,8 @@ execute if predicate majeurs:protect_ongoing run scoreboard players set @s kits_
 execute if predicate majeurs:protect_ongoing run execute as @s run function kits:sort_salle_kits
 execute if predicate majeurs:protect_ongoing run targetglow @a[team=rouge] @a[gamemode=survival,team=rouge] RED
 execute if predicate majeurs:protect_ongoing run targetglow @a[team=bleue] @a[gamemode=survival,team=bleue] BLUE
-execute if predicate majeurs:protect_ongoing run targetglow @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @a[tag=roirouge] DARK_RED
-execute if predicate majeurs:protect_ongoing run targetglow @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @a[tag=roibleu] DARK_BLUE
+execute if predicate majeurs:protect_ongoing run targetglow @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @a[tag=roi_rouge] DARK_RED
+execute if predicate majeurs:protect_ongoing run targetglow @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @a[tag=roi_bleu] DARK_BLUE
 
 # Invasion
 execute if predicate majeurs:invasion_ongoing run tp @s @e[type=marker,name="Attaquant_Invasion",limit=1,sort=random]

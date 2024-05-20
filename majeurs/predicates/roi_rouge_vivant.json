@@ -30,7 +30,7 @@
       "condition": "minecraft:entity_properties",
       "entity": "this",
       "predicate": {
-        "nbt": "{Tags:[\"roirouge\"]}"
+        "nbt": "{Tags:[\"roi_rouge\"]}"
       }
     }
   ]
