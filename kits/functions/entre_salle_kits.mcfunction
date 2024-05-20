@@ -18,5 +18,6 @@ scoreboard players enable @s sort_kits
 scoreboard players enable @s kits_vers_spawn
 execute if entity @s[scores={entre_kits=1..}] as @s run trigger entre_cosm set 0
 execute if entity @s[scores={entre_kits=1..}] run scoreboard players set @s entre_kits 0
+execute if entity @s[scores={entre_kits=1..}] as @s run function world:init_scoreboards
 execute if entity @s[scores={spawn_vers_kits=1..}] as @s run function spawns:disable_triggers
 execute if entity @s[scores={spawn_vers_kits=1..}] run scoreboard players set @s spawn_vers_kits 0
