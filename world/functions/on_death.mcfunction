@@ -1,4 +1,4 @@
-execute store result score #kit_id_victime test run scoreboard players get @s kit_id
+execute store result score #kit_id_victime dummy run scoreboard players get @s kit_id
 function kits:reset_tags
 scoreboard players set @s kills_give_1 0
 scoreboard players set @s kills_give_2 0

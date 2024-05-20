@@ -2,9 +2,9 @@ tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement de la Cha
 scoreboard players set @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] death_reset_tags 1
 tp @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] 2409 251.5 2140 180 0
 execute as @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] run scoreboard players add #pigeons nbr_de_joueurs 1
-scoreboard players set #pigeons_ticks timer_second 0
-scoreboard players set #pigeons_secondes timer_second 0
-scoreboard players set #pigeons_minutes timer_second 0
+scoreboard players set #pigeons_ticks timer 0
+scoreboard players set #pigeons_secondes timer 0
+scoreboard players set #pigeons_minutes timer 0
 scoreboard players set #chasseurs_tues nbr_de_joueurs 0
 function mineurs:stop
 scoreboard players enable @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] devenir_chasseur

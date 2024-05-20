@@ -5,7 +5,7 @@ execute as @a[team=Defenseur] run function kits:tank
 tp @a[team=Defenseur] 2496.0 251.0 2159.0
 scoreboard players set @a[team=Attaquant] entre_kits 1
 execute as @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] run scoreboard players add #invasion nbr_de_joueurs 1
-scoreboard players operation #invasion nbr_de_joueurs *= 16 test
+scoreboard players operation #invasion nbr_de_joueurs *= 16 dummy
 experience set @a[x=2405,y=201,z=2133,dx=137,dy=57,dz=72] 0 levels
 execute as @a[x=2405,y=201,z=2133,dx=137,dy=57,dz=72] run experience add @a[x=2405,y=201,z=2133,dx=137,dy=57,dz=72] 16 levels
 statuswarp pvp disabled
