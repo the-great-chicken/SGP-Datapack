@@ -1,4 +1,6 @@
 tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
+function mineurs:stop
+
 statuswarp pvp disabled
 sudo Bafy78 useglow toggle
 function majeurs_pco:dispatch

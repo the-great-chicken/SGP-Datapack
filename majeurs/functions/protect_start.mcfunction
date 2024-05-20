@@ -3,6 +3,8 @@ execute in minecraft:minisjeux_crea as @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72
 execute in minecraft:minisjeux_crea run function majeurs:protect_dispatch
 fill 2537 253 2203 2537 251 2193 minecraft:barrier replace air
 function mineurs:stop
+scoreboard players set #mort_roi_rouge_annoncee test 0
+scoreboard players set #mort_roi_bleu_annoncee test 0
 scoreboard players enable @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] devenirroirouge
 title @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] title [{"text":"Équipe Rouge", "color":"dark_red"}]
 scoreboard players enable @a[x=2410,y=251,z=2161,dx=3,dy=3,dz=3] devenirroibleu
@@ -12,3 +14,4 @@ statuswarp pvp disabled
 move @a[x=2410,y=251,z=2161,dx=3,dy=3,dz=3] #Bleus
 move @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] #Rouges
 sudo Bafy78 useglow toggle
+function lore:disable_npcs

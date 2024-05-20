@@ -1,5 +1,8 @@
 execute in minisjeux_crea run function even_tick_functions
 
+# Must be in this order
+execute in minisjeux_crea if predicate majeurs:pigeons_ongoing run function majeurs:pigeons_running
+
 execute in minisjeux_crea as @a[scores={death_reset_tags=1..}] run function world:on_death
 
 # Trigger Rewards
@@ -69,3 +72,8 @@ execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_
 # Invasion
 execute in minisjeux_crea if predicate majeurs:invasion_ongoing run function majeurs:invasion_defenders_dying
 execute in minisjeux_crea if predicate majeurs:invasion_ongoing run function majeurs:invasion_running
+
+# Chasse aux pigeons
+execute in minisjeux_crea as @a[scores={devenir_chasseur=1..}] run function majeurs:pigeons_devenir_chasseur
+execute in minisjeux_crea as @a[scores={devenir_pigeon=1..}] run function majeurs:pigeons_devenir_pigeon
+execute in minisjeux_crea if predicate majeurs:pigeons_ongoing run function majeurs:pigeons_timer

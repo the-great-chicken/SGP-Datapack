@@ -1,4 +1,5 @@
 tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
+function mineurs:stop
 function majeurs:invasion_dispatch
 execute as @a[team=Defenseur] run function kits:tank
 tp @a[team=Defenseur] 2496.0 251.0 2159.0
