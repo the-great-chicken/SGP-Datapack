@@ -57,11 +57,15 @@ execute in minisjeux_crea as @a[x=2422.5,y=251.5,z=2136.5,distance=..1.5] unless
 # Protéger le Roi
 execute in minisjeux_crea if entity @a[scores={devenirroibleu=1..}] run function majeurs:protect_devenir_roi_bleu
 execute in minisjeux_crea if entity @a[scores={devenirroirouge=1..}] run function majeurs:protect_devenir_roi_rouge
-execute in minisjeux_crea unless entity @a[team=!bleue,team=!rouge] run function majeurs:protect_running
+execute in minisjeux_crea if predicate majeurs:protect_ongoing run function majeurs:protect_running
 
 # PCO
-execute if predicate majeurs:pco_ongoing run function majeurs_pco:empower
-execute if predicate majeurs:pco_ongoing run function majeurs_pco:check_death
-execute if predicate majeurs:pco_ongoing run function majeurs_pco:running
-execute if predicate majeurs:pco_ongoing run function majeurs_pco:add_cabane_time
-execute if predicate majeurs:pco_ongoing run function majeurs_pco:dans_cabane
+execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_pco:empower
+execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_pco:check_death
+execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_pco:running
+execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_pco:add_cabane_time
+execute in minisjeux_crea if predicate majeurs:pco_ongoing run function majeurs_pco:dans_cabane
+
+# Invasion
+execute in minisjeux_crea if predicate majeurs:invasion_ongoing run function majeurs:invasion_defenders_dying
+execute in minisjeux_crea if predicate majeurs:invasion_ongoing run function majeurs:invasion_running
