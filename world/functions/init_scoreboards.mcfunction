@@ -1,4 +1,4 @@
-execute unless score @s plusgrandestreak >= 0 test run scoreboard players set @s plusgrandestreak 0
+execute unless score @s plus_grande_streak >= 0 test run scoreboard players set @s plus_grande_streak 0
 
 execute unless score @s pyromane_found >= 0 test run scoreboard players set @s pyromane_found 0
 execute unless score @s cancer_found >= 0 test run scoreboard players set @s cancer_found 0
