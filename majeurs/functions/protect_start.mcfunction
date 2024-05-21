@@ -5,13 +5,13 @@ fill 2537 253 2203 2537 251 2193 minecraft:barrier replace air
 function mineurs:stop
 scoreboard players set #mort_roi_rouge_annoncee dummy 0
 scoreboard players set #mort_roi_bleu_annoncee dummy 0
-scoreboard players enable @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] devenir_roi_rouge
-title @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] title [{"text":"Équipe Rouge", "color":"dark_red"}]
-scoreboard players enable @a[x=2410,y=251,z=2161,dx=3,dy=3,dz=3] devenir_roi_bleu
-title @a[x=2410,y=251,z=2161,dx=3,dy=3,dz=3] title [{"text":"Équipe Bleu", "color":"dark_blue"}]
+execute at @e[type=marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run scoreboard players enable @s devenir_roi_rouge
+execute at @e[type=marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run title @s title [{"text":"Équipe Rouge", "color":"dark_red"}]
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run scoreboard players enable @s devenir_roi_bleu
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run title @s title [{"text":"Équipe Bleu", "color":"dark_blue"}]
 setblock 2480 230 2166 minecraft:prismarine_brick_slab[type=bottom]
 statuswarp pvp disabled
-move @a[x=2410,y=251,z=2161,dx=3,dy=3,dz=3] #Bleus
-move @a[x=2414,y=251,z=2161,dx=3,dy=3,dz=3] #Rouges
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run move @s #Bleus
+execute at @e[type=marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run move @s #Rouges
 sudo Bafy78 useglow toggle
 function lore:disable_npcs

@@ -1,8 +1,8 @@
 # Quand un rouge meurt alors que son roi est mort
-execute unless predicate majeurs:roi_rouge_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=rouge] run team leave @s
-execute unless predicate majeurs:roi_rouge_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=rouge] run move @s #Morts
-execute unless predicate majeurs:roi_rouge_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=rouge] run gamemode spectator @s
-execute unless predicate majeurs:roi_rouge_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=rouge] run tp @s 2531 251.5 2198 135 0
+execute unless predicate majeurs:roi_rouge_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=rouge] run team leave @s
+execute unless predicate majeurs:roi_rouge_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=rouge] run move @s #Morts
+execute unless predicate majeurs:roi_rouge_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=rouge] run gamemode spectator @s
+execute unless predicate majeurs:roi_rouge_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=rouge] run tp @s 2531 251.5 2198 135 0
 
 # Quand tous les bleus sont morts
 execute unless entity @a[team=bleue] unless predicate majeurs:roi_bleu_vivant run tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] ["",{"text":"L'Equipe ", "color":"gold", "bold":true},{"text":"Rouge ", "color":"dark_red", "bold":true},{"text":"a gagné ! ", "color":"gold", "bold":true},{"text":"Tous les Bleus sont vivants. ", "color":"gold"}]
@@ -17,10 +17,10 @@ execute unless predicate majeurs:roi_rouge_vivant if score #mort_roi_rouge_annon
 
 
 # Quand un bleu meurt alors que son roi est mort
-execute unless predicate majeurs:roi_bleu_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=bleue] run team leave @s
-execute unless predicate majeurs:roi_bleu_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=bleue] run move @s #Morts
-execute unless predicate majeurs:roi_bleu_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=bleue] run gamemode spectator @s
-execute unless predicate majeurs:roi_bleu_vivant as @a[x=2423,y=251.5,z=2145.5,distance=..3,team=bleue] run tp @s 2531 251.5 2198 135 0
+execute unless predicate majeurs:roi_bleu_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=bleue] run team leave @s
+execute unless predicate majeurs:roi_bleu_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=bleue] run move @s #Morts
+execute unless predicate majeurs:roi_bleu_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=bleue] run gamemode spectator @s
+execute unless predicate majeurs:roi_bleu_vivant at @e[type=marker,name="kits",limit=1] as @a[distance=..3,team=bleue] run tp @s 2531 251.5 2198 135 0
 
 # Quand tous les rouges sont morts
 execute unless entity @a[team=rouge] unless predicate majeurs:roi_rouge_vivant run tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] ["",{"text":"L'Equipe ", "color":"gold", "bold":true},{"text":"Bleue ", "color":"dark_blue", "bold":true},{"text":"a gagné ! ", "color":"gold", "bold":true},{"text":"Tous les Rouges sont vivants. ", "color":"gold"}]

@@ -7,22 +7,7 @@
         "condition": "minecraft:entity_properties",
         "entity": "this",
         "predicate": {
-          "location": {
-            "position": {
-              "x": {
-                "min": 2421,
-                "max": 2426
-              },
-              "y": {
-                "min": 250,
-                "max": 252
-              },
-              "z": {
-                "min": 2143,
-                "max": 2148
-              }
-            }
-          }
+          "nbt": "{Tags:[\"roi\"]}"
         }
       }
     },

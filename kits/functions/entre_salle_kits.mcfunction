@@ -1,6 +1,6 @@
 clear @s
 effect clear @s
-tp @s 2423 251.5 2145.5 0 0
+tp @s @e[type=marker,name="kits",limit=1]
 scoreboard players enable @s veut_combattant
 scoreboard players enable @s veut_roi
 scoreboard players enable @s veut_pigeon

@@ -1,3 +1,3 @@
-tp @r[x=2413,y=251.5,z=2162,distance=5..200] 2411 251.5 2162 0 0
-tp @r[x=2413,y=251.5,z=2162,distance=5..200] 2415 251.5 2162 0 0
-execute if entity @a[x=2413,y=251.5,z=2162,distance=5..200] run function majeurs:protect_dispatch
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] facing entity @e[type=marker,name="devenir_roi_rouge",limit=1] eyes positioned ^ ^ ^2 as @r[distance=5..200] run tp @s @e[type=marker,name="devenir_roi_bleu",limit=1]
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] facing entity @e[type=marker,name="devenir_roi_rouge",limit=1] eyes positioned ^ ^ ^2 as @r[distance=5..200] run tp @s @e[type=marker,name="devenir_roi_rouge",limit=1]
+execute at @e[type=marker,name="devenir_roi_bleu",limit=1] facing entity @e[type=marker,name="devenir_roi_rouge",limit=1] eyes positioned ^ ^ ^2 if entity @a[distance=5..200] run function majeurs:protect_dispatch

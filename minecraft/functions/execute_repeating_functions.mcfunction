@@ -25,8 +25,8 @@ function kits:check_kit_unlock
 execute as @p[scores={veut_random=1..}] run function kits:random
 function kits:check_kills_give
 function kits:tags_management
-execute as @a[x=2422.5,y=251.5,z=2136.5,distance=..1.5] unless score @s entre_kits > 0 dummy run scoreboard players enable @s entre_kits
-execute as @a[nbt={Pos:[2422.5d, 251.5d, 2136.5d]}] run function kits:sort_salle_kits
+execute at @e[type=marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s entre_kits > 0 dummy run scoreboard players enable @s entre_kits
+execute at @e[type=marker,name="accueil",limit=1] as @a[distance=0] run function kits:sort_salle_kits
 execute as @a[scores={entre_kits=1..}] run function kits:entre_salle_kits
 execute as @a[scores={sort_kits=1..}] unless predicate majeurs:event_in_progress run function kits:sort_salle_kits
 execute as @a[scores={sort_kits=1..}] if predicate majeurs:event_in_progress run function majeurs:cannot_tp_to_lobby
@@ -53,7 +53,7 @@ execute as @a[predicate=cosm:veut_particle_weight] run function cosm:disable_wei
 function cosm:check_and_run_update_cosm
 execute as @a[scores={sort_cosm=1..}] run function cosm:sort_cosm
 execute as @a[scores={entre_cosm=1..}] run function cosm:entre_cosm
-execute as @a[x=2422.5,y=251.5,z=2136.5,distance=..1.5] unless score @s entre_cosm > 0 dummy run scoreboard players enable @s entre_cosm
+execute at @e[type=marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s entre_cosm > 0 dummy run scoreboard players enable @s entre_cosm
 
 
 # ------ Events Majeurs ------
