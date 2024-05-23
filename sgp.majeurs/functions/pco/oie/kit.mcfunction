@@ -6,4 +6,4 @@ item replace entity @s armor.head with leather_helmet{Trim:{pattern:sentry, mate
 item replace entity @s armor.chest with leather_chestplate{Trim:{pattern:snout, material:quartz}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:16777045, Name:'{"text":"Corps","color":"yellow","italic":false,"bold":true}'}}
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:coast, material:quartz}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:16777045, Name:'{"text":"Cuisses","color":"yellow","italic":false,"bold":true}'}}
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:wild, material:gold}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:16777045, Name:'{"text":"Pattes","color":"yellow","italic":false,"bold":true}'}}
-scoreboard players set @s reset_tags 1
+scoreboard players set @s sgp.reset_tags 1

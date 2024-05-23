@@ -5,7 +5,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_light": {
+        "sgp.veut_light": {
           "min": 1
         }
       }
@@ -14,7 +14,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_medium": {
+        "sgp.veut_medium": {
           "min": 1
         }
       }
@@ -23,7 +23,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_heavy": {
+        "sgp.veut_heavy": {
           "min": 1
         }
       }
@@ -32,7 +32,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_super_heavy": {
+        "sgp.veut_super_heavy": {
           "min": 1
         }
       }

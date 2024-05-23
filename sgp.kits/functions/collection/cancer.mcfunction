@@ -13,9 +13,9 @@ item replace entity @s armor.chest with golden_chestplate{Trim:{pattern:vex, mat
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:tide, material:redstone}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Pantalon en Cuir", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:spire, material:redstone}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Bottes en Cuir", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
 tag @s add cancer_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 10
-execute if entity @s[team=Attaquant] run clear @s
-execute if entity @s[team=Attaquant] run tellraw @s [{"text":"Le kit Cancer n'est pas disponible pour cet event.", "color":"dark_red"}]
-scoreboard players set @s veut_cancer 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 10
+execute if entity @s[team=sgp.Attaquant] run clear @s
+execute if entity @s[team=sgp.Attaquant] run tellraw @s [{"text":"Le kit Cancer n'est pas disponible pour cet event.", "color":"dark_red"}]
+scoreboard players set @s sgp.veut_cancer 0
+scoreboard players set @s sgp.kit_prefix_set 0

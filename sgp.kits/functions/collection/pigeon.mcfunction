@@ -11,9 +11,9 @@ item replace entity @s armor.chest with elytra{Unbreakable:1, HideFlags:4, displ
 item replace entity @s armor.legs with chainmail_leggings{Unbreakable:1, HideFlags:6, display:{Name:'{"text":"Cuisses", "color":"dark_gray", "italic":false, "bold":true}'}}
 item replace entity @s armor.feet with chainmail_boots{Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:7, display:{Name:'{"text":"Pattes", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
 tag @s add pigeon_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 0
-execute if entity @s[team=Attaquant] run clear @s
-execute if entity @s[team=Attaquant] run tellraw @s [{"text":"Le kit Pigeon n'est pas disponible pour cet event.","color":"dark_red"}]
-scoreboard players set @s veut_pigeon 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 0
+execute if entity @s[team=sgp.Attaquant] run clear @s
+execute if entity @s[team=sgp.Attaquant] run tellraw @s [{"text":"Le kit Pigeon n'est pas disponible pour cet event.","color":"dark_red"}]
+scoreboard players set @s sgp.veut_pigeon 0
+scoreboard players set @s sgp.kit_prefix_set 0

@@ -5,7 +5,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_smoke": {
+        "sgp.veut_smoke": {
           "min": 1
         }
       }
@@ -14,7 +14,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_ench": {
+        "sgp.veut_ench": {
           "min": 1
         }
       }
@@ -23,7 +23,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_cloud": {
+        "sgp.veut_cloud": {
           "min": 1
         }
       }
@@ -32,7 +32,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_flame_crown": {
+        "sgp.veut_flame_crown": {
           "min": 1
         }
       }
@@ -41,7 +41,7 @@
       "condition": "minecraft:entity_scores",
       "entity": "this",
       "scores": {
-        "veut_marine": {
+        "sgp.veut_marine": {
           "min": 1
         }
       }

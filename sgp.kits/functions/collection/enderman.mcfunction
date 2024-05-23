@@ -10,7 +10,7 @@ item replace entity @s armor.head with player_head{SkullOwner:"tsukiTAO", Enchan
 item replace entity @s armor.chest with leather_chestplate{Trim:{pattern:eye, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:3}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{color:0, Name:'{"text":"Corps", "color":"dark_purple", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection III", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}']}}
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:dune, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:3}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{color:0, Name:'{"text":"Jambes", "color":"dark_purple", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection III", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}']}}
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:raiser, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:3}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{color:0, Name:'{"text":"Pieds", "color":"dark_purple", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection III", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}']}}
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 9
-scoreboard players set @s veut_enderman 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 9
+scoreboard players set @s sgp.veut_enderman 0
+scoreboard players set @s sgp.kit_prefix_set 0

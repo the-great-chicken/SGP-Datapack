@@ -9,11 +9,11 @@ item replace entity @s armor.chest with chainmail_chestplate{Trim:{pattern:sentr
 item replace entity @s armor.legs with chainmail_leggings{Trim:{pattern:sentry, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Jambières de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"--------------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
 item replace entity @s armor.feet with chainmail_boots{Trim:{pattern:sentry, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Bottes de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"-----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
 tag @s add alchimiste_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 8
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 8
 execute at @s run summon armor_stand ~ ~ ~ {CustomName:'[{"text":"alchimiste_potion_stacker"}]',Invulnerable:1b,NoGravity:1b,HandItems:[{id:"splash_potion",tag:{Potion:"minecraft:healing",HideFlags:63,display:{Name:'{"text":"Potion de Soin","color":"light_purple","italic":false,"bold":true}',Lore:['[{"text":"Régénère jusqu\'à 2","color":"gray","italic":false},{"text":"❤","color":"red"},{"text":" instantanément","color":"gray"}]']}},Count:8},{id:"splash_potion",tag:{Potion:"minecraft:harming",HideFlags:63,display:{Name:'{"text":"Potion de Dégats","color":"light_purple","italic":false,"bold":true}',Lore:['{"text":"Inflige jusqu\'à 4 dégâts","color":"gray","italic":false}']}},Count:10}]}
 item replace entity @s hotbar.1 from entity @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1] weapon.mainhand
 item replace entity @s hotbar.2 from entity @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1] weapon.offhand
 kill @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1]
-scoreboard players set @s veut_alchimiste 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.veut_alchimiste 0
+scoreboard players set @s sgp.kit_prefix_set 0

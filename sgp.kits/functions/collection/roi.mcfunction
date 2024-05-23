@@ -10,9 +10,9 @@ item replace entity @s armor.chest with golden_chestplate{Trim:{pattern:wild, ma
 item replace entity @s armor.legs with golden_leggings{Trim:{pattern:eye, material:diamond}, Unbreakable:1, HideFlags:255, display:{Name:'{"text":"Jambières Cérémoniales", "color":"yellow", "italic":false, "bold":true}'}}
 item replace entity @s armor.feet with golden_boots{Trim:{pattern:dune, material:diamond}, Unbreakable:1, HideFlags:255, display:{Name:'{"text":"Bottes Cérémoniales", "color":"yellow", "italic":false, "bold":true}'}}
 tag @s add roi_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 6
-execute as @a unless entity @s[tag=!roi_bleu, tag=!roi_rouge] run clear @a[scores={veut_roi=1..}]
-execute as @a unless entity @s[tag=!roi_rouge, tag=!roi_bleu] run tellraw @a[scores={veut_roi=1..}] [{"text":"Le kit Roi n'est pas disponible pour cet event.","color":"dark_red"}]
-scoreboard players set @s veut_roi 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 6
+execute as @a unless entity @s[tag=!roi_bleu, tag=!roi_rouge] run clear @a[scores={sgp.veut_roi=1..}]
+execute as @a unless entity @s[tag=!roi_rouge, tag=!roi_bleu] run tellraw @a[scores={sgp.veut_roi=1..}] [{"text":"Le kit Roi n'est pas disponible pour cet event.","color":"dark_red"}]
+scoreboard players set @s sgp.veut_roi 0
+scoreboard players set @s sgp.kit_prefix_set 0

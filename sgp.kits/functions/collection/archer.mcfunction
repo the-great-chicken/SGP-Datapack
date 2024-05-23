@@ -13,7 +13,7 @@ item replace entity @s armor.legs with leather_leggings{Trim:{pattern:spire, mat
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:spire, material:quartz}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{color:9633536, Name:'{"text":"Bottes en Cuir", "color":"green", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
 effect give @s speed infinite 0
 tag @s add archer_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 2
-scoreboard players set @s veut_archer 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 2
+scoreboard players set @s sgp.veut_archer 0
+scoreboard players set @s sgp.kit_prefix_set 0

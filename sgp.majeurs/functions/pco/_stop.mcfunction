@@ -14,8 +14,8 @@ fill 2538 248 2144 2540 248 2144 minecraft:void_air
 fill 2537 248 2141 2537 248 2143 minecraft:void_air
 fill 2524 248 2144 2526 248 2144 minecraft:void_air
 
-execute as @a run trigger liberer_oies set 0
-execute as @a run trigger liberer_canards set 0
-execute as @a run trigger liberer_poules set 0
+execute as @a run trigger sgp.liberer_oies set 0
+execute as @a run trigger sgp.liberer_canards set 0
+execute as @a run trigger sgp.liberer_poules set 0
 
 function sgp.majeurs:common/stop

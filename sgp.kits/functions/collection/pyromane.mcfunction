@@ -12,7 +12,7 @@ item replace entity @s armor.chest with iron_chestplate{Trim:{pattern:snout, mat
 item replace entity @s armor.legs with diamond_leggings{Trim:{pattern:silence, material:gold}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}, {id:"thorns", lvl:2}, {id:"fire_protection", lvl:6}, {id:"blast_protection", lvl:5}, {id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Jambières Ignifuges", "color":"gold", "italic":false, "bold":true}', Lore:['{"text":"--------------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}', '{"text":"🔥 Protection VI", "color":"gold", "italic":false}', '{"text":"☀ Protection V", "color":"red", "italic":false}', '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}']}}
 item replace entity @s armor.feet with iron_boots{Trim:{pattern:wayfinder, material:gold}, Unbreakable:1, HideFlags:255, display:{Name:'{"text":"Bottes en Fer", "color":"gold", "italic":false, "bold":true}'}}
 tag @s add pyromane_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 4
-scoreboard players set @s veut_pyromane 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 4
+scoreboard players set @s sgp.veut_pyromane 0
+scoreboard players set @s sgp.kit_prefix_set 0

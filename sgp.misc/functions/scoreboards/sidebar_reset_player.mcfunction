@@ -1,4 +1,4 @@
-$scoreboard players reset $(player) morts
-$scoreboard players reset $(player) kills
-$scoreboard players reset $(player) plus_grande_streak
-$scoreboard players reset $(player) kd
+$scoreboard players reset $(player) sgp.morts
+$scoreboard players reset $(player) sgp.kills
+$scoreboard players reset $(player) sgp.plus_grande_streak
+$scoreboard players reset $(player) sgp.kd

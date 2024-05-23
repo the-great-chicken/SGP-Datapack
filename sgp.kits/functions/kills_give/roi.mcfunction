@@ -2,4 +2,4 @@ give @s golden_apple{display: {Name: '{"text":"Pomme d\'or", "color":"yellow", "
 give @s arrow 2
 effect give @s regeneration 1 3
 title @s actionbar [{"text":"+ 2 ➶ Flèches ", "color":"gray", "bold":true},{"text":"et 1 ❤ Pomme d'or !", "color":"yellow", "bold":true}]
-scoreboard players set @s kills_give_1 0
+scoreboard players set @s sgp.kills_give_1 0

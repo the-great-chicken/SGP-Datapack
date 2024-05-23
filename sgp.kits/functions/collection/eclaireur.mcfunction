@@ -12,7 +12,7 @@ item replace entity @s armor.chest with leather_chestplate{Trim:{pattern:raiser,
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:raiser, material:emerald}, Unbreakable:1, Enchantments:[{id:"thorns", lvl:3}], HideFlags:255, display:{Name:'{"text":"Pantalon en Cuir", "color":"aqua", "italic":false, "bold":true}', Lore:['{"text":"-----------------", "color":"#C0C0C0", "italic":false}', '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}']}}
 item replace entity @s armor.feet with diamond_boots{Trim:{pattern:spire, material:diamond}, Unbreakable:1, Enchantments:[{id:"protection", lvl:3}, {id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Bottes d\'Exploration", "color":"aqua", "italic":false, "bold":true}', Lore:['{"text":"--------------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection III", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}']}}
 tag @s add eclaireur_voulu
-scoreboard players set @s reset_tags 1
-scoreboard players set @s kit_id 7
-scoreboard players set @s veut_eclaireur 0
-scoreboard players set @s kitPrefixSet 0
+scoreboard players set @s sgp.reset_tags 1
+scoreboard players set @s sgp.kit_id 7
+scoreboard players set @s sgp.veut_eclaireur 0
+scoreboard players set @s sgp.kit_prefix_set 0

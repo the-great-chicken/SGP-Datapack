@@ -1,6 +1,6 @@
 title @a title [{"text":"Le ", "bold":true},{"text":"Canarchimage", "color":"dark_purple"},{"text":" est revenu !"}]
 tellraw @a [{"text":"Canarchimage : ", "color":"dark_purple", "bold": true},{"text":"Haha ! Je suis venu me venger de l'humiliation que j'ai subie lors de la 1ère édition !", "color":"white", "bold": false}]
-tellraw @a [{"text":"Canarchimage : ", "color":"dark_purple", "bold": true},{"text":"J'ai réussi à créer un sort pour me transformer en véritable Canard !", "color":"white", "bold": false}]
+tellraw @a [{"text":"Canarchimage : ", "color":"dark_purple", "bold": true},{"text":"J'ai réussi à créer un sort pour me transformer en véritable sgp.Canard !", "color":"white", "bold": false}]
 tellraw @a [{"text":"Canarchimage : ", "color":"dark_purple", "bold": true},{"text":"Tu ne peux donc plus simplement dire que je suis un furry et non un vrai canard. Moi aussi je suis désormais Label Rouge, Élevé en Plein Air !", "color":"white", "bold": false}]
 tellraw @a [{"text":"Canarchimage : ", "color":"dark_purple", "bold": true},{"text":"J'ai transformé ta statue en une toute nouvelle statue en mon honneur, mouahahaha...", "color":"white", "bold": false}]
 tellraw @a [{"text":"Le Grand Poulet : ", "color":"dark_blue", "bold": true},{"text":"Je ne te laisserai pas faire !", "color":"white", "bold": false}]
