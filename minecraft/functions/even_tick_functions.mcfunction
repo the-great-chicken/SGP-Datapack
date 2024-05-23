@@ -1,6 +1,6 @@
-execute if score #even_tick dummy matches 0 run function cosm:store_coords
-execute if score #even_tick dummy matches 0 if score #events_mineurs_actifs dummy matches 1 run function mineurs:check_if_players
-execute if score #even_tick dummy matches 0 if score #events_mineurs_actifs dummy matches 1 run function mineurs:timer
+execute if score #even_tick dummy matches 0 run function sgp.cosmetics:misc/store_coords
+execute if score #even_tick dummy matches 0 if score #events_mineurs_actifs dummy matches 1 run function sgp.mineurs:misc/check_if_players
+execute if score #even_tick dummy matches 0 if score #events_mineurs_actifs dummy matches 1 run function sgp.mineurs:common/timer
 
 scoreboard players add #even_tick dummy 1
 
