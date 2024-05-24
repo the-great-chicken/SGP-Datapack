@@ -36,3 +36,4 @@ $execute as @s unless score #slot_found dummy matches 1 if data entity @s Invent
 $execute as @s unless score #slot_found dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", Slot:33b}] run function sgp.kits:stacking/get_slot_count {slot:33}
 $execute as @s unless score #slot_found dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", Slot:34b}] run function sgp.kits:stacking/get_slot_count {slot:34}
 $execute as @s unless score #slot_found dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", Slot:35b}] run function sgp.kits:stacking/get_slot_count {slot:35}
+$execute as @s unless score #slot_found dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", Slot:99b}] run function sgp.kits:stacking/get_slot_count {slot:99}

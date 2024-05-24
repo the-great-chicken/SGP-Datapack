@@ -47,5 +47,6 @@ execute if score #slot_number dummy matches 32 run item replace entity @s invent
 execute if score #slot_number dummy matches 33 run item replace entity @s inventory.24 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 execute if score #slot_number dummy matches 34 run item replace entity @s inventory.25 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 execute if score #slot_number dummy matches 35 run item replace entity @s inventory.26 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
+execute if score #slot_number dummy matches 99 run item replace entity @s weapon.offhand from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 
 kill @e[type=armor_stand,name="item_stacker",limit=1]
