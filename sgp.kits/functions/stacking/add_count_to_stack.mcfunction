@@ -3,13 +3,13 @@
 # $(item_id) = id de l'item à ajouter
 # $(tag) = infos de l'item à ajouter
 
-execute as @s run function sgp.kits:kills_give/a
+$execute as @s run function sgp.kits:stacking/find_slot {item_id:$(item_id)}
 
 $scoreboard players set #somme dummy $(nombre)
 scoreboard players operation #somme dummy += #2e_nombre dummy
 
 $execute at @s run summon armor_stand ~ ~ ~ {CustomName:'[{"text":"item_stacker"}]',Invulnerable:1b,NoGravity:1b,HandItems:[{id:"$(item_id)",tag:{$(tag)},Count:1}]}
-execute store result entity @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1] HandItems[0].Count int 1 run scoreboard players get #somme dummy
+execute store result entity @e[type=armor_stand,name="item_stacker",limit=1] HandItems[0].Count int 1 run scoreboard players get #somme dummy
 
 execute if score #slot_number dummy matches 0 run item replace entity @s hotbar.0 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 execute if score #slot_number dummy matches 1 run item replace entity @s hotbar.1 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
@@ -48,4 +48,4 @@ execute if score #slot_number dummy matches 33 run item replace entity @s invent
 execute if score #slot_number dummy matches 34 run item replace entity @s inventory.25 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 execute if score #slot_number dummy matches 35 run item replace entity @s inventory.26 from entity @e[type=armor_stand,name="item_stacker",limit=1] weapon.mainhand
 
-kill @e[type=armor_stand,name="alchimiste_potion_stacker",limit=1]
+kill @e[type=armor_stand,name="item_stacker",limit=1]
