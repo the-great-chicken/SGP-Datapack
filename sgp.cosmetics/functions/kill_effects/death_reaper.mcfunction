@@ -13,4 +13,5 @@ execute if entity @a[scores={sgp.death_effect=1..}] as @a[tag=witch_kill] if sco
 execute if entity @a[scores={sgp.death_effect=1..}] as @a[tag=hurt_kill] if score @s sgp.UUID = @r[scores={sgp.death_effect=1..}] sgp.killer run function sgp.cosmetics:kill_effects/particle {particle:"damage_indicator ~ ~0.9 ~ 0 0 0 0.5 50"}
 execute if entity @a[scores={sgp.death_effect=1..}] as @a[tag=firework_kill] if score @s sgp.UUID = @r[scores={sgp.death_effect=1..}] sgp.killer run function sgp.cosmetics:kill_effects/firework
 execute if entity @a[scores={sgp.death_effect=1..}] as @a[tag=splash_kill] if score @s sgp.UUID = @r[scores={sgp.death_effect=1..}] sgp.killer run function sgp.cosmetics:kill_effects/particle_and_sound {particle:"splash ~ ~1 ~ 0.15 0.3 0.15 0 2000", sound:"entity.player.splash.high_speed"}
-kill @e[type=marker,name="death_reaper",limit=1]
+scoreboard players set @a sgp.death_effect 0
+kill @e[type=minecraft:marker,name="death_reaper",limit=1]
