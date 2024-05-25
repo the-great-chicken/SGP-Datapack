@@ -3,11 +3,11 @@
     "terms": [
       {
         "condition": "minecraft:reference",
-        "name": "sgp.majeurs:roi_bleu_vivant"
+        "name": "sgp.majeurs:protect/roi_bleu_vivant"
       },
       {
         "condition": "minecraft:reference",
-        "name": "sgp.majeurs:roi_rouge_vivant"
+        "name": "sgp.majeurs:protect/roi_rouge_vivant"
       }
     ]
   }

@@ -17,7 +17,7 @@ scoreboard players enable @s sgp.veut_random
 scoreboard players enable @s sgp.sort_kits
 scoreboard players enable @s sgp.kits_vers_spawn
 execute if entity @s[scores={sgp.entre_kits=1..}] as @s run trigger sgp.entre_cosm set 0
-execute if entity @s[scores={sgp.entre_kits=1..}] run scoreboard players set @s sgp.entre_kits 0
 execute if entity @s[scores={sgp.entre_kits=1..}] as @s run function sgp.misc:scoreboards/player_initialization
+execute if entity @s[scores={sgp.entre_kits=1..}] run scoreboard players set @s sgp.entre_kits 0
 execute if entity @s[scores={sgp.spawn_vers_kits=1..}] as @s run function sgp.spawns:disable_triggers
 execute if entity @s[scores={sgp.spawn_vers_kits=1..}] run scoreboard players set @s sgp.spawn_vers_kits 0

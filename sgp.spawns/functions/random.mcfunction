@@ -8,7 +8,7 @@ execute if score #random_spawn_roll sgp.dummy matches 3 as @s run tellraw @s [{"
 execute if score #random_spawn_roll sgp.dummy matches 4 as @s run trigger sgp.spawn_4
 execute if score #random_spawn_roll sgp.dummy matches 4 as @s run tellraw @s [{"text":"Tu as spawn à la "},{"text":"Maison", "color":"#006b3e", "bold":true}]
 execute if score #random_spawn_roll sgp.dummy matches 5 as @s run trigger sgp.spawn_5
-execute if score #random_spawn_roll sgp.dummy matches 5 as @s run tellraw @s [{"text":"Tu as spawn à la "},{"text":"Salle de Repos", "color":"green", "bold":true}]
+execute if score #random_spawn_roll sgp.dummy matches 5 as @s run tellraw @s [{"text":"Tu as spawn au "},{"text":"Dortoir", "color":"green", "bold":true}]
 execute if score #random_spawn_roll sgp.dummy matches 6 as @s run trigger sgp.spawn_6
 execute if score #random_spawn_roll sgp.dummy matches 6 as @s run tellraw @s [{"text":"Tu as spawn aux "},{"text":"Vallons", "color":"dark_green", "bold":true}]
 execute if score #random_spawn_roll sgp.dummy matches 7 as @s run trigger sgp.spawn_7
