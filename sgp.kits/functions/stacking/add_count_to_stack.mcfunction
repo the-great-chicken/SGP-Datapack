@@ -3,7 +3,46 @@
 # $(item_id) = id de l'item à ajouter
 # $(tag) = infos de l'item à ajouter
 
-$execute as @s run function sgp.kits:stacking/find_slot {item_id:$(item_id)}
+scoreboard players set #slot_found sgp.dummy 0
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:0b}] run function sgp.kits:stacking/get_slot_count {slot:0}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:1b}] run function sgp.kits:stacking/get_slot_count {slot:1}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:2b}] run function sgp.kits:stacking/get_slot_count {slot:2}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:3b}] run function sgp.kits:stacking/get_slot_count {slot:3}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:4b}] run function sgp.kits:stacking/get_slot_count {slot:4}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:5b}] run function sgp.kits:stacking/get_slot_count {slot:5}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:6b}] run function sgp.kits:stacking/get_slot_count {slot:6}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:7b}] run function sgp.kits:stacking/get_slot_count {slot:7}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:8b}] run function sgp.kits:stacking/get_slot_count {slot:8}
+
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:9b}] run function sgp.kits:stacking/get_slot_count {slot:9}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:10b}] run function sgp.kits:stacking/get_slot_count {slot:10}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:11b}] run function sgp.kits:stacking/get_slot_count {slot:11}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:12b}] run function sgp.kits:stacking/get_slot_count {slot:12}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:13b}] run function sgp.kits:stacking/get_slot_count {slot:13}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:14b}] run function sgp.kits:stacking/get_slot_count {slot:14}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:15b}] run function sgp.kits:stacking/get_slot_count {slot:15}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:16b}] run function sgp.kits:stacking/get_slot_count {slot:16}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:17b}] run function sgp.kits:stacking/get_slot_count {slot:17}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:18b}] run function sgp.kits:stacking/get_slot_count {slot:18}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:19b}] run function sgp.kits:stacking/get_slot_count {slot:19}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:20b}] run function sgp.kits:stacking/get_slot_count {slot:20}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:21b}] run function sgp.kits:stacking/get_slot_count {slot:21}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:22b}] run function sgp.kits:stacking/get_slot_count {slot:22}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:23b}] run function sgp.kits:stacking/get_slot_count {slot:23}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:24b}] run function sgp.kits:stacking/get_slot_count {slot:24}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:25b}] run function sgp.kits:stacking/get_slot_count {slot:25}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:26b}] run function sgp.kits:stacking/get_slot_count {slot:26}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:27b}] run function sgp.kits:stacking/get_slot_count {slot:27}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:28b}] run function sgp.kits:stacking/get_slot_count {slot:28}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:29b}] run function sgp.kits:stacking/get_slot_count {slot:29}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:30b}] run function sgp.kits:stacking/get_slot_count {slot:30}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:31b}] run function sgp.kits:stacking/get_slot_count {slot:31}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:32b}] run function sgp.kits:stacking/get_slot_count {slot:32}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:33b}] run function sgp.kits:stacking/get_slot_count {slot:33}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:34b}] run function sgp.kits:stacking/get_slot_count {slot:34}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:35b}] run function sgp.kits:stacking/get_slot_count {slot:35}
+$execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:99b}] run function sgp.kits:stacking/get_slot_count {slot:99}
+
 
 $scoreboard players set #somme sgp.dummy $(count)
 scoreboard players operation #somme sgp.dummy += #2e_nombre sgp.dummy

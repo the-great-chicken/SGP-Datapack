@@ -9,15 +9,6 @@ scoreboard objectives add sgp.veut_ench trigger
 scoreboard objectives add sgp.veut_smoke trigger
 scoreboard objectives add sgp.veut_cloud trigger
 scoreboard objectives add sgp.veut_desactiver trigger
-scoreboard objectives add sgp.light_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.medium_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.heavy_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.super_heavy_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.flame_crown_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.marine_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.ench_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.smoke_particle_unlocked sgp.dummy
-scoreboard objectives add sgp.cloud_particle_unlocked sgp.dummy
 
 scoreboard objectives add sgp.veut_kill_disabled trigger
 scoreboard objectives add sgp.veut_kill_anvil trigger
@@ -112,24 +103,24 @@ scoreboard objectives add sgp.laby_fin trigger
 scoreboard objectives add sgp.jump_hardest_done trigger
 scoreboard objectives add sgp.jump_diff_2_done trigger
 
-scoreboard objectives add sgp.UUID sgp.dummy
-scoreboard objectives add sgp.killer sgp.dummy
-scoreboard objectives add sgp.posx1 sgp.dummy
-scoreboard objectives add sgp.posy1 sgp.dummy
-scoreboard objectives add sgp.posz1 sgp.dummy
-scoreboard objectives add sgp.posx sgp.dummy
-scoreboard objectives add sgp.posy sgp.dummy
-scoreboard objectives add sgp.posz sgp.dummy
-scoreboard objectives add sgp.reset_tags sgp.dummy
-scoreboard objectives add sgp.kit_id sgp.dummy
-scoreboard objectives add sgp.kit_prefix_set sgp.dummy
+scoreboard objectives add sgp.UUID dummy
+scoreboard objectives add sgp.killer dummy
+scoreboard objectives add sgp.posx1 dummy
+scoreboard objectives add sgp.posy1 dummy
+scoreboard objectives add sgp.posz1 dummy
+scoreboard objectives add sgp.posx dummy
+scoreboard objectives add sgp.posy dummy
+scoreboard objectives add sgp.posz dummy
+scoreboard objectives add sgp.reset_tags dummy
+scoreboard objectives add sgp.kit_id dummy
+scoreboard objectives add sgp.kit_prefix_set dummy
 
 scoreboard objectives add sgp.death_effect deathCount
 scoreboard objectives add sgp.death_reset_tags deathCount
 scoreboard objectives add sgp.streak_reset deathCount
 
-scoreboard objectives add sgp.kd sgp.dummy {"bold":true,"color":"dark_green","text":"Kills/Deaths (en %)"}
-scoreboard objectives add sgp.plus_grande_streak sgp.dummy {"bold":true,"color":"dark_aqua","text":"Plus grande streak"}
+scoreboard objectives add sgp.kd dummy {"bold":true,"color":"dark_green","text":"Kills/Deaths (en %)"}
+scoreboard objectives add sgp.plus_grande_streak dummy {"bold":true,"color":"dark_aqua","text":"Plus grande streak"}
 scoreboard objectives add sgp.kills playerKillCount {"bold":true,"color":"dark_red","text":"Kills au PvP"}
 
 scoreboard objectives add sgp.kills_give_1 playerKillCount
@@ -153,35 +144,35 @@ scoreboard objectives add sgp.liberer_oies trigger
 scoreboard objectives add sgp.liberer_poules trigger
 scoreboard objectives add sgp.liberer_canards trigger
 
-scoreboard objectives add sgp.temps_cabane_pco sgp.dummy
-scoreboard objectives add sgp.temps_cabane_pco_secondes sgp.dummy
-scoreboard objectives add sgp.en_cage sgp.dummy
+scoreboard objectives add sgp.temps_cabane_pco dummy
+scoreboard objectives add sgp.temps_cabane_pco_secondes dummy
+scoreboard objectives add sgp.en_cage dummy
 
 scoreboard objectives add sgp.reflexes_joueur trigger
 
-scoreboard objectives add sgp.teleporteur sgp.dummy
-scoreboard objectives add sgp.dummy sgp.dummy
-scoreboard objectives add sgp.timer sgp.dummy
+scoreboard objectives add sgp.teleporteur dummy
+scoreboard objectives add sgp.dummy dummy
+scoreboard objectives add sgp.timer dummy
 
 
 # ---------- Initialize values ----------
-scoreboard players set #ench_particle sgp.dummy 0
-scoreboard players set 0 sgp.dummy 0
-scoreboard players set 1 sgp.dummy 1
-scoreboard players set 7 sgp.dummy 7
-scoreboard players set 10 sgp.dummy 10
-scoreboard players set 16 sgp.dummy 16
-scoreboard players set 29 sgp.dummy 29
-scoreboard players set 37 sgp.dummy 37
-scoreboard players set 49 sgp.dummy 49
-scoreboard players set 50 sgp.dummy 50
-scoreboard players set 100 sgp.dummy 100
-scoreboard players set 300 sgp.dummy 300
-scoreboard players set #even_tick sgp.dummy 0
-scoreboard players set #128_ticks_clock sgp.dummy 0
-scoreboard players set #bossbar_color sgp.dummy 0
-scoreboard players set #bossbar_name sgp.dummy 0
-scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
+scoreboard players set #ench_particle dummy 0
+scoreboard players set 0 dummy 0
+scoreboard players set 1 dummy 1
+scoreboard players set 7 dummy 7
+scoreboard players set 10 dummy 10
+scoreboard players set 16 dummy 16
+scoreboard players set 29 dummy 29
+scoreboard players set 37 dummy 37
+scoreboard players set 49 dummy 49
+scoreboard players set 50 dummy 50
+scoreboard players set 100 dummy 100
+scoreboard players set 300 dummy 300
+scoreboard players set #even_tick dummy 0
+scoreboard players set #128_ticks_clock dummy 0
+scoreboard players set #bossbar_color dummy 0
+scoreboard players set #bossbar_name dummy 0
+scoreboard players set #scoreboard_and_clearlag dummy 0
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0

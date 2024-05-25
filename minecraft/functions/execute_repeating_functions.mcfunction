@@ -24,7 +24,7 @@ function sgp.kits:misc/check_and_run
 function sgp.kits:unlocking/check_kit_unlock
 execute as @p[scores={sgp.veut_random=1..}] run function sgp.kits:misc/random
 function sgp.kits:kills_give/check
-function sgp.kits:kits_tags/management
+function sgp.kits:kit_tags/management
 execute at @e[type=marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s sgp.entre_kits > 0 sgp.dummy run scoreboard players enable @s sgp.entre_kits
 execute at @e[type=marker,name="accueil",limit=1] as @a[distance=0] run function sgp.kits:misc/sort_salle
 execute as @a[scores={sgp.entre_kits=1..}] run function sgp.kits:misc/entre_salle
