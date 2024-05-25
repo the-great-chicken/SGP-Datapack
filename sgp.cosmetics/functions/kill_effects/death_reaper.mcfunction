@@ -1,6 +1,6 @@
 execute as @a store result score @s sgp.killer on attacker run data get entity @s UUID.[1]
 
-execute as @a[scores={sgp.death_effect=1..}] at @s run summon minecraft:marker ~ ~ ~ {CustomName:'[{"text":"death_reaper"}]'}
+execute as @a[scores={sgp.death_effect=1..}] at @s run summon minecraft:marker ~ ~ ~ {CustomName:'"death_reaper"'}
 execute if entity @a[scores={sgp.death_effect=1..}] store result entity @e[type=minecraft:marker,name="death_reaper",limit=1] Pos[0] double 0.01 run scoreboard players get @a[scores={sgp.death_effect=1..},limit=1] sgp.posx1
 execute if entity @a[scores={sgp.death_effect=1..}] store result entity @e[type=minecraft:marker,name="death_reaper",limit=1] Pos[1] double 0.01 run scoreboard players get @a[scores={sgp.death_effect=1..},limit=1] sgp.posy1
 execute if entity @a[scores={sgp.death_effect=1..}] store result entity @e[type=minecraft:marker,name="death_reaper",limit=1] Pos[2] double 0.01 run scoreboard players get @a[scores={sgp.death_effect=1..},limit=1] sgp.posz1

@@ -1,2 +1,2 @@
-$tellraw @s ["", {"text":"Débloque le kit ", "color":"aqua"}, {"text":"$(kit)", "bold":true, "color":"$(kit_color)"}, {"text":" en le trouvant dans la map !", "color":"aqua"}, {"text":"\nIndice : ", "color":"gray"}, {"text":"$(hint)", "color":"$(hint_color)", "bold":true}]
+$tellraw @s ["", {"text":"Débloque le kit ", "color":"aqua"}, {"text":"$(kit)", "bold":true, "color":"$(kit_color)"}, " en le trouvant dans la map !", {"text":"\nIndice : ", "color":"gray"}, {"text":"$(hint)", "color":"$(hint_color)", "bold":true}]
 $scoreboard players set @s sgp.veut_$(kit) 0

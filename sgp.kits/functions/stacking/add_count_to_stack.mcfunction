@@ -47,7 +47,7 @@ $execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s In
 $scoreboard players set #somme sgp.dummy $(count)
 scoreboard players operation #somme sgp.dummy += #2e_nombre sgp.dummy
 
-$execute at @s run summon armor_stand ~ ~ ~ {CustomName:'[{"text":"sgp.item_stacker"}]',Invulnerable:1b,NoGravity:1b,HandItems:[{id:"$(item_id)",tag:{$(tag)},Count:1}]}
+$execute at @s run summon armor_stand ~ ~ ~ {CustomName:'"sgp.item_stacker"',Invulnerable:1b,NoGravity:1b,HandItems:[{id:"$(item_id)",tag:{$(tag)},Count:1}]}
 execute store result entity @e[type=armor_stand,name="sgp.item_stacker",limit=1] HandItems[0].Count int 1 run scoreboard players get #somme sgp.dummy
 
 execute if score #slot_number sgp.dummy matches 0 run item replace entity @s hotbar.0 from entity @e[type=armor_stand,name="sgp.item_stacker",limit=1] weapon.mainhand
