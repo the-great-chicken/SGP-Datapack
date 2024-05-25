@@ -37,7 +37,6 @@ scoreboard objectives add sgp.hurt_kill_unlocked dummy
 scoreboard objectives add sgp.cloud_kill_unlocked dummy
 scoreboard objectives add sgp.splash_kill_unlocked dummy
 scoreboard objectives add sgp.firework_kill_unlocked dummy
-scoreboard objectives add sgp.random_kill_unlocked dummy
 
 scoreboard objectives add sgp.veut_alchimiste trigger
 scoreboard objectives add sgp.veut_archer trigger
@@ -80,7 +79,7 @@ scoreboard objectives add sgp.lieu_bunker dummy
 scoreboard objectives add sgp.lieu_chercheurDevantLeternel dummy
 scoreboard objectives add sgp.lieu_dedale dummy
 scoreboard objectives add sgp.lieu_fun dummy
-scoreboard objectives add sgp.lieu_gallerie dummy
+scoreboard objectives add sgp.lieu_galerie dummy
 scoreboard objectives add sgp.lieu_garde dummy
 scoreboard objectives add sgp.lieu_grandeSalle dummy
 scoreboard objectives add sgp.lieu_grange dummy
@@ -93,7 +92,7 @@ scoreboard objectives add sgp.lieu_observatoire dummy
 scoreboard objectives add sgp.lieu_pavillon dummy
 scoreboard objectives add sgp.lieu_pigeonnier dummy
 scoreboard objectives add sgp.lieu_pyramide dummy
-scoreboard objectives add sgp.lieu_repos dummy
+scoreboard objectives add sgp.lieu_dortoir dummy
 scoreboard objectives add sgp.lieu_reunion dummy
 scoreboard objectives add sgp.lieu_snek dummy
 scoreboard objectives add sgp.lieu_sousToit dummy
