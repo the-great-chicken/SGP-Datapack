@@ -1,3 +1,7 @@
+#> sgp.kits:collection/vindicateur
+# 
+# Gives the Vindicateur kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with iron_axe{Unbreakable:1, HideFlags:6, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:7, Operation:0, UUID:[I; -124310, 13801, 13111, -27602]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], display:{Name:'{"text":"Hache usée", "color":"dark_green", "italic":false, "bold":true}', Lore:['{"text":"-----------", "color":"#C0C0C0", "italic":false}', '{"text":"7 dégats", "color":"blue", "italic":false}']}}

@@ -1,3 +1,8 @@
+#> sgp.kits:misc/random
+# 
+# Rolls a random number between 1 and 12, and runs the corresponding kit function
+# to give it to the player
+
 execute store result score #random_kit_roll sgp.dummy run random value 1..12
 execute if score #random_kit_roll sgp.dummy matches 1 as @s run trigger sgp.veut_combattant
 execute if score #random_kit_roll sgp.dummy matches 1 as @s run tellraw @s ["Tu as obtenu le kit ",{"text":"Combattant", "color":"white", "bold":true}]

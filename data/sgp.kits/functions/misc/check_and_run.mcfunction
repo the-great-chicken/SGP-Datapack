@@ -1,3 +1,7 @@
+#> sgp.kits:misc/check_and_run
+# 
+# Checks if a player wants a kit, running the appropriate function
+
 # Kits débloqués par défaut
 execute as @a[scores={sgp.veut_combattant=1..}] run function sgp.kits:collection/combattant
 scoreboard players enable @a[tag=combattant_voulu] sgp.veut_combattant

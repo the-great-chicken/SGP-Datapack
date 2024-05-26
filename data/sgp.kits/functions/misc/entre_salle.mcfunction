@@ -1,3 +1,7 @@
+#> sgp.kits:misc/entre_salle
+# 
+# Executed when a player wants to enter the kits room
+
 clear @s
 effect clear @s
 tp @s @e[tag=sgp.marker,name="kits",limit=1]

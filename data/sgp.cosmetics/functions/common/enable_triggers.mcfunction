@@ -1,3 +1,7 @@
+#> sgp.cosmetics:common/enable_triggers
+# 
+# Enable the cosmetics triggers for the player
+
 scoreboard players enable @s sgp.veut_light
 scoreboard players enable @s sgp.veut_medium
 scoreboard players enable @s sgp.veut_heavy

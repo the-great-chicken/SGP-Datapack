@@ -1,3 +1,7 @@
+#> sgp.kits:collection/pyromane
+# 
+# Gives the Pyromane kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with blaze_rod{AttributeModifiers:[{Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Unbreakable:1, Enchantments:[{id:"sharpness", lvl:9}, {id:"knockback", lvl:1}, {id:"fire_aspect", lvl:1}], HideFlags:63, display:{Name:'{"text":"Bâton Brûlant", "color":"gold", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant IX", "color":"dark_red", "italic":false}', '{"text":"🔥 Flamme I", "color":"#FF8C00", "italic":false}', '{"text":"⬱ Recul I", "color":"#6F4E37", "italic":false}', '{"text":"6 dégats", "color":"blue", "italic":false}']}}

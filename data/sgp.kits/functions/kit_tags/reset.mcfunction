@@ -1,3 +1,7 @@
+#> sgp.kits:kit_tags
+# 
+# Removes every kit tag from the player
+
 tag @s remove combattant
 tag @s remove roi
 tag @s remove alchimiste

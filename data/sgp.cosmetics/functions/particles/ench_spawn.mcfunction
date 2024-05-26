@@ -1,3 +1,8 @@
+#> sgp.cosmetics:particles/ench_spawn
+# 
+# Summons the Sharpness particles at the current coordinates, depending on
+# the particle cloak's weight
+
 execute if entity @s[tag=light_particle] run particle minecraft:enchanted_hit ~ ~ ~ 0 0 0 0 1
 execute if entity @s[tag=medium_particle] run particle minecraft:enchanted_hit ~ ~ ~ 0.05 0 0.05 0 2
 execute if entity @s[tag=heavy_particle] run particle minecraft:enchanted_hit ~ ~ ~ 0.05 0 0.05 0 2

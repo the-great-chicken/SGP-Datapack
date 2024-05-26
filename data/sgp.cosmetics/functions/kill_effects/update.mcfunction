@@ -1,3 +1,8 @@
+#> sgp.cosmetics:kill_effects/update
+# `{effect, effet: formated_particle_name, couleur: minecraft_color}`
+# 
+# Checks if the player has unlocked the kill effect, activating it or not
+
 $execute if score @s sgp.$(effect)_kill_unlocked matches 1 run function sgp.cosmetics:kill_effects/reset
 $execute if score @s sgp.$(effect)_kill_unlocked matches 1 run tag @s add $(effect)_kill
 $execute if score @s sgp.$(effect)_kill_unlocked matches 1 run tellraw @s ["Ton Kill Effect est maintenant ",{"text":"$(effet)", "color":"$(couleur)", "bold":true}]

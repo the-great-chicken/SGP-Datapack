@@ -1,3 +1,7 @@
+#> sgp.kits:collection/enderman
+# 
+# Gives the Enderman kit to the player
+
 clear @s
 effect clear @s
 tag @s add enderman_voulu

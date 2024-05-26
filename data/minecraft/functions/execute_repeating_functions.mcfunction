@@ -1,3 +1,7 @@
+#> minecraft:even_tick_functions
+# 
+# Executes functions at each game tick
+
 function even_tick_functions
 
 # Must be in this order

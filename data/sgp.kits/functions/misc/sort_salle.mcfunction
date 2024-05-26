@@ -1,3 +1,7 @@
+#> sgp.kits:misc/sort_salle
+# 
+# Executed when a player wants to get out of the kits room
+
 execute as @s run trigger sgp.veut_combattant set 0
 execute as @s run trigger sgp.veut_roi set 0
 execute as @s run trigger sgp.veut_pigeon set 0

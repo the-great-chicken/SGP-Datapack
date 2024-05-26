@@ -1,3 +1,7 @@
+#> sgp.cosmetics:kill_effects/reset
+# 
+# Removes the kill effects tags from the player
+
 tag @s remove random_kill
 tag @s remove anvil_kill
 tag @s remove explosion_kill

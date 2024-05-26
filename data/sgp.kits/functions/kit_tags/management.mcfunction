@@ -1,3 +1,10 @@
+#> sgp.kits:kit_tags/management
+# 
+# Function ran regularly that manages kits tags like <kit>, <kit>_voulu, ...
+#
+# Also resets the kills_give scoreboards when they should, or sets them to
+# a certain value when a specific kit is chosen
+
 execute as @a[scores={sgp.reset_tags=1}] run function sgp.kits:kit_tags/reset
 function sgp.kits:kit_tags/voulu
 scoreboard players set @a[scores={sgp.reset_tags=1}] sgp.kills_give_1 0

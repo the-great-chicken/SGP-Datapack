@@ -1,3 +1,7 @@
+#> sgp.kits:collection/combattant
+# 
+# Gives the Combattant kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with iron_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:6.0d, Operation:0, UUID:[I; -124310, 12201, 13111, -24402]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Enchantments:[{id:"sharpness", lvl:1}], HideFlags:7, display:{Name:'{"text":"Épée en Fer", "color":"white", "italic":false, "bold":true}', Lore:['{"text":"------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', '{"text":"7 dégats", "color":"blue", "italic":false}']}}
