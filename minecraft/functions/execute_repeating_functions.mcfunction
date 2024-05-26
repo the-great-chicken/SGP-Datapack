@@ -25,8 +25,8 @@ function sgp.kits:unlocking/check_kit_unlock
 execute as @p[scores={sgp.veut_random=1..}] run function sgp.kits:misc/random
 function sgp.kits:kills_give/check
 function sgp.kits:kit_tags/management
-execute at @e[type=marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s sgp.entre_kits > 0 sgp.dummy run scoreboard players enable @s sgp.entre_kits
-execute at @e[type=marker,name="accueil",limit=1] as @a[distance=0] run function sgp.kits:misc/sort_salle
+execute at @e[tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s sgp.entre_kits > 0 sgp.dummy run scoreboard players enable @s sgp.entre_kits
+execute at @e[tag=sgp.marker,name="accueil",limit=1] as @a[distance=0] run function sgp.kits:misc/sort_salle
 execute as @a[scores={sgp.entre_kits=1..}] run function sgp.kits:misc/entre_salle
 execute as @a[scores={sgp.sort_kits=1..}] unless predicate sgp.majeurs:event_in_progress run function sgp.kits:misc/sort_salle
 execute as @a[scores={sgp.sort_kits=1..}] if predicate sgp.majeurs:event_in_progress run function sgp.majeurs:common/cannot_tp_to_lobby
@@ -36,7 +36,7 @@ execute as @a[scores={sgp.sort_kits=1..}] if predicate sgp.majeurs:event_in_prog
 function sgp.world:run_lieux_trouves
 function sgp.misc:kill_counter
 function sgp.world:temple_teleporter
-execute at @e[type=marker,name="Lootdrop"] if block ~ ~ ~ minecraft:trapped_chest run particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
+execute at @e[tag=sgp.marker,name="Lootdrop"] if block ~ ~ ~ minecraft:trapped_chest run particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
 execute as @e[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run damage @s 6 minecraft:hot_floor
 execute if score #128_ticks_clock sgp.dummy matches 0 run function sgp.misc:kill_streaks_management
 execute if score #128_ticks_clock sgp.dummy matches 0 as @a run function sgp.misc:kd_buff_and_debuffs
@@ -53,7 +53,7 @@ execute as @a[predicate=sgp.cosmetics:veut_particle_weight] run function sgp.cos
 function sgp.cosmetics:common/check_and_run_update
 execute as @a[scores={sgp.sort_cosm=1..}] run function sgp.cosmetics:misc/sort_cosm
 execute as @a[scores={sgp.entre_cosm=1..}] run function sgp.cosmetics:misc/entre_cosm
-execute at @e[type=marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s sgp.entre_cosm > 0 sgp.dummy run scoreboard players enable @s sgp.entre_cosm
+execute at @e[tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] unless score @s sgp.entre_cosm > 0 sgp.dummy run scoreboard players enable @s sgp.entre_cosm
 
 
 # ------ Events Majeurs ------

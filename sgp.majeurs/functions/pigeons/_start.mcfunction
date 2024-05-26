@@ -1,6 +1,6 @@
 tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement de la Chasse aux sgp.Pigeons...","color":"gray","bold":true}]
 scoreboard players set @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] sgp.death_reset_tags 1
-tp @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @e[type=marker,name="sgp.devenir_chasseur",limit=1]
+tp @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] @e[tag=sgp.marker,name="sgp.devenir_chasseur",limit=1]
 scoreboard players set #pigeons_joueurs sgp.dummy 0
 execute as @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] run scoreboard players add #pigeons_joueurs sgp.dummy 1
 scoreboard players set #pigeons_ticks sgp.timer 0

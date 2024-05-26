@@ -15,11 +15,11 @@ execute as @s run trigger sgp.veut_random set 0
 execute if entity @s[scores={sgp.sort_kits=1..}] run trigger sgp.kits_vers_spawn set 0
 execute if entity @s[scores={sgp.sort_kits=1..}] run clear @s
 execute if entity @s[scores={sgp.sort_kits=1..}] run effect clear @s
-execute if entity @s[scores={sgp.sort_kits=1..}] run tp @s @e[type=marker,name="accueil",limit=1]
+execute if entity @s[scores={sgp.sort_kits=1..}] run tp @s @e[tag=sgp.marker,name="accueil",limit=1]
 execute if entity @s[scores={sgp.sort_kits=1..}] run scoreboard players set @s sgp.sort_kits 0
 
 execute if entity @s[scores={sgp.kits_vers_spawn=1..}] run trigger sgp.sort_kits set 0
 execute if entity @s[scores={sgp.kits_vers_spawn=1..}] unless score #confines_secondes sgp.timer > 0 sgp.dummy run function sgp.spawns:enable_triggers
-execute if entity @s[scores={sgp.kits_vers_spawn=1..}] unless score #confines_secondes sgp.timer > 0 sgp.dummy run tp @s @e[type=marker,name="spawns",limit=1]
-execute if entity @s[scores={sgp.kits_vers_spawn=1..}] if score #confines_secondes sgp.timer > 0 sgp.dummy run tp @s @e[type=marker,name="Confinement",limit=1,sort=random] 
+execute if entity @s[scores={sgp.kits_vers_spawn=1..}] unless score #confines_secondes sgp.timer > 0 sgp.dummy run tp @s @e[tag=sgp.marker,name="spawns",limit=1]
+execute if entity @s[scores={sgp.kits_vers_spawn=1..}] if score #confines_secondes sgp.timer > 0 sgp.dummy run tp @s @e[tag=sgp.marker,name="Confinement",limit=1,sort=random] 
 execute if entity @s[scores={sgp.kits_vers_spawn=1..}] run scoreboard players set @s sgp.kits_vers_spawn 0
