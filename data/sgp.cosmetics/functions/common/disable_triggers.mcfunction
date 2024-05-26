@@ -1,3 +1,7 @@
+#> sgp.cosmetics:common/disable_triggers
+# 
+# Disable the cosmetics triggers for the player
+
 execute as @s run trigger sgp.veut_light set 0
 execute as @s run trigger sgp.veut_medium set 0
 execute as @s run trigger sgp.veut_heavy set 0

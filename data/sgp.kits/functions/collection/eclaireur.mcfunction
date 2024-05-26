@@ -1,3 +1,7 @@
+#> sgp.kits:collection/eclaireur
+# 
+# Gives the Eclaireur kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with stone_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:5.0d, Operation:0, UUID:[I; -124310, 13101, 13111, -26202]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], HideFlags:63, display:{Name:'{"text":"Épée en Pierre", "color":"aqua", "italic":false, "bold":true}', Lore:['{"text":"---------------", "color":"gray", "italic":false}', '{"text":"5 dégats", "color":"blue", "italic":false}']}}

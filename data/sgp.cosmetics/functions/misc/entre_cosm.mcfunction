@@ -1,3 +1,7 @@
+#> sgp.cosmetics:misc/entre_cosm
+# 
+# Executed when a player wants to enter the cosmetics room
+
 execute as @s run function sgp.cosmetics:common/enable_triggers
 clear @s
 scoreboard players enable @s sgp.sort_cosm

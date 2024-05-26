@@ -1,3 +1,7 @@
+#> sgp.kits:collection/archer
+# 
+# Gives the Archer kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with wooden_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:4.0d, Operation:0, UUID:[I; -124310, 13201, 13111, -26402]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], HideFlags:7, display:{Name:'{"text":"Épée d\'Entraînement", "color":"green", "italic":false, "bold":true}', Lore:['{"text":"--------------------", "color":"#C0C0C0", "italic":false}', '{"text":"4 dégats", "color":"blue", "italic":false}']}}

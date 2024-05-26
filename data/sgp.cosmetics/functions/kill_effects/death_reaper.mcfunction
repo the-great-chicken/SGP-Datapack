@@ -1,3 +1,10 @@
+#> sgp.cosmetics:kill_effects/death_reaper
+# 
+# Checks if a player died and which kill effect should be executed
+#
+# The kill effect is executed at the position of the death_reaper marker,
+# which is summoned at the position the player was 1 tick before dying
+
 execute as @a store result score @s sgp.killer on attacker run data get entity @s UUID.[1]
 
 execute as @a[scores={sgp.death_effect=1..}] at @s run summon minecraft:marker ~ ~ ~ {CustomName:'"death_reaper"'}

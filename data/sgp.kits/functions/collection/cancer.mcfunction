@@ -1,3 +1,7 @@
+#> sgp.kits:collection/cancer
+# 
+# Gives the Cancer kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with stick{AttributeModifiers:[{Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Unbreakable:1, Enchantments:[{id:"knockback", lvl:4}, {id:"sharpness", lvl:12}], HideFlags:127, display:{Name:'{"text":"Bâton Cancérigène", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"-------------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant XII", "color":"dark_red", "italic":false}', '{"text":"⬱ Recul IV", "color":"#6F4E37", "italic":false}', '{"text":"7,5 dégats", "color":"blue", "italic":false}']}}

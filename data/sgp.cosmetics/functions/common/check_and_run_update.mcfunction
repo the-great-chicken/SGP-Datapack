@@ -1,3 +1,8 @@
+#> sgp.cosmetics:common/check_and_run_update
+# 
+# Checks if players clicked on a sign to change their cosmetics,
+# and runs the appropriate function if so.
+
 execute as @a[scores={sgp.veut_light=1..}] run function sgp.cosmetics:particles/update {particle:light, particule:"Légère", couleur:light_purple}
 execute as @a[scores={sgp.veut_medium=1..}] run function sgp.cosmetics:particles/update {particle:medium, particule:Moyenne, couleur:dark_purple}
 execute as @a[scores={sgp.veut_heavy=1..}] run function sgp.cosmetics:particles/update {particle:heavy, particule:Lourde, couleur:blue}
