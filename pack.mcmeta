@@ -1,6 +1,7 @@
 {
+    "id": "sgp",
     "pack": {
         "pack_format": 15,
-        "description": "Le épique datapack"
+        "description": "Datapack for the Soirée du Grand Poulet"
     }
 }
