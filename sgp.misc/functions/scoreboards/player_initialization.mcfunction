@@ -52,4 +52,4 @@ execute unless score @s sgp.jump_diff_2_done >= 0 sgp.dummy run scoreboard playe
 
 execute unless score @s sgp.teleporteur >= 0 sgp.dummy run scoreboard players set @s sgp.teleporteur 0
 
-bossbar set minecraft:1 players @a
+bossbar set sgp:lgp players @a

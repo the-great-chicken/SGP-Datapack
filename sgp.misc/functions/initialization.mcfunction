@@ -235,7 +235,7 @@ team modify sgp.PGSEC color gold
 
 
 # Misc
-# TODO : Create bossbar
+bossbar add sgp:lgp "a"
 
 
 # ---------- Run Functions ----------
