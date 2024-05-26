@@ -170,6 +170,7 @@ scoreboard players set 100 dummy 100
 scoreboard players set 300 dummy 300
 scoreboard players set #even_tick dummy 0
 scoreboard players set #128_ticks_clock dummy 0
+scoreboard players set #52_ticks_clock dummy 0
 scoreboard players set #bossbar_color dummy 0
 scoreboard players set #bossbar_name dummy 0
 scoreboard players set #scoreboard_and_clearlag dummy 0
