@@ -1,3 +1,7 @@
+#> sgp.misc:initialization
+# 
+# Create the necessary objectives, initialize values, create teams,...
+
 # ---------- Create Objectives ----------
 scoreboard objectives add sgp.veut_light trigger
 scoreboard objectives add sgp.veut_medium trigger

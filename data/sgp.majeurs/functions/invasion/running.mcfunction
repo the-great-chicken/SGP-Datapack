@@ -1,3 +1,11 @@
+#> sgp.majeurs:invasion/running
+# 
+# Executed each tick when the major event Invasion is running
+#
+# Deals damage each second to Defenders below their area
+#
+# Also runs the timer, as the event has a time limit
+
 scoreboard players add #invasion_ticks sgp.timer 1
 execute if score #invasion_ticks sgp.timer matches 20 run scoreboard players add #invasion_secondes sgp.timer 1
 execute if score #invasion_ticks sgp.timer matches 20 run scoreboard players set #invasion_ticks sgp.timer 0

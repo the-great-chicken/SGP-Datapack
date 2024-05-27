@@ -1,3 +1,7 @@
+#> sgp.mineurs:common/timer
+# 
+# Timer to execute a minor event every x minutes (x is random and changed each time)
+
 scoreboard players add #events_mineurs sgp.timer 1
 
 # Passage à la minute supérieure

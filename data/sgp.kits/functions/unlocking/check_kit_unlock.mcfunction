@@ -1,3 +1,7 @@
+#> sgp.kits:unlocking/check_kit_unlock
+# 
+# Checks if someone unlocked a kit by triggering the corresponding objective
+
 execute as @a[scores={sgp.roi_found=2}] run function sgp.kits:unlocking/unlocking_kit {kit:roi, kit_color:yellow, fw_color:"14602026"}
 execute positioned 2485 214 2199 run function sgp.kits:unlocking/enable_kit_unlock {kit:roi}
 

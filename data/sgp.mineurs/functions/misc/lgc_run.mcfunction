@@ -1,3 +1,7 @@
+#> sgp.mineurs:misc/lgc_run
+# 
+# Generate the next pseudo-random number
+
 scoreboard players operation #random_calc random_calc *= #random_const_mult random_calc
 scoreboard players operation #random_calc random_calc %= #random_const_mod random_calc
 scoreboard players operation #random_calc random_calc += #random_const_add random_calc
