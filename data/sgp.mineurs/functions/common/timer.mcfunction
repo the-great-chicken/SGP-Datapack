@@ -9,10 +9,7 @@ execute if score #events_mineurs sgp.timer matches 600 run scoreboard players ad
 execute if score #events_mineurs sgp.timer matches 600 run scoreboard players set #events_mineurs sgp.timer 0
 
 # Event Mineur
-execute if score #events_mineurs_minutes sgp.timer = #random_out random_calc run function sgp.mineurs:common/choose_event
-execute if score #events_mineurs_minutes sgp.timer = #random_out random_calc run playsound minecraft:entity.experience_orb.pickup ambient @a 2429.70 254.00 2132.25 1000
-execute if score #events_mineurs_minutes sgp.timer = #random_out random_calc run function sgp.mineurs:misc/lgc_run
-execute if score #events_mineurs_minutes sgp.timer = #random_out random_calc run scoreboard players set #events_mineurs_minutes sgp.timer 0
+execute if score #events_mineurs_minutes sgp.timer = #random_event_timer_roll sgp.dummy run function sgp.mineurs:common/choose_event
 
 # Lootdrop 1 minute avant l'event mineur
-execute if score #events_mineurs_minutes sgp.timer = #random_out_moins_1 random_calc if score #events_mineurs sgp.timer matches 0 run function sgp.mineurs:lootdrop/start
+execute if score #events_mineurs_minutes sgp.timer = #random_event_timer_roll_minus_1 sgp.dummy if score #events_mineurs sgp.timer matches 0 run function sgp.mineurs:lootdrop/start
