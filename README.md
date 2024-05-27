@@ -18,16 +18,16 @@ You can bypass these dependencies by removing every non-vanilla command from the
 
 # Installation
 Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tags `sgp.marker` and `global.ignore`
-## Markers to create :
-- 1 `accueil` : room where the players spawn
-- 1 `salle_cosm` : room where the players can change cosmetics
-- 1 `kits` : room where the players can choose their kit
-- 1 `spawns` : room where the players choose their spawnpoint
-- at least 1 `Confinement` : spawnpoints when the Confinement event is active
-- at least 1 `Lootdrop` : location of lootdrop chests
-- at least 1 `Attaquant_Invasion` : spawnpoints when the Invasion event is active    
-- 1 `devenir_roi_rouge` and 1 `devenir_roi_bleu` : These are rooms where a player can become the Roi when "Protéger le Roi" is active. Note that Devenir Roi Rouge and Devenir Roi Bleu cannot be in the same location.
-- 1 `devenir_chasseur` and 1 `devenir_pigeon` : These are rooms where players can become Chasseurs or Pigeons. Note that Devenir Chasseur and Devenir Pigeons cannot be in the same location.
+## Markers to create
+- 1 `accueil`: room where the players spawn
+- 1 `salle_cosm`: room where the players can change cosmetics
+- 1 `kits`: room where the players can choose their kit
+- 1 `spawns`: room where the players choose their spawnpoint
+- at least 1 `Confinement`: spawnpoints when the Confinement event is active
+- at least 1 `Lootdrop`: location of lootdrop chests
+- at least 1 `Attaquant_Invasion`: spawnpoints when the Invasion event is active    
+- 1 `devenir_roi_rouge` and 1 `devenir_roi_bleu`: These are rooms where a player can become the Roi when "Protéger le Roi" is active. Note that Devenir Roi Rouge and Devenir Roi Bleu cannot be in the same location.
+- 1 `devenir_chasseur` and 1 `devenir_pigeon`: These are rooms where players can become Chasseurs or Pigeons. Note that Devenir Chasseur and Devenir Pigeons cannot be in the same location.
 
 Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
 
