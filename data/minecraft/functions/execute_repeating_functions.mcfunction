@@ -1,4 +1,4 @@
-#> minecraft:even_tick_functions
+#> minecraft:execute_repeating_functions
 # 
 # Executes functions at each game tick
 
@@ -34,6 +34,9 @@ execute at @e[tag=sgp.marker,name="accueil",limit=1] as @a[distance=0] run funct
 execute as @a[scores={sgp.entre_kits=1..}] run function sgp.kits:misc/entre_salle
 execute as @a[scores={sgp.sort_kits=1..}] unless predicate sgp.majeurs:event_in_progress run function sgp.kits:misc/sort_salle
 execute as @a[scores={sgp.sort_kits=1..}] if predicate sgp.majeurs:event_in_progress run function sgp.majeurs:common/cannot_tp_to_lobby
+execute if score #52_ticks_clock sgp.dummy matches 0 run function sgp.kits:kit_tags/prefixes_check
+scoreboard players add #52_ticks_clock sgp.dummy 1
+execute if score #52_ticks_clock sgp.dummy matches 52 run scoreboard players set #52_ticks_clock sgp.dummy 0
 
 
 # Miscellaneous
