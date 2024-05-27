@@ -1,3 +1,7 @@
+#> sgp.misc:uninstall
+# 
+# Remove the datapack's data
+
 # ---------- Remove Objectives ----------
 scoreboard objectives remove sgp.veut_light
 scoreboard objectives remove sgp.veut_medium

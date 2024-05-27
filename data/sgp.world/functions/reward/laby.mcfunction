@@ -1,3 +1,8 @@
+#> sgp.world:reward/laby
+# 
+# Check if a player triggered the reward of laby,
+# and gives it to him if so
+
 execute as @a[x=2511,y=229,z=2191,dx=0,dy=1,dz=0,scores={sgp.laby_fin=0}] unless entity @s[tag=eclaireur] unless entity @s[tag=enderman] unless entity @s[tag=pigeon] run scoreboard players enable @s sgp.laby_fin
 execute as @a[x=2511,y=229,z=2191,dx=0,dy=1,dz=0,scores={sgp.laby_fin=0}] run scoreboard players set @s sgp.laby_fin 1
 execute as @a[scores={sgp.laby_fin=2}] run tp @s 2525 205 2191 -90 0

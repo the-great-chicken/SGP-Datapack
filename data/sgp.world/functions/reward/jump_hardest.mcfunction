@@ -1,3 +1,8 @@
+#> sgp.world:reward/jump_hardest
+# 
+# Check if a player triggered the reward of the hardest jump,
+# and gives it to him if so
+
 execute as @s[scores={sgp.jump_hardest_done=0},x=2536.5,y=252.5,z=2172.5,distance=..0.5] run scoreboard players enable @s sgp.jump_hardest_done
 execute as @s[scores={sgp.jump_hardest_done=0},x=2536.5,y=252.5,z=2172.5,distance=..0.5] run scoreboard players set @s sgp.jump_hardest_done 1
 execute as @s[scores={sgp.jump_hardest_done=1},x=2536.5,y=252.5,z=2172.5,distance=0.5..] run trigger sgp.jump_hardest_done set 0

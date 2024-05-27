@@ -1,3 +1,7 @@
+#> sgp.misc:kd_buff_and_debuffs
+# 
+# Buff players who got low kd, debuff players who got high kd
+
 scoreboard players operation @s sgp.kd = @s sgp.kills
 scoreboard players operation @s sgp.kd *= 100 sgp.dummy
 scoreboard players operation @s sgp.kd /= @s morts

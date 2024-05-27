@@ -1,3 +1,9 @@
+#> sgp.world:lieu_trouve
+# `{x, y, z, dx, dy, dz, lieu, lieu_propre, couleur}`
+# 
+# Show a title to a player who found the place for the first time
+# Show a actionbar every time they enter the place
+
 $execute as @a[x=$(x), y=$(y), z=$(z), dx=$(dx), dy=$(dy), dz=$(dz), scores={sgp.lieu_$(lieu)=0}] run title @s subtitle "Nouveau lieu trouvé !"
 $execute as @a[x=$(x), y=$(y), z=$(z), dx=$(dx), dy=$(dy), dz=$(dz), scores={sgp.lieu_$(lieu)=0}] run title @s title {"text":"$(lieu_propre)", "color":"$(couleur)"}
 $execute as @a[x=$(x), y=$(y), z=$(z), dx=$(dx), dy=$(dy), dz=$(dz), scores={sgp.lieu_$(lieu)=0}] at @s run playsound minecraft:ui.cartography_table.take_result ambient @s

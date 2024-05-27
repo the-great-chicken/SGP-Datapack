@@ -1,3 +1,8 @@
+#> sgp.world:temple_teleporter
+# 
+# Manages a teleporter from a place to another: ambient particles,
+# countdown, sound,...
+
 particle witch 2485.5 210.5 2169.5 0.4 0 0.4 0 10 normal
 execute as @a[x=2485.5,y=210.5,z=2169.5,distance=..1,tag=!a_teleporter] at @s run playsound minecraft:block.portal.trigger ambient @s 2485.5 211.5 2169.5 2 1.3
 execute as @a[x=2485.5,y=210.5,z=2169.5,distance=..1,tag=!a_teleporter] run tellraw @s [{"text":"Ⓞ ","color":"#700070"},{"text":"Téléportation dans 3 secondes... Ne bougez pas...","color":"dark_purple","bold":true}]
