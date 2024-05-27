@@ -1,3 +1,7 @@
+#> sgp.mineurs:common/choose_event
+# 
+# Roll a random number to choose a minor event to start
+
 execute store result score #random_event_roll sgp.dummy run random value 1..4
 execute if score #random_event_roll sgp.dummy matches 1 run function sgp.mineurs:magic/start
 execute if score #random_event_roll sgp.dummy matches 2 run function sgp.mineurs:confinement/start

@@ -1,3 +1,8 @@
+#> sgp.world:reward/jump_diff_2
+# 
+# Check if a player triggered the reward of the difficulty 2 jump,
+# and gives it to him if so
+
 execute as @s[scores={sgp.jump_diff_2_done=0},x=2429.5,y=240.5,z=2179.5,distance=..2] run scoreboard players enable @s sgp.jump_diff_2_done
 execute as @s[scores={sgp.jump_diff_2_done=0},x=2429.5,y=240.5,z=2179.5,distance=..2] run scoreboard players set @s sgp.jump_diff_2_done 1
 execute as @s[scores={sgp.jump_diff_2_done=1},x=2429.5,y=240.5,z=2179.5,distance=2..] run trigger sgp.jump_diff_2_done set 0

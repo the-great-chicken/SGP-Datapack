@@ -1,3 +1,8 @@
+#> sgp.misc:scoreboards/player_initialization
+# 
+# Set at 0 the player's scoreboard values, as they cannot
+# be compared when they are not set to a value
+
 execute unless score @s sgp.plus_grande_streak >= 0 sgp.dummy run scoreboard players set @s sgp.plus_grande_streak 0
 
 execute unless score @s sgp.pyromane_found >= 0 sgp.dummy run scoreboard players set @s sgp.pyromane_found 0

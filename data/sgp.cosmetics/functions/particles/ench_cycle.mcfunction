@@ -1,3 +1,8 @@
+#> sgp.cosmetics:particles/ench_cycle
+# 
+# Cycles the Sharpness particle cloak around a player, spawning them at the
+# right coordinates each time
+
 execute if score #ench_particle sgp.dummy matches 1 run execute as @a[tag=ench_particle] at @s positioned ~0.21 ~1 ~-0.77 run function sgp.cosmetics:particles/ench_spawn
 execute if score #ench_particle sgp.dummy matches 2 run execute as @a[tag=ench_particle] at @s positioned ~0.4 ~1 ~-0.69 run function sgp.cosmetics:particles/ench_spawn
 execute if score #ench_particle sgp.dummy matches 3 run execute as @a[tag=ench_particle] at @s positioned ~0.57 ~1 ~-0.57 run function sgp.cosmetics:particles/ench_spawn

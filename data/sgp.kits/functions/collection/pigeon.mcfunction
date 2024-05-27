@@ -1,3 +1,7 @@
+#> sgp.kits:collection/pigeon
+# 
+# Gives the Pigeon kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with feather{AttributeModifiers:[{Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Unbreakable:1, Enchantments:[{id:"knockback", lvl:3}, {id:"sharpness", lvl:5}], HideFlags:63, display:{Name:'{"text":"Plume", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant V", "color":"dark_red", "italic":false}', '{"text":"⬱ Recul III", "color":"#6F4E37", "italic":false}', '{"text":"4 dégats", "color":"blue", "italic":false}']}}

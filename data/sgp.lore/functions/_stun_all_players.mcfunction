@@ -1,3 +1,9 @@
+#> sgp.lore:_stun_all_players
+# `{s: int}`
+# 
+# Stuns the players for `<s>` seconds, making them invulnerable
+# and unable to deal damage
+
 $effect give @a minecraft:slowness $(s) 100 true
 $effect give @a minecraft:jump_boost $(s) 200 true
 $effect give @a minecraft:blindness $(s) 255 true

@@ -1,3 +1,7 @@
+#> sgp.kits:kit_tags/voulu
+# 
+# Transform <kit>_voulu to <kit> for the player
+
 tag @a[tag=pigeon_voulu] add pigeon
 tag @a[tag=pigeon_voulu] remove pigeon_voulu
 

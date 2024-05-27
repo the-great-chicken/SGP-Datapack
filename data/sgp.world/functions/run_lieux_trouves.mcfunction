@@ -1,3 +1,7 @@
+#> sgp.world:run_lieux_trouves
+# 
+# Check if a player is inside a POI, and runs the appropriate function if so
+
 function sgp.world:lieu_trouve {x:2476, y:205, z:2186, dx:1, dy:2, dz:2, lieu:abri, lieu_propre:"Abri", couleur:"#5A4022"}
 function sgp.world:lieu_trouve {x:2439, y:230, z:2144, dx:4, dy:3, dz:4, lieu:autel, lieu_propre:"Autel", couleur:"#DFFFFD"}
 function sgp.world:lieu_trouve {x:2523, y:236, z:2143, dx:7, dy:1, dz:8, lieu:reunion, lieu_propre:"Salle de Réunion", couleur:"#A55D33"}

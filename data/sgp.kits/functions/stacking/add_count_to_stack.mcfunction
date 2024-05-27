@@ -1,7 +1,8 @@
-# Paramètres : 
-# $(count) = nombre à ajouter
-# $(item_id) = id de l'item à ajouter
-# $(tag) = infos de l'item à ajouter
+#> sgp.kits:stacking/add_count_to_stack
+# `{count, item_id, tag: item_nbt}`
+# 
+# Adds `<count>` `<item_id>` with `<item_nbt>` to the 1st slot containing some
+# `<item_id>` in the inventory of the player
 
 scoreboard players set #slot_found sgp.dummy 0
 $execute as @s unless score #slot_found sgp.dummy matches 1 if data entity @s Inventory[{id:"minecraft:$(item_id)", tag:{$(tag)}, Slot:0b}] run function sgp.kits:stacking/get_slot_count {slot:0}

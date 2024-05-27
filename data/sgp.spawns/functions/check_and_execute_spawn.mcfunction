@@ -1,3 +1,7 @@
+#> sgp.spawns:check_and_execute_spawn
+# 
+# Check if a player wants to tp to a spawn, and execute the corresponding one if so
+
 execute as @a[scores={sgp.spawn_1=1..}] run function sgp.spawns:spawn {x:2529, y:238, z:2166, pitch:90, yaw:0, number:1}
 execute as @a[scores={sgp.spawn_2=1..}] run function sgp.spawns:spawn {x:2446, y:227, z:2140, pitch:-90, yaw:0, number:2}
 execute as @a[scores={sgp.spawn_3=1..}] run function sgp.spawns:spawn {x:2503, y:229, z:2169, pitch:180, yaw:0, number:3}

@@ -1,3 +1,9 @@
+#> sgp.kits:kills_give/check
+# 
+# Checks if a player made a kill, and if so, which kit he has.
+#
+# Runs the appropriate function to reward him for his kill.
+
 execute as @a[tag=combattant,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic {nb:1, give:"arrow 3", actionbar:"{\"text\":\"+ 3 ➶ Flèches !\",\"color\":\"gray\",\"bold\":true}", give_2:air}
 execute as @a[tag=combattant,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic {nb:2, give:"golden_apple{display:{Name:'{\"text\":\"Pomme d\\'or\", \"color\":\"white\", \"italic\":false, \"bold\":true}', Lore:['[{\"text\":\"Régénère jusqu\\'à 6\", \"color\":\"gray\", \"italic\":false}, {\"text\":\"❤\", \"color\":\"red\", \"italic\":false}, {\"text\":\" + 2\", \"color\":\"gray\", \"italic\":false}, {\"text\":\"❤\", \"color\":\"yellow\", \"italic\":false}]']}}", actionbar:"{\"text\":\"+ 3 ➶ Flèches \",\"color\":\"gray\",\"bold\":true},{\"text\":\"et 1 ❤ Pomme d\\'or !\",\"color\":\"yellow\"}", give_2:air}
 

@@ -1,3 +1,7 @@
+#> sgp.kits:collection/tank
+# 
+# Gives the Tank kit to the player
+
 clear @s
 effect clear @s
 item replace entity @s hotbar.0 with wooden_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:3.5d, Operation:0, UUID:[I; -124310, 13701, 13111, -27402]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Enchantments:[{id:"knockback", lvl:1}], HideFlags:63, display:{Name:'{"text":"Épée Abîmée","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"------------","color":"#C0C0C0","italic":false}', '{"text":"⬱ Recul I","color":"#6F4E37","italic":false}', '{"text":"3,5 dégats","color":"blue","italic":false}']}}

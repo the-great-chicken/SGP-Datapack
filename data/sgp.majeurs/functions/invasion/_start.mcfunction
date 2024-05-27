@@ -1,3 +1,7 @@
+#> sgp.majeurs:invasion/_start
+# 
+# Start the major event Invasion
+
 tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
 function sgp.mineurs:common/stop
 function sgp.majeurs:invasion/dispatch

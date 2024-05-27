@@ -1,3 +1,7 @@
+#> sgp.misc:kill_counter
+# 
+# Manage an array that counts kills from each kit on every other
+
 execute if data storage sgp:kill_counter HandItems[0].tag.KillUpdates[0] store result score #counter_increment_array sgp.dummy run data get storage sgp:kill_counter HandItems[0].tag.KillUpdates[0]
 execute if score #counter_increment_array sgp.dummy matches 0 run data modify storage sgp:kill_counter HandItems[0].tag.increment set from storage sgp:kill_counter HandItems[0].tag.KillArray[0]
 execute if score #counter_increment_array sgp.dummy matches 0 store result score #increment sgp.dummy run data get storage sgp:kill_counter HandItems[0].tag.increment

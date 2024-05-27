@@ -1,3 +1,7 @@
+#> sgp.majeurs:invasion/defenders_dying
+# 
+# When defenders die
+
 # Quand un défenseur meurt
 execute at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.Defenseur] run team leave @s
 execute at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.Defenseur] run move @s #Morts

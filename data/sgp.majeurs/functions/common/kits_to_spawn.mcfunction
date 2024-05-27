@@ -1,3 +1,8 @@
+#> sgp.majeurs:common/kits_to_spawn
+# 
+# When a player wants to go from the kits' room to the spawns',
+# and a major event needs to change this behavior
+
 # Protéger le Roi
 execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.bleue] 2523.5 231 2160 90 0
 execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.rouge] 2429.5 229 2172.0 270 0

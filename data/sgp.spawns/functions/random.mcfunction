@@ -1,3 +1,7 @@
+#> sgp.spawns:random
+# 
+# Generate a random number and tp the player to the corresponding spawn
+
 execute store result score #random_spawn_roll sgp.dummy run random value 1..11
 execute if score #random_spawn_roll sgp.dummy matches 1 as @s run trigger sgp.spawn_1
 execute if score #random_spawn_roll sgp.dummy matches 1 as @s run tellraw @s ["Tu as spawn au ",{"text":"Sumo", "color":"dark_red", "bold":true}]
