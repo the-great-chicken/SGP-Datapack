@@ -244,7 +244,6 @@ bossbar add sgp:lgp "a"
 
 
 # ---------- Run Functions ----------
-function sgp.mineurs:misc/lgc_init
 
 schedule clear sgp.misc:scoreboards/cycle_and_clearlag
 function sgp.misc:scoreboards/cycle_and_clearlag

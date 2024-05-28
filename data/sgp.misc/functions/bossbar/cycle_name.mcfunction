@@ -49,13 +49,13 @@ execute if score #bossbar_name sgp.dummy matches 47 run bossbar set sgp:lgp name
 execute if score #bossbar_name sgp.dummy matches 48 run bossbar set sgp:lgp name [{"text":"Vénérez Le ", "color":"white", "bold":true},{"text":"Grand ", "color":"blue"},{"text":"Poulet", "color":"red"}]
 
 scoreboard players add #bossbar_name sgp.dummy 1
-execute if score #bossbar_name sgp.dummy < 7 sgp.dummy run schedule function sgp.misc:bossbar/cycle_name 4
+execute if score #bossbar_name sgp.dummy matches ..6 run schedule function sgp.misc:bossbar/cycle_name 4
 execute if score #bossbar_name sgp.dummy matches 7 run schedule function sgp.misc:bossbar/cycle_name 8
-execute if score #bossbar_name sgp.dummy > 7 sgp.dummy if score #bossbar_name sgp.dummy < 29 sgp.dummy run schedule function sgp.misc:bossbar/cycle_name 2
+execute if score #bossbar_name sgp.dummy matches 6.. if score #bossbar_name sgp.dummy matches ..28 run schedule function sgp.misc:bossbar/cycle_name 2
 execute if score #bossbar_name sgp.dummy matches 29 run schedule function sgp.misc:bossbar/cycle_name 16
-execute if score #bossbar_name sgp.dummy > 29 sgp.dummy if score #bossbar_name sgp.dummy < 37 sgp.dummy run schedule function sgp.misc:bossbar/cycle_name 6
+execute if score #bossbar_name sgp.dummy matches 30.. if score #bossbar_name sgp.dummy matches ..36 run schedule function sgp.misc:bossbar/cycle_name 6
 execute if score #bossbar_name sgp.dummy matches 37 run schedule function sgp.misc:bossbar/cycle_name 8
-execute if score #bossbar_name sgp.dummy > 37 sgp.dummy if score #bossbar_name sgp.dummy < 49 sgp.dummy run schedule function sgp.misc:bossbar/cycle_name 2
+execute if score #bossbar_name sgp.dummy matches 38.. if score #bossbar_name sgp.dummy matches ..48 run schedule function sgp.misc:bossbar/cycle_name 2
 
 execute if score #bossbar_name sgp.dummy matches 49 run schedule function sgp.misc:bossbar/cycle_name 56
 execute if score #bossbar_name sgp.dummy matches 49 run scoreboard players set #bossbar_name sgp.dummy 0
