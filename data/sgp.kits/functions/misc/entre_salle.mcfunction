@@ -4,7 +4,7 @@
 
 clear @s
 effect clear @s
-tp @s @e[tag=sgp.marker,name="kits",limit=1]
+tp @s @e[type=marker,tag=sgp.marker,name="kits",limit=1]
 scoreboard players enable @s sgp.veut_combattant
 scoreboard players enable @s sgp.veut_roi
 scoreboard players enable @s sgp.veut_pigeon

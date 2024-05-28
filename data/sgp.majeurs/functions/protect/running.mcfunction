@@ -1,8 +1,8 @@
 # Quand un sgp.rouge meurt alors que son roi est mort
-execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run team leave @s
-execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run move @s #Morts
-execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run gamemode spectator @s
-execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run tp @s 2531 251.5 2198 135 0
+execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run team leave @s
+execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run move @s #Morts
+execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run gamemode spectator @s
+execute unless predicate sgp.majeurs:roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run tp @s 2531 251.5 2198 135 0
 
 # Quand tous les bleus sont morts
 execute unless entity @a[team=sgp.bleue] unless predicate sgp.majeurs:roi_bleu_vivant run tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"L'Equipe ", "color":"gold", "bold":true}, {"text":"Rouge ", "color":"dark_red"}, "a gagné ! ", {"text":"Tous les Bleus sont vivants. ","bold":false}]
@@ -17,10 +17,10 @@ execute unless predicate sgp.majeurs:roi_rouge_vivant if score #mort_roi_rouge_a
 
 
 # Quand un bleu meurt alors que son roi est mort
-execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run team leave @s
-execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run move @s #Morts
-execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run gamemode spectator @s
-execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run tp @s 2531 251.5 2198 135 0
+execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run team leave @s
+execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run move @s #Morts
+execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run gamemode spectator @s
+execute unless predicate sgp.majeurs:roi_bleu_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run tp @s 2531 251.5 2198 135 0
 
 # Quand tous les sgp.rouges sont morts
 execute unless entity @a[team=sgp.rouge] unless predicate sgp.majeurs:roi_rouge_vivant run tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"L'Equipe ", "color":"gold", "bold":true}, {"text":"Bleu ", "color":"dark_blue"}, "a gagné ! ", {"text":"Tous les Rouges sont vivants. ","bold":false}]

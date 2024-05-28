@@ -26,7 +26,7 @@ function sgp.world:lieu_trouve {x:2492, y:239, z:2148, dx:13, dy:3, dz:7, lieu:p
 function sgp.world:lieu_trouve {x:2444, y:237, z:2179, dx:12, dy:6, dz:12, lieu:pavillon, lieu_propre:"Pavillon", couleur:"white"}
 function sgp.world:lieu_trouve {x:2486, y:201, z:2175, dx:22, dy:2, dz:17, lieu:lave, lieu_propre:"Salle de Lave", couleur:"#FFBA00"}
 function sgp.world:lieu_trouve {x:2420, y:205, z:2134, dx:9, dy:6, dz:13, lieu:dedale, lieu_propre:"Dédale", couleur:"aqua"}
-function sgp.world:lieu_trouve {x:2475, y:239, z:2158, dx:10, dy:3, dz:8, lieu:chercheurDevantLeternel, lieu_propre:"Salle du Chercheur devant l'éternel", couleur:"#8B004B"}
+function sgp.world:lieu_trouve {x:2475, y:239, z:2158, dx:10, dy:3, dz:8, lieu:chercheurDevantLeternel, lieu_propre:"Salle du Chercheur devant l\\'éternel", couleur:"#8B004B"}
 function sgp.world:lieu_trouve {x:2444, y:246, z:2154, dx:18, dy:2, dz:18, lieu:fun, lieu_propre:"Zone Fun", couleur:"#C0FF00"}
 function sgp.world:lieu_trouve {x:2505, y:233, z:2175, dx:8, dy:5, dz:8, lieu:pyramide, lieu_propre:"Pyramide", couleur:"#E5DD47"}
 function sgp.world:lieu_trouve {x:2523, y:242, z:2162, dx:12, dy:4, dz:12, lieu:sumo, lieu_propre:"Sumo", couleur:"dark_red"}

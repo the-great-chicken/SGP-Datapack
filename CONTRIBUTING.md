@@ -17,7 +17,7 @@ The datapack's prefix is `sgp.` ; every **namespace**, **objective** or **tag** 
 
 ### Entities Tags
 When you call @e you shoud not forget to add `tag=!global.ignore` and also `global.ignore.pos`, `global.ignore.gui` and `global.ignore.kill` depending on the action you're doing, to prevent your command from interacting with potential entities from other datapacks.
-You should add the necessary tags to custom entities you create, and also add `sgp.marker` to markers for example, so that you can use `@n[tag=sgp.marker,name=<name>]` for example
+You should add the necessary tags to custom entities you create, and also add `sgp.marker` to markers for example, so that you can use `@n[type=marker,tag=sgp.marker,name=<name>]`
 
 ### Function Documentation
 Each fonction should be documented in the following way:

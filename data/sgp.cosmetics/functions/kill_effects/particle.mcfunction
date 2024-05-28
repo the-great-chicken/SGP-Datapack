@@ -3,4 +3,4 @@
 # 
 # Customizable particle kill effect
 
-$execute at @e[tag=sgp.marker,name="death_reaper"] run particle minecraft:$(particle)
+$execute at @e[type=marker,tag=sgp.marker,name="death_reaper"] run particle minecraft:$(particle)
