@@ -1,4 +1,4 @@
 setblock ~ ~ ~ air replace
-playsound minecraft:block.beacon.power_select master @a ~ ~ ~ 1 0.5
-tellraw @a [{"text":"Le coffre a été trouvé !","color":"gold"}]
+playsound minecraft:block.beacon.power_select master @a[tag=in_game] ~ ~ ~ 1 0.5
+tellraw @a[tag=in_game] [{"text":"Le coffre a été trouvé !","color":"gold"}]
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000

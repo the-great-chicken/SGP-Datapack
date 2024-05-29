@@ -20,7 +20,7 @@ execute as @a[scores={sgp.death_reset_tags=1..}] run \
 # Trigger Rewards
 function sgp.world:reward/laby
 
-execute as @a \
+execute as @a[tag=in_game] \
     unless entity @s[tag=enderman] \
     unless entity @s[tag=pigeon] \
     unless entity @s[tag=eclaireur] \
@@ -28,7 +28,7 @@ execute as @a \
     unless entity @s[tag=archer] run \
         function sgp.world:reward_jump_hardest
 
-execute as @a \
+execute as @a[tag=in_game] \
     unless entity @s[tag=enderman] \
     unless entity @s[tag=pigeon] \
     unless entity @s[tag=eclaireur] \
@@ -112,7 +112,7 @@ execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
 execute if score #128_ticks_clock sgp.dummy matches 0 run \
     function sgp.misc:kill_streaks_management
 
-execute if score #128_ticks_clock sgp.dummy matches 0 as @a run \
+execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=in_game] run \
     function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1

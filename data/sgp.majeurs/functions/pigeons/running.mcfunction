@@ -12,6 +12,6 @@ execute as @a[tag=loser] run function sgp.majeurs:pigeons/on_death
 execute as @a[tag=loser] run tag @s remove loser
 
 # Tous les pigeons sont morts
-execute unless entity @a[tag=pigeon] run tellraw @a [{"text":"Les Chasseurs ont gagné !","color":"green","bold":true}]
+execute unless entity @a[tag=pigeon] run tellraw @a[tag=in_game] [{"text":"Les Chasseurs ont gagné !","color":"green","bold":true}]
 execute unless entity @a[tag=pigeon] run function sgp.majeurs:pigeons/_stop
-execute unless entity @a[tag=pigeon] run title @a title [{"text":"Chasseurs Vainqueurs","bold":true,"color":"green"}]
+execute unless entity @a[tag=pigeon] run title @a[tag=in_game] title [{"text":"Chasseurs Vainqueurs","bold":true,"color":"green"}]

@@ -1,5 +1,5 @@
-execute in minecraft:minisjeux_crea run tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement de l'event Proteger le Roi...", "color":"gold", "bold":true}]
-execute in minecraft:minisjeux_crea as @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] run function sgp.misc:on_death
+execute in minecraft:minisjeux_crea run tellraw @a[tag=in_game] [{"text":"Lancement de l'event Proteger le Roi...", "color":"gold", "bold":true}]
+execute in minecraft:minisjeux_crea as @a[tag=in_game] run function sgp.misc:on_death
 execute as @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] at @s run data modify block ^ ^1 ^1 {} merge value {front_text:{messages:['[""]','["",{"text":"DEVENIR","bold":true,"color":"dark_red"}]','[{"text":"LE ROI","bold":true,"color":"dark_red","clickEvent":{"action":"run_command","value":"trigger sgp.devenir_roi_rouge"}}]','[""]']}}
 execute as @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] at @s run data modify block ^ ^1 ^1 {} merge value {front_text:{messages:['[""]','["",{"text":"DEVENIR","bold":true,"color":"dark_blue"}]','[{"text":"LE ROI","bold":true,"color":"dark_blue","clickEvent":{"action":"run_command","value":"trigger sgp.devenir_roi_bleu"}}]','[""]']}}
 execute in minecraft:minisjeux_crea run function sgp.majeurs:protect/dispatch

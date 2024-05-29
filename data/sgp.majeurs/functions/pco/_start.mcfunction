@@ -1,4 +1,4 @@
-tellraw @a[x=2405,y=201,z=2133,dx=137,dy=54,dz=72] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
+tellraw @a[tag=in_game] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
 function sgp.mineurs:common/stop
 
 statuswarp pvp disabled
@@ -47,5 +47,5 @@ fill 2524 248 2144 2526 248 2144 minecraft:warped_fence_gate[facing=north]
 setblock 2478 244 2141 minecraft:warped_fence_gate[facing=west]
 setblock 2484 244 2141 minecraft:warped_fence_gate[facing=west]
 
-scoreboard players set @a sgp.temps_cabane_pco 0
+scoreboard players set @a[tag=in_game] sgp.temps_cabane_pco 0
 function sgp.lore:npcs/disable
