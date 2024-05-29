@@ -39,12 +39,11 @@ scoreboard players add #52_ticks_clock sgp.dummy 1
 execute if score #52_ticks_clock sgp.dummy matches 52 run scoreboard players set #52_ticks_clock sgp.dummy 0
 
 
-# Miscellaneous
-function sgp.world:run_lieux_trouves
+# Miscaellaneous
 function sgp.misc:kill_counter
 function sgp.world:temple_teleporter
 execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] if block ~ ~ ~ minecraft:trapped_chest run particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
-execute as @e[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run damage @s 6 minecraft:hot_floor
+execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run damage @s 6 minecraft:hot_floor
 execute if score #128_ticks_clock sgp.dummy matches 0 run function sgp.misc:kill_streaks_management
 execute if score #128_ticks_clock sgp.dummy matches 0 as @a run function sgp.misc:kd_buff_and_debuffs
 scoreboard players add #128_ticks_clock sgp.dummy 1
