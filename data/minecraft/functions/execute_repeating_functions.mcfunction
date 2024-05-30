@@ -100,7 +100,8 @@ execute if score #52_ticks_clock sgp.dummy matches 52 run \
 # Miscaellaneous
 function sgp.misc:kill_counter
 
-function sgp.world:temple_teleporter
+execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
+    run function sgp.world:teleporter/run
 
 execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
     if block ~ ~ ~ minecraft:trapped_chest run \

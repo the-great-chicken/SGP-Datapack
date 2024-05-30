@@ -23,7 +23,8 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - 1 `salle_cosm`: room where the players can change cosmetics
 - 1 `kits`: room where the players can choose their kit
 - 1 `spawns`: room where the players choose their spawnpoint
-- at least 1 `lieu` with data corresponding to the place. Example : `data:{x:2524, y:248, z:2141, dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`
+- any number of `lieu` with data corresponding to the place. Example : `data:{x:2524, y:248, z:2141, dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`
+- any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: location of lootdrop chests
 - at least 1 `Attaquant_Invasion`: spawnpoints when the Invasion event is active
