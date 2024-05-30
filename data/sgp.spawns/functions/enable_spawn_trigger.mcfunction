@@ -1,0 +1,1 @@
+$scoreboard players enable @a[tag=sgp.enable_spawn_triggers,limit=1] sgp.spawn_$(number)

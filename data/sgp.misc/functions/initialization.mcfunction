@@ -56,52 +56,9 @@ scoreboard objectives add sgp.alchimiste_found trigger
 scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
 
-scoreboard objectives add sgp.spawn_1 trigger
-scoreboard objectives add sgp.spawn_2 trigger
-scoreboard objectives add sgp.spawn_3 trigger
-scoreboard objectives add sgp.spawn_4 trigger
-scoreboard objectives add sgp.spawn_5 trigger
-scoreboard objectives add sgp.spawn_6 trigger
-scoreboard objectives add sgp.spawn_7 trigger
-scoreboard objectives add sgp.spawn_8 trigger
-scoreboard objectives add sgp.spawn_9 trigger
-scoreboard objectives add sgp.spawn_10 trigger
-scoreboard objectives add sgp.spawn_11 trigger
-scoreboard objectives add sgp.spawn_random trigger
+execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
-scoreboard objectives add sgp.lieu_autel dummy
-scoreboard objectives add sgp.lieu_bunker dummy
-scoreboard objectives add sgp.lieu_chercheurDevantLeternel dummy
-scoreboard objectives add sgp.lieu_dedale dummy
-scoreboard objectives add sgp.lieu_fun dummy
-scoreboard objectives add sgp.lieu_galerie dummy
-scoreboard objectives add sgp.lieu_garde dummy
-scoreboard objectives add sgp.lieu_grandeSalle dummy
-scoreboard objectives add sgp.lieu_grange dummy
-scoreboard objectives add sgp.lieu_kotl dummy
-scoreboard objectives add sgp.lieu_laby dummy
-scoreboard objectives add sgp.lieu_lave dummy
-scoreboard objectives add sgp.lieu_machicoulis dummy
-scoreboard objectives add sgp.lieu_moules dummy
-scoreboard objectives add sgp.lieu_observatoire dummy
-scoreboard objectives add sgp.lieu_pavillon dummy
-scoreboard objectives add sgp.lieu_pigeonnier dummy
-scoreboard objectives add sgp.lieu_pyramide dummy
-scoreboard objectives add sgp.lieu_dortoir dummy
-scoreboard objectives add sgp.lieu_reunion dummy
-scoreboard objectives add sgp.lieu_snek dummy
-scoreboard objectives add sgp.lieu_sousToit dummy
-scoreboard objectives add sgp.lieu_sumo dummy
-scoreboard objectives add sgp.lieu_taijitu dummy
-scoreboard objectives add sgp.lieu_temple dummy
-scoreboard objectives add sgp.lieu_toit dummy
-scoreboard objectives add sgp.lieu_vallons dummy
-scoreboard objectives add sgp.lieu_zoneNoire dummy
-scoreboard objectives add sgp.lieu_maison dummy
-scoreboard objectives add sgp.lieu_abri dummy
-scoreboard objectives add sgp.lieu_piliers dummy
-scoreboard objectives add sgp.lieu_jumpEst dummy
-scoreboard objectives add sgp.lieu_jumpOuest dummy
+execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/initialization_spawns with entity @s data
 
 scoreboard objectives add sgp.laby_fin trigger
 scoreboard objectives add sgp.jump_hardest_done trigger
@@ -256,3 +213,8 @@ function sgp.misc:bossbar/cycle_color
 schedule clear sgp.misc:bossbar/cycle_name
 function sgp.misc:bossbar/cycle_name
 
+
+# ---------- Initialize Storages ----------
+
+data merge storage sgp:lootdrop {tag: [{id: "minecraft:bow",tag: {display: {Lore: ["{\"text\":\"------------\",\"color\":\"#C0C0C0\",\"italic\":\"false\"}","{\"text\":\"���� Puissance I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"���� Puissance II\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}","{\"text\":\"∞ Infinité\",\"color\":\"#E5E4E2\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:flame",lvl: 1s},{id: "minecraft:power",lvl: 1s},{id: "minecraft:power",lvl: 2s},{id: "minecraft:punch",lvl: 1s},{id: "minecraft:infinity",lvl: 1s}]}},{id: "minecraft:iron_sword",tag: {display: {Lore: ["{\"text\":\"⚔ Tranchant I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme I\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}"]},Enchantments: [{id: "sharpness",lvl: 1},{id: "fire_aspect",lvl: 1},{id: "knockback",lvl: 1}]},Count: 1b},{id: "minecraft:iron_chestplate",tag: {display: {Lore: ["{\"text\":\"���� Protection I\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection I\",\"color\":\"dark_blue\",\"italic\":\"false\"}","{\"text\":\"���� Protection II\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection II\",\"color\":\"dark_blue\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:protection",lvl: 1s},{id: "minecraft:projectile_protection",lvl: 1s},{id: "minecraft:protection",lvl: 2s},{id: "minecraft:projectile_protection",lvl: 2s}]}}]}
+execute unless data storage sgp:kill_counter HandItems run data merge storage sgp:kill_counter {HandItems: [{Count: 1b,tag: {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}},{}]}

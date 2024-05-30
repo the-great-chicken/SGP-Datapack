@@ -56,52 +56,10 @@ scoreboard objectives remove sgp.alchimiste_found
 scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
 
-scoreboard objectives remove sgp.spawn_1
-scoreboard objectives remove sgp.spawn_2
-scoreboard objectives remove sgp.spawn_3
-scoreboard objectives remove sgp.spawn_4
-scoreboard objectives remove sgp.spawn_5
-scoreboard objectives remove sgp.spawn_6
-scoreboard objectives remove sgp.spawn_7
-scoreboard objectives remove sgp.spawn_8
-scoreboard objectives remove sgp.spawn_9
-scoreboard objectives remove sgp.spawn_10
-scoreboard objectives remove sgp.spawn_11
-scoreboard objectives remove sgp.spawn_random
 
-scoreboard objectives remove sgp.lieu_autel
-scoreboard objectives remove sgp.lieu_bunker
-scoreboard objectives remove sgp.lieu_chercheurDevantLeternel
-scoreboard objectives remove sgp.lieu_dedale
-scoreboard objectives remove sgp.lieu_fun
-scoreboard objectives remove sgp.lieu_galerie
-scoreboard objectives remove sgp.lieu_garde
-scoreboard objectives remove sgp.lieu_grandeSalle
-scoreboard objectives remove sgp.lieu_grange
-scoreboard objectives remove sgp.lieu_kotl
-scoreboard objectives remove sgp.lieu_laby
-scoreboard objectives remove sgp.lieu_lave
-scoreboard objectives remove sgp.lieu_machicoulis
-scoreboard objectives remove sgp.lieu_moules
-scoreboard objectives remove sgp.lieu_observatoire
-scoreboard objectives remove sgp.lieu_pavillon
-scoreboard objectives remove sgp.lieu_pigeonnier
-scoreboard objectives remove sgp.lieu_pyramide
-scoreboard objectives remove sgp.lieu_dortoir
-scoreboard objectives remove sgp.lieu_reunion
-scoreboard objectives remove sgp.lieu_snek
-scoreboard objectives remove sgp.lieu_sousToit
-scoreboard objectives remove sgp.lieu_sumo
-scoreboard objectives remove sgp.lieu_taijitu
-scoreboard objectives remove sgp.lieu_temple
-scoreboard objectives remove sgp.lieu_toit
-scoreboard objectives remove sgp.lieu_vallons
-scoreboard objectives remove sgp.lieu_zoneNoire
-scoreboard objectives remove sgp.lieu_maison
-scoreboard objectives remove sgp.lieu_abri
-scoreboard objectives remove sgp.lieu_piliers
-scoreboard objectives remove sgp.lieu_jumpEst
-scoreboard objectives remove sgp.lieu_jumpOuest
+execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
+
+execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/uninstallation_spawns with entity @s data
 
 scoreboard objectives remove sgp.laby_fin
 scoreboard objectives remove sgp.jump_hardest_done

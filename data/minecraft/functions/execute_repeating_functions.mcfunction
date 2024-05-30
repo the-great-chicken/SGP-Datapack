@@ -39,7 +39,7 @@ execute as @a[tag=in_game] \
 
 
 # Spawns
-function sgp.spawns:check_and_execute_spawn
+execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.spawns:check_and_execute_spawn with entity @s data
 
 execute as @p[scores={sgp.spawn_random=1..}] run \
     function sgp.spawns:random
