@@ -6,7 +6,8 @@ execute if score #even_tick sgp.dummy matches 0 \
     run function sgp.cosmetics:misc/store_coords
 
 execute if score #even_tick sgp.dummy matches 0 \
-    run function sgp.world:run_lieux_trouves
+    as @e[type=marker,tag=sgp.marker,name="lieu"] \
+        run function sgp.world:lieu_trouve with entity @s data
 
 execute if score #even_tick sgp.dummy matches 0 \
     as @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] at @s \

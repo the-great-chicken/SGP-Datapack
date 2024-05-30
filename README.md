@@ -23,9 +23,10 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - 1 `salle_cosm`: room where the players can change cosmetics
 - 1 `kits`: room where the players can choose their kit
 - 1 `spawns`: room where the players choose their spawnpoint
+- at least 1 `lieu` with data corresponding to the place. Example : `data:{x:2524, y:248, z:2141, dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: location of lootdrop chests
-- at least 1 `Attaquant_Invasion`: spawnpoints when the Invasion event is active    
+- at least 1 `Attaquant_Invasion`: spawnpoints when the Invasion event is active
 - 1 `devenir_roi_rouge` and 1 `devenir_roi_bleu`: These are rooms where a player can become the Roi when "Protéger le Roi" is active. Note that Devenir Roi Rouge and Devenir Roi Bleu cannot be in the same location.
 - 1 `devenir_chasseur` and 1 `devenir_pigeon`: These are rooms where players can become Chasseurs or Pigeons. Note that Devenir Chasseur and Devenir Pigeons cannot be in the same location.
 
@@ -33,4 +34,4 @@ Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can shar
 
 
 # Uninstallation
-Run the `sgp.misc:uninstall function`, it will remove all the sgp objectives
+Run the `sgp.misc:uninstall` function, it will remove all the sgp objectives
