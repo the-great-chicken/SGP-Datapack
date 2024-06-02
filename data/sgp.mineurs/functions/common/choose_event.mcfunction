@@ -9,7 +9,7 @@ execute if score #random_event_roll sgp.dummy matches 3 run function sgp.mineurs
 execute if score #random_event_roll sgp.dummy matches 4 run function sgp.mineurs:reflexes/start
 
 
-playsound minecraft:entity.experience_orb.pickup ambient @a[tag=in_game] 2429.70 254.00 2132.25 1000
+execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] run playsound minecraft:entity.experience_orb.pickup master @a[tag=in_game] ~ ~ ~ 100
 
 execute store result score #random_event_timer_roll sgp.dummy run random value 3..5
 scoreboard players operation #random_event_timer_roll_minus_1 sgp.dummy = #random_event_timer_roll sgp.dummy
