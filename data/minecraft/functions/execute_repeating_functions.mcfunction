@@ -18,23 +18,13 @@ execute as @a[scores={sgp.death_reset_tags=1..}] run \
 
 
 # ---------- TRIGGER REWARDS ----------
-function sgp.world:reward/laby
-
 execute as @a[tag=in_game] \
     unless entity @s[tag=enderman] \
     unless entity @s[tag=pigeon] \
     unless entity @s[tag=eclaireur] \
     unless entity @s[tag=cancer] \
     unless entity @s[tag=archer] run \
-        function sgp.world:reward_jump_hardest
-
-execute as @a[tag=in_game] \
-    unless entity @s[tag=enderman] \
-    unless entity @s[tag=pigeon] \
-    unless entity @s[tag=eclaireur] \
-    unless entity @s[tag=cancer] \
-    unless entity @s[tag=archer] run \
-        function sgp.world:reward_jump_diff_2
+        function sgp.world:reward/parkour_rewards
 
 
 
