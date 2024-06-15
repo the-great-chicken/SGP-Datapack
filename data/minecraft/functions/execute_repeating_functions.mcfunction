@@ -17,7 +17,7 @@ execute as @a[scores={sgp.death_reset_tags=1..}] run \
 
 
 
-# Trigger Rewards
+# ---------- TRIGGER REWARDS ----------
 function sgp.world:reward/laby
 
 execute as @a[tag=in_game] \
@@ -38,7 +38,7 @@ execute as @a[tag=in_game] \
 
 
 
-# Spawns
+# ---------- SPAWNS ----------
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.spawns:check_and_execute_spawn with entity @s data
 
 execute as @p[scores={sgp.spawn_random=1..}] run \
@@ -57,7 +57,7 @@ execute as @a[scores={sgp.spawn_vers_kits=1..}] run \
 
 
 
-# Kits
+# ---------- KITS ----------
 function sgp.kits:misc/check_and_run
 
 function sgp.kits:unlocking/check_kit_unlock
@@ -97,7 +97,7 @@ execute if score #52_ticks_clock sgp.dummy matches 52 run \
 
 
 
-# Miscaellaneous
+# ---------- MISCELLANEOUS ----------
 function sgp.misc:kill_counter
 
 execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
@@ -106,6 +106,9 @@ execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
 execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
     if block ~ ~ ~ minecraft:trapped_chest run \
         particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
+
+execute if score #reflexes_ticks sgp.timer matches 1..99 \
+    run function sgp.mineurs:reflexes/running
 
 execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
     damage @s 6 minecraft:hot_floor
@@ -122,7 +125,7 @@ execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players s
 
 
 
-# Cosmétiques
+# ---------- COSMETICS ----------
 function sgp.cosmetics:kill_effects/death_reaper
 
 execute as @a[scores={sgp.veut_desactiver=1..}] run \
@@ -150,7 +153,7 @@ execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=
 
 
 
-# ------ Events Majeurs ------
+# ---------- MAJOR EVENTS ----------
 # Protéger le Roi
 execute if entity @a[scores={sgp.devenir_roi_bleu=1..}] run \
     function sgp.majeurs:protect/devenir_roi_bleu

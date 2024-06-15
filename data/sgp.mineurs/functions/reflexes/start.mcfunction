@@ -2,4 +2,4 @@ tellraw @a[tag=in_game] [{"text":"", "color":"red"},{"text":"REFLEXES ! ", "bold
 scoreboard players enable @a[tag=in_game] sgp.reflexes_joueur
 title @a[tag=in_game] title {"text":"REFLEXES!", "color":"dark_red", "bold":true}
 scoreboard players set #reflexes_ticks sgp.timer 0
-schedule function sgp.mineurs:reflexes_running 1
+function sgp.mineurs:reflexes/running
