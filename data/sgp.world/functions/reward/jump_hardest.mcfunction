@@ -9,3 +9,4 @@ execute as @s[scores={sgp.jump_hardest_done=1},x=2536.5,y=252.5,z=2172.5,distanc
 execute as @s[scores={sgp.jump_hardest_done=2}] run tellraw @s ["Tu viens de débloquer la Trainée de Particule ",{"text":"Marine", "bold":true, "color": "blue"}," !\nVa dans la Salle des ",{"text":"Cosmétiques", "color":"light_purple", "bold":true}," depuis la Salle d'Accueil pour l'activer !"]
 execute as @s[scores={sgp.jump_hardest_done=2}] run scoreboard players set @s sgp.marine_particle_unlocked 1
 execute as @s[scores={sgp.jump_hardest_done=2}] at @s run summon firework_rocket ~ ~ ~ {LifeTime:20, FireworksItem:{id:"firework_rocket", Count:1, tag:{Fireworks:{Explosions:[{Type:1, Flicker:1, Trail:1, Colors:[I; 2437522]}], Flight:1}}}}
+execute as @s[scores={sgp.jump_hardest_done=2}] run scoreboard players set @s sgp.jump_hardest_done 3

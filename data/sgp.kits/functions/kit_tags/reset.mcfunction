@@ -1,4 +1,4 @@
-#> sgp.kits:kit_tags
+#> sgp.kits:kit_tags/reset
 # 
 # Removes every kit tag from the player
 
