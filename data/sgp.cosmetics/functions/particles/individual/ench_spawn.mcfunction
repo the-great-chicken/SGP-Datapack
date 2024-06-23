@@ -1,4 +1,4 @@
-#> sgp.cosmetics:particles/ench_spawn
+#> sgp.cosmetics:particles/individual/ench_spawn
 # 
 # Summons the Sharpness particles at the current coordinates, depending on
 # the particle cloak's weight

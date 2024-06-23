@@ -1,4 +1,4 @@
-#> sgp.cosmetics:particles/ench_cycle
+#> sgp.cosmetics:particles/individual/ench_cycle
 # 
 # Cycles the Sharpness particle cloak around a player, spawning them at the
 # right coordinates each time

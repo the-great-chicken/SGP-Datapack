@@ -115,10 +115,15 @@ scoreboard objectives add sgp.teleporteur dummy
 scoreboard objectives add sgp.dummy dummy
 scoreboard objectives add sgp.timer dummy
 
+scoreboard objectives add sgp.sneak_particle minecraft.custom:minecraft.sneak_time
+
+
 
 # ---------- Initialize values ----------
 scoreboard players set #ench_particle dummy 0
+scoreboard players set #flame_crown_particle dummy 0
 scoreboard players set 0 dummy 0
+scoreboard players set 3 dummy 3
 scoreboard players set 1 dummy 1
 scoreboard players set 7 dummy 7
 scoreboard players set 10 dummy 10
