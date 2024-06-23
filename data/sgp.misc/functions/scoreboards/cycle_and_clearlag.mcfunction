@@ -6,8 +6,7 @@ execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
     run scoreboard objectives setdisplay sidebar sgp.plus_grande_streak
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
-    in minecraft:minisjeux_crea \
-        run kill @e[type=minecraft:arrow,tag=!global.ignore,tag=!global.ignore.kill]
+    run kill @e[type=minecraft:arrow,tag=!global.ignore,tag=!global.ignore.kill]
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 1 \
     run scoreboard objectives setdisplay sidebar sgp.kills
