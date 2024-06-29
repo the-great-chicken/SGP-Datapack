@@ -4,7 +4,15 @@
 
 clear @s
 effect clear @s
-item replace entity @s hotbar.0 with stone_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:5.0d, Operation:0, UUID:[I; -124310, 13101, 13111, -26202]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Enchantments:[{id:"sharpness", lvl:1}], HideFlags:63, display:{Name:'{"text":"Épée en Pierre", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"---------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', '{"text":"6 dégats", "color":"blue", "italic":false}']}}
+item replace entity @s hotbar.0 with stone_sword{\
+    Unbreakable:1, \
+    AttributeModifiers:[\
+        {AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:5.0d, Operation:0, UUID:[I; -124310, 13101, 13111, -26202]}, \
+        {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], \
+    Enchantments:[\
+        {id:"sharpness", lvl:1}], \
+    HideFlags:63, \
+    display:{Name:'{"text":"Épée en Pierre", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"---------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', '{"text":"6 dégats", "color":"blue", "italic":false}']}}
 item replace entity @s weapon.offhand with baked_potato{display:{Name:'{"text":"Pommes de Terre cuites au Four", "color":"light_purple", "italic":false, "bold":true}', Lore:['[{"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, {"text":"❤", "color":"red", "italic":false}]']}} 64
 item replace entity @s hotbar.3 with splash_potion{Potion:"water", custom_potion_effects:[{id:"blindness", amplifier:0, duration:100}], HideFlags:63, display:{Name:'{"text":"Potion de Cécité", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"👁 Cécité (0:05)", "color":"#8B8589", "italic":false}']}}
 item replace entity @s hotbar.4 with milk_bucket{display:{Name:'{"text":"Antibiotique", "color":"light_purple", "italic":false, "bold":true}', Lore:['[{"text":"Enlève tous les effets", "color":"gray", "italic":false}]']}}
