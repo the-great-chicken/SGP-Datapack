@@ -9,13 +9,13 @@ I suggest using the following VSCode extensions (ordered by importance):
 - [VSCode Progressive Increment](https://marketplace.visualstudio.com/items?itemName=narsenico.vscode-progressive-increment) if your code is bad
 
 ### Pull Requests
-Every commit to the repository's main branche must be made from a pull request. You can create a branche if you are a member of the organization, or make a fork if you're not.
+Every commit to the repository's main branch must be made from a pull request. You can create a branch if you are a member of the organization, or make a fork if you're not.
 
 ## Code Conventions :
 ### Prefix
 The datapack's prefix is `sgp.` ; every **namespace**, **objective** or **tag** should start with this prefix
 
-### Entities Tags
+### Entity Tags
 When you call @e you shoud not forget to add `tag=!global.ignore` and also `global.ignore.pos`, `global.ignore.gui` and `global.ignore.kill` depending on the action you're doing, to prevent your command from interacting with potential entities from other datapacks.
 You should add the necessary tags to custom entities you create, and also add `sgp.marker` to markers for example, so that you can use `@n[type=marker,tag=sgp.marker,name=<name>]`
 
