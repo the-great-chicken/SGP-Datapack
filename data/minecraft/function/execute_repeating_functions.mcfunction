@@ -18,12 +18,12 @@ execute as @a[scores={sgp.death_reset_tags=1..}] run \
 
 
 # ---------- TRIGGER REWARDS ----------
-execute as @a[tag=in_game] \
-    unless entity @s[tag=enderman] \
-    unless entity @s[tag=pigeon] \
-    unless entity @s[tag=eclaireur] \
-    unless entity @s[tag=cancer] \
-    unless entity @s[tag=archer] run \
+execute as @a[tag=sgp.in_game] \
+    unless entity @s[tag=sgp.enderman] \
+    unless entity @s[tag=sgp.pigeon] \
+    unless entity @s[tag=sgp.eclaireur] \
+    unless entity @s[tag=sgp.cancer] \
+    unless entity @s[tag=sgp.archer] run \
         function sgp.world:reward/parkour_rewards
 
 
@@ -95,7 +95,7 @@ execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
 
 execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
     if block ~ ~ ~ minecraft:trapped_chest run \
-        particle dust 1.000 0.800 0.100 2.5 ~ ~ ~ 0.3 40 0.3 10 30 force
+        particle dust{color:[1.0, 0.8, 0.1],scale:2.5} ~ ~ ~ 0.3 40 0.3 10 30 force
 
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
@@ -106,7 +106,7 @@ execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
 execute if score #128_ticks_clock sgp.dummy matches 0 run \
     function sgp.misc:kill_streaks_management
 
-execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=in_game] run \
+execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] run \
     function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1

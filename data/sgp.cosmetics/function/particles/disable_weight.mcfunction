@@ -2,7 +2,7 @@
 # 
 # Remove the particle cloak weights tags from the player
 
-tag @s remove light_particle
-tag @s remove medium_particle
-tag @s remove heavy_particle
-tag @s remove super_heavy_particle
+tag @s remove sgp.light_particle
+tag @s remove sgp.medium_particle
+tag @s remove sgp.heavy_particle
+tag @s remove sgp.super_heavy_particle

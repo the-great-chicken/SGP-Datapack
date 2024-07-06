@@ -16,7 +16,7 @@ item replace entity @s armor.head with leather_helmet{Trim:{pattern:vex, materia
 item replace entity @s armor.chest with golden_chestplate{Trim:{pattern:vex, material:redstone}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}, {id:"thorns", lvl:3}, {id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Plastron en Or", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"---------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}', '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}']}}
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:tide, material:redstone}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Pantalon en Cuir", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:spire, material:redstone}, Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Bottes en Cuir", "color":"dark_red", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
-tag @s add cancer_voulu
+tag @s add sgp.cancer_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 10
 execute if entity @s[team=sgp.Attaquant] run clear @s

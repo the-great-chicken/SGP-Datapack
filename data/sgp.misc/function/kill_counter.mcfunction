@@ -18,8 +18,8 @@ execute if data storage sgp:kill_counter HandItems[0].tag.reset run data modify 
 execute if data storage sgp:kill_counter HandItems[0].tag.reset run data remove storage sgp:kill_counter HandItems[0].tag.KillUpdates[0]
 execute if data storage sgp:kill_counter HandItems[0].tag.reset run data remove storage sgp:kill_counter HandItems[0].tag.reset
 
-execute as @a[tag=in_game] if score @s last_kill_count matches 1.. run execute store result score #kit_id_tueur sgp.dummy run scoreboard players get @s sgp.kit_id
-execute as @a[tag=in_game] if score @s last_kill_count matches 1.. run scoreboard players set @s last_kill_count 0
+execute as @a[tag=sgp.in_game] if score @s sgp.last_kill_count matches 1.. run execute store result score #kit_id_tueur sgp.dummy run scoreboard players get @s sgp.kit_id
+execute as @a[tag=sgp.in_game] if score @s sgp.last_kill_count matches 1.. run scoreboard players set @s sgp.last_kill_count 0
 
 execute if score #kit_id_victime sgp.dummy matches 0.. run execute if score #kit_id_tueur sgp.dummy matches 0.. run scoreboard players set #kit_id_kill_run sgp.dummy 1
 execute if score #kit_id_kill_run sgp.dummy matches 1 store result storage sgp:kill_counter HandItems[0].tag.provKillTueur int 1 run scoreboard players get #kit_id_tueur sgp.dummy

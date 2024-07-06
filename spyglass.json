@@ -1,0 +1,23 @@
+
+
+{
+	"env": {
+        "mcmetaSummaryOverrides": {
+            "commands":{
+                "path": "command_registration.json",
+                "replace": 1
+            }
+        }
+	},
+	"format": {
+	},
+	"lint": {
+        "nameOfObjective": "^sgp\\.[a-z 1-9]+(_[a-z 1-9]+)*$",
+        "nameOfScoreHolder": "^\\d+$|^#[a-z]+$|^#([a-z]+|[0-9]+e?|[0-9]+)(_([a-z]+|[0-9]+e?|[0-9]+))+$",
+        "nameOfTag": "^(sgp\\.[a-z]+(_[a-z]+)*|global\\.[a-z]+(\\.[a-z]+)*)$",
+        "nameOfTeam": "^sgp\\.[a-z A-Z]+(_[a-z A-Z]+)*$"
+	},
+	"snippet": {
+	}
+}
+

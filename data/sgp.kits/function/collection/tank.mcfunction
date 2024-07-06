@@ -15,7 +15,7 @@ item replace entity @s armor.head with diamond_helmet{Trim:{pattern:sentry, mate
 item replace entity @s armor.chest with iron_chestplate{Trim:{pattern:dune, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Plastron en Fer","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"➹ Protection I","color":"dark_blue","italic":false}']}}
 item replace entity @s armor.legs with iron_leggings{Trim:{pattern:dune, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Jambières en Fer","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"-----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"➹ Protection I","color":"dark_blue","italic":false}']}}
 item replace entity @s armor.feet with diamond_boots{Trim:{pattern:tide, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"thorns", lvl:1}], HideFlags:255, display:{Name:'{"text":"Bottes en Diamant","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"-----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"᠅ Épines I","color":"dark_green","italic":false}']}}
-tag @s add tank_voulu
+tag @s add sgp.tank_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 5
 scoreboard players set @s sgp.veut_tank 0

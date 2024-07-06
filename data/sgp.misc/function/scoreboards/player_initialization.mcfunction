@@ -15,7 +15,7 @@ scoreboard players add @s sgp.alchimiste_found 0
 scoreboard players add @s sgp.poseidon_found 0
 scoreboard players add @s sgp.eclaireur_found 0
 
-execute unless score @s sgp.UUID matches 0.. unless score @s sgp.UUID matches ..0 store result score @s sgp.UUID run data get entity @s UUID[1]
+execute unless score @s sgp.uuid matches 0.. unless score @s sgp.uuid matches ..0 store result score @s sgp.uuid run data get entity @s UUID[1]
 
 tag @s add sgp.initialize_lieux
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/player_initialization_lieux with entity @s data

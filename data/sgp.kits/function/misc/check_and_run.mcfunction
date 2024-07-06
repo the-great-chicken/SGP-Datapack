@@ -4,11 +4,11 @@
 
 # Kits débloqués par défaut
 execute as @a[scores={sgp.veut_combattant=1..}] run function sgp.kits:collection/combattant
-scoreboard players enable @a[tag=combattant_voulu] sgp.veut_combattant
+scoreboard players enable @a[tag=sgp.combattant_voulu] sgp.veut_combattant
 execute as @a[scores={sgp.veut_vindicateur=1..}] run function sgp.kits:collection/vindicateur
-scoreboard players enable @a[tag=vindicateur_voulu] sgp.veut_vindicateur
+scoreboard players enable @a[tag=sgp.vindicateur_voulu] sgp.veut_vindicateur
 execute as @a[scores={sgp.veut_archer=1..}] run function sgp.kits:collection/archer
-scoreboard players enable @a[tag=archer_voulu] sgp.veut_archer
+scoreboard players enable @a[tag=sgp.archer_voulu] sgp.veut_archer
 
 # Kits à trouver dans la map
 execute as @a[scores={sgp.veut_eclaireur=1..}] run function sgp.kits:misc/check_and_give {kit:eclaireur, kit_color:aqua, hint:"Zone Noire", hint_color:dark_gray}

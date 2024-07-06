@@ -7,7 +7,7 @@
         "condition": "minecraft:entity_properties",
         "entity": "this",
         "predicate": {
-          "nbt": "{Tags:[\"roi\"]}"
+          "nbt": "{Tags:[\"sgp.roi\"]}"
         }
       }
     },
@@ -15,7 +15,7 @@
       "condition": "minecraft:entity_properties",
       "entity": "this",
       "predicate": {
-        "nbt": "{Tags:[\"roi_bleu\"]}"
+        "nbt": "{Tags:[\"sgp.roi_bleu\"]}"
       }
     }
   ]

@@ -7,5 +7,5 @@ execute as @p[scores={sgp.devenir_roi_bleu=1..}] run item replace entity @s hotb
 tp @p[scores={sgp.devenir_roi_bleu=1..}] @e[type=marker,tag=sgp.marker,name="protect_spawn_bleus",limit=1]
 execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run scoreboard players set @s sgp.entre_kits 1
 scoreboard players set @p[scores={sgp.devenir_roi_bleu=1..}] sgp.devenir_roi_bleu 0
-execute as @a[tag=in_game] run trigger sgp.devenir_roi_bleu set 0
-tellraw @a[tag=in_game] ["",{"selector":"@a[tag=sgp.roi_bleu]","color":"dark_blue","bold":true},{"text":" est le roi ","color":"gold"},{"text":"Bleu","color":"dark_blue","bold":true}]
+execute as @a[tag=sgp.in_game] run trigger sgp.devenir_roi_bleu set 0
+tellraw @a[tag=sgp.in_game] ["",{"selector":"@a[tag=sgp.roi_bleu]","color":"dark_blue","bold":true},{"text":" est le roi ","color":"gold"},{"text":"Bleu","color":"dark_blue","bold":true}]

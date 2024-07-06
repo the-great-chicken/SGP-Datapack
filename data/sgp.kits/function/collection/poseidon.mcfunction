@@ -10,8 +10,8 @@ effect give @s slowness infinite 3
 effect give @s resistance infinite 2
 effect give @s hunger infinite 3
 item replace entity @s hotbar.1 with air
-tag @s add poseidon_a_setup_egapp
-tag @s add poseidon_voulu
+tag @s add sgp.poseidon_a_setup_egapp
+tag @s add sgp.poseidon_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 11
 scoreboard players set @s sgp.veut_poseidon 0

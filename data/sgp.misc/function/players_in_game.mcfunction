@@ -3,5 +3,5 @@
 #
 # Players who are inside the radius have a tag, others don't
 
-$execute as @a[distance=..$(radius),tag=!in_game] run tag @s add in_game
-$execute as @a[distance=$(radius)..,tag=in_game] run tag @s remove in_game
+$execute as @a[distance=..$(radius),tag=!sgp.in_game] run tag @s sgp.add in_game
+$execute as @a[distance=$(radius)..,tag=sgp.in_game] run tag @s remove sgp.in_game

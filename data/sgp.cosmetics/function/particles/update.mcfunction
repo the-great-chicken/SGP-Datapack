@@ -3,7 +3,7 @@
 # 
 # Checks if the player has unlocked the particle cloak, activating it or not
 
-$execute if score @s sgp.$(particle)_particle_unlocked matches 1 run tag @s add $(particle)_particle
+$execute if score @s sgp.$(particle)_particle_unlocked matches 1 run tag @s add sgp.$(particle)_particle
 $execute if score @s sgp.$(particle)_particle_unlocked matches 1 run tellraw @s ["Tu as sélectionné la Trainée de Particules ",{"text":"$(particule)", "color":"$(couleur)", "bold":true}]
 $scoreboard players enable @s sgp.veut_$(particle)
 $scoreboard players set @s sgp.veut_$(particle) 0

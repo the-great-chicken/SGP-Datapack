@@ -13,6 +13,15 @@ scoreboard objectives remove sgp.veut_ench
 scoreboard objectives remove sgp.veut_smoke
 scoreboard objectives remove sgp.veut_cloud
 scoreboard objectives remove sgp.veut_desactiver
+scoreboard objectives remove sgp.light_particle_unlocked
+scoreboard objectives remove sgp.medium_particle_unlocked
+scoreboard objectives remove sgp.heavy_particle_unlocked
+scoreboard objectives remove sgp.super_heavy_particle_unlocked
+scoreboard objectives remove sgp.flame_crown_particle_unlocked
+scoreboard objectives remove sgp.marine_particle_unlocked
+scoreboard objectives remove sgp.ench_particle_unlocked
+scoreboard objectives remove sgp.smoke_particle_unlocked
+scoreboard objectives remove sgp.cloud_particle_unlocked
 
 scoreboard objectives remove sgp.veut_kill_disabled
 scoreboard objectives remove sgp.veut_kill_anvil
@@ -56,16 +65,16 @@ scoreboard objectives remove sgp.alchimiste_found
 scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
 
-
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/uninstallation_spawns with entity @s data
+scoreboard objectives remove sgp.spawn_random
 
 scoreboard objectives remove sgp.laby_fin
 scoreboard objectives remove sgp.jump_hardest_done
 scoreboard objectives remove sgp.jump_diff_2_done
 
-scoreboard objectives remove sgp.UUID
+scoreboard objectives remove sgp.uuid
 scoreboard objectives remove sgp.killer
 scoreboard objectives remove sgp.posx1
 scoreboard objectives remove sgp.posy1
@@ -89,6 +98,7 @@ scoreboard objectives remove sgp.kills_give_1
 scoreboard objectives remove sgp.kills_give_2
 scoreboard objectives remove sgp.kills_give_3
 scoreboard objectives remove sgp.streak_en_cours
+scoreboard objectives remove sgp.last_kill_count
 
 scoreboard objectives remove sgp.entre_cosm
 scoreboard objectives remove sgp.sort_cosm
@@ -116,6 +126,8 @@ scoreboard objectives remove sgp.teleporteur
 scoreboard objectives remove sgp.dummy
 scoreboard objectives remove sgp.timer
 
+scoreboard objectives remove sgp.sneak_particle
+
 
 
 # ---------- Remove teams ----------
@@ -133,7 +145,7 @@ team remove sgp.Pigeons
 
 team remove sgp.Oie
 
-team remove Poule
+team remove sgp.Poule
 
 team remove sgp.Canard
 

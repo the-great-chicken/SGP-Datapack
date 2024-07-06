@@ -12,7 +12,7 @@ execute if score #scoreboard_and_clearlag sgp.dummy matches 1 \
     run scoreboard objectives setdisplay sidebar sgp.kills
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 2 \
-    run scoreboard objectives setdisplay sidebar kd
+    run scoreboard objectives setdisplay sidebar sgp.kd
 
 
 

@@ -13,7 +13,7 @@ item replace entity @s armor.head with iron_helmet{Trim:{pattern:spire, material
 item replace entity @s armor.chest with iron_chestplate{Trim:{pattern:coast, material:copper}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Plastron en Fer", "color":"white", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}']}}
 item replace entity @s armor.legs with iron_leggings{Trim:{pattern:spire, material:copper}, Unbreakable:1, Enchantments:[{id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Jambières en Fer", "color":"white", "italic":false, "bold":true}', Lore:['{"text":"-----------------", "color":"#C0C0C0", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}']}}
 item replace entity @s armor.feet with iron_boots{Trim:{pattern:eye, material:copper}, Unbreakable:1, HideFlags:255, display:{Name:'{"text":"Bottes en Fer", "color":"white", "italic":false, "bold":true}'}}
-tag @s add combattant_voulu
+tag @s add sgp.combattant_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 1
 scoreboard players set @s sgp.veut_combattant 0

@@ -11,7 +11,7 @@ scoreboard players set @a[scores={sgp.reset_tags=1}] sgp.kills_give_1 0
 scoreboard players set @a[scores={sgp.reset_tags=1}] sgp.kills_give_2 0
 scoreboard players set @a[scores={sgp.reset_tags=1}] sgp.kills_give_3 0
 scoreboard players set @a[scores={sgp.reset_tags=1}] sgp.reset_tags 0
-scoreboard players set @a[tag=poseidon_a_setup_egapp] sgp.kills_give_2 3
-tag @a[tag=poseidon_a_setup_egapp] remove poseidon_a_setup_egapp
-scoreboard players set @a[tag=vindicateur_a_setup_egapp] sgp.kills_give_2 4
-tag @a[tag=vindicateur_a_setup_egapp] remove vindicateur_a_setup_egapp
+scoreboard players set @a[tag=sgp.poseidon_a_setup_egapp] sgp.kills_give_2 3
+tag @a[tag=sgp.poseidon_a_setup_egapp] remove sgp.poseidon_a_setup_egapp
+scoreboard players set @a[tag=sgp.vindicateur_a_setup_egapp] sgp.kills_give_2 4
+tag @a[tag=sgp.vindicateur_a_setup_egapp] remove sgp.vindicateur_a_setup_egapp

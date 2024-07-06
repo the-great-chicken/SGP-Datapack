@@ -13,6 +13,15 @@ scoreboard objectives add sgp.veut_ench trigger
 scoreboard objectives add sgp.veut_smoke trigger
 scoreboard objectives add sgp.veut_cloud trigger
 scoreboard objectives add sgp.veut_desactiver trigger
+scoreboard objectives add sgp.light_particle_unlocked dummy
+scoreboard objectives add sgp.medium_particle_unlocked dummy
+scoreboard objectives add sgp.heavy_particle_unlocked dummy
+scoreboard objectives add sgp.super_heavy_particle_unlocked dummy
+scoreboard objectives add sgp.flame_crown_particle_unlocked dummy
+scoreboard objectives add sgp.marine_particle_unlocked dummy
+scoreboard objectives add sgp.ench_particle_unlocked dummy
+scoreboard objectives add sgp.smoke_particle_unlocked dummy
+scoreboard objectives add sgp.cloud_particle_unlocked dummy
 
 scoreboard objectives add sgp.veut_kill_disabled trigger
 scoreboard objectives add sgp.veut_kill_anvil trigger
@@ -59,12 +68,13 @@ scoreboard objectives add sgp.eclaireur_found trigger
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/initialization_spawns with entity @s data
+scoreboard objectives add sgp.spawn_random trigger
 
 scoreboard objectives add sgp.laby_fin trigger
 scoreboard objectives add sgp.jump_hardest_done trigger
 scoreboard objectives add sgp.jump_diff_2_done trigger
 
-scoreboard objectives add sgp.UUID dummy
+scoreboard objectives add sgp.uuid dummy
 scoreboard objectives add sgp.killer dummy
 scoreboard objectives add sgp.posx1 dummy
 scoreboard objectives add sgp.posy1 dummy
@@ -88,6 +98,7 @@ scoreboard objectives add sgp.kills_give_1 playerKillCount
 scoreboard objectives add sgp.kills_give_2 playerKillCount
 scoreboard objectives add sgp.kills_give_3 playerKillCount
 scoreboard objectives add sgp.streak_en_cours minecraft.custom:minecraft.player_kills
+scoreboard objectives add sgp.last_kill_count playerKillCount
 
 scoreboard objectives add sgp.entre_cosm trigger
 scoreboard objectives add sgp.sort_cosm trigger
@@ -120,26 +131,26 @@ scoreboard objectives add sgp.sneak_particle minecraft.custom:minecraft.sneak_ti
 
 
 # ---------- Initialize values ----------
-scoreboard players set #ench_particle dummy 0
-scoreboard players set #flame_crown_particle dummy 0
-scoreboard players set 0 dummy 0
-scoreboard players set 3 dummy 3
-scoreboard players set 1 dummy 1
-scoreboard players set 7 dummy 7
-scoreboard players set 10 dummy 10
-scoreboard players set 16 dummy 16
-scoreboard players set 29 dummy 29
-scoreboard players set 37 dummy 37
-scoreboard players set 49 dummy 49
-scoreboard players set 50 dummy 50
-scoreboard players set 100 dummy 100
-scoreboard players set 300 dummy 300
-scoreboard players set #even_tick dummy 0
-scoreboard players set #128_ticks_clock dummy 0
-scoreboard players set #52_ticks_clock dummy 0
-scoreboard players set #bossbar_color dummy 0
-scoreboard players set #bossbar_name dummy 0
-scoreboard players set #scoreboard_and_clearlag dummy 0
+scoreboard players set #ench_particle sgp.dummy 0
+scoreboard players set #flame_crown_particle sgp.dummy 0
+scoreboard players set 0 sgp.dummy 0
+scoreboard players set 3 sgp.dummy 3
+scoreboard players set 1 sgp.dummy 1
+scoreboard players set 7 sgp.dummy 7
+scoreboard players set 10 sgp.dummy 10
+scoreboard players set 16 sgp.dummy 16
+scoreboard players set 29 sgp.dummy 29
+scoreboard players set 37 sgp.dummy 37
+scoreboard players set 49 sgp.dummy 49
+scoreboard players set 50 sgp.dummy 50
+scoreboard players set 100 sgp.dummy 100
+scoreboard players set 300 sgp.dummy 300
+scoreboard players set #even_tick sgp.dummy 0
+scoreboard players set #128_ticks_clock sgp.dummy 0
+scoreboard players set #52_ticks_clock sgp.dummy 0
+scoreboard players set #bossbar_color sgp.dummy 0
+scoreboard players set #bossbar_name sgp.dummy 0
+scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
@@ -186,7 +197,7 @@ team modify sgp.Oie collisionRule never
 team modify sgp.Oie color yellow
 team modify sgp.Oie friendlyFire false
 
-team add Poule
+team add sgp.Poule
 team modify sgp.Poule collisionRule never
 team modify sgp.Poule color red
 team modify sgp.Poule friendlyFire false

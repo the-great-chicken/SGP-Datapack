@@ -2,38 +2,38 @@
 # 
 # Transform <kit>_voulu to <kit> for the player
 
-tag @a[tag=pigeon_voulu] add pigeon
-tag @a[tag=pigeon_voulu] remove pigeon_voulu
+tag @a[tag=sgp.pigeon_voulu] add sgp.pigeon
+tag @a[tag=sgp.pigeon_voulu] remove sgp.pigeon_voulu
 
-tag @a[tag=combattant_voulu] add combattant
-tag @a[tag=combattant_voulu] remove combattant_voulu
+tag @a[tag=sgp.combattant_voulu] add sgp.combattant
+tag @a[tag=sgp.combattant_voulu] remove sgp.combattant_voulu
 
-tag @a[tag=alchimiste_voulu] add alchimiste
-tag @a[tag=alchimiste_voulu] remove alchimiste_voulu
+tag @a[tag=sgp.alchimiste_voulu] add sgp.alchimiste
+tag @a[tag=sgp.alchimiste_voulu] remove sgp.alchimiste_voulu
 
-tag @a[tag=vindicateur_voulu] add vindicateur
-tag @a[tag=vindicateur_voulu] remove vindicateur_voulu
+tag @a[tag=sgp.vindicateur_voulu] add sgp.vindicateur
+tag @a[tag=sgp.vindicateur_voulu] remove sgp.vindicateur_voulu
 
-tag @a[tag=roi_voulu] add roi
-tag @a[tag=roi_voulu] remove roi_voulu
+tag @a[tag=sgp.roi_voulu] add sgp.roi
+tag @a[tag=sgp.roi_voulu] remove sgp.roi_voulu
 
-tag @a[tag=tank_voulu] add tank
-tag @a[tag=tank_voulu] remove tank_voulu
+tag @a[tag=sgp.tank_voulu] add sgp.tank
+tag @a[tag=sgp.tank_voulu] remove sgp.tank_voulu
 
-tag @a[tag=pyromane_voulu] add pyromane
-tag @a[tag=pyromane_voulu] remove pyromane_voulu
+tag @a[tag=sgp.pyromane_voulu] add sgp.pyromane
+tag @a[tag=sgp.pyromane_voulu] remove sgp.pyromane_voulu
 
-tag @a[tag=enderman_voulu] add enderman
-tag @a[tag=enderman_voulu] remove enderman_voulu
+tag @a[tag=sgp.enderman_voulu] add sgp.enderman
+tag @a[tag=sgp.enderman_voulu] remove sgp.enderman_voulu
 
-tag @a[tag=eclaireur_voulu] add eclaireur
-tag @a[tag=eclaireur_voulu] remove eclaireur_voulu
+tag @a[tag=sgp.eclaireur_voulu] add sgp.eclaireur
+tag @a[tag=sgp.eclaireur_voulu] remove sgp.eclaireur_voulu
 
-tag @a[tag=archer_voulu] add archer
-tag @a[tag=archer_voulu] remove archer_voulu
+tag @a[tag=sgp.archer_voulu] add sgp.archer
+tag @a[tag=sgp.archer_voulu] remove sgp.archer_voulu
 
-tag @a[tag=poseidon_voulu] add poseidon
-tag @a[tag=poseidon_voulu] remove poseidon_voulu
+tag @a[tag=sgp.poseidon_voulu] add sgp.poseidon
+tag @a[tag=sgp.poseidon_voulu] remove sgp.poseidon_voulu
 
-tag @a[tag=cancer_voulu] add cancer
-tag @a[tag=cancer_voulu] remove cancer_voulu
+tag @a[tag=sgp.cancer_voulu] add sgp.cancer
+tag @a[tag=sgp.cancer_voulu] remove sgp.cancer_voulu

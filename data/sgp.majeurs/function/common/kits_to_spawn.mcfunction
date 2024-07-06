@@ -10,8 +10,8 @@ execute if predicate sgp.majeurs:protect/ongoing run scoreboard players set @s s
 execute if predicate sgp.majeurs:protect/ongoing run execute as @s run function sgp.kits:misc/sort_salle
 execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[team=sgp.rouge] @a[gamemode=survival,team=sgp.rouge] RED
 execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[team=sgp.bleue] @a[gamemode=survival,team=sgp.bleue] BLUE
-execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[tag=in_game] @a[tag=sgp.roi_rouge] DARK_RED
-execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[tag=in_game] @a[tag=sgp.roi_bleu] DARK_BLUE
+execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[tag=sgp.in_game] @a[tag=sgp.roi_rouge] DARK_RED
+execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[tag=sgp.in_game] @a[tag=sgp.roi_bleu] DARK_BLUE
 
 # Invasion
 execute if predicate sgp.majeurs:invasion/ongoing run tp @s @e[type=marker,tag=sgp.marker,name="Attaquant_Invasion",limit=1,sort=random]

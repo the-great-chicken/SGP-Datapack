@@ -11,8 +11,8 @@ item replace entity @s armor.head with iron_helmet{Trim:{pattern:rib, material:c
 item replace entity @s armor.chest with diamond_chestplate{Trim:{pattern:rib, material:copper}, Unbreakable:1, HideFlags:255, display:{Name:'{"text":"Plastron en Diamant", "color":"dark_green", "italic":false, "bold":true}'}}
 item replace entity @s armor.legs with leather_leggings{Trim:{pattern:rib, material:copper}, Unbreakable:1, Enchantments:[{id:"thorns", lvl:1}], HideFlags:255, display:{color:9533531, Name:'{"text":"Pantalon en Cuir", "color":"dark_green", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}']}}
 item replace entity @s armor.feet with leather_boots{Trim:{pattern:rib, material:copper}, Unbreakable:1, Enchantments:[{id:"thorns", lvl:3}], HideFlags:255, display:{color:9533531, Name:'{"text":"Bottes en Cuir", "color":"dark_green", "italic":false, "bold":true}', Lore:['{"text":"--------------", "color":"#C0C0C0", "italic":false}', '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}']}}
-tag @s add vindicateur_a_setup_egapp
-tag @s add vindicateur_voulu
+tag @s add sgp.vindicateur_a_setup_egapp
+tag @s add sgp.vindicateur_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 3
 execute if entity @s[team=sgp.Attaquant] run clear @s

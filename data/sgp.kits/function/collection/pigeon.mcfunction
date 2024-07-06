@@ -14,7 +14,7 @@ item replace entity @s armor.head with player_head{SkullOwner:"__pif__", Enchant
 item replace entity @s armor.chest with elytra{Unbreakable:1, HideFlags:4, display:{Name:'{"text":"Ailes", "color":"dark_gray", "italic":false, "bold":true}'}}
 item replace entity @s armor.legs with chainmail_leggings{Unbreakable:1, HideFlags:6, display:{Name:'{"text":"Cuisses", "color":"dark_gray", "italic":false, "bold":true}'}}
 item replace entity @s armor.feet with chainmail_boots{Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:7, display:{Name:'{"text":"Pattes", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
-tag @s add pigeon_voulu
+tag @s add sgp.pigeon_voulu
 scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 0
 execute if entity @s[team=sgp.Attaquant] run clear @s
