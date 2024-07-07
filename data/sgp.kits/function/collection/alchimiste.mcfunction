@@ -1,21 +1,5 @@
 #> sgp.kits:collection/alchimiste
 # 
-# Gives the Alchimiste kit to the player
+# Specific things of the Alchimiste kit
 
-clear @s
-effect clear @s
-item replace entity @s hotbar.0 with stone_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:5.0d, Operation:0, UUID:[I; -124310, 13101, 13111, -26202]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Enchantments:[{id:"sharpness", lvl:1}], HideFlags:63, display:{Name:'{"text":"Épée en Pierre", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"---------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', '{"text":"6 dégats", "color":"blue", "italic":false}']}}
-item replace entity @s weapon.offhand with baked_potato{display:{Name:'{"text":"Pommes de Terre cuites au Four", "color":"light_purple", "italic":false, "bold":true}', Lore:['[{"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, {"text":"❤", "color":"red", "italic":false}]']}} 64
-item replace entity @s hotbar.3 with splash_potion{Potion:"water", custom_potion_effects:[{id:"blindness", amplifier:0, duration:100}], HideFlags:63, display:{Name:'{"text":"Potion de Cécité", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"👁 Cécité (0:05)", "color":"#8B8589", "italic":false}']}}
-item replace entity @s hotbar.4 with milk_bucket{display:{Name:'{"text":"Antibiotique", "color":"light_purple", "italic":false, "bold":true}', Lore:['[{"text":"Enlève tous les effets", "color":"gray", "italic":false}]']}}
-item replace entity @s armor.head with chainmail_helmet{Trim:{pattern:tide, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Casque de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"------------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
-item replace entity @s armor.chest with chainmail_chestplate{Trim:{pattern:sentry, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:2}], HideFlags:255, display:{Name:'{"text":"Cotte de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', '{"text":"➹ Protection II", "color":"dark_blue", "italic":false}']}}
-item replace entity @s armor.legs with chainmail_leggings{Trim:{pattern:sentry, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Jambières de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"--------------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
-item replace entity @s armor.feet with chainmail_boots{Trim:{pattern:sentry, material:amethyst}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Bottes de Mailles", "color":"light_purple", "italic":false, "bold":true}', Lore:['{"text":"-----------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}']}}
-tag @s add sgp.alchimiste_voulu
-scoreboard players set @s sgp.reset_tags 1
 scoreboard players set @s sgp.kit_id 8
-function sgp.kits:stacking/set_stack {item_id:splash_potion, count:8, slot:hotbar.1, tag:"Potion:\"minecraft:healing\",HideFlags:63,display:{Name:'{\"text\":\"Potion de Soin\",\"color\":\"light_purple\",\"italic\":false,\"bold\":true}',Lore:['[{\"text\":\"Régénère jusqu\\'à 2\",\"color\":\"gray\",\"italic\":false},{\"text\":\"❤\",\"color\":\"red\"},{\"text\":\" instantanément\",\"color\":\"gray\"}]']}"}
-function sgp.kits:stacking/set_stack {item_id:splash_potion, count:10, slot:hotbar.2, tag:"Potion:\"minecraft:harming\",HideFlags:63,display:{Name:'{\"text\":\"Potion de Dégats\",\"color\":\"light_purple\",\"italic\":false,\"bold\":true}',Lore:['{\"text\":\"Inflige jusqu\\'à 4 dégâts\",\"color\":\"gray\",\"italic\":false}']}"}
-scoreboard players set @s sgp.veut_alchimiste 0
-scoreboard players set @s sgp.kit_prefix_set 0
