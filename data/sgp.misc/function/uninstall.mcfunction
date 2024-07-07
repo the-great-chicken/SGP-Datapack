@@ -41,6 +41,7 @@ scoreboard objectives remove sgp.hurt_kill_unlocked
 scoreboard objectives remove sgp.cloud_kill_unlocked
 scoreboard objectives remove sgp.splash_kill_unlocked
 scoreboard objectives remove sgp.firework_kill_unlocked
+scoreboard objectives remove sgp.disabled_kill_unlocked
 
 scoreboard objectives remove sgp.veut_alchimiste
 scoreboard objectives remove sgp.veut_archer
@@ -89,6 +90,7 @@ scoreboard objectives remove sgp.kit_prefix_set
 scoreboard objectives remove sgp.death_effect
 scoreboard objectives remove sgp.death_reset_tags
 scoreboard objectives remove sgp.streak_reset
+scoreboard objectives remove sgp.morts
 
 scoreboard objectives remove sgp.kd 
 scoreboard objectives remove sgp.plus_grande_streak

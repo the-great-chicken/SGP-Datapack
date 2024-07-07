@@ -41,6 +41,7 @@ scoreboard objectives add sgp.hurt_kill_unlocked dummy
 scoreboard objectives add sgp.cloud_kill_unlocked dummy
 scoreboard objectives add sgp.splash_kill_unlocked dummy
 scoreboard objectives add sgp.firework_kill_unlocked dummy
+scoreboard objectives add sgp.disabled_kill_unlocked dummy
 
 scoreboard objectives add sgp.veut_alchimiste trigger
 scoreboard objectives add sgp.veut_archer trigger
@@ -89,6 +90,7 @@ scoreboard objectives add sgp.kit_prefix_set dummy
 scoreboard objectives add sgp.death_effect deathCount
 scoreboard objectives add sgp.death_reset_tags deathCount
 scoreboard objectives add sgp.streak_reset deathCount
+scoreboard objectives add sgp.morts deathCount
 
 scoreboard objectives add sgp.kd dummy {"bold":true,"color":"dark_green","text":"Kills/Deaths (en %)"}
 scoreboard objectives add sgp.plus_grande_streak dummy {"bold":true,"color":"dark_aqua","text":"Plus grande streak"}

@@ -13,7 +13,7 @@ execute as @a[scores={sgp.veut_marine=1..}] run function sgp.cosmetics:particles
 execute as @a[scores={sgp.veut_smoke=1..}] run function sgp.cosmetics:particles/update {particle:smoke, particule:"Fumée", couleur:gray}
 execute as @a[scores={sgp.veut_ench=1..}] run function sgp.cosmetics:particles/update {particle:ench, particule:Tranchant, couleur:aqua}
 
-execute as @a[scores={sgp.veut_kill_disabled=1..}] unless score @s disabled_kill_unlocked matches 1 run scoreboard players set @s disabled_kill_unlocked 1 
+execute as @a[scores={sgp.veut_kill_disabled=1..}] unless score @s sgp.disabled_kill_unlocked matches 1 run scoreboard players set @s sgp.disabled_kill_unlocked 1 
 execute as @a[scores={sgp.veut_kill_disabled=1..}] run function sgp.cosmetics:kill_effects/update {effect:disabled, effet:"Désactivé", couleur:white}
 execute as @a[scores={sgp.veut_kill_anvil=1..}] run function sgp.cosmetics:kill_effects/update {effect:anvil, effet:Enclume, couleur:dark_gray}
 execute as @a[scores={sgp.veut_kill_portal=1..}] run function sgp.cosmetics:kill_effects/update {effect:portal, effet:Portail, couleur:dark_purple}

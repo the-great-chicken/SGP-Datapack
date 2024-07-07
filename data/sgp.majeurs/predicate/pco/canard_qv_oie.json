@@ -7,7 +7,7 @@
       "type": "player",
       "looking_at": {
         "type": "minecraft:player",
-        "team": "Oie",
+        "team": "sgp.Oie",
         "distance": {
           "horizontal": {
             "min": 0,
@@ -16,6 +16,6 @@
         }
       }
     },
-    "team": "Canard"
+    "team": "sgp.Canard"
   }
 }

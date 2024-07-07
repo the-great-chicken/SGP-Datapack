@@ -12,7 +12,7 @@ scoreboard players set #invasion_secondes sgp.timer 0
 scoreboard players set #invasion_ticks sgp.timer 0
 scoreboard players set #invasion_joueurs sgp.dummy 0
 execute as @a[tag=sgp.in_game] run scoreboard players add #invasion_joueurs sgp.dummy 1
-scoreboard players operation #invasion nbr_de_joueurs *= 16 sgp.dummy
+scoreboard players operation #invasion_joueurs sgp.dummy *= 16 sgp.dummy
 experience set @a[tag=sgp.in_game] 0 levels
 execute as @a[tag=sgp.in_game] run experience add @a[tag=sgp.in_game] 16 levels
 statuswarp pvp disabled

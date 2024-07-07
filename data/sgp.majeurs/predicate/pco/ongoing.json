@@ -5,21 +5,21 @@
         "condition": "minecraft:entity_properties",
         "entity": "this",
         "predicate": {
-          "team": "Oie"
+          "team": "sgp.Oie"
         }
       },
       {
         "condition": "minecraft:entity_properties",
         "entity": "this",
         "predicate": {
-          "team": "Poule"
+          "team": "sgp.Poule"
         }
       },
       {
         "condition": "minecraft:entity_properties",
         "entity": "this",
         "predicate": {
-          "team": "Canard"
+          "team": "sgp.Canard"
         }
       }
     ]

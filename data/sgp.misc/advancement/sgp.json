@@ -3,7 +3,7 @@
         "title": "SGP Datapack",
         "description": "Datapack of the Soirée du Grand Poulet",
         "icon": {
-            "item": "minecraft:chicken"
+            "id": "minecraft:chicken"
         },
         "announce_to_chat": false,
         "show_toast": false
