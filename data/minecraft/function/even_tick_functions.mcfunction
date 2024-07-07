@@ -10,7 +10,7 @@ execute if score #even_tick sgp.dummy matches 0 \
         run function sgp.world:lieu_trouve with entity @s data
 
 execute if score #even_tick sgp.dummy matches 0 \
-    as @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] at @s \
+    as @n[type=marker,tag=sgp.marker,name="pvp_arena"] at @s \
         run function sgp.misc:players_in_game with entity @s data
 
 execute if score #even_tick sgp.dummy matches 0 \

@@ -1,5 +1,5 @@
 # Quand un rouge meurt alors que son roi est mort
-execute unless predicate sgp.majeurs:protect/roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run function sgp.majeurs:protect/player_dead
+execute unless predicate sgp.majeurs:protect/roi_rouge_vivant at @n[type=marker,tag=sgp.marker,name="kits"] as @a[distance=..3,team=sgp.rouge] run function sgp.majeurs:protect/player_dead
 
 # Quand tous les bleus sont morts
 execute unless entity @a[team=sgp.bleue] unless predicate sgp.majeurs:protect/roi_bleu_vivant run tellraw @a[tag=sgp.in_game] [{"text":"L'Equipe ", "color":"gold", "bold":true}, {"text":"Rouge ", "color":"dark_red"}, "a gagné ! ", {"text":"Tous les Bleus sont vivants. ","bold":false}]
@@ -13,7 +13,7 @@ execute unless predicate sgp.majeurs:protect/roi_rouge_vivant if score #mort_roi
 
 
 # Quand un bleu meurt alors que son roi est mort
-execute unless predicate sgp.majeurs:protect/roi_bleu_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.bleue] run function sgp.majeurs:protect/player_dead
+execute unless predicate sgp.majeurs:protect/roi_bleu_vivant at @n[type=marker,tag=sgp.marker,name="kits"] as @a[distance=..3,team=sgp.bleue] run function sgp.majeurs:protect/player_dead
 
 # Quand tous les rouges sont morts
 execute unless entity @a[team=sgp.rouge] unless predicate sgp.majeurs:protect/roi_rouge_vivant run tellraw @a[tag=sgp.in_game] [{"text":"L'Equipe ", "color":"gold", "bold":true}, {"text":"Bleu ", "color":"dark_blue"}, "a gagné ! ", {"text":"Tous les Rouges sont vivants. ","bold":false}]

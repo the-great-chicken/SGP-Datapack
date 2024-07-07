@@ -1,1 +1,1 @@
-$scoreboard players add @a[tag=sgp.initialize_lieux,limit=1] sgp.lieu_$(lieu) 0
+$scoreboard players add @p[tag=sgp.initialize_lieux] sgp.lieu_$(lieu) 0
