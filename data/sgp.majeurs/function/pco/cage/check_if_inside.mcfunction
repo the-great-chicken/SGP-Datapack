@@ -1,0 +1,2 @@
+$execute if entity @s[dx=$(dx1),dy=2,dz=$(dz1)] run scoreboard players set @s sgp.en_cage 1
+$execute as @s[scores={sgp.en_cage=1}] unless entity @s[dx=$(dx1),dy=2,dz=$(dz1)] run scoreboard players set @s sgp.en_cage 0

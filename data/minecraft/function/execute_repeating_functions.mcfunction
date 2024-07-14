@@ -164,8 +164,7 @@ execute if predicate sgp.majeurs:protect/ongoing run \
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/empower
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/check_death
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/add_cabane_time
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/dans_cabane
+execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/cabane/run_check_inside
 
 
 

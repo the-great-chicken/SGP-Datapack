@@ -6,25 +6,22 @@ useglow toggle
 function sgp.majeurs:pco/dispatch
 
 # Mets les cages dans l'arène
-function sgp.majeurs:pco/canard/clone_cages
-function sgp.majeurs:pco/poule/clone_cages
-function sgp.majeurs:pco/oie/clone_cages
+execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage"] run function sgp.majeurs:pco/cage/compute_markers_coordinates
+execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage"] run function sgp.majeurs:pco/cage/clone_cage with entity @s data
 
-tp @e[team=sgp.Oie] 2502.5 239 2176.5
-tp @e[team=sgp.Poule] 2485.5 244 2139.5
-tp @e[team=sgp.Canard] 2530.5 248 2145.5
-targetglow @a[team=sgp.Canard] @a[gamemode=survival,team=sgp.Canard] GREEN
-targetglow @a[team=sgp.Canard] @a[gamemode=survival,team=sgp.Oie] YELLOW
-targetglow @a[team=sgp.Oie] @a[gamemode=survival,team=sgp.Oie] YELLOW
-targetglow @a[team=sgp.Oie] @a[gamemode=survival,team=sgp.Poule] RED
-targetglow @a[team=sgp.Poule] @a[gamemode=survival,team=sgp.Poule] RED
-targetglow @a[team=sgp.Poule] @a[gamemode=survival,team=sgp.Canard] GREEN
-execute as @a[team=sgp.Oie] run function sgp.majeurs:pco/oie/kit
-execute as @a[team=sgp.Poule] run function sgp.majeurs:pco/poule/kit
-execute as @a[team=sgp.Canard] run function sgp.majeurs:pco/canard/kit
+# Gives the kit to the players, and applies glowing
+execute as @a[team=sgp.Poule] run function sgp.majeurs:pco/on_death {color:red, color_hex:16733525, color_material:redstone, cage:poule, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
+execute as @a[team=sgp.Canard] run function sgp.majeurs:pco/on_death {color:green, color_hex:5635925, color_material:emerald, cage:canard, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
+execute as @a[team=sgp.Oie] run function sgp.majeurs:pco/on_death {color:yellow, color_hex:16777045, color_material:gold, cage:oie, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
+
+tp @a[team=sgp.Poule] @e[type=marker,tag=sgp.marker,name="pco_poule_spawn",limit=1]
+tp @a[team=sgp.Canard] @e[type=marker,tag=sgp.marker,name="pco_canard_spawn",limit=1]
+tp @a[team=sgp.Oie] @e[type=marker,tag=sgp.marker,name="pco_oie_spawn",limit=1]
+
 move @a[team=sgp.Oie] #Oies
 move @a[team=sgp.Poule] #Poules
 move @a[team=sgp.Canard] #Canards
+
 scoreboard players set @a[team=sgp.Oie] sgp.liberer_oies 0
 scoreboard players set @a[team=sgp.Canard] sgp.liberer_canards 0
 scoreboard players set @a[team=sgp.Poule] sgp.liberer_poules 0
@@ -39,13 +36,10 @@ title @a[team=sgp.Canard] subtitle [{"text":"Chassez les ","color":"white","bold
 title @a[team=sgp.Canard] title {"text":"Canard","color":"green","bold":true}
 tellraw @a[team=sgp.Canard] [{"text":"Vous êtes un ","color":"white"},{"text":"Canard. ","color":"green","bold":true},{"text":"Vous devez chasser les ","color":"white"},{"text":"Oies.","color":"yellow","bold":true}]
 
-fill 2500 239 2182 2500 239 2180 minecraft:warped_fence_gate[facing=west]
-fill 2499 239 2179 2497 239 2179 minecraft:warped_fence_gate[facing=south]
-fill 2538 248 2144 2540 248 2144 minecraft:warped_fence_gate[facing=north]
-fill 2537 248 2141 2537 248 2143 minecraft:warped_fence_gate[facing=west]
-fill 2524 248 2144 2526 248 2144 minecraft:warped_fence_gate[facing=north]
-setblock 2478 244 2141 minecraft:warped_fence_gate[facing=west]
-setblock 2484 244 2141 minecraft:warped_fence_gate[facing=west]
+# Spawns the cabanes
+execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"poule"}},limit=1] run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"canard"}
+execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"oie"}},limit=1] run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"poule"}
+execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"canard"}},limit=1] run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"oie"}
 
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
 function sgp.lore:npcs/disable

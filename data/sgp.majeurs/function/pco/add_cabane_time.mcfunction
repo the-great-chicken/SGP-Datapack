@@ -1,3 +1,0 @@
-execute as @a[team=sgp.Poule] at @s unless entity @s[x=2478.900,y=244,z=2140.900,dx=5.2,dy=2,dz=2.3] run scoreboard players add @s sgp.temps_cabane_pco 1
-execute as @a[team=sgp.Oie] at @s unless entity @s[x=2497,y=239,z=2179.9,dx=3.2,dy=2,dz=3.2] run scoreboard players add @s sgp.temps_cabane_pco 1
-execute as @a[team=sgp.Canard] at @s unless entity @s[x=2523.8,y=248,z=2140.8,dx=3.3,dy=2,dz=3.3] unless entity @s[x=2537.9,y=248,z=2140.8,dx=3.3,dy=2,dz=3.3] run scoreboard players add @s sgp.temps_cabane_pco 1
