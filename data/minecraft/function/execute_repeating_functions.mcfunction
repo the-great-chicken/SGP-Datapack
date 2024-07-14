@@ -59,11 +59,11 @@ function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
 
-execute at @n[type=marker,tag=sgp.marker,name="accueil"] as @a[distance=..1.5] \
+execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] \
     unless score @s sgp.entre_kits matches 1.. run \
         scoreboard players enable @s sgp.entre_kits
 
-execute at @n[type=marker,tag=sgp.marker,name="accueil"] as @a[distance=0] run \
+execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=0] run \
     function sgp.kits:misc/sort_salle
 
 execute as @a[scores={sgp.entre_kits=1..}] run \
@@ -141,7 +141,7 @@ execute as @a[scores={sgp.sort_cosm=1..}] run \
 execute as @a[scores={sgp.entre_cosm=1..}] run \
     function sgp.cosmetics:misc/entre_cosm
 
-execute at @n[type=marker,tag=sgp.marker,name="accueil"] as @a[distance=..1.5] \
+execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] \
     unless score @s sgp.entre_cosm matches 1.. run \
         scoreboard players enable @s sgp.entre_cosm
 

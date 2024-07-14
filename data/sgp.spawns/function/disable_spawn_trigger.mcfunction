@@ -1,1 +1,1 @@
-$execute as @p[tag=sgp.disable_spawn_triggers] run trigger sgp.spawn_$(number) set 0
+$execute as @a[tag=sgp.disable_spawn_triggers,limit=1] run trigger sgp.spawn_$(number) set 0

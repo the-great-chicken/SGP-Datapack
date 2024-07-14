@@ -1,4 +1,4 @@
 team leave @s
 move @s #Morts
 gamemode spectator @s
-tp @s @n[type=marker,tag=sgp.marker,name="pvp_arena"]
+tp @s @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1]

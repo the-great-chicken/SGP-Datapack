@@ -4,8 +4,8 @@
 # and a major event needs to change this behavior
 
 # Protéger le Roi
-execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.bleue] @n[type=marker,tag=sgp.marker,name="protect_spawn_bleus"]
-execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.rouge] @n[type=marker,tag=sgp.marker,name="protect_spawn_rouges"]
+execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.bleue] @e[type=marker,tag=sgp.marker,name="protect_spawn_bleus",limit=1]
+execute if predicate sgp.majeurs:protect/ongoing run tp @s[team=sgp.rouge] @e[type=marker,tag=sgp.marker,name="protect_spawn_rouges",limit=1]
 execute if predicate sgp.majeurs:protect/ongoing run scoreboard players set @s sgp.kits_vers_spawn 0
 execute if predicate sgp.majeurs:protect/ongoing run execute as @s run function sgp.kits:misc/sort_salle
 execute if predicate sgp.majeurs:protect/ongoing run targetglow @a[team=sgp.rouge] @a[gamemode=survival,team=sgp.rouge] RED

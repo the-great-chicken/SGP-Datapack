@@ -2,10 +2,10 @@ execute as @p[scores={sgp.devenir_roi_bleu=1..}] run function sgp.kits:collectio
 effect give @p[scores={sgp.devenir_roi_bleu=1..}] minecraft:health_boost infinite 4 true
 effect give @p[scores={sgp.devenir_roi_bleu=1..}] minecraft:regeneration 2 10 true
 tag @p[scores={sgp.devenir_roi_bleu=1..}] add sgp.roi_bleu
-execute at @n[type=marker,tag=sgp.marker,name="devenir_roi_bleu"] as @a[distance=..2] run team join sgp.bleue @s
+execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run team join sgp.bleue @s
 execute as @p[scores={sgp.devenir_roi_bleu=1..}] run item replace entity @s hotbar.2 with minecraft:golden_apple{display:{Name:'{"text":"Pomme d\'or","color":"yellow","italic":false,"bold":true}', Lore:['[{"text":"Régénère jusqu\'à 6","color":"gray","italic":false},{"text":"❤","color":"red","italic":false},{"text":" + 2","color":"gray","italic":false},{"text":"❤","color":"yellow","italic":false}]']}} 12
-tp @p[scores={sgp.devenir_roi_bleu=1..}] @n[type=marker,tag=sgp.marker,name="protect_spawn_bleus"]
-execute at @n[type=marker,tag=sgp.marker,name="devenir_roi_bleu"] as @a[distance=..2] run scoreboard players set @s sgp.entre_kits 1
+tp @p[scores={sgp.devenir_roi_bleu=1..}] @e[type=marker,tag=sgp.marker,name="protect_spawn_bleus",limit=1]
+execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run scoreboard players set @s sgp.entre_kits 1
 scoreboard players set @p[scores={sgp.devenir_roi_bleu=1..}] sgp.devenir_roi_bleu 0
 execute as @a[tag=sgp.in_game] run trigger sgp.devenir_roi_bleu set 0
 tellraw @a[tag=sgp.in_game] ["",{"selector":"@a[tag=sgp.roi_bleu]","color":"dark_blue","bold":true},{"text":" est le roi ","color":"gold"},{"text":"Bleu","color":"dark_blue","bold":true}]
