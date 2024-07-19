@@ -3,22 +3,199 @@
 # Gives the items of the Tank kit to the player
 
 # ---------- WEAPONS ----------
-item replace entity @s hotbar.0 with wooden_sword{Unbreakable:1, AttributeModifiers:[{AttributeName:"generic.attack_damage", Name:"Damage", Slot:"mainhand", Amount:3.5d, Operation:0, UUID:[I; -124310, 13701, 13111, -27402]}, {Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Enchantments:[{id:"knockback", lvl:1}], HideFlags:63, display:{Name:'{"text":"Épée Abîmée","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"------------","color":"#C0C0C0","italic":false}', '{"text":"⬱ Recul I","color":"#6F4E37","italic":false}', '{"text":"3,5 dégats","color":"blue","italic":false}']}}
-item replace entity @s hotbar.1 with bow{Enchantments:[{id:"punch", lvl:1}], Unbreakable:1, HideFlags:63, display:{Name:'{"text":"Arc","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"--------","color":"#C0C0C0","italic":false}', '{"text":"⬱ Recul I","color":"#6F4E37","italic":false}']}}
+item replace entity @s hotbar.0 with wooden_sword[ \
+    custom_name='{"text":"Épée Abîmée", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"⬱ Recul I", "color":"#6F4E37", "italic":false}', \
+        '{"text":"3,5 dégats", "color":"blue", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {knockback:1}, \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [ \
+            {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.5, operation:"add_value"}, \
+            ], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
 
-# ---------- ARMOR PIECES ----------
-item replace entity @s armor.head with diamond_helmet{Trim:{pattern:sentry, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"thorns", lvl:1}], HideFlags:255, display:{Name:'{"text":"Casque en Diamant","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"------------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"᠅ Épines I","color":"dark_green","italic":false}']}}
-item replace entity @s armor.chest with iron_chestplate{Trim:{pattern:dune, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Plastron en Fer","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"➹ Protection I","color":"dark_blue","italic":false}']}}
-item replace entity @s armor.legs with iron_leggings{Trim:{pattern:dune, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"projectile_protection", lvl:1}], HideFlags:255, display:{Name:'{"text":"Jambières en Fer","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"-----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"➹ Protection I","color":"dark_blue","italic":false}']}}
-item replace entity @s armor.feet with diamond_boots{Trim:{pattern:tide, material:netherite}, Unbreakable:1, Enchantments:[{id:"protection", lvl:1}, {id:"thorns", lvl:1}], HideFlags:255, display:{Name:'{"text":"Bottes en Diamant","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"-----------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Protection I","color":"dark_aqua","italic":false}', '{"text":"᠅ Épines I","color":"dark_green","italic":false}']}}
+item replace entity @s hotbar.1 with bow[ \
+    custom_name='{"text":"Arc", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"--------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"⬱ Recul I", "color":"#6F4E37", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {punch:1}, \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
 
-# ---------- POTIONS / ARROWS ----------
-item replace entity @s hotbar.7 with tipped_arrow{custom_potion_effects:[{id:"slowness", amplifier:5, duration:160}, {id:"resistance", amplifier:1, duration:160}], CustomPotionColor:14875096, HideFlags:32, display:{Name:'{"text":"Flèche du Maitre Tortue","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"------------------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Résistance II (0:08)","color":"#536878","italic":false}', '{"text":"⬳ Lenteur IV (0:08)","color":"#555555","italic":false}']}} 5
-give @s potion{Potion:"strong_turtle_master", HideFlags:63, display:{Name:'{"text":"Potion du Maitre Tortue","color":"dark_blue","italic":false,"bold":true}', Lore:['{"text":"------------------------","color":"#C0C0C0","italic":false}', '{"text":"🛡 Résistance IV (0:20)","color":"#536878","italic":false}', '{"text":"⬳ Lenteur VI (0:20)","color":"#555555","italic":false}']}} 3
+
+# ---------- ARMOR ----------
+item replace entity @s armor.head with diamond_helmet[ \
+    custom_name='{"text":"Casque en Diamant", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {protection:1, thorns:1}, \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"sentry", \
+        material:"netherite", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.chest with iron_chestplate[ \
+    custom_name='{"text":"Plastron en Fer", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {protection:1, projectile_protection:1}, \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"dune", \
+        material:"netherite", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.legs with iron_leggings[ \
+    custom_name='{"text":"Jambières en Fer", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {protection:1, projectile_protection:1}, \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"dune", \
+        material:"netherite", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.feet with diamond_boots[ \
+    custom_name='{"text":"Bottes en Diamant", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {protection:1, thorns:1}, \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"tide", \
+        material:"netherite", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+
+# ---------- MISC ----------
+item replace entity @s hotbar.7 with tipped_arrow[ \
+    custom_name='{"text":"Flèche du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Résistance II (0:08)", "color":"#536878", "italic":false}', \
+        '{"text":"⬳ Lenteur IV (0:08)", "color":"#555555", "italic":false}' \
+        ], \
+    potion_contents={ \
+        custom_effects: [ \
+            {id:"slowness", amplifier:5, duration:160}, \
+            {id:"resistance", amplifier:1, duration:160} \
+            ] \
+        }, \
+    hide_additional_tooltip={} \
+    ] 5
+
+give @s potion[ \
+    custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Résistance IV (0:20)", "color":"#536878", "italic":false}', \
+        '{"text":"⬳ Lenteur VI (0:20)", "color":"#555555", "italic":false}' \
+        ], \
+    potion_contents="strong_turtle_master", \
+    hide_additional_tooltip={} \
+    ] 3
+
+item replace entity @s weapon.offhand with shield[ \
+    custom_name='{"text":"Bouclier", "color":"dark_blue", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {thorns:1}, show_in_tooltip:false \
+        }, \
+    base_color="black", \
+    banner_patterns=[ \
+        {color:"light_blue", pattern:"rhombus"}, \
+        {color:"blue", pattern:"circle"}, \
+        {color:"black", pattern:"flower"}, \
+        {color:"blue", pattern:"gradient_up"}, \
+        {color:"cyan", pattern:"gradient"}, \
+        ], \
+    hide_additional_tooltip={}, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
 
 # ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef{display:{Name:'{"text":"Steak","color":"dark_blue","italic":false,"bold":true}', Lore:['[{"text":"Régénère jusqu\'à 5","color":"gray","italic":false},{"text":"❤","color":"red","italic":false}]']}} 32
-item replace entity @s hotbar.2 with golden_apple{display:{Name:'{"text":"Pomme d\'or","color":"dark_blue","italic":false,"bold":true}', Lore:['[{"text":"Régénère jusqu\'à 6","color":"gray","italic":false},{"text":"❤","color":"red","italic":false},{"text":" + 2","color":"gray","italic":false},{"text":"❤","color":"yellow","italic":false}]']}} 3
+item replace entity @s hotbar.3 with cooked_beef[ \
+    custom_name='{"text":"Steak", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 5", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"} \
+            ]' \
+        ] \
+    ] 32
 
-# ---------- MISC ITEMS ----------
-item replace entity @s weapon.offhand with shield{Unbreakable:1, Enchantments:[{id:"thorns", lvl:1}], HideFlags:63, display:{Name:'{"text":"Bouclier","color":"dark_blue","italic":false,"bold":true}'}, BlockEntityTag:{Base:15, Patterns:[{Color:3, Pattern:"mr"}, {Color:11, Pattern:"mc"}, {Color:15, Pattern:"flo"}, {Color:11, Pattern:"gru"}, {Color:9, Pattern:"gra"}]}}
+item replace entity @s hotbar.2 with golden_apple[ \
+    custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"}, \
+            {"text":" + 2"}, \
+            {"text":"❤", "color":"yellow"} \
+            ]' \
+        ] \
+    ] 3

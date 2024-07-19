@@ -3,20 +3,101 @@
 # Gives the items of the Pigeon kit to the player
 
 # ---------- WEAPONS ----------
-item replace entity @s hotbar.0 with feather{AttributeModifiers:[{Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Unbreakable:1, Enchantments:[{id:"knockback", lvl:3}, {id:"sharpness", lvl:5}], HideFlags:63, display:{Name:'{"text":"Plume", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"⚔ Tranchant V", "color":"dark_red", "italic":false}', '{"text":"⬱ Recul III", "color":"#6F4E37", "italic":false}', '{"text":"4 dégats", "color":"blue", "italic":false}']}}
-item replace entity @s hotbar.1 with bow{Enchantments:[{id:"power", lvl:2}, {id:"infinity", lvl:1}], HideFlags:5, Unbreakable:1, display:{Name:'{"text":"Lance Plumes", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"🏹 Puissance II", "color":"dark_red", "italic":false}', '{"text":"∞ Infinité", "color":"#E5E4E2", "italic":false}']}}
+item replace entity @s hotbar.0 with feather[ \
+    custom_name='{"text":"Plume", "color":"dark_gray", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"⚔ Tranchant V", "color":"dark_red", "italic":false}', \
+        '{"text":"⬱ Recul III", "color":"#6F4E37", "italic":false}', \
+        '{"text":"4 dégats", "color":"blue", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {knockback:3, sharpness:5}, \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers:[], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
 
-# ---------- ARMOR PIECES ----------
-item replace entity @s armor.head with player_head{SkullOwner:"__pif__", Enchantments:[{id:"binding_curse", lvl:1}], HideFlags:5, display:{Name:'{"text":"Tête", "color":"dark_gray", "italic":false, "bold":true}'}}
-item replace entity @s armor.chest with elytra{Unbreakable:1, HideFlags:4, display:{Name:'{"text":"Ailes", "color":"dark_gray", "italic":false, "bold":true}'}}
-item replace entity @s armor.legs with chainmail_leggings{Unbreakable:1, HideFlags:6, display:{Name:'{"text":"Cuisses", "color":"dark_gray", "italic":false, "bold":true}'}}
-item replace entity @s armor.feet with chainmail_boots{Unbreakable:1, Enchantments:[{id:"protection", lvl:2}], HideFlags:7, display:{Name:'{"text":"Pattes", "color":"dark_gray", "italic":false, "bold":true}', Lore:['{"text":"-------------", "color":"#C0C0C0", "italic":false}', '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}']}}
+item replace entity @s hotbar.1 with bow[ \
+    unbreakable={show_in_tooltip:false}, \
+    enchantments={ \
+        levels: {power:2, infinity:1}, \
+        show_in_tooltip:false \
+        }, \
+    custom_name='{"text":"Lance Plumes", "color":"dark_gray", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🏹 Puissance II", "color":"dark_red", "italic":false}', \
+        '{"text":"∞ Infinité", "color":"#E5E4E2", "italic":false}' \
+        ] \
+    ]
 
-# ---------- POTIONS / ARROWS ----------
-item replace entity @s inventory.8 with arrow{display:{Name:'{"text":"uwu", "italic":false}'}}
+
+
+# ---------- ARMOR ----------
+item replace entity @s armor.head with player_head[ \
+    custom_name='{"text":"Tête", "color":"dark_gray", "italic":false, "bold":true}', \
+    profile="__pif__", \
+    enchantments={ \
+        levels: {binding_curse:1}, \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.chest with elytra[ \
+    custom_name='{"text":"Ailes", "color":"dark_gray", "italic":false, "bold":true}', \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.legs with chainmail_leggings[ \
+    custom_name='{"text":"Cuisses", "color":"dark_gray", "italic":false, "bold":true}', \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+item replace entity @s armor.feet with chainmail_boots[ \
+    custom_name='{"text":"Pattes", "color":"dark_gray", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {protection:2}, \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+
+# ---------- MISC ----------
+item replace entity @s inventory.8 with arrow[ \
+    custom_name='{"text":"uwu", "italic":false}' \
+    ]
+
+item replace entity @s hotbar.2 with firework_rocket[ \
+    custom_name='{"text":"Boost", "color":"dark_gray", "italic":false, "bold":true}', \
+    ] 5
+
 
 # ---------- FOOD ----------
-item replace entity @s weapon.offhand with bread{display:{Name:'{"text":"Miettes", "color":"dark_gray", "italic":false, "bold":true}', Lore:['[{"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, {"text":"❤", "color":"red", "italic":false}]']}} 64
-
-# ---------- MISC ITEMS ----------
-item replace entity @s hotbar.2 with firework_rocket{Fireworks:{}, display:{Name:'{"text":"Boost", "color":"dark_gray", "italic":false, "bold":true}'}} 5
+item replace entity @s weapon.offhand with bread[ \
+    custom_name='{"text":"Miettes", "color":"dark_gray", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"} \
+            ]' \
+        ] \
+    ] 64
