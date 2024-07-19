@@ -25,7 +25,7 @@ item replace entity @s hotbar.0 with iron_sword[ \
 item replace entity @s hotbar.1 with bow[ \
     custom_name='{"text":"Arc", "color":"white", "italic":false, "bold":true}', \
     unbreakable={show_in_tooltip:false} \
-]
+    ]
 
 
 # ---------- ARMOR ----------
@@ -52,7 +52,8 @@ item replace entity @s armor.chest with iron_chestplate[ \
         ], \
     enchantments={ \
         levels: {protection:1, projectile_protection:2}, \
-        show_in_tooltip:false}, \
+        show_in_tooltip:false \
+        }, \
     trim={ \
         pattern:"coast", \
         material:"copper", \
@@ -67,7 +68,7 @@ item replace entity @s armor.chest with iron_chestplate[ \
 
 item replace entity @s armor.legs with iron_leggings[ \
     enchantments={ \
-        levels:{projectile_protection:2}, \
+        levels: {projectile_protection:2}, \
         show_in_tooltip:false \
         }, \
     custom_name='{"text":"Jambières en Fer", "color":"white", "italic":false, "bold":true}', \
@@ -115,8 +116,7 @@ item replace entity @s weapon.offhand with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
     custom_name='{"text":"Pomme d\'or", "color":"white", "italic":false, "bold":true}', \
@@ -128,5 +128,4 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {"text":"❤", "color":"yellow"} \
             ]' \
         ] \
-    ] \
-2
+    ] 2

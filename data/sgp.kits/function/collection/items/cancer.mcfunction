@@ -140,8 +140,7 @@ item replace entity @s hotbar.3 with tipped_arrow[ \
             ] \
         }, \
     hide_additional_tooltip={} \
-    ] \
-5
+    ] 5
 
 item replace entity @s hotbar.4 with tipped_arrow[ \
     custom_name='{"text":"Flèche de Lenteur", "color":"dark_red", "italic":false, "bold":true}', \
@@ -155,8 +154,7 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
             ] \
         }, \
     hide_additional_tooltip={} \
-    ] \
-5
+    ] 5
 
 function sgp.kits:stacking/set_stack { \
     item_id:splash_potion, count:3, slot:hotbar.5, tag: "[ \\\
@@ -200,8 +198,7 @@ item replace entity @s weapon.offhand with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
     custom_name='{"text":"Pomme d\'or", "color":"dark_red", "italic":false, "bold":true}', \
@@ -213,5 +210,4 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {"text":"❤", "color":"yellow"} \
             ]' \
         ] \
-    ] \
-4
+    ] 4

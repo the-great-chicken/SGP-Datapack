@@ -170,7 +170,7 @@ item replace entity @s weapon.offhand with baked_potato[ \
     lore=[ \
         '[ \
             {"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"}]' \
+            {"text":"❤", "color":"red"} \
+            ]' \
         ] \
-    ] \
-64
+    ] 64

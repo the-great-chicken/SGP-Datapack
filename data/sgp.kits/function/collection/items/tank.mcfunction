@@ -146,8 +146,7 @@ item replace entity @s hotbar.7 with tipped_arrow[ \
             ] \
         }, \
     hide_additional_tooltip={} \
-    ] \
-5
+    ] 5
 
 give @s potion[ \
     custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
@@ -158,8 +157,7 @@ give @s potion[ \
         ], \
     potion_contents="strong_turtle_master", \
     hide_additional_tooltip={} \
-    ] \
-3
+    ] 3
 
 item replace entity @s weapon.offhand with shield[ \
     custom_name='{"text":"Bouclier", "color":"dark_blue", "italic":false, "bold":true}', \
@@ -188,8 +186,7 @@ item replace entity @s hotbar.3 with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
     custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
@@ -201,5 +198,4 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {"text":"❤", "color":"yellow"} \
             ]' \
         ] \
-    ] \
-3
+    ] 3

@@ -88,8 +88,7 @@ item replace entity @s inventory.8 with arrow[ \
 
 item replace entity @s hotbar.2 with firework_rocket[ \
     custom_name='{"text":"Boost", "color":"dark_gray", "italic":false, "bold":true}', \
-    ] \
-5
+    ] 5
 
 
 # ---------- FOOD ----------
@@ -101,5 +100,4 @@ item replace entity @s weapon.offhand with bread[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-64
+    ] 64

@@ -124,5 +124,4 @@ item replace entity @s hotbar.3 with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32

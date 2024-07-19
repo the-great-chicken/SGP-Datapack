@@ -116,8 +116,7 @@ item replace entity @s hotbar.3 with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
     custom_name='{"text":"Pomme d\'or", "color":"yellow", "italic":false, "bold":true}', \
@@ -129,5 +128,4 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {"text":"❤", "color":"yellow"} \
             ]' \
         ] \
-    ] \
-4
+    ] 4

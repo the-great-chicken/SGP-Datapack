@@ -20,7 +20,7 @@ give @s trident[ \
         show_in_tooltip:false \
         }, \
     unbreakable={show_in_tooltip:false} \
-    ]
+    ] 17
 
 # ---------- FOOD ----------
 item replace entity @s weapon.offhand with cooked_cod[ \
@@ -31,5 +31,4 @@ item replace entity @s weapon.offhand with cooked_cod[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-64
+    ] 64

@@ -126,8 +126,7 @@ item replace entity @s weapon.offhand with cooked_beef[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-32
+    ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
     custom_name='{"text":"Pomme d\'or", "color":"aqua", "italic":false, "bold":true}', \
@@ -139,5 +138,4 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {"text":"❤", "color":"yellow"} \
             ]' \
         ] \
-    ] \
-6
+    ] 6

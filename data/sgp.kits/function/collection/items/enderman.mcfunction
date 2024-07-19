@@ -133,8 +133,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
 
 item replace entity @s hotbar.1 with ender_pearl[ \
     custom_name='{"text":"Yeux", "color":"dark_purple", "italic":false, "bold":true}' \
-    ] \
-8
+    ] 8
 
 
 # ---------- FOOD ----------
@@ -146,5 +145,4 @@ item replace entity @s weapon.offhand with chorus_fruit[ \
             {"text":"❤", "color":"red"} \
             ]' \
         ] \
-    ] \
-64
+    ] 64
