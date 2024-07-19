@@ -117,29 +117,29 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
 
 # ---------- MISC ----------
 function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:8, slot:hotbar.1, tag:"[ \\\
-        custom_name='{\"text\":\"Potion de Soin\", \"color\":\"light_purple\", \"italic\":false,\"bold\":true}', \\\
-        lore=[ \\\
-            '[ \\\
-                {\"text\":\"Régénère jusqu\\'à 2\", \"color\":\"gray\", \"italic\":false}, \\\
-                {\"text\":\"❤\", \"color\":\"red\"}, \\\
-                {\"text\":\" instantanément\"} \\\
-                ]' \\\
-            ], \\\
-        potion_contents=\"minecraft:healing\", \\\
-        hide_additional_tooltip={} \\\
-        ]" \
+    item_id:splash_potion, count:8, slot:hotbar.1, tag:" \
+        custom_name:'{\"text\":\"Potion de Soin\", \"color\":\"light_purple\", \"italic\":false,\"bold\":true}', \
+        lore:[ \
+            '[ \
+                {\"text\":\"Régénère jusqu\\'à 2\", \"color\":\"gray\", \"italic\":false}, \
+                {\"text\":\"❤\", \"color\":\"red\"}, \
+                {\"text\":\" instantanément\"} \
+                ]' \
+            ], \
+        potion_contents:\"minecraft:healing\", \
+        hide_additional_tooltip:{} \
+        " \
     }
 
 function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:10, slot:hotbar.2, tag:"[ \\\
-        custom_name='{\"text\":\"Potion de Dégats\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \\\
-        lore=[ \\\
-            '{\"text\":\"Inflige jusqu\\'à 4 dégâts\", \"color\":\"gray\", \"italic\":false}' \\\
-            ], \\\
-        potion_contents=\"minecraft:harming\", \\\
-        hide_additional_tooltip={} \\\
-        ]" \
+    item_id:splash_potion, count:10, slot:hotbar.2, tag:" \
+        custom_name:'{\"text\":\"Potion de Dégats\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \
+        lore:[ \
+            '{\"text\":\"Inflige jusqu\\'à 4 dégâts\", \"color\":\"gray\", \"italic\":false}' \
+            ], \
+        potion_contents:\"minecraft:harming\", \
+        hide_additional_tooltip:{} \
+        " \
     }
 
 item replace entity @s hotbar.3 with splash_potion[ \

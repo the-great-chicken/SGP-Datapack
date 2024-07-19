@@ -100,7 +100,7 @@ item replace entity @s armor.feet with leather_boots[ \
         '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}' \
         ], \
     enchantments={ \
-        levels:{protection:1}, \
+        levels: {protection:1}, \
         show_in_tooltip:false \
         }, \
     dyed_color={ \
@@ -126,7 +126,7 @@ item replace entity @s hotbar.5 with tipped_arrow[ \
         '{"text":"⬳ Lenteur II (1:28)", "color":"#555555", "italic":false}' \
         ], \
     potion_contents={ \
-        custom_effects:[ \
+        custom_effects: [ \
             {id:"slowness", amplifier:1, duration:1760} \
             ] \
         }, \

@@ -1,7 +1,7 @@
 #> sgp.kits:kills_give/basic
 # `{give: minecraft_item, give_2: minecraft_item, actionbar: json_text_component, nb: [1,2,3]}`
 # 
-# Gives the item(s) and tells the player what reward(s) he got for his kill(s)
+# Gives the item(s) and tells the player what reward(s) they got for their kill(s)
 
 $give @s $(give)
 $give @s $(give_2)
