@@ -1,5 +1,5 @@
 tag @s add tag1
-execute as @s run function sgp.kits:collection/archer
+execute as @s run function sgp.kits:give {kit:archer}
 team leave @s
 team join sgp.Chasseurs_pigeon @s
 tp @s @e[type=marker,tag=sgp.marker,name="spawns",limit=1]

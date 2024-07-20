@@ -3,11 +3,11 @@
 # Checks if a player wants a kit, running the appropriate function
 
 # Kits débloqués par défaut
-execute as @a[scores={sgp.veut_combattant=1..}] run function sgp.kits:collection/combattant
+execute as @a[scores={sgp.veut_combattant=1..}] run function sgp.kits:give {kit:combattant}
 scoreboard players enable @a[tag=sgp.combattant_voulu] sgp.veut_combattant
-execute as @a[scores={sgp.veut_vindicateur=1..}] run function sgp.kits:collection/vindicateur
+execute as @a[scores={sgp.veut_vindicateur=1..}] run function sgp.kits:give {kit:vindicateur}
 scoreboard players enable @a[tag=sgp.vindicateur_voulu] sgp.veut_vindicateur
-execute as @a[scores={sgp.veut_archer=1..}] run function sgp.kits:collection/archer
+execute as @a[scores={sgp.veut_archer=1..}] run function sgp.kits:give {kit:archer}
 scoreboard players enable @a[tag=sgp.archer_voulu] sgp.veut_archer
 
 # Kits à trouver dans la map

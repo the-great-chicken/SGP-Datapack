@@ -1,4 +1,4 @@
-execute as @p[scores={sgp.devenir_roi_rouge=1..}] run function sgp.kits:collection/roi
+execute as @p[scores={sgp.devenir_roi_rouge=1..}] run function sgp.kits:give {kit:roi}
 effect give @p[scores={sgp.devenir_roi_rouge=1..}] minecraft:health_boost infinite 4 true
 effect give @p[scores={sgp.devenir_roi_rouge=1..}] minecraft:regeneration 2 10 true
 tag @p[scores={sgp.devenir_roi_rouge=1..}] add sgp.roi_rouge

@@ -1,4 +1,4 @@
-execute as @s run function sgp.kits:collection/pigeon
+execute as @s run function sgp.kits:give {kit:roi}
 glow @s 1000000
 tag @s add tag1
 team join sgp.Pigeons @s

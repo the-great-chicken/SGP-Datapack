@@ -5,7 +5,7 @@
 tellraw @a[tag=sgp.in_game] [{"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
 function sgp.mineurs:_stop
 function sgp.majeurs:invasion/dispatch
-execute as @a[team=sgp.Defenseur] run function sgp.kits:collection/tank
+execute as @a[team=sgp.Defenseur] run function sgp.kits:give {kit:tank}
 tp @a[team=sgp.Defenseur] 2496.0 251.0 2159.0
 scoreboard players set @a[team=sgp.Attaquant] sgp.entre_kits 1
 scoreboard players set #invasion_secondes sgp.timer 0
