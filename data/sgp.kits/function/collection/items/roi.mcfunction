@@ -15,7 +15,7 @@ item replace entity @s hotbar.0 with golden_sword[ \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \
-        modifiers:[ \
+        modifiers: [ \
             {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
             ], \
         show_in_tooltip:false \

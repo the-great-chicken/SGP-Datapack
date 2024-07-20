@@ -16,7 +16,7 @@ item replace entity @s hotbar.0 with feather[ \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \
-        modifiers:[], \
+        modifiers: [], \
         show_in_tooltip:false \
         }, \
     unbreakable={show_in_tooltip:false} \

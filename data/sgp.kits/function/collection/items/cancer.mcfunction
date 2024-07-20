@@ -157,35 +157,35 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
     ] 5
 
 function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:3, slot:hotbar.5, tag: "[ \\\
-        custom_name='{\"text\":\"Potion de Rapidité\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \\\
-        lore=[ \\\
-            '{\"text\":\"------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \\\
-            '{\"text\":\"➠ Rapidité II (0:15)\", \"color\":\"aqua\", \"italic\":false}' \\\
-            ], \\\
-        potion_contents={ \\\
-            custom_effects: [ \\\
-                {id:\"speed\", amplifier:1, duration:300} \\\
-                ] \\\
-            }, \\\
-        hide_additional_tooltip={} \\\
+    item_id:splash_potion, count:3, slot:hotbar.5, tag: " \
+        custom_name:'{\"text\":\"Potion de Rapidité\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
+        lore:[ \
+            '{\"text\":\"------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
+            '{\"text\":\"➠ Rapidité II (0:15)\", \"color\":\"aqua\", \"italic\":false}' \
+            ], \
+        potion_contents:{ \
+            custom_effects: [ \
+                {id:\"speed\", amplifier:1, duration:300} \
+                ] \
+            }, \
+        hide_additional_tooltip:{} \
         ]" \
     }
 
 function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:3, slot:hotbar.6, tag:"[ \\\
-        custom_name='{\"text\":\"Potion de Saut\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \\\
-        lore=[ \\\
-            '{\"text\":\"-----------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \\\
-            '{\"text\":\"⇪ Sauts améliorés III (0:30)\", \"color\":\"green\", \"italic\":false}' \\\
-            ], \\\
-        potion_contents={ \\\
-            custom_effects: [ \\\
-                {id:\"jump_boost\", amplifier:2, duration:600} \\\
-                ] \\\
-            }, \\\
-        hide_additional_tooltip={} \\\
-        ]" \
+    item_id:splash_potion, count:3, slot:hotbar.6, tag:" \
+        custom_name:'{\"text\":\"Potion de Saut\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
+        lore:[ \
+            '{\"text\":\"-----------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
+            '{\"text\":\"⇪ Sauts améliorés III (0:30)\", \"color\":\"green\", \"italic\":false}' \
+            ], \
+        potion_contents:{ \
+            custom_effects: [ \
+                {id:\"jump_boost\", amplifier:2, duration:600} \
+                ] \
+            }, \
+        hide_additional_tooltip:{} \
+        " \
     }
 
 
