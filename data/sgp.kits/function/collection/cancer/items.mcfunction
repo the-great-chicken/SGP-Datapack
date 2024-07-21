@@ -169,7 +169,7 @@ function sgp.kits:stacking/set_stack { \
                 ] \
             }, \
         hide_additional_tooltip:{} \
-        ]" \
+        " \
     }
 
 function sgp.kits:stacking/set_stack { \

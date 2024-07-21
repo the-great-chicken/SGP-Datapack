@@ -7,16 +7,12 @@ function sgp.kits:stacking/add_count_to_stack { \
     item_id:splash_potion, \
     count:2, \
     tag:" \
-        custom_name:'{\"text\":\"Potion de Soin\", \"color\":\"light_purple\", \"italic\":false,\"bold\":true}', \
-        lore:[ \
-            '[ \
-                {\"text\":\"Régénère jusqu\\'à 2\", \"color\":\"gray\", \"italic\":false}, \
-                {\"text\":\"❤\", \"color\":\"red\"}, \
-                {\"text\":\" instantanément\"} \
-                ]' \
+        \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"light_purple\",\"italic\":false,\"text\":\"Potion de Soin\"}', \
+        \"minecraft:lore\": [ \
+            '{\"color\":\"gray\",\"extra\":[{\"color\":\"red\",\"text\":\"❤\"},\" instantanément\"],\"italic\":false,\"text\":\"Régénère jusqu\\'à 2\"}' \
             ], \
-        potion_contents:\"minecraft:healing\", \
-        hide_additional_tooltip:{} \
+        \"minecraft:potion_contents\":{potion:\"minecraft:healing\"}, \
+        \"minecraft:hide_additional_tooltip\":{} \
         " \
     }
 
@@ -24,14 +20,15 @@ function sgp.kits:stacking/add_count_to_stack { \
     item_id:splash_potion, \
     count:3, \
     tag:" \
-        custom_name:'{\"text\":\"Potion de Dégats\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \
-        lore:[ \
-            '{\"text\":\"Inflige jusqu\\'à 4 dégâts\", \"color\":\"gray\", \"italic\":false}' \
-            ], \
-        potion_contents:\"minecraft:harming\", \
-        hide_additional_tooltip:{} \
+        \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"light_purple\",\"italic\":false,\"text\":\"Potion de Dégats\"}', \
+        \"minecraft:lore\": [ \
+            '{\"color\":\"gray\",\"italic\":false,\"text\":\"Inflige jusqu\\'à 4 dégâts\"}' \
+        ], \
+        \"minecraft:potion_contents\":{potion:\"minecraft:harming\"}, \
+        \"minecraft:hide_additional_tooltip\":{} \
         " \
     }
+
 
 data modify storage smithed.actionbar:input message set value { \
     json:'[ \

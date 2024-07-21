@@ -88,6 +88,7 @@ item replace entity @s inventory.8 with arrow[ \
 
 item replace entity @s hotbar.2 with firework_rocket[ \
     custom_name='{"text":"Boost", "color":"dark_gray", "italic":false, "bold":true}', \
+    hide_additional_tooltip={} \
     ] 5
 
 
