@@ -10,4 +10,4 @@ execute unless entity @a[tag=sgp.adding_prefix] if entity @a[scores={sgp.kit_pre
 execute unless entity @a[tag=sgp.adding_prefix] if entity @a[scores={sgp.kit_prefix_set=0},tag=sgp.roi] run function sgp.kits:kit_tags/prefixes_update {kit:roi}
 execute unless entity @a[tag=sgp.adding_prefix] if entity @a[scores={sgp.kit_prefix_set=0},tag=sgp.tank] run function sgp.kits:kit_tags/prefixes_update {kit:tank}
 execute unless entity @a[tag=sgp.adding_prefix] if entity @a[scores={sgp.kit_prefix_set=0},tag=sgp.vindicateur] run function sgp.kits:kit_tags/prefixes_update {kit:vindicateur}
-tag @a remove sgp.adding_prefix
+tag @a[tag=sgp.adding_prefix] remove sgp.adding_prefix
