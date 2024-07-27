@@ -7,17 +7,16 @@ function sgp.kits:stacking/add_count_to_stack { \
     item_id:splash_potion, \
     count:1, \
     tag:" \
-        custom_name:'{\"text\":\"Potion de Rapidité\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
-        lore:[ \
-            '{\"text\":\"------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
-            '{\"text\":\"➠ Rapidité II (0:15)\", \"color\":\"aqua\", \"italic\":false}' \
+        \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"dark_red\",\"italic\":false,\"text\":\"Potion de Rapidité\"}', \
+        \"minecraft:lore\": [ \
+            '{\"color\":\"aqua\", \"italic\":false, \"text\":\"➠ Rapidité II (0:15)\"}' \
             ], \
-        potion_contents:{ \
+        \"minecraft:potion_contents\":{ \
             custom_effects: [ \
-                {id:\"speed\", amplifier:1, duration:300} \
+                {duration:300, id:\"minecraft:speed\", amplifier:1b, } \
                 ] \
             }, \
-        hide_additional_tooltip:{} \
+        \"minecraft:hide_additional_tooltip\":{} \
         " \
     }
 
@@ -25,17 +24,16 @@ function sgp.kits:stacking/add_count_to_stack { \
     item_id:splash_potion, \
     count:1, \
     tag:" \
-        custom_name:'{\"text\":\"Potion de Saut\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
-        lore:[ \
-            '{\"text\":\"-----------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
-            '{\"text\":\"⇪ Sauts améliorés III (0:30)\", \"color\":\"green\", \"italic\":false}' \
+        \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"dark_red\",\"italic\":false,\"text\":\"Potion de Saut\"}', \
+        \"minecraft:lore\": [ \
+            '{\"color\":\"green\", \"italic\":false, \"text\":\"⇪ Sauts améliorés III (0:30)\"}' \
             ], \
-        potion_contents:{ \
+        \"minecraft:potion_contents\":{ \
             custom_effects: [ \
-                {id:\"jump_boost\", amplifier:2, duration:600} \
+                {duration:600, id:\"minecraft:jump_boost\", amplifier:2b} \
                 ] \
             }, \
-        hide_additional_tooltip:{} \
+        \"minecraft:hide_additional_tooltip\":{} \
         " \
     }
 
