@@ -29,10 +29,10 @@ item replace entity @s armor.head with leather_helmet[ \
     custom_name='{"text":"Chapeau en Cuir", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
+        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:3}, \
+        levels: {thorns:2}, \
         show_in_tooltip:false \
         }, \
     trim={ \
@@ -51,10 +51,10 @@ item replace entity @s armor.chest with leather_chestplate[ \
     custom_name='{"text":"Tunique en Cuir", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
+        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:3}, \
+        levels: {thorns:2}, \
         show_in_tooltip:false \
         }, \
     trim={ \
@@ -73,10 +73,10 @@ item replace entity @s armor.legs with leather_leggings[ \
     custom_name='{"text":"Pantalon en Cuir", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
+        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:3}, \
+        levels: {thorns:2}, \
         show_in_tooltip:false \
         }, \
     trim={ \
@@ -95,10 +95,10 @@ item replace entity @s armor.feet with diamond_boots[ \
     custom_name='{"text":"Pantalon en Cuir", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
+        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:3}, \
+        levels: {thorns:2}, \
         show_in_tooltip:false \
         }, \
     trim={ \
@@ -115,6 +115,7 @@ item replace entity @s armor.feet with diamond_boots[ \
 
 # ---------- MISC ----------
 item replace entity @s hotbar.7 with arrow 3
+item replace entity @s hotbar.6 with spyglass
 
 
 # ---------- FOOD ----------
