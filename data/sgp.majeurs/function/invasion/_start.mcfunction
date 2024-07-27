@@ -5,7 +5,7 @@
 tellraw @a[tag=sgp.in_game] [{"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
 function sgp.mineurs:_stop
 function sgp.majeurs:invasion/dispatch
-execute as @a[team=sgp.Defenseur] run function sgp.kits:collection/tank
+execute as @a[team=sgp.Defenseur] run function sgp.kits:give {kit:tank}
 tp @a[team=sgp.Defenseur] 2496.0 251.0 2159.0
 scoreboard players set @a[team=sgp.Attaquant] sgp.entre_kits 1
 scoreboard players set #invasion_secondes sgp.timer 0
@@ -23,8 +23,35 @@ move @a[team=sgp.Attaquant] #Attaquants
 useglow toggle
 targetglow @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] RED
 targetglow @a[team=sgp.Defenseur] @a[gamemode=survival,team=sgp.Defenseur] BLUE
-give @a[team=sgp.Defenseur] minecraft:potion{Potion:"minecraft:strong_turtle_master", HideFlags:63, display:{Name:'{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}',Lore:['{"text":"------------------------", "color":"#C0C0C0", "italic":false}','{"text":"🛡 Résistance IV (0:20)", "color":"#536878", "italic":false}','{"text":"⬳ Lenteur VI (0:20)", "color":"#555555", "italic":false}']}} 3
+
+give @a[team=sgp.Defenseur] potion[ \
+    custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Résistance IV (0:20)", "color":"#536878", "italic":false}', \
+        '{"text":"⬳ Lenteur VI (0:20)", "color":"#555555", "italic":false}' \
+        ], \
+    potion_contents="strong_turtle_master", \
+    hide_additional_tooltip={} \
+    ] 3
+
 effect give @a[tag=sgp.in_game] minecraft:saturation 10 2
 fill 2495 253 2164 2495 243 2164 air
-item replace entity @a[team=sgp.Defenseur] hotbar.7 with minecraft:tipped_arrow{custom_potion_effects:[{id:"slowness", amplifier:5, duration:60}], CustomPotionColor:14875096, HideFlags:32, display:{Name:'{"text":"Flèche de Lenteur", "color":"dark_blue", "italic":false, "bold":true}',Lore:['{"text":"------------------------", "color":"#C0C0C0", "italic":false}','{"text":"⬳ Lenteur IV (0:03)", "color":"#555555", "italic":false}']}} 10
+
+item replace entity @a[team=sgp.Defenseur] hotbar.7 with tipped_arrow[ \
+    custom_name='{"text":"Flèche du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Résistance II (0:08)", "color":"#536878", "italic":false}', \
+        '{"text":"⬳ Lenteur IV (0:08)", "color":"#555555", "italic":false}' \
+        ], \
+    potion_contents={ \
+        custom_effects: [ \
+            {id:"slowness", amplifier:5, duration:160}, \
+            {id:"resistance", amplifier:1, duration:160} \
+            ] \
+        }, \
+    hide_additional_tooltip={} \
+    ] 10
+
 function sgp.lore:npcs/disable

@@ -6,10 +6,121 @@
 
 clear @s
 effect clear @s
-item replace entity @s hotbar.0 with feather{AttributeModifiers:[{Slot:"mainhand", AttributeName:"generic.attack_speed", Name:"generic.attack_speed", Amount:1000.0d, Operation:0, UUID:[I; -110663, 103297, -1423577, 206238]}], Unbreakable:1, Enchantments:[{id:"unbreaking", lvl:0s}, {id:"sharpness", lvl:1s}], HideFlags:63, display:{Name:'{"text":"Plume","color":"$(color)","italic":false,"bold":true}', Lore:['{"text":"-------------","color":"#C0C0C0","italic":false}', '{"text":"⚔ Tranchant I","color":"dark_red","italic":false}', '{"text":"4 dégats","color":"blue","italic":false}']}}
-$item replace entity @s weapon.offhand with bread{display:{Name:'{"text":"Miettes","color":"$(color)","italic":false,"bold":true}', Lore:['[{"text":"Régénère jusqu\'à 3","color":"gray","italic":false},{"text":"❤","color":"red","italic":false}]']}} 64
-$item replace entity @s armor.head with leather_helmet{Trim:{pattern:sentry, material:$(color_material)}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:$(color_hex), Name:'{"text":"Tête","color":"$(color)","italic":false,"bold":true}'}}
-$item replace entity @s armor.chest with leather_chestplate{Trim:{pattern:snout, material:quartz}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:$(color_hex), Name:'{"text":"Corps","color":"$(color)","italic":false,"bold":true}'}}
-$item replace entity @s armor.legs with leather_leggings{Trim:{pattern:coast, material:quartz}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:$(color_hex), Name:'{"text":"Cuisses","color":"$(color)","italic":false,"bold":true}'}}
-$item replace entity @s armor.feet with leather_boots{Trim:{pattern:wild, material:gold}, Enchantments:[{id:"binding_curse", lvl:1s}], Unbreakable:1, HideFlags:255, display:{color:$(color_hex), Name:'{"text":"Pattes","color":"$(color)","italic":false,"bold":true}'}}
+
+# ---------- WEAPON ----------
+$item replace entity @s hotbar.0 with feather[ \
+    custom_name='{"text":"Plume", "color":"$(color)", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"-------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', \
+        '{"text":"4 dégats", "color":"blue", "italic":false}' \
+        ], \
+    enchantments={ \
+        levels: {unbreaking:0, sharpness:1}, \
+        show_in_tooltip:false \
+        } \
+    ]
+
+
+# ---------- ARMOR ----------
+$item replace entity @s armor.head with leather_helmet[ \
+    custom_name='{\"text\":\"Tête", "color":"$(color)", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {binding_curse:1}, \
+        show_in_tooltip:false \
+        }, \
+    dyed_color={ \
+        rgb:$(color_hex), \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"sentry", \
+        material:"$(color_material)", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+$item replace entity @s armor.chest with leather_chestplate[ \
+    custom_name='{"text":"Corps", "color":"$(color)", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {binding_curse:1}, \
+        show_in_tooltip:false \
+        }, \
+    dyed_color={ \
+        rgb:$(color_hex), \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"snout", \
+        material:"quartz", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+$item replace entity @s armor.legs with leather_leggings[ \
+    custom_name='{"text":"Cuisses", "color":"$(color)", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {binding_curse:1}, \
+        show_in_tooltip:false \
+        }, \
+    dyed_color={ \
+        rgb:$(color_hex), \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"coast", \
+        material:"quartz", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+$item replace entity @s armor.feet with leather_boots[ \
+    custom_name='{"text":"Pattes", "color":"$(color)", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {binding_curse:1}, \
+        show_in_tooltip:false \
+        }, \
+    dyed_color={ \
+        rgb:$(color_hex), \
+        show_in_tooltip:false \
+        }, \
+    trim={ \
+        pattern:"wild", \
+        material:"gold", \
+        show_in_tooltip:false \
+        }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
+
+# ---------- FOOD ----------
+$item replace entity @s weapon.offhand with bread[ \
+    custom_name='{"text":"Miettes", "color":"$(color)", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red", "italic":false} \
+            ]' \
+        ] \
+    ] 64
+
 scoreboard players set @s sgp.reset_tags 1
