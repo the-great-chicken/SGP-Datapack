@@ -27,7 +27,6 @@ targetglow @a[team=sgp.Defenseur] @a[gamemode=survival,team=sgp.Defenseur] BLUE
 give @a[team=sgp.Defenseur] potion[ \
     custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Résistance IV (0:20)", "color":"#536878", "italic":false}', \
         '{"text":"⬳ Lenteur VI (0:20)", "color":"#555555", "italic":false}' \
         ], \
@@ -41,7 +40,6 @@ fill 2495 253 2164 2495 243 2164 air
 item replace entity @a[team=sgp.Defenseur] hotbar.7 with tipped_arrow[ \
     custom_name='{"text":"Flèche du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Résistance II (0:08)", "color":"#536878", "italic":false}', \
         '{"text":"⬳ Lenteur IV (0:08)", "color":"#555555", "italic":false}' \
         ], \

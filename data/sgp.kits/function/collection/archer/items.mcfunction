@@ -122,7 +122,6 @@ item replace entity @s hotbar.4 with arrow
 item replace entity @s hotbar.5 with tipped_arrow[ \
     custom_name='{"text":"Flèche de Lenteur", "color":"green", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"⬳ Lenteur II (1:28)", "color":"#555555", "italic":false}' \
         ], \
     potion_contents={ \
@@ -136,7 +135,6 @@ item replace entity @s hotbar.5 with tipped_arrow[ \
 item replace entity @s weapon.offhand with tipped_arrow[ \
     custom_name='{"text":"Flèche de Poison", "color":"green", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"☠ Poison (0:11)", "color":"#55741B", "italic":false}' \
         ], \
     potion_contents="long_poison", \

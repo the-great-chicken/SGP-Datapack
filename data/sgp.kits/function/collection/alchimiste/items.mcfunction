@@ -145,7 +145,6 @@ function sgp.kits:stacking/set_stack { \
 item replace entity @s hotbar.3 with splash_potion[ \
     custom_name='{"text":"Potion de Cécité", "color":"light_purple", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"👁 Cécité (0:05)", "color":"#8B8589", "italic":false}' \
         ], \
     potion_contents={ \

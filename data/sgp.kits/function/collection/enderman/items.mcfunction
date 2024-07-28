@@ -120,7 +120,6 @@ item replace entity @s armor.feet with leather_boots[ \
 item replace entity @s hotbar.2 with splash_potion[ \
     custom_name='{"text":"Potion de Rapidité", "color":"dark_purple", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"➠ Rapidité II (0:22)", "color":"aqua", "italic":false}' \
         ], \
     potion_contents={ \
