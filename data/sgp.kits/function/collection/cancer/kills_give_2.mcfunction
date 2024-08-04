@@ -9,7 +9,7 @@ function sgp.kits:stacking/add_count_to_stack { \
     tag:" \
         \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"dark_red\",\"italic\":false,\"text\":\"Potion de Rapidité\"}', \
         \"minecraft:lore\": [ \
-            '{\"color\":\"aqua\", \"italic\":false, \"text\":\"➠ Rapidité II (0:15)\"}' \
+            '{\"color\":\"aqua\",\"italic\":false,\"text\":\"➠ Rapidité II (0:15)\"}' \
             ], \
         \"minecraft:potion_contents\":{ \
             custom_effects: [ \
@@ -26,7 +26,7 @@ function sgp.kits:stacking/add_count_to_stack { \
     tag:" \
         \"minecraft:custom_name\":'{\"bold\":true,\"color\":\"dark_red\",\"italic\":false,\"text\":\"Potion de Saut\"}', \
         \"minecraft:lore\": [ \
-            '{\"color\":\"green\", \"italic\":false, \"text\":\"⇪ Sauts améliorés III (0:30)\"}' \
+            '{\"color\":\"green\",\"italic\":false,\"text\":\"⇪ Sauts améliorés III (0:30)\"}' \
             ], \
         \"minecraft:potion_contents\":{ \
             custom_effects: [ \

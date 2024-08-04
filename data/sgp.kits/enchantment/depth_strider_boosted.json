@@ -1,0 +1,56 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.minecraft.depth_strider"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": 1,
+        "attribute": "minecraft:generic.water_movement_efficiency",
+        "id": "minecraft:enchantment.depth_strider",
+        "operation": "add_value"
+      }
+    ],
+    "minecraft:location_changed": [
+      {
+        "effect": {
+          "type": "attribute",
+          "attribute": "minecraft:generic.movement_speed",
+          "id": "sgp.kits:depth_strider_boost",
+          "operation": "add_value",
+          "amount": {
+            "type": "linear",
+            "base": 0.03,
+            "per_level_above_first": 0.01
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "location": {
+              "fluid": {
+                "fluids": "#minecraft:water"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 50,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "feet"
+  ],
+  "supported_items": "#minecraft:enchantable/foot_armor",
+  "weight": 1
+}

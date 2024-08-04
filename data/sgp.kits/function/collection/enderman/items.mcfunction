@@ -28,7 +28,7 @@ item replace entity @s armor.head with player_head[ \
     custom_name='{"text":"Tête", "color":"dark_purple", "italic":false, "bold":true}', \
     profile="tsukiTAO", \
     enchantments={ \
-        levels: {binding_curse:1}, \
+        levels: {binding_curse:1, "sgp.kits:water_damage":1}, \
         show_in_tooltip:false \
         }, \
     unbreakable={show_in_tooltip:false} \

@@ -90,6 +90,10 @@ item replace entity @s armor.legs with golden_leggings[ \
 
 item replace entity @s armor.feet with golden_boots[ \
     custom_name='{"text":"Bottes Cérémoniales", "color":"yellow", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {"sgp.kits:depth_strider_boosted":1}, \
+        show_in_tooltip:false \
+    }, \
     trim={ \
         pattern:"dune", \
         material:"diamond", \

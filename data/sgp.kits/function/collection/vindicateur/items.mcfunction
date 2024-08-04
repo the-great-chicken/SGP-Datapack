@@ -79,7 +79,7 @@ item replace entity @s armor.feet with leather_boots[ \
         '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:3}, \
+        levels: {thorns:3, "sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
         }, \
     dyed_color={ \
