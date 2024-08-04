@@ -115,7 +115,7 @@ item replace entity @s armor.feet with diamond_boots[ \
         '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {protection:1, thorns:1}, \
+        levels: {protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
         }, \
     trim={ \
