@@ -90,6 +90,10 @@ item replace entity @s armor.legs with iron_leggings[ \
 
 item replace entity @s armor.feet with iron_boots[\
     custom_name='{"text":"Bottes en Fer", "color":"white", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {"sgp.kits:depth_strider_boosted":2}, \
+        show_in_tooltip:false \
+    }, \
     trim={ \
         pattern:"eye", \
         material:"copper", \

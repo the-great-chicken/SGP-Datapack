@@ -37,7 +37,6 @@ item replace entity @s hotbar.1 with bow[ \
     ]
 
 
-
 # ---------- ARMOR ----------
 item replace entity @s armor.head with player_head[ \
     custom_name='{"text":"Tête", "color":"dark_gray", "italic":false, "bold":true}', \
@@ -70,7 +69,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
         '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {protection:2}, \
+        levels: {protection:2, "sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \

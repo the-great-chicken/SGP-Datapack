@@ -11,7 +11,7 @@ give @s trident[ \
         '{"text":"7,5 dégats", "color":"blue", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {riptide:4}, \
+        levels: {riptide:1}, \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \
@@ -41,6 +41,24 @@ give @s trident[ \
         }, \
     unbreakable={show_in_tooltip:false} \
     ] 17
+
+
+# ---------- ARMOR ----------
+item replace entity @s armor.feet with chainmail_boots[ \
+    custom_name='{"text":"Palmes", "color":"dark_aqua", "italic":false, "bold":true}', \
+    enchantments={ \
+        levels: {"sgp.kits:depth_strider_boosted":25}, \
+        show_in_tooltip:false \
+    }, \
+    attribute_modifiers={ \
+        modifiers: [ \
+            {type:"generic.armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
+        ], \
+        show_in_tooltip:false \
+        }, \
+    unbreakable={show_in_tooltip:false} \
+    ]
+
 
 # ---------- FOOD ----------
 item replace entity @s weapon.offhand with cooked_cod[ \

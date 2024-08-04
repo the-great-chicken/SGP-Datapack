@@ -111,7 +111,7 @@ item replace entity @s armor.feet with leather_boots[ \
         '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {protection:2}, \
+        levels: {protection:2, "sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
         }, \
     trim={ \

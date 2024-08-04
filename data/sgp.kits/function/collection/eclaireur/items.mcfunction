@@ -92,13 +92,13 @@ item replace entity @s armor.legs with leather_leggings[ \
     ]
 
 item replace entity @s armor.feet with diamond_boots[ \
-    custom_name='{"text":"Pantalon en Cuir", "color":"aqua", "italic":false, "bold":true}', \
+    custom_name='{"text":"Bottes d\'Exploration", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {thorns:2}, \
+        levels: {thorns:2, "sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
         }, \
     trim={ \
