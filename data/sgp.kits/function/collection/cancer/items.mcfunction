@@ -131,7 +131,6 @@ item replace entity @s armor.feet with leather_boots[ \
 item replace entity @s hotbar.3 with tipped_arrow[ \
     custom_name='{"text":"Flèche de Lévitation", "color":"dark_red", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"--------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"⟰ Lévitation IV (0:13)", "color":"#F2F3F4", "italic":false}' \
         ], \
     potion_contents={ \
@@ -145,7 +144,6 @@ item replace entity @s hotbar.3 with tipped_arrow[ \
 item replace entity @s hotbar.4 with tipped_arrow[ \
     custom_name='{"text":"Flèche de Lenteur", "color":"dark_red", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"⬳ Lenteur IV (0:26)", "color":"#555555", "italic":false}' \
         ], \
     potion_contents={ \
@@ -160,7 +158,6 @@ function sgp.kits:stacking/set_stack { \
     item_id:splash_potion, count:3, slot:hotbar.5, tag: " \
         custom_name:'{\"text\":\"Potion de Rapidité\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
         lore:[ \
-            '{\"text\":\"------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
             '{\"text\":\"➠ Rapidité II (0:15)\", \"color\":\"aqua\", \"italic\":false}' \
             ], \
         potion_contents:{ \
@@ -176,7 +173,6 @@ function sgp.kits:stacking/set_stack { \
     item_id:splash_potion, count:3, slot:hotbar.6, tag:" \
         custom_name:'{\"text\":\"Potion de Saut\", \"color\":\"dark_red\", \"italic\":false, \"bold\":true}', \
         lore:[ \
-            '{\"text\":\"-----------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
             '{\"text\":\"⇪ Sauts améliorés III (0:30)\", \"color\":\"green\", \"italic\":false}' \
             ], \
         potion_contents:{ \

@@ -16,7 +16,6 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
     give:"splash_potion[ \
         custom_name='{\"text\":\"Potion de Rapidité\", \"color\":\"dark_purple\", \"italic\":false, \"bold\":true}', \
         lore=[ \
-            '{\"text\":\"------------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
             '{\"text\":\"➠ Rapidité II (0:22)\", \"color\":\"aqua\", \"italic\":false}' \
             ], \
         potion_contents={ \

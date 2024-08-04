@@ -9,7 +9,6 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
     give:"splash_potion[ \
         custom_name='{\"text\":\"Potion de Cécité\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \
         lore=[ \
-            '{\"text\":\"----------------\", \"color\":\"#C0C0C0\", \"italic\":false}', \
             '{\"text\":\"👁 Cécité (0:05)\", \"color\":\"#8B8589\", \"italic\":false}' \
             ], \
         potion_contents={ \

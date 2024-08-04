@@ -103,7 +103,6 @@ item replace entity @s armor.feet with leather_boots[ \
 item replace entity @s hotbar.2 with splash_potion[ \
     custom_name='{"text":"Potion de Faiblesse", "color":"dark_green", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"-------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"⬊ Faiblesse I (0:05)", "color":"#777075", "italic":false}' \
         ], \
     potion_contents={ \

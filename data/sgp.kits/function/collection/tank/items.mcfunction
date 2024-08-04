@@ -135,7 +135,6 @@ item replace entity @s armor.feet with diamond_boots[ \
 item replace entity @s hotbar.7 with tipped_arrow[ \
     custom_name='{"text":"Flèche du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Résistance II (0:08)", "color":"#536878", "italic":false}', \
         '{"text":"⬳ Lenteur IV (0:08)", "color":"#555555", "italic":false}' \
         ], \
@@ -151,7 +150,6 @@ item replace entity @s hotbar.7 with tipped_arrow[ \
 give @s potion[ \
     custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"------------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Résistance IV (0:20)", "color":"#536878", "italic":false}', \
         '{"text":"⬳ Lenteur VI (0:20)", "color":"#555555", "italic":false}' \
         ], \
