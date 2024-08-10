@@ -1,0 +1,1 @@
+execute if data entity @s item.components."minecraft:potion_contents" run tag @s add sgp.special_splash_arrow

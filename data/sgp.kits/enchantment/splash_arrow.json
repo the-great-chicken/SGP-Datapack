@@ -1,0 +1,55 @@
+{
+    "anvil_cost": 5,
+    "description": {
+      "translate": "enchantment.custom.splash_arrow"
+    },
+    "effects": {
+      "minecraft:projectile_spawned": [
+        {
+          "effect": {
+            "type": "run_function",
+            "function": "sgp.kits:enchantments/tag_special_arrow"
+          },
+          "requirements": {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:arrow"
+            }
+          }
+        }
+      ],
+      "minecraft:hit_block": [
+        {
+            "effect": {
+              "type": "run_function",
+              "function": "sgp.kits:enchantments/summon_custom_splash_potion"
+            },
+            "requirements": {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{Tags:[\"sgp.special_splash_arrow\"]}"
+              }
+            }
+        }
+      ]
+    },
+    "max_level": 1,
+    "max_cost": {
+      "base": 30,
+      "per_level_above_first": 15
+    },
+    "min_cost": {
+      "base": 15,
+      "per_level_above_first": 15
+    },
+    "slots": [
+      "mainhand"
+    ],
+    "supported_items": [
+      "minecraft:bow",
+      "minecraft:crossbow"
+    ],
+    "weight": 2
+  }

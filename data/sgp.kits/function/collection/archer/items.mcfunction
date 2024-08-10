@@ -27,7 +27,7 @@ item replace entity @s hotbar.1 with bow[ \
         '{"text":"∞ Infinité", "color":"#E5E4E2", "italic":false}' \
         ], \
     enchantments={ \
-        levels: {infinity:1, power:3, punch:1}, \
+        levels: {infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1}, \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \
