@@ -36,6 +36,48 @@
             }
           }
         }
+      },
+      {
+        "effect": {
+          "type": "attribute",
+          "attribute": "minecraft:generic.movement_speed",
+          "id": "sgp.kits:depth_strider_boost_swimming",
+          "operation": "add_value",
+          "amount": {
+            "type": "linear",
+            "base": -0.03,
+            "per_level_above_first": -0.01
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "nbt": "{Tags:[\"sgp.poseidon\"]}"
+                }
+              }
+            },
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "location": {
+                  "fluid": {
+                    "fluids": "#minecraft:water"
+                  }
+                },
+                "flags": {
+                  "is_swimming": true
+                }
+              }
+            }
+          ]
+        }
       }
     ]
   },
