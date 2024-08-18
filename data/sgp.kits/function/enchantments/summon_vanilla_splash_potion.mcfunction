@@ -1,3 +1,5 @@
 # Map vanilla arrow potions to corresponding splash potions with correct durations
 execute if data entity @s {item:{components:{"minecraft:potion_contents":{potion:"minecraft:long_poison"}}}} run summon potion ~ ~0.5 ~ {Item:{id:"minecraft:splash_potion", count:1b, components:{"minecraft:potion_contents":{custom_effects:[{id:"minecraft:poison", amplifier:0, duration:220}]}}}, Motion:[0.0,-10.0,0.0]}
+execute if data entity @s {item:{components:{"minecraft:potion_contents":{potion:"minecraft:harming"}}}} run summon potion ~ ~0.5 ~ {Item:{id:"minecraft:splash_potion", count:1b, components:{"minecraft:potion_contents":{custom_effects:[{id:"minecraft:instant_damage", amplifier:0, duration:220}]}}}, Motion:[0.0,-10.0,0.0]}
+execute if data entity @s {item:{components:{"minecraft:potion_contents":{potion:"minecraft:slowness"}}}} run summon potion ~ ~0.5 ~ {Item:{id:"minecraft:splash_potion", count:1b, components:{"minecraft:potion_contents":{custom_effects:[{id:"minecraft:slowness", amplifier:0, duration:220}]}}}, Motion:[0.0,-10.0,0.0]}
 # Add more mappings for other vanilla potion types...

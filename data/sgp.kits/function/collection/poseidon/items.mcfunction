@@ -4,9 +4,9 @@
 
 # ---------- WEAPONS ----------
 give @s trident[ \
-    custom_name='{"text":"Trident", "color":"dark_aqua", "italic":false, "bold":true}', \
+    custom_name='{"text":"Le Trident", "color":"dark_aqua", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"---------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"-----------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"⚡ Impulsion I", "color":"yellow", "italic":false}', \
         '{"text":"7,5 dégats", "color":"blue", "italic":false}' \
         ], \
@@ -33,6 +33,7 @@ give @s trident[ \
         levels: {impaling:4}, \
         show_in_tooltip:false \
         }, \
+    enchantment_glint_override=false, \
     attribute_modifiers={ \
         modifiers: [ \
             {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
