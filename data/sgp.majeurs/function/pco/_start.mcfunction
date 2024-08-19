@@ -9,7 +9,7 @@ statuswarp pvp disabled
 useglow toggle
 function sgp.majeurs:pco/dispatch
 
-# Mettre les cages dans l'arène
+# Spawn the cages
 execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage"] \
     run function sgp.majeurs:pco/cage/compute_markers_coordinates
 
@@ -28,6 +28,7 @@ execute as @a[team=sgp.Oie] \
     run function sgp.majeurs:pco/on_death {color:yellow, color_hex:16777045, color_material:gold, cage:oie, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
 
 
+# Teleport the players to their spawn
 tp @a[team=sgp.Poule] @e[type=marker,tag=sgp.marker,name="pco_poule_spawn",limit=1]
 tp @a[team=sgp.Canard] @e[type=marker,tag=sgp.marker,name="pco_canard_spawn",limit=1]
 tp @a[team=sgp.Oie] @e[type=marker,tag=sgp.marker,name="pco_oie_spawn",limit=1]
@@ -58,13 +59,13 @@ tellraw @a[team=sgp.Canard] [{"text":"Vous êtes un ","color":"white"},{"text":"
 
 # Spawn the cabanes
 execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"poule"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"canard"}
+    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"canard"}
 
 execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"oie"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"poule"}
+    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"poule"}
 
 execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"canard"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"oie"}
+    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"oie"}
 
 
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
