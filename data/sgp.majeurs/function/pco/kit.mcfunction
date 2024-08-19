@@ -1,7 +1,7 @@
 #> sgp.majeurs:pco/kit
 # `{color, color_material, color_hex}`
 #
-# Equips a player with a custom kit for the "Poule-Canard-Oie" game, including
+# Equip a player with a custom kit for the "Poule-Canard-Oie" game, including
 # a feather weapon, bread for healing, and colored leather armor.
 
 clear @s
