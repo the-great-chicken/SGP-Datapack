@@ -14,10 +14,10 @@ execute as @a[tag=sgp.in_game] \
 
 
 execute as @a[team=sgp.Poule] at @s \
-    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"poule"}},limit=1] data.fill
+    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage",nbt={data:{cage:"poule"}},limit=1] data.fill
 
 execute as @a[team=sgp.Oie] at @s \
-    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"oie"}},limit=1] data.fill
+    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage",nbt={data:{cage:"oie"}},limit=1] data.fill
 
 execute as @a[team=sgp.Canard] at @s \
-    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"canard"}},limit=1] data.fill
+    run function sgp.majeurs:pco/cabane/check_if_inside with entity @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage",nbt={data:{cage:"canard"}},limit=1] data.fill

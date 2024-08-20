@@ -24,12 +24,12 @@ execute store result entity @s data.fill.dz1 int 1 \
 
 
 $execute store result score #success_outline sgp.dummy \
-    at @e[type=marker,tag=sgp.marker,name="pco_$(cage)_cage_arena",limit=1] \
+    at @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_$(cage)_cage_arena",limit=1] \
         run function sgp.majeurs:pco/cabane/outline with entity @s data.fill
 
 # If it didn't work, that means there shouldn't be a direction applied to the block
 $execute if score #success_outline sgp.dummy matches 0 \
-    at @e[type=marker,tag=sgp.marker,name="pco_$(cage)_cage_arena",limit=1] \
+    at @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_$(cage)_cage_arena",limit=1] \
         run function sgp.majeurs:pco/cabane/outline_no_orientation with entity @s data.fill
 
 
@@ -38,5 +38,5 @@ $data modify entity @s data.fill.block_2 set value "$(block_2)"
 $data modify entity @s data.fill.block_to_replace_2 set value "$(block_to_replace_2)"
 
 
-$execute at @e[type=marker,tag=sgp.marker,name="pco_$(cage)_cage_arena",limit=1] \
+$execute at @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_$(cage)_cage_arena",limit=1] \
     run function sgp.majeurs:pco/cabane/ground with entity @s data.fill

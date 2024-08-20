@@ -7,7 +7,7 @@ $function sgp.majeurs:pco/kit {color:$(color), color_material:$(color_material),
 
 effect give @s resistance infinite 5 true
 
-$execute at @e[type=marker,tag=sgp.marker,name="pco_$(cage)_cage_arena",limit=1] run tp @s ~1 ~ ~1
+$execute at @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_$(cage)_cage_arena",limit=1] run tp @s ~1 ~ ~1
 
 $targetglow @s @a[gamemode=survival,team=sgp.$(team)] $(color_team)
 $targetglow @s @a[gamemode=survival,team=sgp.$(to_catch)] $(color_to_catch)

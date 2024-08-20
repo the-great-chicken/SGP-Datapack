@@ -6,7 +6,7 @@
 # checking if a team won
 
 # Activer/désactiver le fait de pouvoir cliquer sur les panneaux de libération
-execute as @e[type=marker,tag=sgp.marker,name="pco_oie_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
+execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_oie_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
     as @a[team=sgp.Oie] \
         run function sgp.majeurs:pco/cage/check_can_uncage {team:"oie"}
 
@@ -14,7 +14,7 @@ execute as @a[team=sgp.Oie,scores={sgp.liberer_oies=1,sgp.en_cage=1}] \
     run trigger sgp.liberer_oies set 0
 
 
-execute as @e[type=marker,tag=sgp.marker,name="pco_canard_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
+execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_canard_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
     as @a[team=sgp.Canard] \
         run function sgp.majeurs:pco/cage/check_can_uncage {team:"canard"}
 
@@ -22,7 +22,7 @@ execute as @a[team=sgp.Canard,scores={sgp.liberer_canards=1,sgp.en_cage=1}] \
     run trigger sgp.liberer_canards set 0
 
 
-execute as @e[type=marker,tag=sgp.marker,name="pco_poule_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
+execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_poule_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
     as @a[team=sgp.Poule] \
         run function sgp.majeurs:pco/cage/check_can_uncage {team:"poule"}
 

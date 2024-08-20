@@ -4,10 +4,10 @@
 # Check if every player from a team is in the cage
 # and stop the game if it's the case.
 
-$execute as @e[type=marker,tag=sgp.marker,name='pco_$(cage)_cage_arena',limit=1] at @s \
+$execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name='pco_$(cage)_cage_arena',limit=1] at @s \
     as @a[team=sgp.$(team)] \
         run function sgp.majeurs:pco/cage/check_if_inside \
-            with entity @e[type=marker,tag=sgp.marker,name='pco_cage_storage',nbt={data:{cage:'$(cage)'}},limit=1] data
+            with entity @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name='pco_cage_storage',nbt={data:{cage:'$(cage)'}},limit=1] data
 
 
 $execute as @a[team=sgp.$(team)] \
