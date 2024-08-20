@@ -11,4 +11,6 @@ execute as @a[tag=sgp.in_game] run trigger sgp.liberer_oies set 0
 execute as @a[tag=sgp.in_game] run trigger sgp.liberer_canards set 0
 execute as @a[tag=sgp.in_game] run trigger sgp.liberer_poules set 0
 
+function sgp.majeurs:common/rounds with storage sgp:data majeurs.pco
+
 function sgp.majeurs:common/stop
