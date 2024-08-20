@@ -100,9 +100,6 @@ execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
-execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
-    damage @s 6 minecraft:hot_floor
-
 execute if score #128_ticks_clock sgp.dummy matches 0 run \
     function sgp.misc:kill_streaks_management
 
