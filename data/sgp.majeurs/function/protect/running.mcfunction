@@ -23,4 +23,5 @@ execute unless entity @a[team=sgp.rouge] unless predicate sgp.majeurs:protect/ro
 # Quand le roi bleu vient de mourir
 execute unless predicate sgp.majeurs:protect/roi_bleu_vivant if score #mort_roi_bleu_annoncee sgp.dummy matches 0 run tellraw @a[tag=sgp.in_game] [{"text":"Le roi de l'Equipe ", "color":"gold"},{"text":"Bleue ", "color":"dark_blue", "bold":true},"est mort, les membres de son équipe ne peuvent plus réapparaitre!"]
 execute unless predicate sgp.majeurs:protect/roi_bleu_vivant if score #mort_roi_bleu_annoncee sgp.dummy matches 0 run tag @a remove sgp.roi_bleu
-execute unless predicate sgp.majeurs:protect/roi_bleu_vivant if score #mort_roi_bleu_annoncee sgp.dummy matches 0 run scoreboard players set #mort_roi_bleu_annoncee sgp.dummy 1
+execute unless predicate sgp.majeurs:protect/roi_bleu_vivant if score #mort_roi_bleu_annoncee sgp.dummy matches 0 run scoreboard players set #mort_roi_bleu_annoncee sgp.dummy 1execute as @a[tag=sgp.roi_bleu] run function sgp.majeurs:protect/king_effect {team:bleue, color:"[0.0,0.0,1.0]"}
+execute as @a[tag=sgp.roi_rouge] run function sgp.majeurs:protect/king_effect {team:rouge, color:"[1.0,0.0,0.0]"}
