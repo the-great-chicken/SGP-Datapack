@@ -231,7 +231,9 @@ function sgp.misc:bossbar/cycle_color
 schedule clear sgp.misc:bossbar/cycle_name
 function sgp.misc:bossbar/cycle_name
 
-function #bs.schedule:load
+
+schedule clear sgp.majeurs:scheduler/main
+function sgp.majeurs:scheduler/main
 
 # ---------- Initialize Storages ----------
 
