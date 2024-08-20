@@ -1,3 +1,8 @@
+#> sgp.majeurs:protect/devenir_roi_bleu
+#
+# This function is executed when a players wants to become the blue king
+# Gives him the kit and effects, tags him, announces it,...
+
 execute as @p[scores={sgp.devenir_roi_bleu=1..}] run function sgp.kits:give {kit:roi}
 effect give @p[scores={sgp.devenir_roi_bleu=1..}] minecraft:health_boost infinite 4 true
 effect give @p[scores={sgp.devenir_roi_bleu=1..}] minecraft:regeneration 2 10 true

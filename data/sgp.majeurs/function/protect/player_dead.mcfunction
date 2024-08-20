@@ -1,3 +1,7 @@
+#> sgp.majeurs:protect/player_dead
+#
+# Teleport a player and other things when they die definitely
+
 team leave @s
 move @s #Morts
 gamemode spectator @s

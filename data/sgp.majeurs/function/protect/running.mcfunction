@@ -1,3 +1,8 @@
+#> sgp.majeurs:protect/running
+#
+# Things that are executed all the time when the event is running
+# Like checking if ppl die, if a team wins,...
+
 # Quand un rouge meurt alors que son roi est mort
 execute unless predicate sgp.majeurs:protect/roi_rouge_vivant at @e[type=marker,tag=sgp.marker,name="kits",limit=1] as @a[distance=..3,team=sgp.rouge] run function sgp.majeurs:protect/player_dead
 
