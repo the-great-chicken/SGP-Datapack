@@ -47,35 +47,37 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run give @s golden_a
     ]
 
 execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
+    nb:2, \
     give: 'splash_potion[ \
-        "minecraft:custom_name":\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Rapidité"}\', \
-        "minecraft:lore": [ \
-            \'{"color":"aqua","italic":false,"text":"➠ Rapidité II (0:15)"}\' \
+        custom_name=\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Rapidité"}\', \
+        lore= [ \
+            \'{"text":"➠ Rapidité II (0:15)", "color":"aqua", "italic":false}\' \
             ], \
-        "minecraft:potion_contents":{ \
+        potion_contents={ \
             custom_effects: [ \
-                {duration:300, id:"minecraft:speed", amplifier:1b, } \
+                {duration:300, id:"minecraft:speed", amplifier:1b} \
                 ] \
             }, \
-        "minecraft:hide_additional_tooltip":{} \
-        ,max_stack_size=64 \
+        hide_additional_tooltip={}, \
+        max_stack_size=64 \
         ] 1', \
-    give_2: 'splash_potion["minecraft:custom_name":\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Rapidité"}\', \
-        "minecraft:lore": [ \
+    give_2: 'splash_potion[ \
+        custom_name=\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Rapidité"}\', \
+        lore= [ \
             \'{"color":"green","italic":false,"text":"⇪ Sauts améliorés III (0:30)"}\' \
             ], \
-        "minecraft:potion_contents":{ \
+        potion_contents={ \
             custom_effects: [ \
-                {duration:600, id:"minecraft:jump_boost", amplifier:2b, } \
+                {duration:600, id:"minecraft:jump_boost", amplifier:2b} \
                 ] \
             }, \
-        "minecraft:hide_additional_tooltip":{} \
-        ,max_stack_size=64 \
+        hide_additional_tooltip={}, \
+        max_stack_size=64 \
         ] 1', \
     actionbar:' \
-        {"text":"+ 1 ❤ Pomme d\'or, ", "color":"yellow", "bold":true}, \
+        {"text":"+ 1 ❤ Pomme d\\\'or, ", "color":"yellow", "bold":true}, \
         {"text":"1 ⟰ Flèche de Lévitation, ", "color":"white"}, \
         {"text":"1 ⬳ Flèche de Lenteur, ", "color":"#555555"}, \
         {"text":"1 ➠ Potion de Rapidité ", "color":"aqua"}, \
         {"text":"et 1 ⇪ Potion de Saut !", "color":"green"} ', \
-    nb:2 }
+    }

@@ -12,8 +12,10 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.k
                 {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true}, \
                 {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true} \
                 ], \
-            flight_duration:-2 \
-            } \
+            flight_duration:-2,\
+            show_in_tooltip:false \
+            }, \
+        hide_additional_tooltip={} \
         ] 2', \
     actionbar:' \
         {"text":"+ 1 ➶ Flèche ", "color":"gray", "bold":true}, \
@@ -38,6 +40,6 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_2=3..}] run function sgp.k
     actionbar:' \
         {"text":"+ 1 ➶ Flèche, ","color":"gray", "bold":true}, \
         {"text":"2 ☀ Explosifs ", "color":"red"}, \
-        {"text":"et 1 ❤ Pomme d\'or !", "color":"yellow"} \
+        {"text":"et 1 ❤ Pomme d\\\'or !", "color":"yellow"} \
         ', \
     }

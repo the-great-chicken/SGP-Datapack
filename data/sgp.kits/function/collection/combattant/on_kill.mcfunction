@@ -25,6 +25,6 @@ execute as @a[tag=sgp.combattant,scores={sgp.kills_give_2=2..}] run function sgp
     give_2:air, \
     actionbar:' \
         {"text":"+ 3 ➶ Flèches ", "color":"gray", "bold":true}, \
-        {"text":"et 1 ❤ Pomme d\'or !", "color":"yellow"} \
+        {"text":"et 1 ❤ Pomme d\\\'or !", "color":"yellow"} \
         ' \
     }

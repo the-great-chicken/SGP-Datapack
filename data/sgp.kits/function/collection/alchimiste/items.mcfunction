@@ -116,31 +116,29 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
 
 
 # ---------- MISC ----------
-function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:8, slot:hotbar.1, tag:" \
-        custom_name:'{\"text\":\"Potion de Soin\", \"color\":\"light_purple\", \"italic\":false,\"bold\":true}', \
-        lore:[ \
+item replace entity @s hotbar.1 with splash_potion[ \
+        custom_name='{"text":"Potion de Soin", "color":"light_purple", "italic":false,"bold":true}', \
+        lore=[ \
             '[ \
-                {\"text\":\"Régénère jusqu\\'à 2\", \"color\":\"gray\", \"italic\":false}, \
-                {\"text\":\"❤\", \"color\":\"red\"}, \
-                {\"text\":\" instantanément\"} \
+                {"text":"Régénère jusqu\'à 2", "color":"gray", "italic":false}, \
+                {"text":"❤", "color":"red"}, \
+                {"text":" instantanément"} \
                 ]' \
             ], \
-        potion_contents:\"minecraft:healing\", \
-        hide_additional_tooltip:{} \
-        " \
-    }
+        potion_contents="minecraft:healing", \
+        hide_additional_tooltip={}, \
+        max_stack_size=64 \
+    ] 8
 
-function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:10, slot:hotbar.2, tag:" \
-        custom_name:'{\"text\":\"Potion de Dégats\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \
-        lore:[ \
-            '{\"text\":\"Inflige jusqu\\'à 4 dégâts\", \"color\":\"gray\", \"italic\":false}' \
+item replace entity @s hotbar.2 with splash_potion[ \
+        custom_name='{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}', \
+        lore=[ \
+            '{"text":"Inflige jusqu\'à 4 dégâts", "color":"gray", "italic":false}' \
             ], \
-        potion_contents:\"minecraft:harming\", \
-        hide_additional_tooltip:{} \
-        " \
-    }
+        potion_contents="minecraft:harming", \
+        hide_additional_tooltip={}, \
+        max_stack_size=64 \
+    ] 10
 
 item replace entity @s hotbar.3 with splash_potion[ \
     custom_name='{"text":"Potion de Cécité", "color":"light_purple", "italic":false, "bold":true}', \
@@ -152,7 +150,8 @@ item replace entity @s hotbar.3 with splash_potion[ \
             {id:"blindness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    hide_additional_tooltip={}, \
+        max_stack_size=64 \
     ]
 
 item replace entity @s hotbar.4 with milk_bucket[ \
