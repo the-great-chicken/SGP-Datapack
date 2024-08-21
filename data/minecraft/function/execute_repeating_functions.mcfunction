@@ -113,7 +113,6 @@ execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players s
 
 
 # ---------- COSMETICS ----------
-function sgp.cosmetics:kill_effects/death_reaper
 
 execute as @a[scores={sgp.veut_desactiver=1..}] run \
     function sgp.cosmetics:particles/disable
