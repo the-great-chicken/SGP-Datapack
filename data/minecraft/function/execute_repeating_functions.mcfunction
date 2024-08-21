@@ -3,9 +3,10 @@
 # Executes functions at each game tick
 
 
-
-function even_tick_functions
-
+# one game tick out of 2
+execute if score #even_tick sgp.dummy matches 0 run function even_tick_functions
+scoreboard players add #even_tick sgp.dummy 1
+execute if score #even_tick sgp.dummy matches 2 run scoreboard players set #even_tick sgp.dummy 0
 
 
 # Must be in this order
