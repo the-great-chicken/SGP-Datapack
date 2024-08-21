@@ -14,12 +14,12 @@ execute if score #invasion_ticks sgp.timer matches 0 run execute as @a[team=sgp.
 execute if score #invasion_ticks sgp.timer matches 0 run experience add @a[tag=sgp.in_game] -1 levels
 
 # Timer Écoulé
-execute if score #invasion_secondes sgp.timer >= #invasion_joueurs sgp.dummy run tellraw @a[tag=sgp.in_game] [{"text":"Les Défenseurs ont gagné ! Ils ont survécu suffisament longtemps","color":"blue","bold":true}]
+execute if score #invasion_secondes sgp.timer >= #invasion_joueurs sgp.dummy run tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Les Défenseurs ont gagné ! Ils ont survécu suffisament longtemps", "color":"blue", "bold":true}]
 execute if score #invasion_secondes sgp.timer >= #invasion_joueurs sgp.dummy run title @a[tag=sgp.in_game] title [{"text":"Défenseurs Vainqueurs","color":"blue","bold":true}]
 execute if score #invasion_secondes sgp.timer >= #invasion_joueurs sgp.dummy run function sgp.majeurs:invasion/_stop
 
 # Prévenir qu'il reste peu de temps
 execute if score #invasion_ticks sgp.timer matches 0 run scoreboard players operation #invasion-100 sgp.timer = #invasion_joueurs sgp.dummy
 execute if score #invasion_ticks sgp.timer matches 0 run scoreboard players operation #invasion-100 sgp.timer -= #invasion_secondes sgp.timer
-execute if score #invasion_ticks sgp.timer matches 0 run execute if score #invasion-100 sgp.timer matches 60 run tellraw @a[tag=sgp.in_game] [{"text":"Il reste 1 minute avant que les Défenseurs gagnent !","bold":true,"color":"blue"}]
+execute if score #invasion_ticks sgp.timer matches 0 run execute if score #invasion-100 sgp.timer matches 60 run tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Il reste 1 minute avant que les Défenseurs gagnent !", "bold":true, "color":"blue"}]
 execute if score #invasion_ticks sgp.timer matches 0 run execute if score #invasion-100 sgp.timer matches 60 run playsound minecraft:entity.experience_orb.pickup ambient @a[tag=sgp.in_game] 2429.70 254.00 2132.25 1000 0.5

@@ -2,7 +2,7 @@
 # 
 # Start the major event Invasion
 
-tellraw @a[tag=sgp.in_game] [{"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
+tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Lancement d'Invasion...", "color":"dark_blue", "bold":true}]
 function sgp.mineurs:_stop
 function sgp.majeurs:invasion/dispatch
 execute as @a[team=sgp.Defenseur] run function sgp.kits:give {kit:tank}

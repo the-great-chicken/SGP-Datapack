@@ -2,7 +2,7 @@ scoreboard players add #confines_ticks sgp.timer 1
 execute if score #confines_ticks sgp.timer matches 0 run experience add @a[tag=sgp.in_game] -1 levels
 
 # Démarrage de l'event après x secondes
-execute if score #confines_secondes sgp.timer matches 19 if score #confines_ticks sgp.timer matches 0 if score #confines_minutes sgp.timer matches 0 run tellraw @a[tag=sgp.in_game] ["",{"text":"CONFINEMENT ! ", "color":"gray", "bold":true},{"text":"L'événement a commencé et se terminera dans 3 minutes !", "color":"white"}]
+execute if score #confines_secondes sgp.timer matches 19 if score #confines_ticks sgp.timer matches 0 if score #confines_minutes sgp.timer matches 0 run tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"CONFINEMENT ! ", "bold":true}, {"text":"L'événement a commencé et se terminera dans 3 minutes !", "color":"white"}]
 execute if score #confines_secondes sgp.timer matches 19 if score #confines_ticks sgp.timer matches 0 if score #confines_minutes sgp.timer matches 0 run stopsound @a[tag=sgp.in_game] master minecraft:music_disc.strad
 
 # Faits des dégâts quand les joueurs ne sont pas en Intérieur
