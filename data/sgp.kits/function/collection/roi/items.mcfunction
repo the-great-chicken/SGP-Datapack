@@ -112,7 +112,7 @@ item replace entity @s hotbar.7 with arrow 12
 
 
 # ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
+item replace entity @s weapon.offhand with cooked_beef[ \
     custom_name='{"text":"Steak", "color":"yellow", "italic":false, "bold":true}', \
     lore=[ \
         '[ \

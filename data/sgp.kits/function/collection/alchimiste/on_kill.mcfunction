@@ -6,7 +6,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
     give: 'splash_potion[ \
         custom_name=\'{"text":"Potion de Soin", "color":"light_purple", "italic":false, "bold":true}\', \
         lore=[ \
-            \'{"text":"Régénère jusqu\'à 2", "color":"gray", "  italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\'\
+            \'{"text":"Régénère jusqu\\\'à 2", "color":"gray", "  italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\'\
             ], \
         potion_contents={potion:"minecraft:healing"}, \
         hide_additional_tooltip={}, \
@@ -15,12 +15,13 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
     give_2: 'splash_potion[ \
         custom_name=\'{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}\', \
         lore=[ \
-            \'{"text":"Inflige jusqu\'à 3", "color":"gray", "italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\' \
+            \'{"text":"Inflige jusqu\\\'à 3", "color":"gray", "italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\' \
             ], \
         potion_contents={potion:"minecraft:harming"}, \
         hide_additional_tooltip={}, \
-        max_stack_size=64] \
-        3', \
+        max_stack_size=64 \
+        ] 3\
+        ', \
     actionbar:' \
         {"text":"+ 2 ❤ Potions de Soin ", "color":"red", "bold":true}, \
         {"text":"et 3 ⚔ Potions de Dégats !", "color":"dark_red"} ', \

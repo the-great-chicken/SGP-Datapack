@@ -14,7 +14,8 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
                 {id:"weakness", amplifier:0, duration:100} \
                 ] \
             }, \
-        hide_additional_tooltip={} \
+        hide_additional_tooltip={}, \
+        max_stack_size=64 \
         ]', \
     give_2:air, \
     actionbar:'{"text":"+ 1 ⬊ Potion de Faiblesse !", "color":"#777075", "bold":true}' \

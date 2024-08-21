@@ -52,6 +52,6 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_3=3..}] run function sgp.kit
     give_2:air, \
     actionbar:' \
         {"text":"+ 1 ☠ Flèche de Poison ", "color":"green", "bold":true}, \
-        {"text":"et 1 ❤ Pomme d\'or !", "color":"yellow"} \
+        {"text":"et 1 ❤ Pomme d\\\'or !", "color":"yellow"} \
         ' \
     }

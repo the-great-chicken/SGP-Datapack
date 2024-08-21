@@ -127,7 +127,8 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"speed", amplifier:1, duration:440} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
     ]
 
 item replace entity @s hotbar.1 with ender_pearl[ \
