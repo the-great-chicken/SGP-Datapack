@@ -130,6 +130,8 @@ scoreboard objectives add sgp.timer dummy
 
 scoreboard objectives add sgp.sneak_particle minecraft.custom:minecraft.sneak_time
 
+scoreboard objectives add sgp.lieu_count dummy
+
 
 
 # ---------- Initialize values ----------
@@ -158,7 +160,7 @@ scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
 scoreboard players set #confines_minutes sgp.timer 0
 
-
+execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]
 
 # ---------- Create teams ----------
 team add sgp.Defenseur "Défenseur"
