@@ -8,4 +8,4 @@ execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
 
 experience set @a[tag=sgp.in_game] 181 levels
 
-function sgp.mineurs:confinement/running
+schedule function sgp.mineurs:confinement/running 15s
