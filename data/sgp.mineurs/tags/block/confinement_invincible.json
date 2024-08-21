@@ -10,6 +10,7 @@
     "#minecraft:doors",
     "#minecraft:trapdoors",
     "minecraft:moving_piston",
-    "minecraft:light"
+    "minecraft:light",
+    "minecraft:water"
   ]
 }
