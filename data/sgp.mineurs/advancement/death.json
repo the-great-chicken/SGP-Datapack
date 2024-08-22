@@ -1,0 +1,18 @@
+{
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:entity_killed_player",
+			"conditions": {
+				"player": {
+					"nbt": "{Tags:[sgp.bounty]}"
+				},
+				"entity": {
+					"type": "minecraft:player"
+				}
+			}
+		}
+	},
+	"rewards": {
+		"function": "sgp.mineurs:bounty/leave_wanted"
+	}
+}

@@ -13,6 +13,7 @@ scoreboard objectives add sgp.veut_ench trigger
 scoreboard objectives add sgp.veut_smoke trigger
 scoreboard objectives add sgp.veut_cloud trigger
 scoreboard objectives add sgp.veut_desactiver trigger
+scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.light_particle_unlocked dummy
 scoreboard objectives add sgp.medium_particle_unlocked dummy
 scoreboard objectives add sgp.heavy_particle_unlocked dummy

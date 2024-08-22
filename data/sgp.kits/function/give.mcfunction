@@ -6,6 +6,7 @@
 clear @s
 effect clear @s
 attribute @s minecraft:generic.step_height modifier remove kit
+attribute @s minecraft:generic.max_health modifier remove sgp.bounty_reward
 
 $function sgp.kits:collection/$(kit)/items
 
