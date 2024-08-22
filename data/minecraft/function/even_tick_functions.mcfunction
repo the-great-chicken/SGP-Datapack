@@ -2,9 +2,7 @@
 # 
 # Executes functions one game tick out of 2 
 
-function sgp.cosmetics:misc/store_coords
-
-execute as @e[type=marker,tag=sgp.marker,name="lieu"] \
+execute as @e[type=marker,tag=sgp.marker,name="lieu"] at @s \
         run function sgp.world:lieu/lieu_trouve with entity @s data
 
 execute as @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] at @s \
