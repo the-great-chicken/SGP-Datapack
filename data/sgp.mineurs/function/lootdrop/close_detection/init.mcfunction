@@ -15,9 +15,10 @@ execute as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
 tag @s add sgp.container_open
 
 # Summoning the items in the chest
-execute as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
-    if block ~ ~ ~ trapped_chest \
-        run data modify block ~ ~ ~ Items set from storage sgp:close_detection Items
+execute unless entity @s[tag=sgp.peaceful] \
+    as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
+        if block ~ ~ ~ trapped_chest \
+            run data modify block ~ ~ ~ Items set from storage sgp:close_detection Items
 
 function #bs.schedule:schedule {with:{id:"close_detection",command:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",time:1,unit:"t"}}
 
