@@ -1,0 +1,15 @@
+{
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:entity_killed_player",
+			"conditions": {
+				"entity": {
+					"type": "minecraft:player"
+				}
+			}
+		}
+	},
+	"rewards": {
+		"function": "sgp.majeurs:hide_and_seek/died"
+	}
+}

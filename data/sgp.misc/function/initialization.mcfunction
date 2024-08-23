@@ -22,6 +22,7 @@ scoreboard objectives add sgp.marine_particle_unlocked dummy
 scoreboard objectives add sgp.ench_particle_unlocked dummy
 scoreboard objectives add sgp.smoke_particle_unlocked dummy
 scoreboard objectives add sgp.cloud_particle_unlocked dummy
+scoreboard objectives add sgp.link_teams dummy
 
 scoreboard objectives add sgp.veut_kill_disabled trigger
 scoreboard objectives add sgp.veut_kill_anvil trigger
@@ -215,6 +216,12 @@ team add sgp.PGSEC
 team modify sgp.PGSEC collisionRule never
 team modify sgp.PGSEC color gold
 
+team add sgp.hider "Volaille"
+team modify sgp.hider collisionRule pushOtherTeams
+team modify sgp.hider nametagVisibility never
+
+team add sgp.seeker "Chasseurs"
+team modify sgp.seeker friendlyFire false
 
 # Misc
 bossbar add sgp:lgp "a"
@@ -240,5 +247,5 @@ function sgp.misc:bossbar/cycle_name
 
 data merge storage sgp:lootdrop {tag: [{id: "minecraft:bow",tag: {display: {Lore: ["{\"text\":\"------------\",\"color\":\"#C0C0C0\",\"italic\":\"false\"}","{\"text\":\"���� Puissance I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"���� Puissance II\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}","{\"text\":\"∞ Infinité\",\"color\":\"#E5E4E2\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:flame",lvl: 1s},{id: "minecraft:power",lvl: 1s},{id: "minecraft:power",lvl: 2s},{id: "minecraft:punch",lvl: 1s},{id: "minecraft:infinity",lvl: 1s}]}},{id: "minecraft:iron_sword",tag: {display: {Lore: ["{\"text\":\"⚔ Tranchant I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme I\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}"]},Enchantments: [{id: "sharpness",lvl: 1},{id: "fire_aspect",lvl: 1},{id: "knockback",lvl: 1}]},count: 1b},{id: "minecraft:iron_chestplate",tag: {display: {Lore: ["{\"text\":\"���� Protection I\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection I\",\"color\":\"dark_blue\",\"italic\":\"false\"}","{\"text\":\"���� Protection II\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection II\",\"color\":\"dark_blue\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:protection",lvl: 1s},{id: "minecraft:projectile_protection",lvl: 1s},{id: "minecraft:protection",lvl: 2s},{id: "minecraft:projectile_protection",lvl: 2s}]}}]}
 execute unless data storage sgp:kill_counter HandItems run data merge storage sgp:kill_counter {HandItems: [{count: 1b,tag: {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}},{}]}
-data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache"}}}
+data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"La chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",beacome_seeker:"Vous pouvez chasser de la volaille à votre tour !"}}}}
 data modify storage sgp.text prefix set value {"text":"[", "color":"gray", "extra":[{"text":"SGP", "color":"gold"}, {"text":"] "}]}

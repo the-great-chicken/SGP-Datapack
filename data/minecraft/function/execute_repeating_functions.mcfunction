@@ -18,6 +18,7 @@ execute as @a[scores={sgp.death_reset_tags=1..}] run \
 
 
 
+
 # ---------- TRIGGER REWARDS ----------
 execute as @a[tag=sgp.in_game] \
     unless entity @s[tag=sgp.enderman] \

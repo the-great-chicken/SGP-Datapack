@@ -1,1 +1,0 @@
-$execute as @a[sort=random,limit=$(nbr_wanted)] run tag @s add $(tag)
