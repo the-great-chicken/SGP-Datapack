@@ -10,6 +10,9 @@ scoreboard players enable @a[tag=sgp.vindicateur_voulu] sgp.veut_vindicateur
 execute as @a[scores={sgp.veut_archer=1..}] run function sgp.kits:give {kit:archer}
 scoreboard players enable @a[tag=sgp.archer_voulu] sgp.veut_archer
 
+execute as @a[scores={sgp.veut_peaceful=1..}] run function sgp.kits:give {kit:peaceful}
+scoreboard players enable @a[tag=sgp.peaceful_voulu] sgp.veut_peaceful
+
 # Kits à trouver dans la map
 execute as @a[scores={sgp.veut_eclaireur=1..}] run function sgp.kits:misc/check_and_give {kit:eclaireur, kit_color:aqua, hint:"Zone Noire", hint_color:dark_gray}
 execute as @a[scores={sgp.veut_enderman=1..}] run function sgp.kits:misc/check_and_give {kit:enderman, kit_color:dark_purple, hint:"Zone Fun", hint_color:"#C0FF00"}

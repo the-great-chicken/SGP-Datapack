@@ -14,3 +14,4 @@ tag @s remove sgp.poseidon
 tag @s remove sgp.enderman
 tag @s remove sgp.tank
 tag @s remove sgp.pyromane
+tag @s remove sgp.peaceful
