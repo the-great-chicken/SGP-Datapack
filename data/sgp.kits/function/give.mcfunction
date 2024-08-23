@@ -6,7 +6,6 @@
 clear @s
 effect clear @s
 attribute @s minecraft:generic.step_height modifier remove kit
-attribute @s generic.attack_damage modifier remove kit
 god @s off
 
 $function sgp.kits:collection/$(kit)/items

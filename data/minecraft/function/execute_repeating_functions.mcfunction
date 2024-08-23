@@ -81,6 +81,14 @@ execute if predicate sgp.majeurs:event_in_progress \
 # execute if score #52_ticks_clock sgp.dummy matches 0 run \
 #     function sgp.kits:kit_tags/prefixes_check
 
+execute if score #52_ticks_clock sgp.dummy matches 0 \
+    as @a[tag=sgp.in_game,tag=sgp.peaceful] at @s \
+        run particle minecraft:heart ~ ~2 ~ 0.1 0 0.1 1 1
+
+execute if score #52_ticks_clock sgp.dummy matches 26 \
+    as @a[tag=sgp.in_game,tag=sgp.peaceful] at @s \
+        run particle minecraft:heart ~ ~2 ~ 0.1 0 0.1 1 1
+
 scoreboard players add #52_ticks_clock sgp.dummy 1
 
 execute if score #52_ticks_clock sgp.dummy matches 52 run \
