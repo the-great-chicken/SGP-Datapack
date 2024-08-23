@@ -3,9 +3,10 @@
 # Executes functions at each game tick
 
 
-
-function even_tick_functions
-
+# one game tick out of 2
+execute if score #even_tick sgp.dummy matches 0 run function even_tick_functions
+scoreboard players add #even_tick sgp.dummy 1
+execute if score #even_tick sgp.dummy matches 2 run scoreboard players set #even_tick sgp.dummy 0
 
 
 # Must be in this order
@@ -80,6 +81,14 @@ execute if predicate sgp.majeurs:event_in_progress \
 # execute if score #52_ticks_clock sgp.dummy matches 0 run \
 #     function sgp.kits:kit_tags/prefixes_check
 
+execute if score #52_ticks_clock sgp.dummy matches 0 \
+    as @a[tag=sgp.in_game,tag=sgp.peaceful] at @s \
+        run particle minecraft:heart ~ ~2 ~ 0.1 0 0.1 1 1
+
+execute if score #52_ticks_clock sgp.dummy matches 26 \
+    as @a[tag=sgp.in_game,tag=sgp.peaceful] at @s \
+        run particle minecraft:heart ~ ~2 ~ 0.1 0 0.1 1 1
+
 scoreboard players add #52_ticks_clock sgp.dummy 1
 
 execute if score #52_ticks_clock sgp.dummy matches 52 run \
@@ -100,9 +109,6 @@ execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
-execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
-    damage @s 6 minecraft:hot_floor
-
 execute if score #128_ticks_clock sgp.dummy matches 0 run \
     function sgp.misc:kill_streaks_management
 
@@ -116,7 +122,6 @@ execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players s
 
 
 # ---------- COSMETICS ----------
-function sgp.cosmetics:kill_effects/death_reaper
 
 execute as @a[scores={sgp.veut_desactiver=1..}] run \
     function sgp.cosmetics:particles/disable

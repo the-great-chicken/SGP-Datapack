@@ -14,6 +14,7 @@ execute as @s run trigger sgp.veut_enderman set 0
 execute as @s run trigger sgp.veut_alchimiste set 0
 execute as @s run trigger sgp.veut_poseidon set 0
 execute as @s run trigger sgp.veut_eclaireur set 0
+execute as @s run trigger sgp.veut_peaceful set 0
 execute as @s run trigger sgp.veut_random set 0
 
 execute if entity @s[scores={sgp.sort_kits=1..}] run trigger sgp.kits_vers_spawn set 0

@@ -17,6 +17,7 @@ scoreboard players enable @s sgp.veut_enderman
 scoreboard players enable @s sgp.veut_alchimiste
 scoreboard players enable @s sgp.veut_poseidon
 scoreboard players enable @s sgp.veut_eclaireur
+scoreboard players enable @s sgp.veut_peaceful
 scoreboard players enable @s sgp.veut_random
 scoreboard players enable @s sgp.sort_kits
 scoreboard players enable @s sgp.kits_vers_spawn

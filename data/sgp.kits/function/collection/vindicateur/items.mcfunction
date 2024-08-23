@@ -110,12 +110,13 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"weakness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
     ]
 
 
 # ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
+item replace entity @s weapon.offhand with cooked_beef[ \
     custom_name='{"text":"Steak", "color":"dark_green", "italic":false, "bold":true}', \
     lore=[ \
         '[ \
