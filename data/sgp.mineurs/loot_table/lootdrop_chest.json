@@ -841,7 +841,7 @@
             {
               "function": "minecraft:set_enchantments",
               "enchantments": {
-                "sgp:depth_strider_boosted": 1
+                "sgp.kits:depth_strider_boosted": 1
               }
             },
             {
