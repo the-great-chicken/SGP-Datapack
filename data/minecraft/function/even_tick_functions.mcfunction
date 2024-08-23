@@ -13,3 +13,4 @@ execute if score #events_mineurs_actifs sgp.dummy matches 1 \
 
 execute if score #events_mineurs_actifs sgp.dummy matches 1 \
         run function sgp.mineurs:common/timer
+
