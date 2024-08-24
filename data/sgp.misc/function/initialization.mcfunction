@@ -223,7 +223,7 @@ team modify sgp.hider color white
 
 team add sgp.seeker "Chasseurs"
 team modify sgp.seeker friendlyFire false
-team modify sgp.hider color dark_green
+team modify sgp.seeker color dark_green
 
 # Misc
 bossbar add sgp:lgp "a"

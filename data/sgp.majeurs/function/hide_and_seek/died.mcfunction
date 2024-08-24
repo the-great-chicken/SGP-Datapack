@@ -2,7 +2,7 @@
 #
 # do the stuff when a player dies
 
-
+advancement revoke @s only sgp.majeurs:death
 tag @s remove sgp.hider
 
 #verifie si il reste des Cacheurs en vie sinon on stop l'event
