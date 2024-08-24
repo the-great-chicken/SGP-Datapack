@@ -9,4 +9,4 @@ tellraw @a[tag=sgp.current_team] [{"storage":"sgp.text", "nbt":"prefix", "interp
 execute store result storage sgp:data hide_and_seek.select_teams.selector int 1 run scoreboard players add #selector sgp.link_teams 1
 
 tag @a[tag=sgp.current_team] remove sgp.current_team
-execute unless entity @a[tag=sgp.hider] run function sgp.majeurs:hide_and_seek/teams/select_teams
+execute if entity @a[team=sgp.hider,tag=!sgp.hider] run function sgp.majeurs:hide_and_seek/teams/select_teams

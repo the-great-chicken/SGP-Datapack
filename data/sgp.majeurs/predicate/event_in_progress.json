@@ -12,6 +12,10 @@
     {
       "condition": "minecraft:reference",
       "name": "sgp.majeurs:invasion/ongoing"
+    },
+    {
+      "condition": "minecraft:reference",
+      "name": "sgp.majeurs:hide_and_seek/ongoing"
     }
   ]
 }
