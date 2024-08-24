@@ -10,7 +10,8 @@ function sgp.misc:selected_player/main {div:3,tag:sgp.seeker,sign:"%"}
 execute as @a[tag=sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/seeker
 execute as @a[team=!sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/hider
 
-
+scoreboard players set #hider sgp.timer 60
+scoreboard players set #hider sgp.timer 60
 
 title @a[tag=sgp.in_game] times 0t 1s 0t
 scoreboard players set @a[tag=sgp.in_game] sgp.timer 60

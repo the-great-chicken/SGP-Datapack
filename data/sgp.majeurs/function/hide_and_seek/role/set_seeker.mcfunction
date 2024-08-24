@@ -6,4 +6,5 @@ function sgp.majeurs:hide_and_seek/stun/stun
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
 
+say move to chasseurs
 move @s #Chasseurs
