@@ -119,6 +119,8 @@ scoreboard players add #128_ticks_clock sgp.dummy 1
 
 execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players set #128_ticks_clock sgp.dummy 0
 
+execute as @a[tag=sgp.in_game] run function sgp.world:climbing_boost
+
 
 
 # ---------- COSMETICS ----------
