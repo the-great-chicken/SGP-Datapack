@@ -1,3 +1,7 @@
+#> sgp.majeurs:hide_and_seek/role/hider
+#
+# Définit le rôle de Hider
+
 team join sgp.hider @s
 effect give @s invisibility 60 1 true
 attribute @s generic.attack_damage modifier add sgp.hider -0.999 add_value

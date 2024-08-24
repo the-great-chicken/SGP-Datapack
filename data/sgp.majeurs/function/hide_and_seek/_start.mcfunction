@@ -15,8 +15,7 @@ title @a[tag=sgp.in_game] times 0t 1s 0t
 scoreboard players set @a[tag=sgp.in_game] sgp.timer 60
 
 #make the teams of hiders
-scoreboard players set #selector sgp.link_teams 0
-execute store result storage sgp:data hide_and_seek.select_teams.selector int 1 run scoreboard players set #selector sgp.link_teams 0
+execute store result storage sgp:data hide_and_seek.select_teams.selector int 1 run scoreboard players set #selector sgp.link_teams 1
 function sgp.majeurs:hide_and_seek/teams/select_teams
 
 #start the timer
