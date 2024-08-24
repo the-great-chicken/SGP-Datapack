@@ -9,6 +9,8 @@ execute unless entity @a[team=sgp.hider] run title @a[tag=sgp.in_game] actionbar
 effect clear @a[tag=sgp.in_game]
 scoreboard players reset * sgp.link_teams
 team leave @a[tag=sgp.in_game]
+function sgp.majeurs:hide_and_seek/reset_player
+execute as @a[tag=sgp.in_game] run function sgp.misc:on_death
 
 #stop the game
 schedule clear sgp.majeurs:hide_and_seek/_stop

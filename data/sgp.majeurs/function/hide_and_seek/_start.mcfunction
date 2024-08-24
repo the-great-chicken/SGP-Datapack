@@ -2,6 +2,8 @@
 #
 # Start the hide and seek game.
 
+execute as @a[tag=sgp.in_game] run function sgp.misc:on_death
+
 #calculate and atrivuate the seeker and hider
 function sgp.misc:selected_player/main {div:10,tag:sgp.seeker,sign:"/"}
 function sgp.misc:selected_player/main {div:3,tag:sgp.seeker,sign:"%"}
