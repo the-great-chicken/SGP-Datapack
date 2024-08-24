@@ -1,7 +1,4 @@
 team join sgp.seeker @s
-
-scoreboard players set @s sgp.timer 60
-
 tellraw @s [{"text":"Vous devez éliminer tous les Volailles","color":"red"}]
 effect give @s speed infinite 1 true
 effect give @s jump_boost infinite 1 true
