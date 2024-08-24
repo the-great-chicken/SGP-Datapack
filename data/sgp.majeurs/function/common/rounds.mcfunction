@@ -1,4 +1,4 @@
-#> sgp.majeurs:function/common/rounds
+#> sgp.majeurs:common/rounds
 #`{event, text}`
 # 
 # check if the number of rounds is less than the maximum number of rounds

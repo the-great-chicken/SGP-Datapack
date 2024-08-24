@@ -1,3 +1,7 @@
+#> sgp.majeurs:hide_and_seek/timer/become_seeker
+#
+# This function is called every second to update the timer of the new seeker.
+
 title @s title [{"text": "vous pourrais chasser dans "},{"score":{"name":"@s","objective":"sgp.timer"}}]
 
 scoreboard players remove @s sgp.timer 1
