@@ -4,4 +4,4 @@
 # Customizable particle + sound kill effect
 
 $execute at @e[type=marker,tag=sgp.marker,name="death_reaper"] run particle minecraft:$(particle)
-$execute at @e[type=marker,tag=sgp.marker,name="death_reaper"] run playsound minecraft:$(sound) master @a ~ ~ ~ 0.8
+$execute at @e[type=marker,tag=sgp.marker,name="death_reaper"] run playsound minecraft:$(sound) master @a[tag=sgp.in_game] ~ ~ ~ 0.8

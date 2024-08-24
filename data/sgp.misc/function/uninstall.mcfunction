@@ -130,6 +130,9 @@ scoreboard objectives remove sgp.timer
 
 scoreboard objectives remove sgp.sneak_particle
 
+scoreboard objectives remove sgp.lieu_count
+
+
 
 
 # ---------- Remove teams ----------

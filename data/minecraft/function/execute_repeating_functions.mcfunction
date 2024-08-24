@@ -31,7 +31,8 @@ execute as @a[tag=sgp.in_game] \
 
 
 # ---------- SPAWNS ----------
-execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.spawns:check_and_execute_spawn with entity @s data
+execute as @e[type=marker,tag=sgp.marker,name="spawn"] \
+    run function sgp.spawns:check_and_execute_spawn with entity @s data
 
 execute as @p[scores={sgp.spawn_random=1..}] run \
     function sgp.spawns:random
@@ -102,20 +103,21 @@ execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
-execute if score #128_ticks_clock sgp.dummy matches 0 run \
-    function sgp.misc:kill_streaks_management
+execute if score #128_ticks_clock sgp.dummy matches 0 \
+    unless predicate sgp.majeurs:event_in_progress \
+        run function sgp.misc:kill_streaks_management
 
 execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] run \
     function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1
 
-execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players set #128_ticks_clock sgp.dummy 0
+execute if score #128_ticks_clock sgp.dummy matches 128 \
+    run scoreboard players set #128_ticks_clock sgp.dummy 0
 
 
 
 # ---------- COSMETICS ----------
-
 execute as @a[scores={sgp.veut_desactiver=1..}] run \
     function sgp.cosmetics:particles/disable
 
