@@ -1,8 +1,7 @@
 tellraw @a[tag=sgp.in_game] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
-function sgp.mineurs:_stop
 
-statuswarp pvp disabled
-useglow toggle
+function sgp.majeurs:common/start
+
 function sgp.majeurs:pco/dispatch
 
 # Mets les cages dans l'arène
@@ -42,4 +41,3 @@ execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage
 execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",nbt={data:{cage:"canard"}},limit=1] run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air",cage:"oie"}
 
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
-function sgp.lore:npcs/disable
