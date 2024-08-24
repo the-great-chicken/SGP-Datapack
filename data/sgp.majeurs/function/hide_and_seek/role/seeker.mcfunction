@@ -5,4 +5,3 @@ tellraw @s [{"text":"Vous devez éliminer tous les Vollailles","color":"red"}]
 
 
 
-

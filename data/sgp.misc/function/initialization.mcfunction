@@ -223,7 +223,7 @@ team modify sgp.PGSEC color gold
 team add sgp.hider "Volaille"
 team modify sgp.hider collisionRule pushOtherTeams
 team modify sgp.hider nametagVisibility never
-team modify sgp.hider color white
+team modify sgp.hider color yellow
 
 team add sgp.seeker "Chasseurs"
 team modify sgp.seeker friendlyFire false

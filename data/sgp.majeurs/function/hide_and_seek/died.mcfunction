@@ -6,8 +6,8 @@ advancement revoke @s only sgp.majeurs:death
 tag @s remove sgp.hider
 
 #verifie si il reste des Cacheurs en vie sinon on stop l'event
-execute if entity @e[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text": "Les Chasseur on gagné !", "color": "red"}]
-execute if entity @e[team=sgp.hider] run return run function sgp.majeurs:hide_and_seek/_stop
+execute unless entity @e[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text": "Les Chasseur on gagné !", "color": "red"}]
+execute unless entity @e[team=sgp.hider] run return run function sgp.majeurs:hide_and_seek/_stop
 
 #check pour la team du joueur mort
 scoreboard players operation #death_teams sgp.link_teams = @s sgp.link_teams
