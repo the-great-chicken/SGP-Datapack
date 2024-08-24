@@ -1,3 +1,7 @@
+#> sgp.majeurs:hide_and_seek/role/become_seeker
+#
+# This function is called when a player becomes a seeker.
+
 
 function sgp.majeurs:hide_and_seek/reset_player
 

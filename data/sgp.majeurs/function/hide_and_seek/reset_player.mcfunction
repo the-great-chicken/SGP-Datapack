@@ -1,4 +1,4 @@
-#>sgp.majeurs:hide_and_seek/reset_player
+#> sgp.majeurs:hide_and_seek/reset_player
 #
 # Reset the player
 
