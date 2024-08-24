@@ -7,7 +7,7 @@ execute as @a[tag=sgp.in_game] run function sgp.misc:on_death
 function sgp.misc:selected_player/main {div:10,tag:sgp.seeker,sign:"/"}
 function sgp.misc:selected_player/main {div:3,tag:sgp.seeker,sign:"%"}
 
-execute as @a[team=sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/seeker
+execute as @a[tag=sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/seeker
 execute as @a[team=!sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/hider
 
 
