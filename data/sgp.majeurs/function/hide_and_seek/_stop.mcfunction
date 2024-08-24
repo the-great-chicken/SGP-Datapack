@@ -3,7 +3,7 @@
 # Stop the hide and seek game.
 
 #win for the hiders
-execute unless entity @a[team=sgp.hider] run title @a[tag=sgp.in_game] actionbar [{"text":"La volaille a gagné !","color":"red"}]
+execute unless entity @a[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text":"La volaille a gagné !","color":"red"}]
 
 #reset all players
 effect clear @a[tag=sgp.in_game]
