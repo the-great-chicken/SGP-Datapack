@@ -1,4 +1,3 @@
-say move to your team
 execute if score @s sgp.link_teams matches 1 run return run move @s #Volailles_1
 execute if score @s sgp.link_teams matches 2 run return run move @s #Volailles_2
 execute if score @s sgp.link_teams matches 3 run return run move @s #Volailles_3
