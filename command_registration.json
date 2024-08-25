@@ -11543,6 +11543,34 @@
       },
       "executable": true
     },
+    "paper:spark": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "spark": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
     "luckperms": {
       "type": "literal",
       "children": {
@@ -12115,7 +12143,7 @@
       },
       "executable": true
     },
-    "glow": {
+    "god": {
       "type": "literal",
       "children": {
         "player": {
@@ -12126,264 +12154,11 @@
             "type": "players"
           },
           "children": {
-            "duration": {
-              "type": "argument",
-              "parser": "brigadier:integer",
-              "executable": true
-            }
-          }
-        }
-      },
-      "executable": true
-    },
-    "minecraft:glow": {
-      "type": "literal",
-      "children": {
-        "player": {
-          "type": "argument",
-          "parser": "minecraft:entity",
-          "properties": {
-            "amount": "multiple",
-            "type": "players"
-          },
-          "children": {
-            "duration": {
-              "type": "argument",
-              "parser": "brigadier:integer",
-              "executable": true
-            }
-          }
-        }
-      },
-      "executable": true
-    },
-    "targetglow": {
-      "type": "literal",
-      "children": {
-        "client": {
-          "type": "argument",
-          "parser": "minecraft:entity",
-          "properties": {
-            "amount": "multiple",
-            "type": "players"
-          },
-          "children": {
-            "player": {
-              "type": "argument",
-              "parser": "minecraft:entity",
-              "properties": {
-                "amount": "multiple",
-                "type": "players"
-              },
-              "children": {
-                "BLACK": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_BLUE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_GREEN": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_AQUA": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_RED": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_PURPLE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GOLD": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GRAY": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_GRAY": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "BLUE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GREEN": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "AQUA": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "RED": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "LIGHT_PURPLE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "YELLOW": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "WHITE": {
-                  "type": "literal",
-                  "executable": true
-                }
-              },
-              "executable": true
-            }
-          }
-        }
-      },
-      "executable": true
-    },
-    "minecraft:targetglow": {
-      "type": "literal",
-      "children": {
-        "client": {
-          "type": "argument",
-          "parser": "minecraft:entity",
-          "properties": {
-            "amount": "multiple",
-            "type": "players"
-          },
-          "children": {
-            "player": {
-              "type": "argument",
-              "parser": "minecraft:entity",
-              "properties": {
-                "amount": "multiple",
-                "type": "players"
-              },
-              "children": {
-                "BLACK": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_BLUE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_GREEN": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_AQUA": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_RED": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_PURPLE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GOLD": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GRAY": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "DARK_GRAY": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "BLUE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "GREEN": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "AQUA": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "RED": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "LIGHT_PURPLE": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "YELLOW": {
-                  "type": "literal",
-                  "executable": true
-                },
-                "WHITE": {
-                  "type": "literal",
-                  "executable": true
-                }
-              },
-              "executable": true
-            }
-          }
-        }
-      },
-      "executable": true
-    },
-    "removeglow": {
-      "type": "literal",
-      "children": {
-        "player": {
-          "type": "argument",
-          "parser": "minecraft:entity",
-          "properties": {
-            "amount": "multiple",
-            "type": "players"
-          },
-          "executable": true
-        }
-      },
-      "executable": true
-    },
-    "minecraft:removeglow": {
-      "type": "literal",
-      "children": {
-        "player": {
-          "type": "argument",
-          "parser": "minecraft:entity",
-          "properties": {
-            "amount": "multiple",
-            "type": "players"
-          },
-          "executable": true
-        }
-      },
-      "executable": true
-    },
-    "statuswarp": {
-      "type": "literal",
-      "children": {
-        "name": {
-          "type": "argument",
-          "parser": "brigadier:string",
-          "properties": {
-            "type": "word"
-          },
-          "children": {
-            "enabled": {
+            "on": {
               "type": "literal",
               "executable": true
             },
-            "disabled": {
+            "off": {
               "type": "literal",
               "executable": true
             }
@@ -12392,21 +12167,22 @@
       },
       "executable": true
     },
-    "minecraft:statuswarp": {
+    "minecraft:god": {
       "type": "literal",
       "children": {
-        "name": {
+        "player": {
           "type": "argument",
-          "parser": "brigadier:string",
+          "parser": "minecraft:entity",
           "properties": {
-            "type": "word"
+            "amount": "multiple",
+            "type": "players"
           },
           "children": {
-            "enabled": {
+            "on": {
               "type": "literal",
               "executable": true
             },
-            "disabled": {
+            "off": {
               "type": "literal",
               "executable": true
             }
@@ -12415,38 +12191,242 @@
       },
       "executable": true
     },
-    "useglow": {
+    "egod": {
       "type": "literal",
       "children": {
-        "args": {
+        "player": {
           "type": "argument",
-          "parser": "brigadier:string",
+          "parser": "minecraft:entity",
           "properties": {
-            "type": "greedy"
+            "amount": "multiple",
+            "type": "players"
           },
-          "executable": true
-        },
-        "toggle": {
-          "type": "literal",
-          "executable": true
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
         }
       },
       "executable": true
     },
-    "minecraft:useglow": {
+    "minecraft:egod": {
       "type": "literal",
       "children": {
-        "args": {
+        "player": {
           "type": "argument",
-          "parser": "brigadier:string",
+          "parser": "minecraft:entity",
           "properties": {
-            "type": "greedy"
+            "amount": "multiple",
+            "type": "players"
           },
-          "executable": true
-        },
-        "toggle": {
-          "type": "literal",
-          "executable": true
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "godmode": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:godmode": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "egodmode": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:egodmode": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "tgm": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:tgm": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "etgm": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:etgm": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "on": {
+              "type": "literal",
+              "executable": true
+            },
+            "off": {
+              "type": "literal",
+              "executable": true
+            }
+          }
         }
       },
       "executable": true

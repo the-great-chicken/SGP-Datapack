@@ -57,6 +57,7 @@ scoreboard objectives add sgp.veut_random trigger
 scoreboard objectives add sgp.veut_roi trigger
 scoreboard objectives add sgp.veut_tank trigger
 scoreboard objectives add sgp.veut_vindicateur trigger
+scoreboard objectives add sgp.veut_peaceful trigger
 scoreboard objectives add sgp.pyromane_found trigger
 scoreboard objectives add sgp.cancer_found trigger
 scoreboard objectives add sgp.roi_found trigger
