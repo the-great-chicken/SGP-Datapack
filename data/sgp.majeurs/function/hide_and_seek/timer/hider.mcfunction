@@ -7,9 +7,10 @@ data modify storage smithed.actionbar:input message set value { \
     priority:'notification'}
 execute as @a[team=sgp.hider] run function #smithed.actionbar:message
 
-scoreboard players remove #hider sgp.timer 1
 execute unless score #hider sgp.timer matches ..0 run tellraw @a {"score": {"name": "#hider", "objective": "sgp.timer"}}
-execute unless score #hider sgp.timer matches ..0 run function #bs.schedule:schedule {with:{command:"function sgp.majeurs:hide_and_seek/timer/hider",time:1,unit:"s"}}
+
+execute unless score #hider sgp.timer matches ..0 run schedule function sgp.majeurs:hide_and_seek/timer/hider 1s
 execute if score #hider sgp.timer matches ..0 as @a[team=sgp.hider] run function sgp.majeurs:hide_and_seek/timer/end {role:'hider'}
+scoreboard players remove #hider sgp.timer 1
 
 say timer hider
