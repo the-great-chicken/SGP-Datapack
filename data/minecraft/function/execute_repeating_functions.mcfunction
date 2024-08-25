@@ -13,7 +13,7 @@ execute if score #even_tick sgp.dummy matches 2 run scoreboard players set #even
 execute if predicate sgp.majeurs:pigeons/ongoing run \
     function sgp.majeurs:pigeons/running
 
-execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
+execute if predicate sgp.majeurs:hide_and_seek/ongoing as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
     function sgp.majeurs:hide_and_seek/delay_death
 
 execute as @a[scores={sgp.death_reset_tags=1..}] run \
