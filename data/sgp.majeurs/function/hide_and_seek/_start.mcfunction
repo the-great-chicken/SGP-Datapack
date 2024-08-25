@@ -11,7 +11,7 @@ function sgp.misc:selected_player/main {div:3,tag:sgp.seeker,sign:"%"}
 effect give @a[tag=sgp.in_game] minecraft:saturation infinite 1 true
 execute as @a[tag=sgp.in_game] run attribute @s generic.water_movement_efficiency modifier add sgp.all 1 add_value
 
-experience set @a[tag=sgp.in_game] 300 levels
+experience set @a[tag=sgp.in_game] 360 levels
 experience set @a[tag=sgp.in_game] 100000 points
 function sgp.majeurs:hide_and_seek/timer/second
 
