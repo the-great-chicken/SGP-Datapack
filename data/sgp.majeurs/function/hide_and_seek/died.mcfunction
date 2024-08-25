@@ -6,6 +6,7 @@ execute as @s[team=sgp.seeker] run return run function sgp.majeurs:hide_and_seek
 execute as @s[team=sgp.seeker] run return run tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
 
 tag @s remove sgp.hider
+team leave @s
 
 #verifie si il reste des Cacheurs en vie sinon on stop l'event
 execute unless entity @e[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text": "Les Chasseur gagne !", "color": "red"}]
