@@ -139,16 +139,16 @@ item replace entity @s hotbar.1 with splash_potion[ \
     potion_contents="minecraft:healing", \
     hide_additional_tooltip={}, \
     max_stack_size=64 \
-] 8
+    ] 8
 
 item replace entity @s hotbar.2 with splash_potion[ \
-        custom_name='{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}', \
-        lore=[ \
-            '{"text":"Inflige jusqu\'à 4 dégâts", "color":"gray", "italic":false}' \
-            ], \
-        potion_contents="minecraft:harming", \
-        hide_additional_tooltip={}, \
-        max_stack_size=64 \
+    custom_name='{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"Inflige jusqu\'à 4 dégâts", "color":"gray", "italic":false}' \
+        ], \
+    potion_contents="minecraft:harming", \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
     ] 10
 
 item replace entity @s hotbar.3 with splash_potion[ \
@@ -162,7 +162,7 @@ item replace entity @s hotbar.3 with splash_potion[ \
             ] \
         }, \
     hide_additional_tooltip={}, \
-        max_stack_size=64 \
+    max_stack_size=64 \
     ]
 
 item replace entity @s hotbar.4 with milk_bucket[ \
