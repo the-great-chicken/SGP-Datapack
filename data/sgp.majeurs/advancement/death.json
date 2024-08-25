@@ -3,13 +3,17 @@
 		"requirement": {
 			"trigger": "minecraft:entity_killed_player",
 			"conditions": {
+				"player": {
+					"team": "sgp.hider"
+				},
 				"entity": {
-					"type": "minecraft:player"
+					"type": "minecraft:player",
+					"team": "sgp.seeker"
 				}
 			}
 		}
 	},
 	"rewards": {
-		"function": "sgp.majeurs:hide_and_seek/died"
+		"function": "sgp.majeurs:hide_and_seek/delay_death"
 	}
 }
