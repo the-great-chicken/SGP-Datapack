@@ -2,6 +2,7 @@
 #
 # do the stuff when a player dies
 
+execute as @s[team=sgp.seeker] run return run function sgp.majeurs:hide_and_seek/role/effect/seeker
 execute as @s[team=sgp.seeker] run return run tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
 
 tag @s remove sgp.hider
