@@ -79,8 +79,8 @@ execute if predicate sgp.majeurs:event_in_progress \
     as @a[scores={sgp.sort_kits=1..}] run \
         function sgp.majeurs:common/cannot_tp_to_lobby
 
-# execute if score #52_ticks_clock sgp.dummy matches 0 run \
-#     function sgp.kits:kit_tags/prefixes_check
+execute if score #52_ticks_clock sgp.dummy matches 0 run \
+    function sgp.kits:kit_tags/prefixes_check
 
 execute if score #52_ticks_clock sgp.dummy matches 0 \
     as @a[tag=sgp.in_game,tag=sgp.peaceful] at @s \
