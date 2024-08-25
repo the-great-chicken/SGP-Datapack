@@ -2,6 +2,8 @@
 #
 # do the stuff when a player dies
 
+execute as @s[team=sgp.seeker] run return run tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
+
 advancement revoke @s only sgp.majeurs:death
 tag @s remove sgp.hider
 
