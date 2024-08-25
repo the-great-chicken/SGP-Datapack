@@ -1,1 +1,1 @@
-function #bs.schedule:schedule {with:{command:"function sgp.majeurs:hide_and_seek/died",time:1,unit:"t"}}
+function #bs.schedule:schedule {with:{command:"function sgp.majeurs:hide_and_seek/died",time:4,unit:"t"}}
