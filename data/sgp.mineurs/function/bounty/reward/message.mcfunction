@@ -1,4 +1,6 @@
 #> sgp.mineurs:bounty/reward/message
+#
+# send the reward message to the player
 
 scoreboard players enable @s sgp.reward
 tellraw @s [{"storage":"sgp.text", "nbt":"prefix", "interpret":true},{"text": "Choisis une récompense :","color": "white"}]

@@ -1,6 +1,5 @@
 #> sgp.mineurs:bounty/reward/trigger
-
-
+#
 #trigger the reward
 execute if score @s sgp.reward matches 1 run function sgp.mineurs:bounty/reward/macros {reward:"strength",function:"effect give @s strength 120 0 true"}
 execute if score @s sgp.reward matches 2 run function sgp.mineurs:bounty/reward/macros {reward:"absorbtion",function:"effect give @s absorption infinite 9 true"}
