@@ -8,6 +8,7 @@ team join sgp.hider @s
 effect give @s invisibility 60 1 true
 attribute @s generic.attack_damage modifier add sgp.hider -0.999 add_value
 effect give @s speed 60 5 true
+effect give @s resistance 60 10 true
 
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_hider]
