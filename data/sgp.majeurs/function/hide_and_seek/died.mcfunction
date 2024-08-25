@@ -8,6 +8,7 @@ tag @s remove sgp.hider
 
 #verifie si il reste des Cacheurs en vie sinon on stop l'event
 execute unless entity @e[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text": "Les Chasseur gagne !", "color": "red"}]
+execute unless entity @e[team=sgp.hider] run tellraw @a[tag=sgp.in_game] [{"text": "Les Chasseur gagne ! en éliminant toute les Volaille", "color": "red"}]
 execute unless entity @e[team=sgp.hider] run return run function sgp.majeurs:hide_and_seek/_stop
 
 #check pour la team du joueur mort

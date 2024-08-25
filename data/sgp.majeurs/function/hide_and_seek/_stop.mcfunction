@@ -3,7 +3,8 @@
 # Stop the hide and seek game.
 
 #win for the hiders
-execute if entity @a[team=sgp.hider] run title @a[tag=sgp.in_game] title [{"text":"La volaille a gagné !","color":"red"}]
+execute if entity @a[tag=sgp.hider] run title @a[tag=sgp.in_game] title [{"text":"La volaille a gagné !","color":"red"}]
+execute if entity @a[tag=sgp.hider] run tellraw @a[tag=sgp.in_game] [{"text":"La volaille a gagné ! en survivant 5 min","color":"red"}]
 
 #reset all players
 scoreboard players reset * sgp.link_teams

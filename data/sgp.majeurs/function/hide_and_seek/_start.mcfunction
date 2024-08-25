@@ -32,4 +32,4 @@ scoreboard players set #seeker sgp.timer 60
 function sgp.majeurs:hide_and_seek/timer/seeker
 function sgp.majeurs:hide_and_seek/timer/hider
 
-schedule function sgp.majeurs:hide_and_seek/_stop 300s
+schedule function sgp.majeurs:hide_and_seek/_stop 360s
