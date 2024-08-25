@@ -1,0 +1,7 @@
+#> sgp.mineurs:bounty/reward/message
+#
+# send the reward message to the player
+
+scoreboard players enable @s sgp.reward
+tellraw @s [{"storage":"sgp.text", "nbt":"prefix", "interpret":true},{"text": "Choisis une récompense :","color": "white"}]
+tellraw @s ["",{"color":"dark_red","text":" [Force] ","hoverEvent":{"action":"show_text","contents":[{"text":"Donne "},{"color":"dark_red","text":"Force "},{"text":"I pendant 2 minutes"}]},"clickEvent":{"action":"run_command","value":"/trigger sgp.reward set 1"}},{"text": "/ ","color": "white"},{"color":"gold","text":"[Absorption] ","hoverEvent":{"action":"show_text","contents":[{"text":"Te donne 2 barres d' "},{"color":"gold","text":"Absorption "},{"text":"permanent"}]},"clickEvent":{"action":"run_command","value":"/trigger sgp.reward set 2"}},{"text": "/ ","color": "white"},{"color":"light_purple","text":"[Boost de Vie] ","hoverEvent":{"action":"show_text","contents":[{"text":"Donne 3 "},{"color":"red","text":"❤ "},{"text":"supplémentaire jusqu'à ta prochaine mort"}]},"clickEvent":{"action":"run_command","value":"/trigger sgp.reward set 3"}},{"text": "/ ","color": "white"},{"color":"yellow","text":"[Totem + Pomme Cheat] ","hoverEvent":{"action":"show_text","contents":[{"text":"Donne un "},{"translate": "item.minecraft.totem_of_undying","color": "yellow"},{"text":" et une "},{"translate": "item.minecraft.enchanted_golden_apple","color": "light_purple"}]},"clickEvent":{"action":"run_command","value":"/trigger sgp.reward set 4"}}]

@@ -27,6 +27,7 @@ execute as @a[tag=sgp.in_game] \
     unless entity @s[tag=sgp.archer] run \
         function sgp.world:reward/parkour_rewards
 
+execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
 
 
 # ---------- SPAWNS ----------
