@@ -94,8 +94,19 @@ item replace entity @s armor.legs with leather_leggings[ \
 item replace entity @s armor.feet with diamond_boots[ \
     custom_name='{"text":"Bottes d\'Exploration", "color":"aqua", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}' \
+        '{"text":"---------------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"᠅ Épines II", "color":"dark_green", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous n\'êtes pas", "color":"white"} \
+            ]', \
+        '[ \
+            {"text":"ralenti dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
         ], \
     enchantments={ \
         levels: {thorns:2, "sgp.kits:depth_strider_boosted":1}, \

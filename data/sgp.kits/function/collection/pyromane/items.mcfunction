@@ -93,6 +93,19 @@ item replace entity @s armor.legs with diamond_leggings[ \
 
 item replace entity @s armor.feet with iron_boots[ \
     custom_name='{"text":"Bottes en Fer", "color":"gold", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈", "color":"yellow", "italic":false}', \
+        '[ \
+            {"text":"× ", "color":"red", "italic":false}, \
+            {"text":"Vous êtes ", "color":"white"}, \
+            {"text":"lent", "color":"red"} \
+            ]', \
+        '[ \
+            {"text":"dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈", "color":"yellow", "italic":false}' \
+        ], \
     trim={ \
         pattern:"wayfinder", \
         material:"gold", \
