@@ -4,7 +4,7 @@
 			"trigger": "minecraft:entity_killed_player",
 			"conditions": {
 				"player": {
-					"nbt": "{Tags:[sgp.bounty]}"
+					"nbt": "{Tags:[sgp.wanted]}"
 				},
 				"entity": {
 					"type": "minecraft:player"
