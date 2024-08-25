@@ -4,12 +4,12 @@
 
 function sgp.majeurs:common/start
 
-say 1
 #calculate and atrivuate the seeker and hider
 function sgp.misc:selected_player/main {div:10,tag:sgp.seeker,sign:"/"}
 function sgp.misc:selected_player/main {div:3,tag:sgp.seeker,sign:"%"}
 
 effect give @a[tag=sgp.in_game] minecraft:saturation infinite 1 true
+execute as @a[tag=sgp.in_game] run attribute @s generic.water_movement_efficiency modifier add sgp.all 1 add_value
 
 execute as @a[tag=sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/seeker
 execute as @a[tag=!sgp.seeker] at @s run function sgp.majeurs:hide_and_seek/role/hider
