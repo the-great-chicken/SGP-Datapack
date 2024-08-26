@@ -67,6 +67,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
     lore=[ \
         '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Protection II", "color":"dark_aqua", "italic":false}', \
+        '{"text":""}', \
         '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
         '[ \
             {"text":"» ", "color":"yellow", "italic":false}, \
