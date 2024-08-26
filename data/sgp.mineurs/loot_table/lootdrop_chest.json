@@ -173,28 +173,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🛡 Protection II",
-                      "color": "dark_aqua",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 1
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -203,28 +183,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:projectile_protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "➹ Protection II",
-                      "color": "dark_blue",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 2
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:proj_prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -433,28 +393,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🛡 Protection II",
-                      "color": "dark_aqua",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 1
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -463,28 +403,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:projectile_protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "➹ Protection II",
-                      "color": "dark_blue",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 2
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:proj_prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -739,28 +659,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🛡 Protection II",
-                      "color": "dark_aqua",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 1
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -769,28 +669,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:projectile_protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "➹ Protection II",
-                      "color": "dark_blue",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 2
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:proj_prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -1016,28 +896,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🛡 Protection II",
-                      "color": "dark_aqua",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 1
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -1046,28 +906,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:projectile_protection": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "➹ Protection II",
-                      "color": "dark_blue",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 2
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:proj_prot_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -1554,26 +1394,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:fire_aspect": 1
-                  }
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🔥 Flamme",
-                      "color": "#FF8C00",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "append"
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:fire_aspect",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -1582,26 +1404,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:knockback": 1
-                  }
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "⬱ Recul I",
-                      "color": "#6F4E37",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "append"
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:kb",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -2172,28 +1976,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:power": 1
-                  },
-                  "add": true
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🏹 Puissance II",
-                      "color": "dark_red",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "replace_section",
-                  "offset": 1
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:power_2",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -2202,26 +1986,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:flame": 1
-                  }
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "🔥 Flamme",
-                      "color": "#FF8C00",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "append"
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:flame",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -2230,26 +1996,8 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:punch": 1
-                  }
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "⬱ Recul I",
-                      "color": "#6F4E37",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "append"
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:punch",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
@@ -2258,36 +2006,14 @@
               ]
             },
             {
-              "function": "minecraft:sequence",
-              "functions": [
-                {
-                  "function": "minecraft:set_enchantments",
-                  "enchantments": {
-                    "minecraft:infinity": 1
-                  }
-                },
-                {
-                  "function": "minecraft:set_lore",
-                  "lore": [
-                    {
-                      "text": "∞ Infinité",
-                      "color": "#E5E4E2",
-                      "italic": false
-                    }
-                  ],
-                  "mode": "append"
-                }
-              ],
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:infinity",
               "conditions": [
                 {
                   "condition": "minecraft:random_chance",
                   "chance": 0.05
                 }
               ]
-            },
-            {
-              "function": "minecraft:sequence",
-              "functions": []
             },
             {
               "function": "minecraft:set_lore",
