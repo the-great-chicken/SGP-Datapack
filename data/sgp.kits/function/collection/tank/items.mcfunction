@@ -142,6 +142,30 @@ item replace entity @s armor.feet with diamond_boots[ \
     ]
 
 
+# ---------- FOOD ----------
+item replace entity @s hotbar.3 with cooked_beef[ \
+    custom_name='{"text":"Steak", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 5", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"} \
+            ]' \
+        ] \
+    ] 32
+
+item replace entity @s hotbar.2 with golden_apple[ \
+    custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"}, \
+            {"text":" + 2"}, \
+            {"text":"❤", "color":"yellow"} \
+            ]' \
+        ] \
+    ] 3
+
+
 # ---------- MISC ----------
 item replace entity @s hotbar.7 with tipped_arrow[ \
     custom_name='{"text":"Flèche du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \
@@ -184,27 +208,3 @@ item replace entity @s weapon.offhand with shield[ \
     hide_additional_tooltip={}, \
     unbreakable={show_in_tooltip:false} \
     ]
-
-
-# ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
-    custom_name='{"text":"Steak", "color":"dark_blue", "italic":false, "bold":true}', \
-    lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 5", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"} \
-            ]' \
-        ] \
-    ] 32
-
-item replace entity @s hotbar.2 with golden_apple[ \
-    custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
-    lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"}, \
-            {"text":" + 2"}, \
-            {"text":"❤", "color":"yellow"} \
-            ]' \
-        ] \
-    ] 3

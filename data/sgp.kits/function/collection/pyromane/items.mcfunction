@@ -127,15 +127,17 @@ item replace entity @s weapon.offhand with flint_and_steel[ \
     unbreakable={show_in_tooltip:false} \
     ]
 
-item replace entity @s hotbar.4 with firework_rocket[ \
-    custom_name='{"text":"Explosifs", "color":"red", "italic":false, "bold":true}', \
-    fireworks={ \
-        explosions: [ \
+item replace entity @s hotbar.4 with strider_spawn_egg[ \
+    entity_data={\
+        id:"minecraft:firework_rocket",\
+        LifeTime:0,\
+        FireworksItem:{id:"firework_rocket",count:1,components:{fireworks:{explosions: [ \
             {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true}, \
             {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true} \
             ], \
-        flight_duration:-2 \
-        } \
+        }}} \
+        }, \
+    custom_name='{"text":"Explosifs", "color":"red", "italic":false, "bold":true}' \
     ]
 
 
