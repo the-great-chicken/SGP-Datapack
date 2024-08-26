@@ -57,17 +57,6 @@ title @a[team=sgp.Canard] title {"text":"Canard","color":"green","bold":true}
 tellraw @a[team=sgp.Canard] [{"text":"Vous êtes un ","color":"white"},{"text":"Canard. ","color":"green","bold":true},{"text":"Vous devez chasser les ","color":"white"},{"text":"Oies.","color":"yellow","bold":true}]
 
 
-# Spawn the cabanes
-execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",tag=sgp.enabled,nbt={data:{cage:"poule"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"canard"}
-
-execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",tag=sgp.enabled,nbt={data:{cage:"oie"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"poule"}
-
-execute as @e[type=marker,tag=sgp.marker,name="pco_cage_storage",tag=sgp.enabled,nbt={data:{cage:"canard"}},limit=1] \
-    run function sgp.majeurs:pco/cabane/change_cabane_block {block:warped_fence_gate, block_to_replace:"#minecraft:air", block_2:green_concrete, block_to_replace_2:white_concrete, cage:"oie"}
-
-
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
 
 function sgp.lore:npcs/disable

@@ -164,7 +164,9 @@ execute if predicate sgp.majeurs:protect/ongoing run \
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/empower
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/check_death
 execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/cabane/run_check_inside
+execute if predicate sgp.majeurs:pco/ongoing \
+    as @a[tag=sgp.in_game] \
+        run function sgp.majeurs:pco/cabane/run_check_inside
 
 
 
