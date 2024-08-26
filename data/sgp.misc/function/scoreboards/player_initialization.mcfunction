@@ -29,3 +29,6 @@ scoreboard players add @s sgp.jump_diff_2_done 0
 scoreboard players add @s sgp.teleporteur 0
 
 bossbar set sgp:lgp players @a
+
+execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
+    run spawnpoint @s ~ ~ ~ ~
