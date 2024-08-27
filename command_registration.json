@@ -7094,6 +7094,14 @@
         "uuids": {
           "type": "literal",
           "executable": true
+        },
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
         }
       },
       "executable": true
@@ -10821,6 +10829,16 @@
     },
     "minecraft:list": {
       "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
       "executable": true,
       "redirect": [
         "list"
@@ -12130,6 +12148,594 @@
       "executable": true
     },
     "minecraft:wp": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "glow": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "duration": {
+              "type": "argument",
+              "parser": "brigadier:integer",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:glow": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "duration": {
+              "type": "argument",
+              "parser": "brigadier:integer",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "targetglow": {
+      "type": "literal",
+      "children": {
+        "client": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "player": {
+              "type": "argument",
+              "parser": "minecraft:entity",
+              "properties": {
+                "amount": "multiple",
+                "type": "players"
+              },
+              "children": {
+                "BLACK": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_BLUE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_GREEN": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_AQUA": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_RED": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_PURPLE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GOLD": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GRAY": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_GRAY": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "BLUE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GREEN": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "AQUA": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "RED": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "LIGHT_PURPLE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "YELLOW": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "WHITE": {
+                  "type": "literal",
+                  "executable": true
+                }
+              },
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:targetglow": {
+      "type": "literal",
+      "children": {
+        "client": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "children": {
+            "player": {
+              "type": "argument",
+              "parser": "minecraft:entity",
+              "properties": {
+                "amount": "multiple",
+                "type": "players"
+              },
+              "children": {
+                "BLACK": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_BLUE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_GREEN": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_AQUA": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_RED": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_PURPLE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GOLD": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GRAY": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "DARK_GRAY": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "BLUE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "GREEN": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "AQUA": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "RED": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "LIGHT_PURPLE": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "YELLOW": {
+                  "type": "literal",
+                  "executable": true
+                },
+                "WHITE": {
+                  "type": "literal",
+                  "executable": true
+                }
+              },
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "removeglow": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:removeglow": {
+      "type": "literal",
+      "children": {
+        "player": {
+          "type": "argument",
+          "parser": "minecraft:entity",
+          "properties": {
+            "amount": "multiple",
+            "type": "players"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "statuswarp": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "word"
+          },
+          "children": {
+            "enabled": {
+              "type": "literal",
+              "executable": true
+            },
+            "disabled": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "minecraft:statuswarp": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "word"
+          },
+          "children": {
+            "enabled": {
+              "type": "literal",
+              "executable": true
+            },
+            "disabled": {
+              "type": "literal",
+              "executable": true
+            }
+          }
+        }
+      },
+      "executable": true
+    },
+    "useglow": {
+      "type": "literal",
+      "children": {
+        "toggle": {
+          "type": "literal",
+          "executable": true
+        },
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:useglow": {
+      "type": "literal",
+      "children": {
+        "toggle": {
+          "type": "literal",
+          "executable": true
+        },
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "elist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:elist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "online": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:online": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "eonline": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:eonline": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "playerlist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:playerlist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "eplayerlist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:eplayerlist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "plist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:plist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "eplist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:eplist": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "who": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:who": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "ewho": {
+      "type": "literal",
+      "children": {
+        "args": {
+          "type": "argument",
+          "parser": "brigadier:string",
+          "properties": {
+            "type": "greedy"
+          },
+          "executable": true
+        }
+      },
+      "executable": true
+    },
+    "minecraft:ewho": {
       "type": "literal",
       "children": {
         "args": {

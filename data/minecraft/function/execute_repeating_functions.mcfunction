@@ -6,7 +6,12 @@
 # one game tick out of 2
 execute if score #even_tick sgp.dummy matches 0 run function even_tick_functions
 scoreboard players add #even_tick sgp.dummy 1
-execute if score #even_tick sgp.dummy matches 2 run scoreboard players set #even_tick sgp.dummy 0
+execute if score #even_tick sgp.dummy matches 2.. run scoreboard players set #even_tick sgp.dummy 0
+
+# one game tick out of 20
+execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
+scoreboard players add #20_ticks sgp.dummy 1
+execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
 
 # Must be in this order
