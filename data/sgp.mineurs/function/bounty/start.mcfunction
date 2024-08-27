@@ -9,7 +9,7 @@ function sgp.mineurs:bounty/select_wanted with storage sgp:data mineurs.bounty
 execute as @a[tag=sgp.wanted] run function sgp.mineurs:bounty/init_wanted
 title @a[tag=sgp.in_game] title {"text":"Bounty !", "color":"yellow", "bold":true}
 
-tellraw @a [{"storage":"sgp.text", "nbt":"prefix", "interpret":true},{"text":"Les personnes recherchées sont ","color": "yellow"},{"selector":"@a[tag=sgp.wanted]","color": "white"}]
+tellraw @a [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"BOUNTY! ","color":"yellow", "bold":true}, {"text":"Les personnes recherchées sont ", "color": "yellow"},{"selector":"@a[tag=sgp.wanted]", "color": "white"}]
 
 function sgp.misc:timer_experience {duration:120}
 

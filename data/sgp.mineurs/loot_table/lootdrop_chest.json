@@ -1085,33 +1085,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:cake",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_name",
-              "name": {
-                "text": "Gâteau",
-                "color": "white",
-                "bold": true,
-                "italic": false
-              }
-            },
-            {
-              "function": "minecraft:set_lore",
-              "lore": [
-                {
-                  "text": "C'est délicieux",
-                  "color": "light_purple",
-                  "italic": false
-                }
-              ],
-              "mode": "append"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:golden_apple",
           "weight": 4,
           "functions": [

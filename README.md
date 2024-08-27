@@ -38,6 +38,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - 3 `pco_cage_storage`: one for each team. They should not be placed somewhere visible, and are used to clone the cages from there to the arena at the start of the event. They should have the following data: `{cage:"<team>", dx, dy, dz, fill:{x, y, z, dx, dz}}` The 3 first `dx dy dz` are the size of the cages. The `x y z` in `fill{}` are the differences between the position of the linked `pco_<team>_cage_arena` and the corner of the cabane. `dx and dz` in the `fill{}` are the size of the cabane.
 - 3 `pco_uncage_storage`: one for each team. They should be near the `pco_cage_storage`s, and should have the following data: `{cage:"<team>", dx, dy, dz}`
 - 3 `pco_<team>_cage_arena` that should be placed in the corner of the cage of the team, in the arena.
+- 3 `pco_<team>_spawn` that are the place at which the players from the specified team spawn
 
 Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
 

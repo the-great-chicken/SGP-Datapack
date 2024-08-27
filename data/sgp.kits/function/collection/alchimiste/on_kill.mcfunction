@@ -6,7 +6,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
     give: 'splash_potion[ \
         custom_name=\'{"text":"Potion de Soin", "color":"light_purple", "italic":false, "bold":true}\', \
         lore=[ \
-            \'{"text":"Régénère jusqu\\\'à 2", "color":"gray", "  italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\'\
+            \'{"text":"Régénère jusqu\\\'à 2", "color":"gray", "italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}\'\
             ], \
         potion_contents={potion:"minecraft:healing"}, \
         hide_additional_tooltip={}, \

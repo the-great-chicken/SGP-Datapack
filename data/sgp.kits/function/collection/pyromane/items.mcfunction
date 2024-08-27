@@ -138,7 +138,7 @@ item replace entity @s hotbar.4 with strider_spawn_egg[ \
         }}} \
         }, \
     custom_name='{"text":"Explosifs", "color":"red", "italic":false, "bold":true}' \
-    ]
+    ] 8
 
 
 # ---------- FOOD ----------

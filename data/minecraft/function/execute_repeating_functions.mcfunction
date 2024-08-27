@@ -39,7 +39,7 @@ execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] \
     run function sgp.spawns:check_and_execute_spawn with entity @s data
 
-execute as @p[scores={sgp.spawn_random=1..}] run \
+execute as @a[scores={sgp.spawn_random=1..}] run \
     function sgp.spawns:random
 
 execute unless predicate sgp.majeurs:event_in_progress \

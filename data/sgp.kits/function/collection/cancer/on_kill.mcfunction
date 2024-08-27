@@ -62,7 +62,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         max_stack_size=64 \
         ] 1', \
     give_2: 'splash_potion[ \
-        custom_name=\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Rapidité"}\', \
+        custom_name=\'{"bold":true,"color":"dark_red","italic":false,"text":"Potion de Saut"}\', \
         lore= [ \
             \'{"color":"green","italic":false,"text":"⇪ Sauts améliorés III (0:30)"}\' \
             ], \

@@ -144,7 +144,7 @@ item replace entity @s hotbar.1 with splash_potion[ \
 item replace entity @s hotbar.2 with splash_potion[ \
     custom_name='{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"Inflige jusqu\'à 4 dégâts", "color":"gray", "italic":false}' \
+        '{"text":"Inflige jusqu\'à 3", "color":"gray", "italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}' \
         ], \
     potion_contents="minecraft:harming", \
     hide_additional_tooltip={}, \

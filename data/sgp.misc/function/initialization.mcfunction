@@ -161,7 +161,6 @@ scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
-scoreboard players set #confines_minutes sgp.timer 0
 
 execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]
 
