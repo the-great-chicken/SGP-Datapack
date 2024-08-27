@@ -4,7 +4,7 @@
 # depending on their time left in sgp.temps_cabane_pco
 
 # If they are inside
-execute if entity @s[distance=..20] \
+execute if entity @s[distance=..15] \
     at @s if block ~ ~-1 ~ green_concrete \
         run function sgp.majeurs:pco/cabane/if_inside
 
