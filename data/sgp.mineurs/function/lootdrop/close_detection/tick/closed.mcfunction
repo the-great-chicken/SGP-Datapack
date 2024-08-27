@@ -1,3 +1,9 @@
+#> sgp.mineurs:lootdrop/close_detection/tick/closed
+#
+# Things that happen when the chest is closed (remove the chest, particles,...)
+
+tag @a[tag=sgp.container_open] remove sgp.container_open
+
 setblock ~ ~ ~ air replace
 
 playsound minecraft:block.beacon.power_select master @a[tag=sgp.in_game] ~ ~ ~ 1 0.5

@@ -1,0 +1,22 @@
+[
+  {
+    "function": "minecraft:set_enchantments",
+    "enchantments": {
+      "minecraft:protection": 1
+    },
+    "add": true
+  },
+  {
+    "function": "minecraft:set_lore",
+    "lore": [
+      {
+        "text": "🛡 Protection II",
+        "color": "dark_aqua",
+        "italic": false
+      }
+    ],
+    "mode": "replace_section",
+    "offset": 1
+  }
+]
+  
