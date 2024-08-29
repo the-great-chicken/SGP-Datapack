@@ -33,3 +33,4 @@ function sgp.majeurs:hide_and_seek/timer/seeker
 function sgp.majeurs:hide_and_seek/timer/hider
 
 schedule function sgp.majeurs:hide_and_seek/_stop 360s
+schedule function sgp.majeurs:hide_and_seek/timer/glow 90s
