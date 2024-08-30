@@ -5,6 +5,13 @@
 # checking if someone clicked on the uncage sign,
 # checking if a team won
 
+function sgp.majeurs:pco/empower
+
+function sgp.majeurs:pco/check_death
+
+execute as @a[tag=sgp.in_game] \
+    run function sgp.majeurs:pco/cabane/run_check_inside
+
 # Activer/désactiver le fait de pouvoir cliquer sur les panneaux de libération
 execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_oie_cage_arena",limit=1] at @s positioned ~1 ~ ~1 \
     as @a[team=sgp.Oie] \
