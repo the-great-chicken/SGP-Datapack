@@ -15,6 +15,6 @@ execute as @a \
 
 useglow toggle
 
-function sgp.majeurs:common/rounds with storage sgp:data majeurs.pco
+function sgp.majeurs:common/rounds with storage sgp:data majeurs.protect
 
 function sgp.majeurs:common/stop
