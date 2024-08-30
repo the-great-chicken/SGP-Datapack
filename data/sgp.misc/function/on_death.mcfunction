@@ -8,5 +8,5 @@ scoreboard players set @s sgp.kills_give_1 0
 scoreboard players set @s sgp.kills_give_2 0
 scoreboard players set @s sgp.kills_give_3 0
 function sgp.cosmetics:common/disable_triggers
-scoreboard players set @s sgp.entre_kits 1
+function sgp.kits:misc/entre_salle
 scoreboard players set @s sgp.death_reset_tags 0

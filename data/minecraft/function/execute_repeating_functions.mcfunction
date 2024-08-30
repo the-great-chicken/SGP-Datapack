@@ -18,8 +18,13 @@ execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20
 execute if predicate sgp.majeurs:pigeons/ongoing run \
     function sgp.majeurs:pigeons/running
 
-execute as @a[scores={sgp.death_reset_tags=1..}] run \
+execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
+    if predicate sgp.majeurs:hide_and_seek/ongoing \
+        run function sgp.majeurs:hide_and_seek/delay_death
+
+execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
     function sgp.misc:on_death
+
 
 
 
@@ -112,8 +117,9 @@ execute if score #128_ticks_clock sgp.dummy matches 0 \
     unless predicate sgp.majeurs:event_in_progress \
         run function sgp.misc:kill_streaks_management
 
-execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] run \
-    function sgp.misc:kd_buff_and_debuffs
+execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] \
+    unless predicate sgp.majeurs:event_in_progress \
+        run function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1
 

@@ -3,10 +3,9 @@
 # Start the PCO major event
 
 tellraw @a[tag=sgp.in_game] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
-function sgp.mineurs:_stop
 
-statuswarp pvp disabled
-useglow toggle
+function sgp.majeurs:common/start
+
 function sgp.majeurs:pco/dispatch
 
 # Spawn the cages
@@ -58,5 +57,3 @@ tellraw @a[team=sgp.Canard] [{"text":"Vous êtes un ","color":"white"},{"text":"
 
 
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
-
-function sgp.lore:npcs/disable
