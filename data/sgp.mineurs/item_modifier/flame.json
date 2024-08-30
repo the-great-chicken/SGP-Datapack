@@ -1,0 +1,19 @@
+[
+    {
+        "function": "minecraft:set_enchantments",
+        "enchantments": {
+        "minecraft:flame": 1
+        }
+    },
+    {
+        "function": "minecraft:set_lore",
+        "lore": [
+        {
+            "text": "🔥 Flamme",
+            "color": "#FF8C00",
+            "italic": false
+        }
+        ],
+        "mode": "append"
+    }
+]

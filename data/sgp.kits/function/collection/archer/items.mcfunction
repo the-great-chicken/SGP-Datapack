@@ -63,7 +63,7 @@ item replace entity @s armor.head with leather_helmet[ \
     unbreakable={show_in_tooltip:false} \
     ]
 
-item replace entity @s armor.chest with chainmail_chestplate[\
+item replace entity @s armor.chest with chainmail_chestplate[ \
     custom_name='{"text":"Cotte de Mailles", "color":"green", "italic":false, "bold":true}', \
     attribute_modifiers={ \
         modifiers: [], \
@@ -90,14 +90,30 @@ item replace entity @s armor.legs with leather_leggings[ \
         material:"quartz", \
         show_in_tooltip:false \
         }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false}, \
     unbreakable={show_in_tooltip:false} \
     ]
 
 item replace entity @s armor.feet with leather_boots[ \
     custom_name='{"text":"Bottes en Cuir", "color":"green", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"--------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}' \
+        '{"text":"---------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous êtes ", "color":"white"}, \
+            {"text":"plus", "color":"gold"} \
+            ]', \
+        '[ \
+            {"text":"rapide ", "color":"gold", "italic":false}, \
+            {"text":"dans l\'", "color":"white"}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
         ], \
     enchantments={ \
         levels: {protection:1, "sgp.kits:depth_strider_boosted":2}, \
@@ -112,6 +128,9 @@ item replace entity @s armor.feet with leather_boots[ \
         material:"quartz", \
         show_in_tooltip:false \
         }, \
+    attribute_modifiers={ \
+        modifiers: [], \
+        show_in_tooltip:false}, \
     unbreakable={show_in_tooltip:false} \
     ]
 

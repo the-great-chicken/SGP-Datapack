@@ -1,0 +1,19 @@
+[
+    {
+        "function": "minecraft:set_enchantments",
+        "enchantments": {
+        "minecraft:infinity": 1
+        }
+    },
+    {
+        "function": "minecraft:set_lore",
+        "lore": [
+        {
+            "text": "∞ Infinité",
+            "color": "#E5E4E2",
+            "italic": false
+        }
+        ],
+        "mode": "append"
+    }
+]

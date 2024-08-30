@@ -1,0 +1,22 @@
+[
+  {
+    "function": "minecraft:set_enchantments",
+    "enchantments": {
+      "minecraft:projectile_protection": 1
+    },
+    "add": true
+  },
+  {
+    "function": "minecraft:set_lore",
+    "lore": [
+      {
+        "text": "➹ Protection II",
+        "color": "dark_blue",
+        "italic": false
+      }
+    ],
+    "mode": "replace_section",
+    "offset": 2
+  }
+]
+  

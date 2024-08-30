@@ -26,5 +26,5 @@ data modify storage smithed.actionbar:input message set value { \
     priority:'notification' \
     }
 
-execute as @s run function #smithed.actionbar:message
+function #smithed.actionbar:message
 scoreboard players set @s sgp.kills_give_1 0

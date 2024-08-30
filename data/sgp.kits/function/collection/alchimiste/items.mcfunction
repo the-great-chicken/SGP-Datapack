@@ -96,7 +96,18 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
     custom_name='{"text":"Bottes de Mailles", "color":"light_purple", "italic":false, "bold":true}', \
     lore=[ \
         '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}' \
+        '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous n\'êtes pas", "color":"white"} \
+            ]', \
+        '[ \
+            {"text":"ralenti dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
         ], \
     enchantments={ \
         levels: {protection:1, "sgp.kits:depth_strider_boosted":1}, \
@@ -116,31 +127,29 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
 
 
 # ---------- MISC ----------
-function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:8, slot:hotbar.1, tag:" \
-        custom_name:'{\"text\":\"Potion de Soin\", \"color\":\"light_purple\", \"italic\":false,\"bold\":true}', \
-        lore:[ \
-            '[ \
-                {\"text\":\"Régénère jusqu\\'à 2\", \"color\":\"gray\", \"italic\":false}, \
-                {\"text\":\"❤\", \"color\":\"red\"}, \
-                {\"text\":\" instantanément\"} \
-                ]' \
-            ], \
-        potion_contents:\"minecraft:healing\", \
-        hide_additional_tooltip:{} \
-        " \
-    }
+item replace entity @s hotbar.1 with splash_potion[ \
+    custom_name='{"text":"Potion de Soin", "color":"light_purple", "italic":false,"bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 2", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"}, \
+            {"text":" instantanément"} \
+            ]' \
+        ], \
+    potion_contents="minecraft:healing", \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
+    ] 8
 
-function sgp.kits:stacking/set_stack { \
-    item_id:splash_potion, count:10, slot:hotbar.2, tag:" \
-        custom_name:'{\"text\":\"Potion de Dégats\", \"color\":\"light_purple\", \"italic\":false, \"bold\":true}', \
-        lore:[ \
-            '{\"text\":\"Inflige jusqu\\'à 4 dégâts\", \"color\":\"gray\", \"italic\":false}' \
-            ], \
-        potion_contents:\"minecraft:harming\", \
-        hide_additional_tooltip:{} \
-        " \
-    }
+item replace entity @s hotbar.2 with splash_potion[ \
+    custom_name='{"text":"Potion de Dégats", "color":"light_purple", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"Inflige jusqu\'à 3", "color":"gray", "italic":false, "extra":[{"text":"❤", "color":"red"}, " instantanément"]}' \
+        ], \
+    potion_contents="minecraft:harming", \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
+    ] 10
 
 item replace entity @s hotbar.3 with splash_potion[ \
     custom_name='{"text":"Potion de Cécité", "color":"light_purple", "italic":false, "bold":true}', \
@@ -152,7 +161,8 @@ item replace entity @s hotbar.3 with splash_potion[ \
             {id:"blindness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
     ]
 
 item replace entity @s hotbar.4 with milk_bucket[ \

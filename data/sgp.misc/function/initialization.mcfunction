@@ -13,6 +13,7 @@ scoreboard objectives add sgp.veut_ench trigger
 scoreboard objectives add sgp.veut_smoke trigger
 scoreboard objectives add sgp.veut_cloud trigger
 scoreboard objectives add sgp.veut_desactiver trigger
+scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.light_particle_unlocked dummy
 scoreboard objectives add sgp.medium_particle_unlocked dummy
 scoreboard objectives add sgp.heavy_particle_unlocked dummy
@@ -22,6 +23,7 @@ scoreboard objectives add sgp.marine_particle_unlocked dummy
 scoreboard objectives add sgp.ench_particle_unlocked dummy
 scoreboard objectives add sgp.smoke_particle_unlocked dummy
 scoreboard objectives add sgp.cloud_particle_unlocked dummy
+scoreboard objectives add sgp.link_teams dummy
 
 scoreboard objectives add sgp.veut_kill_disabled trigger
 scoreboard objectives add sgp.veut_kill_anvil trigger
@@ -56,6 +58,7 @@ scoreboard objectives add sgp.veut_random trigger
 scoreboard objectives add sgp.veut_roi trigger
 scoreboard objectives add sgp.veut_tank trigger
 scoreboard objectives add sgp.veut_vindicateur trigger
+scoreboard objectives add sgp.veut_peaceful trigger
 scoreboard objectives add sgp.pyromane_found trigger
 scoreboard objectives add sgp.cancer_found trigger
 scoreboard objectives add sgp.roi_found trigger
@@ -130,6 +133,8 @@ scoreboard objectives add sgp.timer dummy
 
 scoreboard objectives add sgp.sneak_particle minecraft.custom:minecraft.sneak_time
 
+scoreboard objectives add sgp.lieu_count dummy
+
 
 
 # ---------- Initialize values ----------
@@ -148,6 +153,7 @@ scoreboard players set 50 sgp.dummy 50
 scoreboard players set 100 sgp.dummy 100
 scoreboard players set 300 sgp.dummy 300
 scoreboard players set #even_tick sgp.dummy 0
+scoreboard players set #20_ticks sgp.dummy 0
 scoreboard players set #128_ticks_clock sgp.dummy 0
 scoreboard players set #52_ticks_clock sgp.dummy 0
 scoreboard players set #bossbar_color sgp.dummy 0
@@ -156,7 +162,12 @@ scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
-scoreboard players set #confines_minutes sgp.timer 0
+
+scoreboard players set #hide_and_seek_max_rounds sgp.dummy 3
+scoreboard players set #protect_max_rounds sgp.dummy 3
+scoreboard players set #hide_and_seek_max_rounds sgp.dummy 3
+
+execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]
 
 
 
@@ -213,9 +224,18 @@ team add sgp.PGSEC
 team modify sgp.PGSEC collisionRule never
 team modify sgp.PGSEC color gold
 
+team add sgp.hider "Volaille"
+team modify sgp.hider collisionRule pushOtherTeams
+team modify sgp.hider nametagVisibility never
+team modify sgp.hider color yellow
+
+team add sgp.seeker "Chasseurs"
+team modify sgp.seeker friendlyFire false
+team modify sgp.seeker color dark_green
 
 # Misc
 bossbar add sgp:lgp "a"
+
 
 
 # ---------- Run Functions ----------
@@ -231,9 +251,16 @@ function sgp.misc:bossbar/cycle_color
 schedule clear sgp.misc:bossbar/cycle_name
 function sgp.misc:bossbar/cycle_name
 
-function #bs.schedule:load
+
 
 # ---------- Initialize Storages ----------
 
 data merge storage sgp:lootdrop {tag: [{id: "minecraft:bow",tag: {display: {Lore: ["{\"text\":\"------------\",\"color\":\"#C0C0C0\",\"italic\":\"false\"}","{\"text\":\"���� Puissance I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"���� Puissance II\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}","{\"text\":\"∞ Infinité\",\"color\":\"#E5E4E2\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:flame",lvl: 1s},{id: "minecraft:power",lvl: 1s},{id: "minecraft:power",lvl: 2s},{id: "minecraft:punch",lvl: 1s},{id: "minecraft:infinity",lvl: 1s}]}},{id: "minecraft:iron_sword",tag: {display: {Lore: ["{\"text\":\"⚔ Tranchant I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme I\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}"]},Enchantments: [{id: "sharpness",lvl: 1},{id: "fire_aspect",lvl: 1},{id: "knockback",lvl: 1}]},count: 1b},{id: "minecraft:iron_chestplate",tag: {display: {Lore: ["{\"text\":\"���� Protection I\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection I\",\"color\":\"dark_blue\",\"italic\":\"false\"}","{\"text\":\"���� Protection II\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection II\",\"color\":\"dark_blue\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:protection",lvl: 1s},{id: "minecraft:projectile_protection",lvl: 1s},{id: "minecraft:protection",lvl: 2s},{id: "minecraft:projectile_protection",lvl: 2s}]}}]}
+
 execute unless data storage sgp:kill_counter HandItems run data merge storage sgp:kill_counter {HandItems: [{count: 1b,tag: {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}},{}]}
+
+data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Vous pouvez chasser de la volaille à votre tour !"}}},"arene":{base:"2419 198 2133",dx:140,dz:73,dy:73},mineurs:{bounty:{base:"2419 198 2133",dx:140,dz:73,dy:73}}}
+
+data merge storage sgp:kits {eclaireur:{kit: eclaireur, kit_color:aqua}, enderman:{kit:enderman, kit_color:dark_purple}, pigeon:{kit:pigeon, kit_color:dark_gray}, poseidon:{kit:poseidon, kit_color:dark_aqua}, pyromane:{kit:pyromane, kit_color:gold}, roi:{kit:roi, kit_color:yellow}, tank:{kit:tank, kit_color:dark_blue}, cancer:{kit:cancer, kit_color:dark_red}, alchimiste:{kit:alchimiste, kit_color:light_purple}}
+
+data modify storage sgp.text prefix set value {"text":"[", "color":"gray", "extra":[{"text":"SGP", "color":"gold"}, {"text":"] "}]}

@@ -10,6 +10,10 @@
     "#minecraft:doors",
     "#minecraft:trapdoors",
     "minecraft:moving_piston",
-    "minecraft:light"
+    "minecraft:light",
+    "minecraft:water",
+    "minecraft:deepslate_tile_slab",
+    "minecraft:deepslate_tile_stairs",
+    "minecraft:dark_oak_fence"
   ]
 }

@@ -89,6 +89,20 @@ item replace entity @s armor.legs with iron_leggings[ \
     ]
 
 item replace entity @s armor.feet with iron_boots[\
+    lore=[ \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous êtes ", "color":"white"}, \
+            {"text":"plus", "color":"gold"} \
+            ]', \
+        '[ \
+            {"text":"rapide ", "color":"gold", "italic":false}, \
+            {"text":"dans l\'", "color":"white"}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
+        ], \
     custom_name='{"text":"Bottes en Fer", "color":"white", "italic":false, "bold":true}', \
     enchantments={ \
         levels: {"sgp.kits:depth_strider_boosted":2}, \
