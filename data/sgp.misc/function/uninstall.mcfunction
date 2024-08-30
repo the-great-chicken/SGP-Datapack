@@ -56,6 +56,7 @@ scoreboard objectives remove sgp.veut_random
 scoreboard objectives remove sgp.veut_roi
 scoreboard objectives remove sgp.veut_tank
 scoreboard objectives remove sgp.veut_vindicateur
+scoreboard objectives remove sgp.veut_peaceful
 scoreboard objectives remove sgp.pyromane_found
 scoreboard objectives remove sgp.cancer_found
 scoreboard objectives remove sgp.roi_found

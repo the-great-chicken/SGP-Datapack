@@ -3,9 +3,9 @@
 # Check if a player triggered the reward of laby,
 # and gives it to him if so
 
-execute at @e[type=marker,tag=sgp.marker,name="laby_fin"] as @s[scores={sgp.laby_fin=0},distance=..0.5] run scoreboard players enable @s sgp.laby_fin
-execute at @e[type=marker,tag=sgp.marker,name="laby_fin"] as @s[scores={sgp.laby_fin=0},distance=..0.5] run scoreboard players set @s sgp.laby_fin 1
-execute at @e[type=marker,tag=sgp.marker,name="laby_fin"] as @s[scores={sgp.laby_fin=1},distance=0.5..] run trigger sgp.laby_fin set 0
+execute at @e[type=marker,tag=sgp.marker,name="laby_fin",limit=1] as @s[scores={sgp.laby_fin=0},distance=..0.5] run scoreboard players enable @s sgp.laby_fin
+execute at @e[type=marker,tag=sgp.marker,name="laby_fin",limit=1] as @s[scores={sgp.laby_fin=0},distance=..0.5] run scoreboard players set @s sgp.laby_fin 1
+execute at @e[type=marker,tag=sgp.marker,name="laby_fin",limit=1] as @s[scores={sgp.laby_fin=1},distance=0.5..] run trigger sgp.laby_fin set 0
 
 execute as @s[scores={sgp.laby_fin=2}] run tp @s 2525 205 2191 -90 0
 execute as @s[scores={sgp.laby_fin=2}] run scoreboard players add #nbr_joueurs sgp.laby_fin 1

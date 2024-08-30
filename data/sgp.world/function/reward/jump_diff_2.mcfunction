@@ -3,10 +3,10 @@
 # Check if a player triggered the reward of the difficulty 2 jump,
 # and gives it to him if so
 
-execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2"] as @s[scores={sgp.jump_diff_2_done=0},distance=..2] run scoreboard players enable @s sgp.jump_diff_2_done
-execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2"] as @s[scores={sgp.jump_diff_2_done=0},distance=..2] run scoreboard players set @s sgp.jump_diff_2_done 1
+execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2",limit=1] as @s[scores={sgp.jump_diff_2_done=0},distance=..2] run scoreboard players enable @s sgp.jump_diff_2_done
+execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2",limit=1] as @s[scores={sgp.jump_diff_2_done=0},distance=..2] run scoreboard players set @s sgp.jump_diff_2_done 1
 
-execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2"] as @s[scores={sgp.jump_diff_2_done=1},distance=2..] run trigger sgp.jump_diff_2_done set 0
+execute at @e[type=marker,tag=sgp.marker,name="jump_diff_2",limit=1] as @s[scores={sgp.jump_diff_2_done=1},distance=2..] run trigger sgp.jump_diff_2_done set 0
 
 
 execute as @s[scores={sgp.jump_diff_2_done=2}] \

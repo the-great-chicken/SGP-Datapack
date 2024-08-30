@@ -1,0 +1,11 @@
+{
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:tick"
+      }
+    },
+    "rewards": {
+      "function": "sgp.mineurs:lootdrop/close_detection/tick/init"
+    }
+  }
+  

@@ -47,6 +47,21 @@ give @s trident[ \
 # ---------- ARMOR ----------
 item replace entity @s armor.feet with chainmail_boots[ \
     custom_name='{"text":"Palmes", "color":"dark_aqua", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"⚡ ", "color":"yellow", "italic":false}, \
+            {"text":"Vous êtes ", "color":"white"}, \
+            {"text":"très"} \
+            ]', \
+        '[ \
+            {"text":"rapide ", "color":"yellow", "italic":false}, \
+            {"text":"dans l\'", "color":"white"}, \
+            {"text":"eau ", "color":"#55D5F0"}, \
+            {"text":"!", "color":"white"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
+        ], \
     enchantments={ \
         levels: {"sgp.kits:depth_strider_boosted":25}, \
         show_in_tooltip:false \

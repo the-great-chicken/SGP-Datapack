@@ -3,10 +3,10 @@
 # Check if a player triggered the reward of the hardest jump,
 # and gives it to him if so
 
-execute at @e[type=marker,tag=sgp.marker,name="jump_hardest"] as @s[scores={sgp.jump_hardest_done=0},distance=..0.5] run scoreboard players enable @s sgp.jump_hardest_done
-execute at @e[type=marker,tag=sgp.marker,name="jump_hardest"] as @s[scores={sgp.jump_hardest_done=0},distance=..0.5] run scoreboard players set @s sgp.jump_hardest_done 1
+execute at @e[type=marker,tag=sgp.marker,name="jump_hardest",limit=1] as @s[scores={sgp.jump_hardest_done=0},distance=..0.5] run scoreboard players enable @s sgp.jump_hardest_done
+execute at @e[type=marker,tag=sgp.marker,name="jump_hardest",limit=1] as @s[scores={sgp.jump_hardest_done=0},distance=..0.5] run scoreboard players set @s sgp.jump_hardest_done 1
 
-execute at @e[type=marker,tag=sgp.marker,name="jump_hardest"] as @s[scores={sgp.jump_hardest_done=1},distance=0.5..] run trigger sgp.jump_hardest_done set 0
+execute at @e[type=marker,tag=sgp.marker,name="jump_hardest",limit=1] as @s[scores={sgp.jump_hardest_done=1},distance=0.5..] run trigger sgp.jump_hardest_done set 0
 
 
 execute as @s[scores={sgp.jump_hardest_done=2}] \

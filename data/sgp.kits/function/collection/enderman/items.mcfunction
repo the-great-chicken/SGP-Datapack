@@ -26,7 +26,7 @@ item replace entity @s hotbar.0 with diamond_sword[ \
 # ---------- ARMOR ----------
 item replace entity @s armor.head with player_head[ \
     custom_name='{"text":"Tête", "color":"dark_purple", "italic":false, "bold":true}', \
-    profile="kaamaru", \
+    profile="WelcomeToMoes48", \
     enchantments={ \
         levels: {binding_curse:1, "sgp.kits:water_damage":1}, \
         show_in_tooltip:false \
@@ -91,9 +91,22 @@ item replace entity @s armor.legs with leather_leggings[ \
 item replace entity @s armor.feet with leather_boots[ \
     custom_name='{"text":"Pieds", "color":"dark_purple", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"--------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Protection III", "color":"dark_aqua", "italic":false}', \
-        '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}' \
+        '{"text":"➹ Protection I", "color":"dark_blue", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"dark_purple", "italic":false}', \
+        '[ \
+            {"text":"⚠ ", "color":"dark_red", "italic":false}, \
+            {"text":"Vous prenez des", "color":"red"} \
+            ]', \
+        '[ \
+            {"text":"dégâts ", "color":"dark_red", "italic":false}, \
+            {"text":"dans l\'", "color":"red"}, \
+            {"text":"eau ", "color":"#55D5F0"}, \
+            {"text":"!", "color":"red"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"dark_purple", "italic":false}' \
         ], \
     enchantments={ \
         levels: {protection:3, projectile_protection:1}, \

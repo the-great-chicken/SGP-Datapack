@@ -48,8 +48,12 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - 3 `pco_<team>_cage_arena` that should be placed in the corner of the cage of the team, in the arena.
 - 1 `spawn_seeker` spawn of the seeker team
 - 1 `spawn_hider` spawn of the hider team
+- 3 `pco_<team>_spawn` that are the place at which the players from the specified team spawn
 
 Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
+
+## Storages to initialize
+- `sgp:kits` with the data about hints for each kits, example: `eclaireur:{hint:"Zone Noire", hint_color:dark_gray}`. Merge it (there is more data in sgp:kits.eclaireur for example)
 
 # Uninstallation
 

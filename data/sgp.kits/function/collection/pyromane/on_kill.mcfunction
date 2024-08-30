@@ -5,17 +5,17 @@
 execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic { \
     nb:1, \
     give:"arrow", \
-    give_2:'firework_rocket[ \
-        custom_name=\'{"text":"Explosifs", "color":"red", "italic":false, "bold":true}\', \
-        fireworks={ \
-            explosions: [ \
+    give_2:'strider_spawn_egg[ \
+        entity_data={\
+            id:"minecraft:firework_rocket",\
+            LifeTime:0,\
+            FireworksItem:{id:"firework_rocket",count:1,components:{fireworks:{explosions: [ \
                 {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true}, \
                 {shape:"large_ball", colors: [I;11743532,15435844], fade_colors: [I;14602026,15435844], has_twinkle:true} \
                 ], \
-            flight_duration:-2,\
-            show_in_tooltip:false \
+            }}} \
             }, \
-        hide_additional_tooltip={} \
+        custom_name=\'{"text":"Explosifs", "color":"red", "italic":false, "bold":true}\' \
         ] 2', \
     actionbar:' \
         {"text":"+ 1 ➶ Flèche ", "color":"gray", "bold":true}, \
