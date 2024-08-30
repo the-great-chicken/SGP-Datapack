@@ -1,4 +1,4 @@
-#> sgp.majeurs:pco/clone_cage
+#> sgp.majeurs:pco/cage/clone_cage
 # `{cage, x, y, z, x2, y2, z2}`
 #
 # If executed as a pco_cage_storage marker,

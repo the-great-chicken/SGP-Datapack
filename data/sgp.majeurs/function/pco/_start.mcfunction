@@ -18,13 +18,13 @@ execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage"
 
 # Give the kit to the players, and apply glowing
 execute as @a[team=sgp.Poule] \
-    run function sgp.majeurs:pco/on_death {color:red, color_hex:16733525, color_material:redstone, cage:poule, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
+    run function sgp.majeurs:pco/on_start {color:red, color_hex:16733525, color_material:redstone, cage:poule, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
 
 execute as @a[team=sgp.Canard] \
-    run function sgp.majeurs:pco/on_death {color:green, color_hex:5635925, color_material:emerald, cage:canard, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
+    run function sgp.majeurs:pco/on_start {color:green, color_hex:5635925, color_material:emerald, cage:canard, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
 
 execute as @a[team=sgp.Oie] \
-    run function sgp.majeurs:pco/on_death {color:yellow, color_hex:16777045, color_material:gold, cage:oie, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
+    run function sgp.majeurs:pco/on_start {color:yellow, color_hex:16777045, color_material:gold, cage:oie, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
 
 
 # Teleport the players to their spawn
