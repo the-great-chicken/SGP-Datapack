@@ -23,3 +23,6 @@ execute as @a[tag=sgp.in_game] \
 
 execute as @a[tag=sgp.in_game] \
     run trigger sgp.liberer_poules set 0
+function sgp.majeurs:common/rounds with storage sgp:data majeurs.pco
+
+function sgp.majeurs:common/stop

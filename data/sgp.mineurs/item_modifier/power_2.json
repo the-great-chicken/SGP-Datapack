@@ -1,0 +1,21 @@
+[
+    {
+        "function": "minecraft:set_enchantments",
+        "enchantments": {
+        "minecraft:power": 1
+        },
+        "add": true
+    },
+    {
+        "function": "minecraft:set_lore",
+        "lore": [
+        {
+            "text": "🏹 Puissance II",
+            "color": "dark_red",
+            "italic": false
+        }
+        ],
+        "mode": "replace_section",
+        "offset": 1
+    }
+]

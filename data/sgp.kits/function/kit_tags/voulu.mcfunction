@@ -37,3 +37,6 @@ tag @a[tag=sgp.poseidon_voulu] remove sgp.poseidon_voulu
 
 tag @a[tag=sgp.cancer_voulu] add sgp.cancer
 tag @a[tag=sgp.cancer_voulu] remove sgp.cancer_voulu
+
+tag @a[tag=sgp.peaceful_voulu] add sgp.peaceful
+tag @a[tag=sgp.peaceful_voulu] remove sgp.peaceful_voulu

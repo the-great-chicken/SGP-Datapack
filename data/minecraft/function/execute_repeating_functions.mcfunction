@@ -3,9 +3,15 @@
 # Executes functions at each game tick
 
 
+# one game tick out of 2
+execute if score #even_tick sgp.dummy matches 0 run function even_tick_functions
+scoreboard players add #even_tick sgp.dummy 1
+execute if score #even_tick sgp.dummy matches 2.. run scoreboard players set #even_tick sgp.dummy 0
 
-function even_tick_functions
-
+# one game tick out of 20
+execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
+scoreboard players add #20_ticks sgp.dummy 1
+execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
 
 # Must be in this order
@@ -26,12 +32,14 @@ execute as @a[tag=sgp.in_game] \
     unless entity @s[tag=sgp.archer] run \
         function sgp.world:reward/parkour_rewards
 
+execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
 
 
 # ---------- SPAWNS ----------
-execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.spawns:check_and_execute_spawn with entity @s data
+execute as @e[type=marker,tag=sgp.marker,name="spawn"] \
+    run function sgp.spawns:check_and_execute_spawn with entity @s data
 
-execute as @p[scores={sgp.spawn_random=1..}] run \
+execute as @a[scores={sgp.spawn_random=1..}] run \
     function sgp.spawns:random
 
 execute unless predicate sgp.majeurs:event_in_progress \
@@ -77,12 +85,12 @@ execute if predicate sgp.majeurs:event_in_progress \
     as @a[scores={sgp.sort_kits=1..}] run \
         function sgp.majeurs:common/cannot_tp_to_lobby
 
-# execute if score #52_ticks_clock sgp.dummy matches 0 run \
-#     function sgp.kits:kit_tags/prefixes_check
+execute if score #52_ticks_clock sgp.dummy matches 0 run \
+    function sgp.kits:kit_tags/prefixes_check
 
 scoreboard players add #52_ticks_clock sgp.dummy 1
 
-execute if score #52_ticks_clock sgp.dummy matches 52 run \
+execute if score #52_ticks_clock sgp.dummy matches 52.. run \
     scoreboard players set #52_ticks_clock sgp.dummy 0
 
 
@@ -100,24 +108,23 @@ execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
-execute as @a[x=2454,y=193,z=2191,dx=12,dy=0,dz=6] run \
-    damage @s 6 minecraft:hot_floor
-
-execute if score #128_ticks_clock sgp.dummy matches 0 run \
-    function sgp.misc:kill_streaks_management
+execute if score #128_ticks_clock sgp.dummy matches 0 \
+    unless predicate sgp.majeurs:event_in_progress \
+        run function sgp.misc:kill_streaks_management
 
 execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] run \
     function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1
 
-execute if score #128_ticks_clock sgp.dummy matches 128 run scoreboard players set #128_ticks_clock sgp.dummy 0
+execute if score #128_ticks_clock sgp.dummy matches 128 \
+    run scoreboard players set #128_ticks_clock sgp.dummy 0
+
+execute as @a[tag=sgp.in_game] run function sgp.world:climbing_boost
 
 
 
 # ---------- COSMETICS ----------
-function sgp.cosmetics:kill_effects/death_reaper
-
 execute as @a[scores={sgp.veut_desactiver=1..}] run \
     function sgp.cosmetics:particles/disable
 

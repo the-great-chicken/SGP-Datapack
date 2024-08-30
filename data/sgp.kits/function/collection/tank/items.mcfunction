@@ -110,9 +110,20 @@ item replace entity @s armor.legs with iron_leggings[ \
 item replace entity @s armor.feet with diamond_boots[ \
     custom_name='{"text":"Bottes en Diamant", "color":"dark_blue", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"-----------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"------------------", "color":"#C0C0C0", "italic":false}', \
         '{"text":"🛡 Protection I", "color":"dark_aqua", "italic":false}', \
-        '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}' \
+        '{"text":"᠅ Épines I", "color":"dark_green", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous n\'êtes pas", "color":"white"} \
+            ]', \
+        '[ \
+            {"text":"ralenti dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
         ], \
     enchantments={ \
         levels: {protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
@@ -129,6 +140,30 @@ item replace entity @s armor.feet with diamond_boots[ \
         }, \
     unbreakable={show_in_tooltip:false} \
     ]
+
+
+# ---------- FOOD ----------
+item replace entity @s hotbar.3 with cooked_beef[ \
+    custom_name='{"text":"Steak", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 5", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"} \
+            ]' \
+        ] \
+    ] 32
+
+item replace entity @s hotbar.2 with golden_apple[ \
+    custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
+    lore=[ \
+        '[ \
+            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
+            {"text":"❤", "color":"red"}, \
+            {"text":" + 2"}, \
+            {"text":"❤", "color":"yellow"} \
+            ]' \
+        ] \
+    ] 3
 
 
 # ---------- MISC ----------
@@ -173,27 +208,3 @@ item replace entity @s weapon.offhand with shield[ \
     hide_additional_tooltip={}, \
     unbreakable={show_in_tooltip:false} \
     ]
-
-
-# ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
-    custom_name='{"text":"Steak", "color":"dark_blue", "italic":false, "bold":true}', \
-    lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 5", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"} \
-            ]' \
-        ] \
-    ] 32
-
-item replace entity @s hotbar.2 with golden_apple[ \
-    custom_name='{"text":"Pomme d\'or", "color":"dark_blue", "italic":false, "bold":true}', \
-    lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"}, \
-            {"text":" + 2"}, \
-            {"text":"❤", "color":"yellow"} \
-            ]' \
-        ] \
-    ] 3

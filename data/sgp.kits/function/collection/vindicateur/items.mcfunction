@@ -75,8 +75,19 @@ item replace entity @s armor.legs with leather_leggings[ \
 item replace entity @s armor.feet with leather_boots[ \
     custom_name='{"text":"Bottes en Cuir", "color":"dark_green", "italic":false, "bold":true}', \
     lore=[ \
-        '{"text":"--------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}' \
+        '{"text":"----------------", "color":"#C0C0C0", "italic":false}', \
+        '{"text":"᠅ Épines III", "color":"dark_green", "italic":false}', \
+        '{"text":""}', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous n\'êtes pas", "color":"white"} \
+            ]', \
+        '[ \
+            {"text":"ralenti dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
         ], \
     enchantments={ \
         levels: {thorns:3, "sgp.kits:depth_strider_boosted":1}, \
@@ -110,12 +121,13 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"weakness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    hide_additional_tooltip={}, \
+    max_stack_size=64 \
     ]
 
 
 # ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
+item replace entity @s weapon.offhand with cooked_beef[ \
     custom_name='{"text":"Steak", "color":"dark_green", "italic":false, "bold":true}', \
     lore=[ \
         '[ \

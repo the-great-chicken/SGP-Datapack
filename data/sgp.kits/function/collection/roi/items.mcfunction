@@ -90,6 +90,18 @@ item replace entity @s armor.legs with golden_leggings[ \
 
 item replace entity @s armor.feet with golden_boots[ \
     custom_name='{"text":"Bottes Cérémoniales", "color":"yellow", "italic":false, "bold":true}', \
+    lore=[ \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
+        '[ \
+            {"text":"» ", "color":"yellow", "italic":false}, \
+            {"text":"Vous n\'êtes pas", "color":"white"} \
+            ]', \
+        '[ \
+            {"text":"ralenti dans l\'", "color":"white", "italic":false}, \
+            {"text":"eau", "color":"#55D5F0"} \
+            ]', \
+        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
+        ], \
     enchantments={ \
         levels: {"sgp.kits:depth_strider_boosted":1}, \
         show_in_tooltip:false \
@@ -112,7 +124,7 @@ item replace entity @s hotbar.7 with arrow 12
 
 
 # ---------- FOOD ----------
-item replace entity @s hotbar.3 with cooked_beef[ \
+item replace entity @s weapon.offhand with cooked_beef[ \
     custom_name='{"text":"Steak", "color":"yellow", "italic":false, "bold":true}', \
     lore=[ \
         '[ \

@@ -10,4 +10,4 @@ removeglow @a[tag=sgp.in_game]
 function sgp.lore:npcs/enable
 experience set @a[tag=sgp.in_game] 0 levels
 gamemode survival @a[tag=sgp.in_game]
-useglow
+useglow toggle
