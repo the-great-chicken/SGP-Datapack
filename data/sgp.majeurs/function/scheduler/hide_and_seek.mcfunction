@@ -1,7 +1,5 @@
-#> sgp.majeurs:function/common/rounds
-#`{event}`
+#> sgp.majeurs:scheduler/hide_and_seek
 # 
-# check if the number of rounds is less than the maximum number of rounds
-# if true, schedule the next round in 30 seconds
+# make the hide and seek game start whith some messages
 schedule function sgp.majeurs:hide_and_seek/_start 120s
 function sgp.majeurs:scheduler/message with storage sgp:data majeurs.hide_and_seek
