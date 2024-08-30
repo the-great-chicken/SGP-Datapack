@@ -2,6 +2,8 @@
 #
 # Stop the PCO major event
 
+function sgp.majeurs:common/stop
+
 # Remove the cages
 execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_uncage_storage"] \
     run function sgp.majeurs:pco/cage/compute_markers_coordinates
@@ -21,5 +23,3 @@ execute as @a[tag=sgp.in_game] \
 
 execute as @a[tag=sgp.in_game] \
     run trigger sgp.liberer_poules set 0
-
-function sgp.majeurs:common/stop
