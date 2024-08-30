@@ -1,6 +1,6 @@
 # We don't use macros as CommandAPI doesn't support macros yet
 
-playerlist
+execute as @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] run playerlist
 
 execute if entity @a[scores={sgp.kit_prefix_set=0},tag=sgp.alchimiste] run tag @r[scores={sgp.kit_prefix_set=0},tag=sgp.alchimiste] add sgp.adding_prefix
 execute if entity @a[tag=sgp.adding_prefix] run scoreboard players set @a[tag=sgp.adding_prefix,limit=1] sgp.kit_prefix_set 1

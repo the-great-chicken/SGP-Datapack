@@ -40,6 +40,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
                 ] \
             }, \
         hide_additional_tooltip={} \
+        max_stack_size=64 \
         ]', \
     give_2:air, \
     actionbar:' \

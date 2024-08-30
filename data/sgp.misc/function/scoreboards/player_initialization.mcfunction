@@ -32,3 +32,5 @@ bossbar set sgp:lgp players @a
 
 execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
     run spawnpoint @s ~ ~ ~ ~
+
+execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]

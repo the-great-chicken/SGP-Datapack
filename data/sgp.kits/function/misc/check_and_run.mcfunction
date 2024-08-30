@@ -14,12 +14,10 @@ execute as @a[scores={sgp.veut_peaceful=1..}] run function sgp.kits:give {kit:pe
 scoreboard players enable @a[tag=sgp.peaceful_voulu] sgp.veut_peaceful
 
 # Kits à trouver dans la map
-execute as @a[scores={sgp.veut_eclaireur=1..}] run function sgp.kits:misc/check_and_give {kit:eclaireur, kit_color:aqua, hint:"Zone Noire", hint_color:dark_gray}
-execute as @a[scores={sgp.veut_enderman=1..}] run function sgp.kits:misc/check_and_give {kit:enderman, kit_color:dark_purple, hint:"Zone Fun", hint_color:"#C0FF00"}
-execute as @a[scores={sgp.veut_pigeon=1..}] run function sgp.kits:misc/check_and_give {kit:pigeon, kit_color:dark_gray, hint:Pigeonnier, hint_color:gray}
-execute as @a[scores={sgp.veut_poseidon=1..}] run function sgp.kits:misc/check_and_give {kit:poseidon, kit_color:dark_aqua, hint:Temple, hint_color:dark_blue}
-execute as @a[scores={sgp.veut_pyromane=1..}] run function sgp.kits:misc/check_and_give {kit:pyromane, kit_color:gold, hint:Grange, hint_color:gold}
-execute as @a[scores={sgp.veut_roi=1..}] run function sgp.kits:misc/check_and_give {kit:roi, kit_color:yellow, hint:"King of the Ladder", hint_color:"#4A5D23"}
-execute as @a[scores={sgp.veut_tank=1..}] run function sgp.kits:misc/check_and_give {kit:tank, kit_color:dark_blue, hint:Abri, hint_color:"#5A4022"}
-execute as @a[scores={sgp.veut_cancer=1..}] run function sgp.kits:misc/check_and_give {kit:cancer, kit_color:dark_red, hint:Autel, hint_color:"#DFFFFD"}
-execute as @a[scores={sgp.veut_alchimiste=1..}] run function sgp.kits:misc/check_and_give {kit:alchimiste, kit_color:light_purple, hint:"Salle de Réunion", hint_color:"#A55D33"}
+execute as @a[scores={sgp.veut_eclaireur=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits eclaireur
+execute as @a[scores={sgp.veut_enderman=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits enderman
+execute as @a[scores={sgp.veut_pigeon=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits pigeon
+execute as @a[scores={sgp.veut_poseidon=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits poseidon
+execute as @a[scores={sgp.veut_pyromane=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits pyromane
+execute as @a[scores={sgp.veut_tank=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits tank
+execute as @a[scores={sgp.veut_alchimiste=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits alchimiste
