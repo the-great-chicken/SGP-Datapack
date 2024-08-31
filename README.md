@@ -54,8 +54,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
 
 ## Storages to initialize
-
-- `sgp:kits` with the data about hints for each kits, example: `eclaireur:{hint:"Zone Noire", hint_color:dark_gray}`. Merge it (there is more data in sgp:kits.eclaireur for example)
+- `sgp:kits` with the data about hints for each kits, example: `eclaireur:{hint:"Zone Noire", hint_color:dark_gray}`. Merge it (there is more data in sgp:kits eclaireur for example)
 
 # Uninstallation
 

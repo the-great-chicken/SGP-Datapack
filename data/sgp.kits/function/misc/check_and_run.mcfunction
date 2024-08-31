@@ -19,5 +19,7 @@ execute as @a[scores={sgp.veut_enderman=1..}] run function sgp.kits:misc/check_a
 execute as @a[scores={sgp.veut_pigeon=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits pigeon
 execute as @a[scores={sgp.veut_poseidon=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits poseidon
 execute as @a[scores={sgp.veut_pyromane=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits pyromane
+execute as @a[scores={sgp.veut_roi=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits roi
 execute as @a[scores={sgp.veut_tank=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits tank
+execute as @a[scores={sgp.veut_cancer=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits cancer
 execute as @a[scores={sgp.veut_alchimiste=1..}] run function sgp.kits:misc/check_and_give with storage sgp:kits alchimiste
