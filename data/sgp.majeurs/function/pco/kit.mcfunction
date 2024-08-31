@@ -1,7 +1,7 @@
 #> sgp.majeurs:pco/kit
 # `{color, color_material, color_hex}`
 #
-# Equips a player with a custom kit for the "Poule-Canard-Oie" game, including
+# Equip a player with a custom kit for the "Poule-Canard-Oie" game, including
 # a feather weapon, bread for healing, and colored leather armor.
 
 clear @s
@@ -24,7 +24,7 @@ $item replace entity @s hotbar.0 with feather[ \
 
 # ---------- ARMOR ----------
 $item replace entity @s armor.head with leather_helmet[ \
-    custom_name='{\"text\":\"Tête", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name='{"text":"Tête", "color":"$(color)", "italic":false, "bold":true}', \
     enchantments={ \
         levels: {binding_curse:1}, \
         show_in_tooltip:false \

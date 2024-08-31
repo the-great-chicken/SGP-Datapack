@@ -174,10 +174,7 @@ execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run \
 
 
 # PCO
-execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/empower
-execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/check_death
-execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/running
-execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/cabane/run_check_inside
+execute as @r[tag=sgp.in_game] if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
 
 
 
