@@ -9,11 +9,13 @@ advancement revoke @s only sgp.cosmetics:death
 
 execute as @a[tag=sgp.in_game] store result score @s sgp.killer on attacker run data get entity @s UUID.[1]
 
-summon minecraft:marker ~ ~ ~ {CustomName:'"death_reaper"', Tags:["sgp.marker"]}
+execute at @s run summon minecraft:marker ~ ~ ~ {CustomName:'"death_reaper"', Tags:["sgp.marker"]}
 
 tag @s add sgp.death
 
-execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos set from entity @p[tag=sgp.death] LastDeathLocation
+execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos[0] set from entity @p[tag=sgp.death] LastDeathLocation.pos[0]
+execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos[1] set from entity @p[tag=sgp.death] LastDeathLocation.pos[1]
+execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos[2] set from entity @p[tag=sgp.death] LastDeathLocation.pos[2]
 
 execute on attacker run function sgp.cosmetics:kill_effects/summon
 
