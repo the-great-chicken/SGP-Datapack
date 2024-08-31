@@ -2,9 +2,7 @@
 #
 # start the bounty minor event
 
-execute store result score #nbr_joueurs sgp.dummy if entity @a
-execute store result storage sgp:data mineurs.bounty.nbr_wanted int 1 run scoreboard players operation #nbr_joueurs sgp.dummy /= 10 sgp.dummy
-function sgp.mineurs:bounty/select_wanted with storage sgp:data mineurs.bounty
+function sgp.misc:selected_player/main {div:7, tag:sgp.wanted, sign:'/'}
 
 execute as @a[tag=sgp.wanted] run function sgp.mineurs:bounty/init_wanted
 title @a[tag=sgp.in_game] title {"text":"Bounty !", "color":"yellow", "bold":true}

@@ -12,4 +12,4 @@ $scoreboard players set @s sgp.veut_$(particle) 0
 
 $execute as @s unless score @s sgp.$(particle)_particle_unlocked matches 1 \
     run tellraw @s [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Tu n'as pas encore débloqué la Trainée de Particules ", "color":"red"}, {"text":"$(particule)", "bold":true, "color":"$(couleur)"}," !\n", \
-        {"text":"Tu trouveras peut-être", "color":"aqua"}, {"text":"une façon","bold":true, "color":"green"}, {"text":"de la débloquer durant la soirée", "color":"aqua"}]
+        {"text":"Tu trouveras peut-être ", "color":"aqua"}, {"text":"une façon","bold":true, "color":"green"}, {"text":" de la débloquer durant la soirée", "color":"aqua"}]
