@@ -45,14 +45,14 @@ execute as @a[scores={sgp.liberer_oies=2}] \
     run scoreboard players set @a[tag=sgp.in_game] sgp.liberer_oies 0
 
 
-execute as @a[scores={sgp.liberer_oies=2}] \
+execute as @a[scores={sgp.liberer_poules=2}] \
     run function sgp.majeurs:pco/cage/uncage {cage:poule, team:Poule, team_color:red, catchers:Oie}
 
 execute as @a[scores={sgp.liberer_poules=2}] \
     run scoreboard players set @a[tag=sgp.in_game] sgp.liberer_poules 0
 
 
-execute as @a[scores={sgp.liberer_oies=2}] \
+execute as @a[scores={sgp.liberer_canards=2}] \
     run function sgp.majeurs:pco/cage/uncage {cage:canard, team:Canard, team_color:green, catchers:Poule}
 
 execute as @a[scores={sgp.liberer_canards=2}] \
