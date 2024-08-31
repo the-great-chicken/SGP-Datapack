@@ -5,12 +5,12 @@
 
 execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
     as @a[distance=..3,team=sgp.Poule] \
-        run function sgp.majeurs:pco/on_death {color:red, color_hex:16733525, color_material:redstone, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
+        run function sgp.majeurs:pco/on_death {color:red, color_hex:16733525, color_material:redstone, team:Poule}
 
 execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
     as @a[distance=..3,team=sgp.Canard] \
-        run function sgp.majeurs:pco/on_death {color:green, color_hex:5635925, color_material:emerald, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
+        run function sgp.majeurs:pco/on_death {color:green, color_hex:5635925, color_material:emerald, team:Canard}
         
 execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
     as @a[distance=..3,team=sgp.Oie] \
-        run function sgp.majeurs:pco/on_death {color:yellow, color_hex:16777045, color_material:gold, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
+        run function sgp.majeurs:pco/on_death {color:yellow, color_hex:16777045, color_material:gold, team:Oie}
