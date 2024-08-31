@@ -2,12 +2,18 @@
     "condition": "minecraft:any_of",
     "terms": [
       {
-        "condition": "minecraft:reference",
-        "name": "sgp.majeurs:protect/roi_bleu_vivant"
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+          "team": "sgp.rouge"
+        }
       },
       {
-        "condition": "minecraft:reference",
-        "name": "sgp.majeurs:protect/roi_rouge_vivant"
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+          "team": "sgp.bleue"
+        }
       }
     ]
   }

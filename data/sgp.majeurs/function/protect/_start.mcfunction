@@ -13,7 +13,7 @@ execute as @a[tag=sgp.in_game] run function sgp.majeurs:protect/dispatch
 function sgp.mineurs:_stop
 
 scoreboard players set #mort_roi_rouge_annoncee sgp.dummy 0
-scoreboard players set #mort_roi_bleu_annoncee sgp.dummy 0
+scoreboard players set #mort_roi_bleue_annoncee sgp.dummy 0
 
 execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run scoreboard players enable @s sgp.devenir_roi_rouge
 execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run title @s title [{"text":"Équipe Rouge", "color":"dark_red"}]

@@ -162,11 +162,11 @@ execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=
 
 # ---------- MAJOR EVENTS ----------
 # Protéger le Roi
-execute if entity @a[scores={sgp.devenir_roi_bleu=1..}] run \
-    function sgp.majeurs:protect/devenir_roi_bleu
+execute as @a[scores={sgp.devenir_roi_bleu=1..}] run \
+    function sgp.majeurs:protect/devenir_roi {side:bleu, team:bleue, name:Bleu, color:dark_blue}
 
-execute if entity @a[scores={sgp.devenir_roi_rouge=1..}] run \
-    function sgp.majeurs:protect/devenir_roi_rouge
+execute as @a[scores={sgp.devenir_roi_rouge=1..}] run \
+    function sgp.majeurs:protect/devenir_roi {side:rouge, team:rouge, name:Rouge, color:dark_red}
 
 execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run \
     function sgp.majeurs:protect/running
