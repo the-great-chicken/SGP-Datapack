@@ -62,6 +62,10 @@ execute as @a[scores={sgp.liberer_canards=2}] \
 # Check si des joueurs sont en cage, et si tous les joueurs d'une équipe le sont, la partie se termine
 function sgp.majeurs:pco/check_if_team_wins {cage:poule, team:Poule, text_and_color:"\"text\":\"Oies Victorieuses\", \"color\":\"yellow\""}
 
+execute unless entity @a[team=sgp.Poule] run return 1
+
 function sgp.majeurs:pco/check_if_team_wins {cage:canard, team:Canard, text_and_color:"\"text\":\"Poules Victorieuses\", \"color\":\"red\""}
+
+execute unless entity @a[team=sgp.Poule] run return 1
 
 function sgp.majeurs:pco/check_if_team_wins {cage:oie, team:Oie, text_and_color:"\"text\":\"Canards Victorieux\", \"color\":\"green\""}
