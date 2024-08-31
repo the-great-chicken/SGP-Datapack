@@ -15,11 +15,11 @@ execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20
 
 
 # Must be in this order
-execute if predicate sgp.majeurs:pigeons/ongoing run \
+execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
     function sgp.majeurs:pigeons/running
 
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
-    if predicate sgp.majeurs:hide_and_seek/ongoing \
+    if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
@@ -47,11 +47,11 @@ execute as @e[type=marker,tag=sgp.marker,name="spawn"] \
 execute as @a[scores={sgp.spawn_random=1..}] run \
     function sgp.spawns:random
 
-execute unless predicate sgp.majeurs:event_in_progress \
+execute unless entity @a[predicate=sgp.majeurs:event_in_progress] \
     as @a[scores={sgp.kits_vers_spawn=1..}] run \
         function sgp.kits:misc/sort_salle
 
-execute if predicate sgp.majeurs:event_in_progress \
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] \
     as @a[scores={sgp.kits_vers_spawn=1..}] run \
         function sgp.majeurs:common/kits_to_spawn
 
@@ -82,11 +82,11 @@ execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=
 execute as @a[scores={sgp.entre_kits=1..}] run \
     function sgp.kits:misc/entre_salle
 
-execute unless predicate sgp.majeurs:event_in_progress \
+execute unless entity @a[predicate=sgp.majeurs:event_in_progress] \
     as @a[scores={sgp.sort_kits=1..}] run \
         function sgp.kits:misc/sort_salle
 
-execute if predicate sgp.majeurs:event_in_progress \
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] \
     as @a[scores={sgp.sort_kits=1..}] run \
         function sgp.majeurs:common/cannot_tp_to_lobby
 
@@ -114,11 +114,11 @@ execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
 execute if score #128_ticks_clock sgp.dummy matches 0 \
-    unless predicate sgp.majeurs:event_in_progress \
+    unless entity @a[predicate=sgp.majeurs:event_in_progress] \
         run function sgp.misc:kill_streaks_management
 
 execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] \
-    unless predicate sgp.majeurs:event_in_progress \
+    unless entity @a[predicate=sgp.majeurs:event_in_progress] \
         run function sgp.misc:kd_buff_and_debuffs
 
 scoreboard players add #128_ticks_clock sgp.dummy 1
@@ -162,28 +162,28 @@ execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=
 
 # ---------- MAJOR EVENTS ----------
 # Protéger le Roi
-execute if entity @a[scores={sgp.devenir_roi_bleu=1..}] run \
-    function sgp.majeurs:protect/devenir_roi_bleu
+execute as @a[scores={sgp.devenir_roi_bleu=1..}] run \
+    function sgp.majeurs:protect/devenir_roi {side:bleu, team:bleue, name:Bleu, color:dark_blue}
 
-execute if entity @a[scores={sgp.devenir_roi_rouge=1..}] run \
-    function sgp.majeurs:protect/devenir_roi_rouge
+execute as @a[scores={sgp.devenir_roi_rouge=1..}] run \
+    function sgp.majeurs:protect/devenir_roi {side:rouge, team:rouge, name:Rouge, color:dark_red}
 
-execute if predicate sgp.majeurs:protect/ongoing run \
+execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run \
     function sgp.majeurs:protect/running
 
 
 
 # PCO
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/empower
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/check_death
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
-execute if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/cabane/run_check_inside
+execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/empower
+execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/check_death
+execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/running
+execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/cabane/run_check_inside
 
 
 
 # Invasion
-execute if predicate sgp.majeurs:invasion/ongoing run function sgp.majeurs:invasion/defenders_dying
-execute if predicate sgp.majeurs:invasion/ongoing run function sgp.majeurs:invasion/running
+execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run function sgp.majeurs:invasion/defenders_dying
+execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run function sgp.majeurs:invasion/running
 
 
 
@@ -194,5 +194,5 @@ execute as @a[scores={sgp.devenir_chasseur=1..}] run \
 execute as @a[scores={sgp.devenir_pigeon=1..}] run \
     function sgp.majeurs:pigeons/devenir_pigeon
 
-execute if predicate sgp.majeurs:pigeons/ongoing run \
+execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
     function sgp.majeurs:pigeons/timer
