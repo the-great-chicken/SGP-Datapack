@@ -12,7 +12,8 @@ $execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_uncage_stora
     run function sgp.majeurs:pco/cage/clone_cage with entity @s data
 
 
-$effect clear @a[team=sgp.$(team)] minecraft:resistance
+$effect clear @a[team=sgp.$(team),] minecraft:resistance
+$tp @a[team=sgp.$(team),sgp.en_cage=1] @s
 
 $tellraw @a[team=sgp.$(team)] {"text":"Vous avez réussi à libérer tous vos congénères !","color":"$(team_color)","bold":true}
 $title @a[team=sgp.$(team)] title {"text":"Libération :D","color":"$(team_color)","bold":true}
