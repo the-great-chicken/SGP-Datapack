@@ -5,7 +5,7 @@
 gamemode survival @a[tag=sgp.in_game]
 scoreboard players set @a[tag=sgp.in_game] sgp.death_reset_tags 1
 scoreboard players set @a[tag=sgp.in_game] sgp.streak_en_cours 0
-removeglow @a
+glow remove @a
 team leave @a[tag=sgp.in_game]
 statuswarp pvp enabled
 function sgp.lore:npcs/enable

@@ -7,7 +7,7 @@ execute as @a[tag=sgp.in_game] if score @s sgp.streak_en_cours > @s sgp.plus_gra
 execute as @a[scores={sgp.streak_reset=1..}] run scoreboard players set @s sgp.streak_en_cours 0
 execute as @a[scores={sgp.streak_reset=1..}] run scoreboard players set @s sgp.streak_reset 0
 
-removeglow @a[team=sgp.PGSEC]
+glow remove @a[team=sgp.PGSEC]
 team empty sgp.PGSEC
 scoreboard players set #highest sgp.streak_en_cours 1
 execute as @a[tag=sgp.in_game] if score @s sgp.streak_en_cours = #highest sgp.streak_en_cours run team join sgp.PGSEC @s

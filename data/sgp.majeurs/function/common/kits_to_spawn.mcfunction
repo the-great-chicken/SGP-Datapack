@@ -10,4 +10,4 @@ execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run function sgp.maj
 execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run tp @s @e[type=marker,tag=sgp.marker,name="Attaquant_Invasion",limit=1,sort=random]
 execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run scoreboard players set @s sgp.kits_vers_spawn 0
 execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run function sgp.kits:misc/sort_salle
-execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run targetglow @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] RED
+execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run glow add @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] RED

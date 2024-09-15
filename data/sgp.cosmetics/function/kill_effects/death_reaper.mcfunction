@@ -13,7 +13,7 @@ summon minecraft:marker ~ ~ ~ {CustomName:'"death_reaper"', Tags:["sgp.marker"]}
 
 tag @s add sgp.death
 
-execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos set from entity @p[tag=sgp.death] LastDeathLocation
+execute as @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1] run data modify entity @s Pos set from entity @p[tag=sgp.death] LastDeathLocation.pos
 
 execute on attacker run function sgp.cosmetics:kill_effects/summon
 
