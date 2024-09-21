@@ -5,6 +5,9 @@
 
 scoreboard players add @s sgp.plus_grande_streak 0
 
+scoreboard players add @s sgp.combattant_found 3
+scoreboard players add @s sgp.vindicateur_found 3
+scoreboard players add @s sgp.archer_found 3
 scoreboard players add @s sgp.pyromane_found 0
 scoreboard players add @s sgp.cancer_found 0
 scoreboard players add @s sgp.roi_found 0
