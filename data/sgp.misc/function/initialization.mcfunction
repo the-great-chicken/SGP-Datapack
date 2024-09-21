@@ -59,6 +59,10 @@ scoreboard objectives add sgp.veut_roi trigger
 scoreboard objectives add sgp.veut_tank trigger
 scoreboard objectives add sgp.veut_vindicateur trigger
 scoreboard objectives add sgp.veut_peaceful trigger
+
+scoreboard objectives add sgp.combattant_found trigger
+scoreboard objectives add sgp.vindicateur_found trigger
+scoreboard objectives add sgp.archer_found trigger
 scoreboard objectives add sgp.pyromane_found trigger
 scoreboard objectives add sgp.cancer_found trigger
 scoreboard objectives add sgp.roi_found trigger
@@ -264,6 +268,18 @@ execute unless data storage sgp:kill_counter HandItems run data merge storage sg
 
 data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Vous pouvez chasser de la volaille à votre tour !"}}},"arene":{base:"2419 198 2133",dx:140,dz:73,dy:73},mineurs:{bounty:{base:"2419 198 2133",dx:140,dz:73,dy:73}}}
 
-data merge storage sgp:kits {eclaireur:{kit: eclaireur, kit_color:aqua}, enderman:{kit:enderman, kit_color:dark_purple}, pigeon:{kit:pigeon, kit_color:dark_gray}, poseidon:{kit:poseidon, kit_color:dark_aqua}, pyromane:{kit:pyromane, kit_color:gold}, roi:{kit:roi, kit_color:yellow}, tank:{kit:tank, kit_color:dark_blue}, cancer:{kit:cancer, kit_color:dark_red}, alchimiste:{kit:alchimiste, kit_color:light_purple}}
+data merge storage sgp:kits {\
+    eclaireur:{kit: eclaireur, kit_color:aqua, kit_name:"Éclaireur"}, \
+    enderman:{kit:enderman, kit_color:dark_purple, kit_name:Enderman}, \
+    pigeon:{kit:pigeon, kit_color:dark_gray, kit_name:Pigeon}, \
+    poseidon:{kit:poseidon, kit_color:dark_aqua, kit_name:"Poséidon"}, \
+    pyromane:{kit:pyromane, kit_color:gold, kit_name:Pyromane}, \
+    roi:{kit:roi, kit_color:yellow, kit_name:Roi}, tank:{kit:tank, kit_color:dark_blue, kit_name:Tank}, \
+    cancer:{kit:cancer, kit_color:dark_red, kit_name:Cancer}, \
+    alchimiste:{kit:alchimiste, kit_color:light_purple, kit_name:Alchimiste}, \
+    combattant:{kit:combattant, kit_color:white, kit_name:Combattant}, \
+    archer:{kit:archer, kit_color:green, kit_name:Archer}, \
+    vindicateur:{kit:vindicateur, kit_color:dark_green, kit_name:Vindicateur} \
+    }
 
 data modify storage sgp.text prefix set value {"text":"[", "color":"gray", "extra":[{"text":"SGP", "color":"gold"}, {"text":"] "}]}
