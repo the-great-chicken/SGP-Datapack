@@ -2,7 +2,7 @@
 #
 # Start the PCO major event
 
-tellraw @a[tag=sgp.in_game] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
+tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true},{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
 
 function sgp.majeurs:common/start
 
