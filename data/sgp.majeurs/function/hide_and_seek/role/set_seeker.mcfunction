@@ -3,8 +3,8 @@
 # Set the seeker attribute for the role
 team join sgp.seeker @s
 tag @s add sgp.seeker
-tellraw @s [{text:"Tu dois éliminer tous les Volailles",color:red}]
-attribute @s attack_damage modifier add sgp.seeker 1000 add_value
+tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true},{text:"Tu dois éliminer toutes les Volailles",color:"red"}]
+attribute @s generic.attack_damage modifier add sgp.seeker 1000 add_value
 function sgp.majeurs:hide_and_seek/stun/stun
 
 #Set the armor
