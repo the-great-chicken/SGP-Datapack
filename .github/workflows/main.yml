@@ -22,7 +22,8 @@ jobs:
           curl -o mods/fabric-api.jar $TEST_FABRIC_API
           curl -o mods/packtest.jar $TEST_PACKTEST
           mkdir -p world/datapacks/SGP-Datapack
-          cp -r data world/datapacks/SGP-Datapack/data
+          cp -r data world/datapacks/SGP-Datapack/
+          cp pack.mcmeta world/datapacks/SGP-Datapack/
       - name: Run tests
         run: |
           java -Xmx2G -Dpacktest.auto -Dpacktest.auto.annotations -jar server.jar nogui
