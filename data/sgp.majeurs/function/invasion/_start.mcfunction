@@ -19,11 +19,7 @@ execute as @a[tag=sgp.in_game] run experience add @a[tag=sgp.in_game] 16 levels
 
 title @a[team=sgp.Defenseur] title [{"text":"Vous êtes Défenseur", "color":"blue", "bold":true}]
 title @a[team=sgp.Attaquant] title [{"text":"Vous êtes sgp.Attaquant", "color":"red", "bold":true}]
-move @a[team=sgp.Defenseur] #Défenseurs
-move @a[team=sgp.Attaquant] #Attaquants
 
-targetglow @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] RED
-targetglow @a[team=sgp.Defenseur] @a[gamemode=survival,team=sgp.Defenseur] BLUE
 
 give @a[team=sgp.Defenseur] potion[ \
     custom_name='{"text":"Potion du Maitre Tortue", "color":"dark_blue", "italic":false, "bold":true}', \

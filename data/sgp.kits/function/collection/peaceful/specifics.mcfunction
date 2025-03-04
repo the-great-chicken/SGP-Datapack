@@ -2,7 +2,6 @@
 # 
 # Specific things of the Peaceful kit
 
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run god @s on
 execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run effect give @s weakness infinite 99 true
 
 

@@ -12,7 +12,6 @@ execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_uncage_storag
     run function sgp.majeurs:pco/cage/clone_cage with entity @s data
 
 
-useglow toggle
 
 
 execute as @a[tag=sgp.in_game] \
