@@ -3,8 +3,14 @@ on: [push, pull_request]
 env:
   # Make sure to update these links!
   TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.15.11/0.11.2/server/jar
-  TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/aHOmYIWr/fabric-api-0.115.1%2B1.21.1.jar
-  TEST_PACKTEST: https://cdn.modrinth.com/data/XsKUhp45/versions/x9txtivi/packtest-1.8-mc1.21.1.jar
+  TEST_CARDBOARD: https://cdn.modrinth.com/data/MLYQ9VGP/versions/NjOwf6oN/Cardboard-1.21.jar
+  TEST_ICOMMON: https://cdn.modrinth.com/data/SVKv1SZo/versions/caR6lov0/iCommon-Fabric-bundle.jar
+  TEST_COMMAND_API: https://cdn.modrinth.com/data/ExxvCi0y/versions/1jNJFhmj/CommandAPI-9.7.0-Mojang-Mapped.jar
+  TEST_LUCKPERMS: https://download.luckperms.net/1573/bukkit/loader/LuckPerms-Bukkit-5.4.156.jar
+  TEST_TGCPLUGIN: "https://cdn.discordapp.com/attachments/1096151878477283481/1346533065983393894/TGCPlugin-1.21.1-SNAPSHOT.jar?ex=67c88824&is=67c736a4&hm=f6fda2953cb8516957074cca38ce94d58e7a9e592984ddf7689ec0d849a6aabc&"
+  TEST_DISCORDSRV: https://github.com/DiscordSRV/DiscordSRV/releases/download/v1.26.0/DiscordSRV-Build-1.26.0.jar
+  TEST_DISCORDSRV_ADDON: "https://cdn.discordapp.com/attachments/1096151878477283481/1346533395869728860/DiscordSRV-ApiTest.jar?ex=67c88872&is=67c736f2&hm=4f16258de847a424b523e97b2a6f72b697825f02a90d16c75a6e34cec28ea932&"
+
 
 jobs:
   test:
@@ -19,8 +25,16 @@ jobs:
         run: |
           curl -o server.jar $TEST_FABRIC_SERVER
           mkdir mods
+          curl -o mods/Cardboard.jar $TEST_CARDBOARD
+          curl -o mods/iCommon.jar $TEST_ICOMMON
           curl -o mods/fabric-api.jar $TEST_FABRIC_API
           curl -o mods/packtest.jar $TEST_PACKTEST
+          mkdir plugins
+          curl -o plugins/CommandAPI.jar $TEST_COMMAND_API
+          curl -o plugins/Luckperms.jar $TEST_LUCKPERMS
+          curl -o plugins/TGCPlugin.jar $TEST_TGCPLUGIN
+          curl -o plugins/DiscordSRV.jar $TEST_DISCORDSRV
+          curl -o plugins/DiscordSRV-addon.jar $TEST_DISCORDSRV_ADDON
           mkdir -p world/datapacks/SGP-Datapack
           cp -r data world/datapacks/SGP-Datapack/
           cp pack.mcmeta world/datapacks/SGP-Datapack/
