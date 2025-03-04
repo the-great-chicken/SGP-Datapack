@@ -18,3 +18,4 @@ setblock 2480 230 2166 minecraft:prismarine_brick_slab[type=bottom]
 title @a[tag=sgp.in_game] title [{"text":"Chasse aux Pigeons","color":"gray","bold":true}]
 tag @a[tag=sgp.in_game] remove tag1
 
+move @a[tag=sgp.in_game] #Pigeons

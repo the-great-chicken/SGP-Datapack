@@ -20,3 +20,6 @@ execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a
 
 execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run scoreboard players enable @s sgp.devenir_roi_bleu
 execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run title @s title [{"text":"Équipe Bleue", "color":"dark_blue"}]
+
+execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run move @s #Bleus
+execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run move @s #Rouges

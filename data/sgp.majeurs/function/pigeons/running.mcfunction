@@ -7,6 +7,7 @@ execute as @a[tag=!sgp.pigeon] if score @s sgp.death_reset_tags matches 1 run sc
 execute as @a[tag=sgp.pigeon] if score @s sgp.death_reset_tags matches 1 run tag @s add sgp.loser
 execute as @a[tag=sgp.loser] run scoreboard players set @s sgp.death_reset_tags 0
 execute as @a[tag=sgp.loser] run tag @s remove sgp.pigeon
+move @a[tag=sgp.loser] #Chasseurs
 execute as @a[tag=sgp.loser] run function sgp.majeurs:pigeons/on_death
 execute as @a[tag=sgp.loser] run tag @s remove sgp.loser
 
