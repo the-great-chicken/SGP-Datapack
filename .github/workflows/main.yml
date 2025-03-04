@@ -26,4 +26,4 @@ jobs:
           cp pack.mcmeta world/datapacks/SGP-Datapack/
       - name: Run tests
         run: |
-          java -Xmx2G -Dpacktest.auto -Dpacktest.auto.annotations -jar server.jar nogui
+          java -Xmx2G -Dpacktest.auto -jar server.jar nogui
