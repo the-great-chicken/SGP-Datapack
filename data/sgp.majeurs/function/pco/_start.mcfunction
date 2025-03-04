@@ -33,6 +33,10 @@ tp @a[team=sgp.Canard] @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_c
 tp @a[team=sgp.Oie] @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_oie_spawn",limit=1]
 
 
+move @a[team=sgp.Oie] #Oies
+move @a[team=sgp.Poule] #Poules
+move @a[team=sgp.Canard] #Canards
+
 
 scoreboard players set @a[team=sgp.Oie] sgp.liberer_oies 0
 scoreboard players set @a[team=sgp.Canard] sgp.liberer_canards 0

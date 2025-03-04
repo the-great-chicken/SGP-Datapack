@@ -15,3 +15,5 @@ item replace entity @s armor.feet with minecraft:leather_boots[dyed_color={rgb:1
 
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
+
+move @s #Chasseurs
