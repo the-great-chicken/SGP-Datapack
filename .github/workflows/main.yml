@@ -7,9 +7,9 @@ env:
   TEST_ICOMMON: https://cdn.modrinth.com/data/SVKv1SZo/versions/caR6lov0/iCommon-Fabric-bundle.jar
   TEST_COMMAND_API: https://cdn.modrinth.com/data/ExxvCi0y/versions/1jNJFhmj/CommandAPI-9.7.0-Mojang-Mapped.jar
   TEST_LUCKPERMS: https://download.luckperms.net/1573/bukkit/loader/LuckPerms-Bukkit-5.4.156.jar
-  TEST_TGCPLUGIN: "https://cdn.discordapp.com/attachments/1096151878477283481/1346533065983393894/TGCPlugin-1.21.1-SNAPSHOT.jar?ex=67c88824&is=67c736a4&hm=f6fda2953cb8516957074cca38ce94d58e7a9e592984ddf7689ec0d849a6aabc&"
+  TEST_TGCPLUGIN: https://cdn.discordapp.com/attachments/1096151878477283481/1346533065983393894/TGCPlugin-1.21.1-SNAPSHOT.jar?ex=67c88824&is=67c736a4&hm=f6fda2953cb8516957074cca38ce94d58e7a9e592984ddf7689ec0d849a6aabc
   TEST_DISCORDSRV: https://github.com/DiscordSRV/DiscordSRV/releases/download/v1.26.0/DiscordSRV-Build-1.26.0.jar
-  TEST_DISCORDSRV_ADDON: "https://cdn.discordapp.com/attachments/1096151878477283481/1346533395869728860/DiscordSRV-ApiTest.jar?ex=67c88872&is=67c736f2&hm=4f16258de847a424b523e97b2a6f72b697825f02a90d16c75a6e34cec28ea932&"
+  TEST_DISCORDSRV_ADDON: https://cdn.discordapp.com/attachments/1096151878477283481/1346533395869728860/DiscordSRV-ApiTest.jar?ex=67c88872&is=67c736f2&hm=4f16258de847a424b523e97b2a6f72b697825f02a90d16c75a6e34cec28ea932
 
 
 jobs:
