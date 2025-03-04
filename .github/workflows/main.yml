@@ -1,0 +1,28 @@
+on: [push, pull_request]
+
+env:
+  # Make sure to update these links!
+  TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.15.3/0.11.2/server/jar
+  TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/aHOmYIWr/fabric-api-0.115.1%2B1.21.1.jar
+  TEST_PACKTEST: https://cdn.modrinth.com/data/XsKUhp45/versions/x9txtivi/packtest-1.8-mc1.21.1.jar
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Download and prepare files
+        run: |
+          curl -o server.jar $TEST_FABRIC_SERVER
+          mkdir mods
+          curl -o mods/fabric-api.jar $TEST_FABRIC_API
+          curl -o mods/packtest.jar $TEST_PACKTEST
+          mkdir -p world/datapacks/SGP-Datapack
+          cp -r data world/datapacks/datapack/SGP-Datapack
+      - name: Run tests
+        run: |
+          java -Xmx2G -Dpacktest.auto -Dpacktest.auto.annotations -jar server.jar nogui
