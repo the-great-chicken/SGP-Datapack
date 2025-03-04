@@ -2,7 +2,7 @@ on: [push, pull_request]
 
 env:
   # Make sure to update these links!
-  TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.15.3/0.11.2/server/jar
+  TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/1.21.1/0.15.11/0.11.2/server/jar
   TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/aHOmYIWr/fabric-api-0.115.1%2B1.21.1.jar
   TEST_PACKTEST: https://cdn.modrinth.com/data/XsKUhp45/versions/x9txtivi/packtest-1.8-mc1.21.1.jar
 
