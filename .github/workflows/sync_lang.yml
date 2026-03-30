@@ -18,7 +18,7 @@ jobs:
 
       - name: Validate JSON Syntax
         run: |
-          find dp_source/translations -name "*.json" -exec jq . {} + > /dev/null
+          find datapack_repo/translations -name "*.json" -exec jq . {} + > /dev/null
 
       - name: Checkout Resource Pack Repo
         uses: actions/checkout@v6
