@@ -1,4 +1,4 @@
-tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Lancement de la Chasse aux Pigeons...", "color":"gray", "bold":true}]
+tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"translate":"sgp.majeurs:pigeons_start_message", "fallback":"Lancement de la Chasse aux Pigeons...", "color":"gray", "bold":true}]
 
 function sgp.majeurs:common/start
 
