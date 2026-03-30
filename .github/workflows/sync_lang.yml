@@ -30,6 +30,7 @@ jobs:
       - name: Sync Files
         run: |
           rsync -av --delete datapack_repo/translations/ resource_pack_repo/assets/
+          rsync -av --delete datapack_repo/translations/ resource_pack_repo/TGC_Pack/assets/
 
       - name: Create Pull Request in Resource Pack
         uses: peter-evans/create-pull-request@v8
