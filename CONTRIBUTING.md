@@ -33,3 +33,4 @@ Each fonction should be documented in the following way:
 
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
+Do not hardcode any text that will be shown to the user. Instead use a translate component, with a fallback in French. The translation key should be of the form `sgp.namespace:name`. Then navigate to `/translations/namespace/lang` and put your translations in all localization files.

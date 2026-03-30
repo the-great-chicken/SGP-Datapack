@@ -1,0 +1,46 @@
+name: Sync Translations to Resource Pack
+
+on:
+  push:
+    branches:
+      - translation_bis
+    paths:
+      - 'translations/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Datapack Repo
+        uses: actions/checkout@v6
+        with:
+          path: datapack_repo
+
+      - name: Validate JSON Syntax
+        run: |
+          find dp_source/translations -name "*.json" -exec jq . {} + > /dev/null
+
+      - name: Checkout Resource Pack Repo
+        uses: actions/checkout@v6
+        with:
+          repository: the-great-chicken/TGC_PACK
+          token: ${{ secrets.TRANSLATION_SYNC_TOKEN }}
+          path: resource_pack_repo
+
+      - name: Sync Files
+        run: |
+          rsync -av --delete datapack_repo/translations/ resource_pack_repo/assets/
+
+      - name: Create Pull Request in Resource Pack
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.TRANSLATION_SYNC_TOKEN }}
+          path: resource_pack_repo
+          branch: translations-update
+          commit-message: "chore: update translations from datapack"
+          title: "🌐 Update Translations from Datapack"
+          body: |
+            Automated translation sync.
+            - Source: ${{ github.repository }}@${{ github.sha }}
+            - Instructions: Review for any accidental deletions and squash-merge.
+          base: main
