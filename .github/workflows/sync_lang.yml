@@ -29,8 +29,11 @@ jobs:
 
       - name: Sync Files
         run: |
-          rsync -av --delete datapack_repo/translations/ resource_pack_repo/assets/
-          rsync -av --delete datapack_repo/translations/ resource_pack_repo/TGC_Pack/assets/
+          cd datapack_repo/translations
+          for dir in */; do
+            echo "Syncing namespace: $dir"
+            rsync -av --delete "$dir" "../../resource_pack_repo/TGC_Pack/assets/$dir"
+          done
 
       - name: Create Pull Request in Resource Pack
         uses: peter-evans/create-pull-request@v8
