@@ -16,7 +16,7 @@ item replace entity @s hotbar.0 with wooden_sword[ \
         }, \
     attribute_modifiers={ \
         modifiers: [ \
-            {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.5, operation:"add_value"}, \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.5, operation:"add_value"}, \
             ], \
         show_in_tooltip:false \
         }, \

@@ -7,7 +7,7 @@
     "minecraft:attributes": [
       {
         "amount": 1,
-        "attribute": "minecraft:generic.water_movement_efficiency",
+        "attribute": "minecraft:water_movement_efficiency",
         "id": "minecraft:enchantment.depth_strider",
         "operation": "add_value"
       }
@@ -16,7 +16,7 @@
       {
         "effect": {
           "type": "attribute",
-          "attribute": "minecraft:generic.movement_speed",
+          "attribute": "minecraft:movement_speed",
           "id": "sgp.kits:depth_strider_boost",
           "operation": "add_value",
           "amount": {
@@ -40,7 +40,7 @@
       {
         "effect": {
           "type": "attribute",
-          "attribute": "minecraft:generic.movement_speed",
+          "attribute": "minecraft:movement_speed",
           "id": "sgp.kits:depth_strider_boost_swimming",
           "operation": "add_value",
           "amount": {

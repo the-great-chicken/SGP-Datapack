@@ -8,7 +8,7 @@ scoreboard players set #confines_secondes sgp.timer 0
 execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] run setblock ~ ~ ~ air
 
 execute as @a[tag=sgp.in_game] \
-    run attribute @s minecraft:generic.scale modifier remove sgp.smol
+    run attribute @s minecraft:scale modifier remove sgp.smol
 
 experience set @a[tag=sgp.in_game] 0 levels
 experience set @a[tag=sgp.in_game] 0 points

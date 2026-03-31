@@ -11,7 +11,7 @@ item replace entity @s hotbar.0 with iron_axe[ \
         ], \
     attribute_modifiers={ \
         modifiers: [ \
-            {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:7, operation:"add_value"}, \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7, operation:"add_value"}, \
             ], \
         show_in_tooltip:false}, \
     unbreakable={show_in_tooltip:false} \

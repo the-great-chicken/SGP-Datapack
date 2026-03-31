@@ -6,6 +6,6 @@ scoreboard players set #smol_seconds sgp.dummy 0
 experience set @a[tag=sgp.in_game] 150 levels
 
 execute as @a[tag=sgp.in_game] \
-    run attribute @s minecraft:generic.scale modifier add sgp.smol -0.5 add_multiplied_total
+    run attribute @s minecraft:scale modifier add sgp.smol -0.5 add_multiplied_total
 
 function sgp.mineurs:smol/running

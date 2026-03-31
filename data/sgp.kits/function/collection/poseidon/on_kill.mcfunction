@@ -17,7 +17,7 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.k
         enchantment_glint_override=false, \
         attribute_modifiers={ \
             modifiers: [ \
-                {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+                {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
                 ], \
             show_in_tooltip:false \
             }, \

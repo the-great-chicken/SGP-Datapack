@@ -1,5 +1,5 @@
 execute as @a[tag=sgp.in_game] \
-    run attribute @s minecraft:generic.scale modifier remove sgp.smol
+    run attribute @s minecraft:scale modifier remove sgp.smol
 
 tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Le Canarchimage vous a rendu votre taille normale", "color":"blue"}]
 
