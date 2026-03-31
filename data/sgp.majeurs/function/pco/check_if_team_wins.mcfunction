@@ -20,7 +20,7 @@ $execute if score #$(cage)s sgp.en_cage = #$(cage)s_joueurs sgp.dummy \
     run function sgp.majeurs:pco/_stop
 
 $execute if score #$(cage)s sgp.en_cage = #$(cage)s_joueurs sgp.dummy \
-    run title @a[tag=sgp.in_game] title {$(text_and_color), "bold":true}
+    run title @a[tag=sgp.in_game] title {$(text_and_color), bold:true}
 
 
 $scoreboard players set #$(cage)s_joueurs sgp.dummy 0

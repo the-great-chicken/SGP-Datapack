@@ -13,14 +13,14 @@ $tag @s add sgp.roi_$(side)
 $execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_$(side)",limit=1] as @a[distance=..2] run team join sgp.$(team) @s
 
 execute as @s run item replace entity @s hotbar.2 with golden_apple[ \
-    custom_name='{"text":"Pomme d\'or", "color":"yellow", "italic":false, "bold":true}', \
+    custom_name={text:"Pomme d'or", color:yellow, italic:false, bold:true}, \
     lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 6", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"}, \
-            {"text":" + 2"}, \
-            {"text":"❤", "color":"yellow"} \
-            ]' \
+        [ \
+            {text:"Régénère jusqu'à 6", color:gray, italic:false}, \
+            {text:"❤", color:red}, \
+            {text:" + 2"}, \
+            {text:"❤", color:yellow} \
+            ] \
         ] \
     ] 12
 
@@ -32,6 +32,6 @@ $scoreboard players set @s sgp.devenir_roi_$(side) 0
 
 $execute as @a[tag=sgp.in_game] run trigger sgp.devenir_roi_$(side) set 0
 
-$tellraw @a[tag=sgp.in_game] ["",{"selector":"@a[tag=sgp.roi_$(side)]","color":"$(color)","bold":true},{"text":" est le roi ","color":"gold"},{"text":"$(name)","color":"$(color)","bold":true}]
-$title @a[tag=sgp.in_game] subtitle [{"text":" est le roi ","color":"gold"},{"text":"$(name)","color":"$(color)","bold":true}]
-$title @a[tag=sgp.in_game] title [{"selector":"@a[tag=sgp.roi_$(side)]","color":"$(color)","bold":true}]
+$tellraw @a[tag=sgp.in_game] ["",{selector:"@a[tag=sgp.roi_$(side)]",color:"$(color)",bold:true},{text:" est le roi ",color:gold},{text:"$(name)",color:"$(color)",bold:true}]
+$title @a[tag=sgp.in_game] subtitle [{text:" est le roi ",color:gold},{text:"$(name)",color:"$(color)",bold:true}]
+$title @a[tag=sgp.in_game] title [{selector:"@a[tag=sgp.roi_$(side)]",color:"$(color)",bold:true}]

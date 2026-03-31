@@ -95,9 +95,9 @@ scoreboard objectives add sgp.death_reset_tags deathCount
 scoreboard objectives add sgp.streak_reset deathCount
 scoreboard objectives add sgp.morts deathCount
 
-scoreboard objectives add sgp.kd dummy {"bold":true,"color":"dark_green","text":"Kills/Deaths (en %)"}
-scoreboard objectives add sgp.plus_grande_streak dummy {"bold":true,"color":"dark_aqua","text":"Plus grande streak"}
-scoreboard objectives add sgp.kills playerKillCount {"bold":true,"color":"dark_red","text":"Kills au PvP"}
+scoreboard objectives add sgp.kd dummy {bold:true,color:dark_green,text:"Kills/Deaths (en %)"}
+scoreboard objectives add sgp.plus_grande_streak dummy {bold:true,color:dark_aqua,text:"Plus grande streak"}
+scoreboard objectives add sgp.kills playerKillCount {bold:true,color:dark_red,text:"Kills au PvP"}
 
 scoreboard objectives add sgp.kills_give_1 playerKillCount
 scoreboard objectives add sgp.kills_give_2 playerKillCount
@@ -258,7 +258,7 @@ function sgp.misc:bossbar/cycle_name
 
 # ---------- Initialize Storages ----------
 
-data merge storage sgp:lootdrop {tag: [{id: "minecraft:bow",tag: {display: {Lore: ["{\"text\":\"------------\",\"color\":\"#C0C0C0\",\"italic\":\"false\"}","{\"text\":\"���� Puissance I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"���� Puissance II\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}","{\"text\":\"∞ Infinité\",\"color\":\"#E5E4E2\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:flame",lvl: 1s},{id: "minecraft:power",lvl: 1s},{id: "minecraft:power",lvl: 2s},{id: "minecraft:punch",lvl: 1s},{id: "minecraft:infinity",lvl: 1s}]}},{id: "minecraft:iron_sword",tag: {display: {Lore: ["{\"text\":\"⚔ Tranchant I\",\"color\":\"dark_red\",\"italic\":\"false\"}","{\"text\":\"���� Flamme I\",\"color\":\"#FF8C00\",\"italic\":\"false\"}","{\"text\":\"⬱ Recul I\",\"color\":\"#6F4E37\",\"italic\":\"false\"}"]},Enchantments: [{id: "sharpness",lvl: 1},{id: "fire_aspect",lvl: 1},{id: "knockback",lvl: 1}]},count: 1b},{id: "minecraft:iron_chestplate",tag: {display: {Lore: ["{\"text\":\"���� Protection I\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection I\",\"color\":\"dark_blue\",\"italic\":\"false\"}","{\"text\":\"���� Protection II\",\"color\":\"dark_aqua\",\"italic\":\"false\"}","{\"text\":\"➹ Protection II\",\"color\":\"dark_blue\",\"italic\":\"false\"}"]},Enchantments: [{id: "minecraft:protection",lvl: 1s},{id: "minecraft:projectile_protection",lvl: 1s},{id: "minecraft:protection",lvl: 2s},{id: "minecraft:projectile_protection",lvl: 2s}]}}]}
+data merge storage sgp:lootdrop {tag: [{id: "minecraft:bow",tag: {display: {Lore: ["{text:\"------------\",color:\"#C0C0C0\",italic:false}","{text:\"���� Puissance I\",color:dark_red,italic:false}","{text:\"���� Flamme\",color:\"#FF8C00\",italic:false}","{text:\"���� Puissance II\",color:dark_red,italic:false}","{text:\"⬱ Recul I\",color:\"#6F4E37\",italic:false}","{text:\"∞ Infinité\",color:\"#E5E4E2\",italic:false}"]},Enchantments: [{id: "minecraft:flame",lvl: 1s},{id: "minecraft:power",lvl: 1s},{id: "minecraft:power",lvl: 2s},{id: "minecraft:punch",lvl: 1s},{id: "minecraft:infinity",lvl: 1s}]}},{id: "minecraft:iron_sword",tag: {display: {Lore: ["{text:\"⚔ Tranchant I\",color:dark_red,italic:false}","{text:\"���� Flamme I\",color:\"#FF8C00\",italic:false}","{text:\"⬱ Recul I\",color:\"#6F4E37\",italic:false}"]},Enchantments: [{id: "sharpness",lvl: 1},{id: "fire_aspect",lvl: 1},{id: "knockback",lvl: 1}]},count: 1b},{id: "minecraft:iron_chestplate",tag: {display: {Lore: ["{text:\"���� Protection I\",color:dark_aqua,italic:false}","{text:\"➹ Protection I\",color:dark_blue,italic:false}","{text:\"���� Protection II\",color:dark_aqua,italic:false}","{text:\"➹ Protection II\",color:dark_blue,italic:false}"]},Enchantments: [{id: "minecraft:protection",lvl: 1s},{id: "minecraft:projectile_protection",lvl: 1s},{id: "minecraft:protection",lvl: 2s},{id: "minecraft:projectile_protection",lvl: 2s}]}}]}
 
 execute unless data storage sgp:kill_counter HandItems run data merge storage sgp:kill_counter {HandItems: [{count: 1b,tag: {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}},{}]}
 
@@ -266,4 +266,4 @@ data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},
 
 data merge storage sgp:kits {eclaireur:{kit: eclaireur, kit_color:aqua}, enderman:{kit:enderman, kit_color:dark_purple}, pigeon:{kit:pigeon, kit_color:dark_gray}, poseidon:{kit:poseidon, kit_color:dark_aqua}, pyromane:{kit:pyromane, kit_color:gold}, roi:{kit:roi, kit_color:yellow}, tank:{kit:tank, kit_color:dark_blue}, cancer:{kit:cancer, kit_color:dark_red}, alchimiste:{kit:alchimiste, kit_color:light_purple}}
 
-data modify storage sgp.text prefix set value {"text":"[", "color":"gray", "extra":[{"text":"SGP", "color":"gold"}, {"text":"] "}]}
+data modify storage sgp.text prefix set value {text:"[", color:gray, extra:[{text:"SGP", color:gold}, {text:"] "}]}

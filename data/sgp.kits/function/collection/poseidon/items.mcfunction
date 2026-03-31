@@ -4,11 +4,11 @@
 
 # ---------- WEAPONS ----------
 give @s trident[ \
-    custom_name='{"text":"Le Trident", "color":"dark_aqua", "italic":false, "bold":true}', \
+    custom_name={text:"Le Trident", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
-        '{"text":"-----------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"⚡ Impulsion I", "color":"yellow", "italic":false}', \
-        '{"text":"7,5 dégats", "color":"blue", "italic":false}' \
+        {text:"-----------", color:"#C0C0C0", italic:false}, \
+        {text:"⚡ Impulsion I", color:yellow, italic:false}, \
+        {text:"7,5 dégats", color:blue, italic:false} \
         ], \
     enchantments={ \
         levels: {riptide:1}, \
@@ -24,10 +24,10 @@ give @s trident[ \
     ]
 
 give @s trident[ \
-    custom_name='{"text":"Trident", "color":"dark_aqua", "italic":false, "bold":true}', \
+    custom_name={text:"Trident", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
-        '{"text":"---------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"7,5 dégats", "color":"blue", "italic":false}' \
+        {text:"---------", color:"#C0C0C0", italic:false}, \
+        {text:"7,5 dégats", color:blue, italic:false} \
         ], \
     enchantments={ \
         levels: {impaling:4}, \
@@ -46,21 +46,21 @@ give @s trident[ \
 
 # ---------- ARMOR ----------
 item replace entity @s armor.feet with chainmail_boots[ \
-    custom_name='{"text":"Palmes", "color":"dark_aqua", "italic":false, "bold":true}', \
+    custom_name={text:"Palmes", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
-        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}', \
-        '[ \
-            {"text":"⚡ ", "color":"yellow", "italic":false}, \
-            {"text":"Vous êtes ", "color":"white"}, \
-            {"text":"très"} \
-            ]', \
-        '[ \
-            {"text":"rapide ", "color":"yellow", "italic":false}, \
-            {"text":"dans l\'", "color":"white"}, \
-            {"text":"eau ", "color":"#55D5F0"}, \
-            {"text":"!", "color":"white"} \
-            ]', \
-        '{"text":"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "color":"#4040EA", "italic":false}' \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        [ \
+            {text:"⚡ ", color:yellow, italic:false}, \
+            {text:"Vous êtes ", color:white}, \
+            {text:"très"} \
+            ], \
+        [ \
+            {text:"rapide ", color:yellow, italic:false}, \
+            {text:"dans l'", color:white}, \
+            {text:"eau ", color:"#55D5F0"}, \
+            {text:"!", color:white} \
+            ], \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     enchantments={ \
         levels: {"sgp.kits:depth_strider_boosted":25}, \
@@ -78,11 +78,11 @@ item replace entity @s armor.feet with chainmail_boots[ \
 
 # ---------- FOOD ----------
 item replace entity @s weapon.offhand with cooked_cod[ \
-    custom_name='{"text":"Morue", "color":"dark_aqua", "italic":false, "bold":true}', \
+    custom_name={text:"Morue", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 2,5", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red"} \
-            ]' \
+        [ \
+            {text:"Régénère jusqu'à 2,5", color:gray, italic:false}, \
+            {text:"❤", color:red} \
+            ] \
         ] \
     ] 64
