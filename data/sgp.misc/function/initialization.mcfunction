@@ -95,9 +95,9 @@ scoreboard objectives add sgp.death_reset_tags deathCount
 scoreboard objectives add sgp.streak_reset deathCount
 scoreboard objectives add sgp.morts deathCount
 
-scoreboard objectives add sgp.kd dummy {"bold":true,"color":"dark_green","text":"Kills/Deaths (en %)"}
-scoreboard objectives add sgp.plus_grande_streak dummy {"bold":true,"color":"dark_aqua","text":"Plus grande streak"}
-scoreboard objectives add sgp.kills playerKillCount {"bold":true,"color":"dark_red","text":"Kills au PvP"}
+scoreboard objectives add sgp.kd dummy {"translate":"sgp.misc:kd_ratio_name","fallback":"Kills/Deaths (en %%)","bold":true,"color":"dark_green"}
+scoreboard objectives add sgp.plus_grande_streak dummy {"translate":"sgp.misc:highest_streak_name","fallback":"Plus grande streak","bold":true,"color":"dark_aqua"}
+scoreboard objectives add sgp.kills playerKillCount {"translate":"sgp.misc:kills_pvp_name","fallback":"Kills au PvP","bold":true,"color":"dark_red"}
 
 scoreboard objectives add sgp.kills_give_1 playerKillCount
 scoreboard objectives add sgp.kills_give_2 playerKillCount

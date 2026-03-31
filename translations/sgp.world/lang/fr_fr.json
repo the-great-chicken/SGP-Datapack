@@ -1,0 +1,14 @@
+{
+  "sgp.world:teleportation_countdown": "Téléportation dans 3 secondes... Ne bougez pas...",
+  "sgp.world:unlocked_marine_particle": "Tu viens de débloquer la Trainée de Particule %s !\n        Va dans la Salle des %s depuis la %s pour l'activer !",
+  "sgp.world:particle_marine": "Marine",
+  "sgp.world:cosmetics": "Cosmétiques",
+  "sgp.world:main_lobby": "Salle d'Accueil",
+  "sgp.world:unlocked_splash_kill_effect": "Tu viens de débloquer le Kill Effect %s !\n        Va dans la Salle des %s depuis la %s pour l'activer !",
+  "sgp.world:kill_effect_splash": "Splash",
+  "sgp.world:laby_finished_announcement": "%s est la %se personne a avoir fini le %s ! Bravo à eux !",
+  "sgp.world:labyrinth": "Labyrinthe",
+  "sgp.world:unlocked_portal_kill_effect": "Tu as débloqué le Kill Effect %s ! \n         Tu peux l'activer en allant dans la salle des %s depuis l'accueil",
+  "sgp.world:kill_effect_portal": "Portail",
+  "sgp.world:location_found": "Nouveau lieu trouvé ! : %s / %s"
+}

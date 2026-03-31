@@ -3,7 +3,7 @@ name: Sync Translations to Resource Pack
 on:
   push:
     branches:
-      - translation_bis
+      - main
     paths:
       - 'translations/**'
 

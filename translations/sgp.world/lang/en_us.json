@@ -1,0 +1,14 @@
+{
+  "sgp.world:teleportation_countdown": "Teleporting in 3 seconds... Do not move...",
+  "sgp.world:unlocked_marine_particle": "You just unlocked the %s Particle Trail!\n        Go to the %s Room from the %s to activate it!",
+  "sgp.world:particle_marine": "Marine",
+  "sgp.world:cosmetics": "Cosmetics",
+  "sgp.world:main_lobby": "Main Lobby",
+  "sgp.world:unlocked_splash_kill_effect": "You just unlocked the %s Kill Effect!\n        Go to the %s Room from the %s to activate it!",
+  "sgp.world:kill_effect_splash": "Splash",
+  "sgp.world:laby_finished_announcement": "%s is the #%s person to have finished the %s! Congratulations!",
+  "sgp.world:labyrinth": "Labyrinth",
+  "sgp.world:unlocked_portal_kill_effect": "You just unlocked the %s Kill Effect!\n         Go to the %s Room from the lobby to activate it!",
+  "sgp.world:kill_effect_portal": "Portal",
+  "sgp.world:location_found": "New location found! : %s / %s"
+}

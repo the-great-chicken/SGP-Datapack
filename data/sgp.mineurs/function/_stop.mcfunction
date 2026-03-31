@@ -1,4 +1,4 @@
-tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"Désactivation des Événements Mineurs", "color":"red", "bold":true}]
+tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"translate":"sgp.mineurs:deactivation_minor_events", "fallback":"Désactivation des Événements Mineurs", "color":"red", "bold":true}]
 
 scoreboard players set #events_mineurs_actifs sgp.dummy 0
 
