@@ -4,7 +4,7 @@
 team join sgp.seeker @s
 tag @s add sgp.seeker
 tellraw @s [{"text":"Vous devez éliminer tous les Volailles","color":"red"}]
-attribute @s generic.attack_damage modifier add sgp.seeker 1000 add_value
+attribute @s attack_damage modifier add sgp.seeker 1000 add_value
 function sgp.majeurs:hide_and_seek/stun/stun
 
 #Set the armor

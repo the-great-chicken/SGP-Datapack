@@ -16,7 +16,7 @@ give @s trident[ \
         }, \
     attribute_modifiers={ \
         modifiers: [ \
-            {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
             ], \
         show_in_tooltip:false \
         }, \
@@ -36,7 +36,7 @@ give @s trident[ \
     enchantment_glint_override=false, \
     attribute_modifiers={ \
         modifiers: [ \
-            {type:"generic.attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
             ], \
         show_in_tooltip:false \
         }, \
@@ -68,7 +68,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
     }, \
     attribute_modifiers={ \
         modifiers: [ \
-            {type:"generic.armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
+            {type:"armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
         ], \
         show_in_tooltip:false \
         }, \
