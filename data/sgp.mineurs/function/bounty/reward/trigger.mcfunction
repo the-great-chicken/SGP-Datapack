@@ -11,4 +11,4 @@ execute as @s[tag=sgp.no_reward] run scoreboard players enable @s sgp.reward
 #check if the reward exists
 execute as @s[tag=sgp.reward] run return run tag @s remove sgp.reward
 scoreboard players enable @s sgp.reward
-tellraw @s ["",{"text":"Cette récompense n'existe pas.","color":"red"}]
+tellraw @s ["",{text:"Cette récompense n'existe pas.",color:red}]

@@ -3,7 +3,7 @@
 # This function is called every second to update the timer of the seeker.
 
 
-title @a[tag=sgp.seeker] title [{"text": "La Chasse commence dans "},{"score":{"name":"#seeker","objective":"sgp.timer"}},"s"]
+title @a[tag=sgp.seeker] title [{text: "La Chasse commence dans "},{score:{name:"#seeker",objective:"sgp.timer"}},"s"]
 
 
 

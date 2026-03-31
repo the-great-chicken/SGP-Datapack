@@ -1,5 +1,5 @@
-title @a[tag=sgp.in_game] title {"text":"SMOL!", "color":"blue", "bold":true}
-tellraw @a[tag=sgp.in_game] [{"storage":"sgp.text", "nbt":"prefix", "interpret":true}, {"text":"SMOL! ", "color":"blue", "bold":true},{"text":"Le Canarchimage a divisé la taille de tout le monde par 2 !", "color":"blue"}]
+title @a[tag=sgp.in_game] title {text:"SMOL!", color:blue, bold:true}
+tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"SMOL! ", color:blue, bold:true},{text:"Le Canarchimage a divisé la taille de tout le monde par 2 !", color:blue}]
 
 scoreboard players set #smol_seconds sgp.dummy 0
 

@@ -15,31 +15,31 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.k
                 ], \
             }}} \
             }, \
-        custom_name=\'{"text":"Explosifs", "color":"red", "italic":false, "bold":true}\' \
+        custom_name={text:"Explosifs", color:red, italic:false, bold:true} \
         ] 2', \
     actionbar:' \
-        {"text":"+ 1 ➶ Flèche ", "color":"gray", "bold":true}, \
-        {"text":"et 2 ☀ Explosifs !", "color":"red"} \
+        {text:"+ 1 ➶ Flèche ", color:gray, bold:true}, \
+        {text:"et 2 ☀ Explosifs !", color:red} \
         ' \
     }
 
 execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_2=3..}] run function sgp.kits:kills_give/basic { \
     nb:2, \
     give:'golden_apple[ \
-        custom_name=\'{"text":"Pomme d\\\'or", "color":"gold", "italic":false, "bold":true}\', \
+        custom_name={text:"Pomme d\'or", color:gold, italic:false, bold:true}, \
         lore=[ \
-            \'[ \
-                {"text":"Régénère jusqu\\\'à 6", "color":"gray", "italic":false}, \
-                {"text":"❤", "color":"red"}, \
-                {"text":" + 2"}, \
-                {"text":"❤", "color":"yellow"} \
-                ]\' \
+             [ \
+                {text:"Régénère jusqu\'à 6", color:gray, italic:false}, \
+                {text:"❤", color:red}, \
+                {text:" + 2"}, \
+                {text:"❤", color:yellow} \
+                ] \
             ] \
         ]', \
     give_2:air, \
     actionbar:' \
-        {"text":"+ 1 ➶ Flèche, ","color":"gray", "bold":true}, \
-        {"text":"2 ☀ Explosifs ", "color":"red"}, \
-        {"text":"et 1 ❤ Pomme d\\\'or !", "color":"yellow"} \
+        {text:"+ 1 ➶ Flèche, ",color:gray, bold:true}, \
+        {text:"2 ☀ Explosifs ", color:red}, \
+        {text:"et 1 ❤ Pomme d\'or !", color:yellow} \
         ', \
     }

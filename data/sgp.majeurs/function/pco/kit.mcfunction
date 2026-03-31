@@ -9,11 +9,11 @@ effect clear @s
 
 # ---------- WEAPON ----------
 $item replace entity @s hotbar.0 with feather[ \
-    custom_name='{"text":"Plume", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Plume", color:"$(color)", italic:false, bold:true}, \
     lore=[ \
-        '{"text":"-------------", "color":"#C0C0C0", "italic":false}', \
-        '{"text":"⚔ Tranchant I", "color":"dark_red", "italic":false}', \
-        '{"text":"4 dégats", "color":"blue", "italic":false}' \
+        {text:"-------------", color:"#C0C0C0", italic:false}, \
+        {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
+        {text:"4 dégats", color:blue, italic:false} \
         ], \
     enchantments={ \
         levels: {unbreaking:0, sharpness:1}, \
@@ -24,7 +24,7 @@ $item replace entity @s hotbar.0 with feather[ \
 
 # ---------- ARMOR ----------
 $item replace entity @s armor.head with leather_helmet[ \
-    custom_name='{"text":"Tête", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Tête", color:"$(color)", italic:false, bold:true}, \
     enchantments={ \
         levels: {binding_curse:1}, \
         show_in_tooltip:false \
@@ -46,7 +46,7 @@ $item replace entity @s armor.head with leather_helmet[ \
     ]
 
 $item replace entity @s armor.chest with leather_chestplate[ \
-    custom_name='{"text":"Corps", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Corps", color:"$(color)", italic:false, bold:true}, \
     enchantments={ \
         levels: {binding_curse:1}, \
         show_in_tooltip:false \
@@ -68,7 +68,7 @@ $item replace entity @s armor.chest with leather_chestplate[ \
     ]
 
 $item replace entity @s armor.legs with leather_leggings[ \
-    custom_name='{"text":"Cuisses", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Cuisses", color:"$(color)", italic:false, bold:true}, \
     enchantments={ \
         levels: {binding_curse:1}, \
         show_in_tooltip:false \
@@ -90,7 +90,7 @@ $item replace entity @s armor.legs with leather_leggings[ \
     ]
 
 $item replace entity @s armor.feet with leather_boots[ \
-    custom_name='{"text":"Pattes", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Pattes", color:"$(color)", italic:false, bold:true}, \
     enchantments={ \
         levels: {binding_curse:1}, \
         show_in_tooltip:false \
@@ -101,7 +101,7 @@ $item replace entity @s armor.feet with leather_boots[ \
         }, \
     trim={ \
         pattern:"wild", \
-        material:"gold", \
+        material:gold, \
         show_in_tooltip:false \
         }, \
     attribute_modifiers={ \
@@ -114,12 +114,12 @@ $item replace entity @s armor.feet with leather_boots[ \
 
 # ---------- FOOD ----------
 $item replace entity @s weapon.offhand with bread[ \
-    custom_name='{"text":"Miettes", "color":"$(color)", "italic":false, "bold":true}', \
+    custom_name={text:"Miettes", color:"$(color)", italic:false, bold:true}, \
     lore=[ \
-        '[ \
-            {"text":"Régénère jusqu\'à 3", "color":"gray", "italic":false}, \
-            {"text":"❤", "color":"red", "italic":false} \
-            ]' \
+        [ \
+            {text:"Régénère jusqu'à 3", color:gray, italic:false}, \
+            {text:"❤", color:red, italic:false} \
+            ] \
         ] \
     ] 64
 

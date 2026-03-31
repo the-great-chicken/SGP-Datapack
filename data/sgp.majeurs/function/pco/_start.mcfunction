@@ -2,7 +2,7 @@
 #
 # Start the PCO major event
 
-tellraw @a[tag=sgp.in_game] [{"text":"Lancement de Poule Canard Oie...","color":"dark_purple","bold":true}]
+tellraw @a[tag=sgp.in_game] [{text:"Lancement de Poule Canard Oie...",color:dark_purple,bold:true}]
 
 function sgp.majeurs:common/start
 
@@ -43,17 +43,17 @@ scoreboard players set @a[team=sgp.Canard] sgp.liberer_canards 0
 scoreboard players set @a[team=sgp.Poule] sgp.liberer_poules 0
 
 
-title @a[team=sgp.Oie] subtitle [{"text":"Chassez les ","color":"white","bold":true},{"text":"Poules","color":"red"}]
-title @a[team=sgp.Oie] title {"text":"Oie","color":"yellow","bold":true}
-tellraw @a[team=sgp.Oie] [{"text":"Vous êtes une ","color":"white"},{"text":"Oie. ","color":"yellow","bold":true},{"text":"Vous devez chasser les ","color":"white"},{"text":"Poules.","color":"red","bold":true}]
+title @a[team=sgp.Oie] subtitle [{text:"Chassez les ",color:white,bold:true},{text:"Poules",color:red}]
+title @a[team=sgp.Oie] title {text:"Oie",color:yellow,bold:true}
+tellraw @a[team=sgp.Oie] [{text:"Vous êtes une ",color:white},{text:"Oie. ",color:yellow,bold:true},{text:"Vous devez chasser les ",color:white},{text:"Poules.",color:red,bold:true}]
 
-title @a[team=sgp.Poule] subtitle [{"text":"Chassez les ","color":"white","bold":true},{"text":"Canards","color":"green"}]
-title @a[team=sgp.Poule] title {"text":"Poule","color":"red","bold":true}
-tellraw @a[team=sgp.Poule] [{"text":"Vous êtes une ","color":"white"},{"text":"Poule. ","color":"red","bold":true},{"text":"Vous devez chasser les ","color":"white"},{"text":"Canards.","color":"green","bold":true}]
+title @a[team=sgp.Poule] subtitle [{text:"Chassez les ",color:white,bold:true},{text:"Canards",color:green}]
+title @a[team=sgp.Poule] title {text:"Poule",color:red,bold:true}
+tellraw @a[team=sgp.Poule] [{text:"Vous êtes une ",color:white},{text:"Poule. ",color:red,bold:true},{text:"Vous devez chasser les ",color:white},{text:"Canards.",color:green,bold:true}]
 
-title @a[team=sgp.Canard] subtitle [{"text":"Chassez les ","color":"white","bold":true},{"text":"Oies","color":"yellow"}]
-title @a[team=sgp.Canard] title {"text":"Canard","color":"green","bold":true}
-tellraw @a[team=sgp.Canard] [{"text":"Vous êtes un ","color":"white"},{"text":"Canard. ","color":"green","bold":true},{"text":"Vous devez chasser les ","color":"white"},{"text":"Oies.","color":"yellow","bold":true}]
+title @a[team=sgp.Canard] subtitle [{text:"Chassez les ",color:white,bold:true},{text:"Oies",color:yellow}]
+title @a[team=sgp.Canard] title {text:"Canard",color:green,bold:true}
+tellraw @a[team=sgp.Canard] [{text:"Vous êtes un ",color:white},{text:"Canard. ",color:green,bold:true},{text:"Vous devez chasser les ",color:white},{text:"Oies.",color:yellow,bold:true}]
 
 
 scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
