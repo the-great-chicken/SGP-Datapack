@@ -11,29 +11,21 @@ item replace entity @s hotbar.0 with feather[ \
         {text:"⬱ Recul III", color:"#6F4E37", italic:false}, \
         {text:"4 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {knockback:3, sharpness:5}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={knockback:3, sharpness:5}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
-    unbreakable={show_in_tooltip:false}, \
-    enchantments={ \
-        levels: {power:2, infinity:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={power:2, infinity:1}, \
     custom_name={text:"Lance Plumes", color:dark_gray, italic:false, bold:true}, \
     lore=[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"🏹 Puissance II", color:dark_red, italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
-        ] \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -41,25 +33,21 @@ item replace entity @s hotbar.1 with bow[ \
 item replace entity @s armor.head with player_head[ \
     custom_name={text:"Tête", color:dark_gray, italic:false, bold:true}, \
     profile="__pif__", \
-    enchantments={ \
-        levels: {binding_curse:1}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={binding_curse:1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s armor.chest with elytra[ \
     custom_name={text:"Ailes", color:dark_gray, italic:false, bold:true}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s armor.legs with chainmail_leggings[ \
     custom_name={text:"Cuisses", color:dark_gray, italic:false, bold:true}, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with chainmail_boots[ \
@@ -79,15 +67,9 @@ item replace entity @s armor.feet with chainmail_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2, "sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={protection:2, "sgp.kits:depth_strider_boosted":1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 
@@ -98,7 +80,7 @@ item replace entity @s inventory.8 with arrow[ \
 
 item replace entity @s hotbar.2 with firework_rocket[ \
     custom_name={text:"Boost", color:dark_gray, italic:false, bold:true}, \
-    hide_additional_tooltip={} \
+    tooltip_display= {hidden_components:["fireworks"]}, \
     ] 5
 
 

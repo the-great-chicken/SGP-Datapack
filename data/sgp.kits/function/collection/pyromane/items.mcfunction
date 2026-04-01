@@ -12,14 +12,8 @@ item replace entity @s hotbar.0 with blaze_rod[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"6 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {sharpness:9, knockback:1, fire_aspect:1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        } \
+    enchantments={sharpness:9, knockback:1, fire_aspect:1}, \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -28,11 +22,9 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false} \
         ], \
-    enchantments={ \
-        levels: {flame:1}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={flame:1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -42,13 +34,9 @@ item replace entity @s armor.head with iron_helmet[ \
     trim={ \
         pattern:"wild", \
         material:gold, \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with iron_chestplate[ \
@@ -56,13 +44,9 @@ item replace entity @s armor.chest with iron_chestplate[ \
     trim={ \
         pattern:"snout", \
         material:gold, \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with diamond_leggings[ \
@@ -75,20 +59,13 @@ item replace entity @s armor.legs with diamond_leggings[ \
         {text:"☀ Protection V", color:red, italic:false}, \
         {text:"᠅ Épines II", color:dark_green, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2, thorns:2, fire_protection:6, blast_protection:5, projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:2, thorns:2, fire_protection:6, blast_protection:5, projectile_protection:2}, \
     trim={ \
         pattern:"silence", \
         material:gold, \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with iron_boots[ \
@@ -109,13 +86,9 @@ item replace entity @s armor.feet with iron_boots[ \
     trim={ \
         pattern:"wayfinder", \
         material:gold, \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 
@@ -124,7 +97,7 @@ item replace entity @s hotbar.7 with arrow 8
 
 item replace entity @s weapon.offhand with flint_and_steel[ \
     custom_name={text:"Briquet", color:gold, italic:false, bold:true}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={} \
     ]
 
 item replace entity @s hotbar.4 with strider_spawn_egg[ \

@@ -10,28 +10,21 @@ item replace entity @s hotbar.0 with diamond_sword[ \
         {text:"❊ Affilage III", color:"#ADDBD9", italic:false}, \
         {text:"6 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {sweeping_edge:3}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.0, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={sweeping_edge:3}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.0, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 # ---------- ARMOR ----------
 item replace entity @s armor.head with player_head[ \
     custom_name={text:"Tête", color:dark_purple, italic:false, bold:true}, \
     profile="WelcomeToMoes48", \
-    enchantments={ \
-        levels: {binding_curse:1, "sgp.kits:water_damage":1}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={binding_curse:1, "sgp.kits:water_damage":1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s armor.chest with leather_chestplate[ \
@@ -41,24 +34,14 @@ item replace entity @s armor.chest with leather_chestplate[ \
         {text:"🛡 Protection III", color:dark_aqua, italic:false}, \
         {text:"➹ Protection I", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:3, projectile_protection:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:0, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:3, projectile_protection:1}, \
+    dyed_color=0, \
     trim={ \
         pattern:"eye", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 item replace entity @s armor.legs with leather_leggings[ \
@@ -68,24 +51,14 @@ item replace entity @s armor.legs with leather_leggings[ \
         {text:"🛡 Protection III", color:dark_aqua, italic:false}, \
         {text:"➹ Protection I", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:3, projectile_protection:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:0, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:3, projectile_protection:1}, \
+    dyed_color=0, \
     trim={ \
         pattern:"dune", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 item replace entity @s armor.feet with leather_boots[ \
@@ -108,24 +81,14 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:dark_purple, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:3, projectile_protection:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:0, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:3, projectile_protection:1}, \
+    dyed_color=0, \
     trim={ \
         pattern:"raiser", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 
@@ -140,7 +103,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"speed", amplifier:1, duration:440} \
             ] \
         }, \
-    hide_additional_tooltip={}, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
     ]
 

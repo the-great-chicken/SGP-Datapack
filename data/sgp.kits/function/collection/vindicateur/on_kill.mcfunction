@@ -14,7 +14,7 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
                 {id:"weakness", amplifier:0, duration:100} \
                 ] \
             }, \
-        hide_additional_tooltip={}, \
+        tooltip_display={hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \
@@ -24,11 +24,9 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
 execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_2=5..}] run function sgp.kits:kills_give/basic { \
     nb:2, \
     give:'totem_of_undying[ \
-        enchantments={ \
-            levels: {protection:1}, \
-            show_in_tooltip:false \
-            }, \
+        enchantments={protection:1}, \
         custom_name={text:"Totem", color:gold, italic:false, bold:true} \
+        tooltip_display={hidden_components:["enchantments"]} \
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 ⚚ Totem !", color:gold, bold:true} \

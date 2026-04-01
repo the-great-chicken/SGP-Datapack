@@ -10,21 +10,18 @@ item replace entity @s hotbar.0 with iron_sword[ \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
         {text:"7 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {sharpness:1}, show_in_tooltip:false \
-    }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage",slot:"mainhand",id:"sgp.damage",amount:6.0,operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={sharpness:1}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage",slot:"mainhand",id:"sgp.damage",amount:6.0,operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
     custom_name={text:"Arc", color:white, italic:false, bold:true}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable"]} \
     ]
 
 
@@ -33,14 +30,10 @@ item replace entity @s armor.head with iron_helmet[ \
     custom_name={text:"Casque en Fer", color:white, italic:false, bold:true}, \
     trim={ \
         pattern:"spire", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with iron_chestplate[ \
@@ -50,27 +43,17 @@ item replace entity @s armor.chest with iron_chestplate[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"➹ Protection II", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, projectile_protection:2}, \
     trim={ \
         pattern:"coast", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with iron_leggings[ \
-    enchantments={ \
-        levels: {projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={projectile_protection:2}, \
     custom_name={text:"Jambières en Fer", color:white, italic:false, bold:true}, \
     lore=[ \
         {text:"-----------------", color:"#C0C0C0", italic:false}, \
@@ -78,14 +61,10 @@ item replace entity @s armor.legs with iron_leggings[ \
         ], \
     trim={ \
         pattern:"spire", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with iron_boots[\
@@ -104,20 +83,13 @@ item replace entity @s armor.feet with iron_boots[\
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     custom_name={text:"Bottes en Fer", color:white, italic:false, bold:true}, \
-    enchantments={ \
-        levels: {"sgp.kits:depth_strider_boosted":2}, \
-        show_in_tooltip:false \
-    }, \
+    enchantments={"sgp.kits:depth_strider_boosted":2}, \
     trim={ \
         pattern:"eye", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 

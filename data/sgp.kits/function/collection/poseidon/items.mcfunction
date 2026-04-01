@@ -10,17 +10,12 @@ give @s trident[ \
         {text:"⚡ Impulsion I", color:yellow, italic:false}, \
         {text:"7,5 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {riptide:1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={riptide:1}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 give @s trident[ \
@@ -29,18 +24,13 @@ give @s trident[ \
         {text:"---------", color:"#C0C0C0", italic:false}, \
         {text:"7,5 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {impaling:4}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={impaling:4}, \
     enchantment_glint_override=false, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ] 17
 
 
@@ -62,17 +52,12 @@ item replace entity @s armor.feet with chainmail_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {"sgp.kits:depth_strider_boosted":25}, \
-        show_in_tooltip:false \
-    }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
+    enchantments={"sgp.kits:depth_strider_boosted":25}, \
+    attribute_modifiers=[ \
+        {type:"armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
         ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 

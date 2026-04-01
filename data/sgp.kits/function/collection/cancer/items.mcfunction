@@ -11,13 +11,8 @@ item replace entity @s hotbar.0 with stick[ \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false}, \
         {text:"7,5 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {knockback:4, sharpness:12}, \
-        show_in_tooltip:false}, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        } \
+    enchantments={knockback:4, sharpness:12}, \
+    tooltip_display={hidden_components:["enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -27,11 +22,9 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={ \
-        levels: {punch:4, flame:1}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={punch:4, flame:1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -42,20 +35,13 @@ item replace entity @s armor.head with leather_helmet[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection II", color:dark_aqua, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:2}, \
     trim={ \
         pattern:"vex", \
-        material:"redstone", \
-        show_in_tooltip:false \
+        material:"redstone" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with golden_chestplate[ \
@@ -66,20 +52,13 @@ item replace entity @s armor.chest with golden_chestplate[ \
         {text:"➹ Protection II", color:dark_blue, italic:false}, \
         {text:"᠅ Épines III", color:dark_green, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2, thorns:3, projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:2, thorns:3, projectile_protection:2}, \
     trim={ \
         pattern:"vex", \
-        material:"redstone", \
-        show_in_tooltip:false \
+        material:"redstone" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with leather_leggings[ \
@@ -88,20 +67,13 @@ item replace entity @s armor.legs with leather_leggings[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection II", color:dark_aqua, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:2}, \
     trim={ \
         pattern:"tide", \
-        material:"redstone", \
-        show_in_tooltip:false \
+        material:"redstone" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with leather_boots[ \
@@ -121,20 +93,13 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:2, "sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:2, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \
         pattern:"spire", \
-        material:"redstone", \
-        show_in_tooltip:false \
+        material:"redstone" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 
@@ -149,7 +114,7 @@ item replace entity @s hotbar.3 with tipped_arrow[ \
             {id:"levitation", amplifier:3, duration:256} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 5
 
 item replace entity @s hotbar.4 with tipped_arrow[ \
@@ -162,7 +127,7 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
             {id:"slowness", amplifier:3, duration:512} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 5
 
 item replace entity @s hotbar.5 with splash_potion[ \
@@ -175,7 +140,7 @@ item replace entity @s hotbar.5 with splash_potion[ \
                 {id:"speed", amplifier:1, duration:300} \
                 ] \
             }, \
-        hide_additional_tooltip={}, \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
     ] 3
 
@@ -190,7 +155,7 @@ item replace entity @s hotbar.6 with splash_potion[ \
                 {id:"jump_boost", amplifier:2, duration:600} \
                 ] \
             }, \
-        hide_additional_tooltip={}, \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
     ] 3
 

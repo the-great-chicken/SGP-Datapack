@@ -10,17 +10,12 @@ item replace entity @s hotbar.0 with wooden_sword[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"3,5 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {knockback:1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.5, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={knockback:1}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.5, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -29,11 +24,9 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"--------", color:"#C0C0C0", italic:false}, \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={ \
-        levels: {punch:1}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={punch:1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -45,20 +38,13 @@ item replace entity @s armor.head with diamond_helmet[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, thorns:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, thorns:1}, \
     trim={ \
         pattern:"sentry", \
-        material:"netherite", \
-        show_in_tooltip:false \
+        material:"netherite" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with iron_chestplate[ \
@@ -68,20 +54,13 @@ item replace entity @s armor.chest with iron_chestplate[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"➹ Protection I", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, projectile_protection:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, projectile_protection:1}, \
     trim={ \
         pattern:"dune", \
-        material:"netherite", \
-        show_in_tooltip:false \
+        material:"netherite" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with iron_leggings[ \
@@ -91,20 +70,13 @@ item replace entity @s armor.legs with iron_leggings[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"➹ Protection I", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, projectile_protection:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, projectile_protection:1}, \
     trim={ \
         pattern:"dune", \
-        material:"netherite", \
-        show_in_tooltip:false \
+        material:"netherite" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with diamond_boots[ \
@@ -125,20 +97,13 @@ item replace entity @s armor.feet with diamond_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \
         pattern:"tide", \
-        material:"netherite", \
-        show_in_tooltip:false \
+        material:"netherite" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 
@@ -179,7 +144,7 @@ item replace entity @s hotbar.7 with tipped_arrow[ \
             {id:"resistance", amplifier:1, duration:160} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     ] 5
 
 give @s potion[ \
@@ -189,14 +154,12 @@ give @s potion[ \
         {text:"⬳ Lenteur VI (0:20)", color:"#555555", italic:false} \
         ], \
     potion_contents="strong_turtle_master", \
-    hide_additional_tooltip={} \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     ] 3
 
 item replace entity @s weapon.offhand with shield[ \
     custom_name={text:"Bouclier", color:dark_blue, italic:false, bold:true}, \
-    enchantments={ \
-        levels: {thorns:1}, show_in_tooltip:false \
-        }, \
+    enchantments={thorns:1}, \
     base_color=black, \
     banner_patterns=[ \
         {color:"light_blue", pattern:"rhombus"}, \
@@ -205,6 +168,6 @@ item replace entity @s weapon.offhand with shield[ \
         {color:blue, pattern:"gradient_up"}, \
         {color:"cyan", pattern:"gradient"}, \
         ], \
-    hide_additional_tooltip={}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["banner_patterns","enchantments","unbreakable"]}, \
     ]

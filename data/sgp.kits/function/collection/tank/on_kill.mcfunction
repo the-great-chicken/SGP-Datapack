@@ -27,7 +27,7 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_1=1..}] run function sgp.kits:
                 {id:"resistance", amplifier:1, duration:160} \
                 ] \
             }, \
-        hide_additional_tooltip={} \
+        tooltip_display={hidden_components:["potion_contents"]}, \
         ]', \
     actionbar:' \
         {text:"+ 1 ➶ Flèche ", color:"#545F67", bold:true}, \
@@ -44,7 +44,7 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_2=3..}] run function sgp.kits:
             {text:"⬳ Lenteur VI (0:20)", color:"#555555", italic:false} \
             ], \
         potion_contents="strong_turtle_master", \
-        hide_additional_tooltip={} \
+        tooltip_display={hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
     actionbar:' \

@@ -15,100 +15,58 @@ $item replace entity @s hotbar.0 with feather[ \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
         {text:"4 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {unbreaking:0, sharpness:1}, \
-        show_in_tooltip:false \
-        } \
+    enchantments={unbreaking:0, sharpness:1} \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 
 # ---------- ARMOR ----------
 $item replace entity @s armor.head with leather_helmet[ \
     custom_name={text:"Tête", color:"$(color)", italic:false, bold:true}, \
-    enchantments={ \
-        levels: {binding_curse:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:$(color_hex), \
-        show_in_tooltip:false \
-        }, \
+    enchantments={binding_curse:1}, \
+    dyed_color=$(color_hex), \
     trim={ \
         pattern:"sentry", \
-        material:"$(color_material)", \
-        show_in_tooltip:false \
+        material:"$(color_material)" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 $item replace entity @s armor.chest with leather_chestplate[ \
     custom_name={text:"Corps", color:"$(color)", italic:false, bold:true}, \
-    enchantments={ \
-        levels: {binding_curse:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:$(color_hex), \
-        show_in_tooltip:false \
-        }, \
+    enchantments={binding_curse:1}, \
+    dyed_color=$(color_hex), \
     trim={ \
         pattern:"snout", \
-        material:"quartz", \
-        show_in_tooltip:false \
+        material:"quartz" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 $item replace entity @s armor.legs with leather_leggings[ \
     custom_name={text:"Cuisses", color:"$(color)", italic:false, bold:true}, \
-    enchantments={ \
-        levels: {binding_curse:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:$(color_hex), \
-        show_in_tooltip:false \
-        }, \
+    enchantments={binding_curse:1}, \
+    dyed_color=$(color_hex), \
     trim={ \
         pattern:"coast", \
-        material:"quartz", \
-        show_in_tooltip:false \
+        material:"quartz" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 $item replace entity @s armor.feet with leather_boots[ \
     custom_name={text:"Pattes", color:"$(color)", italic:false, bold:true}, \
-    enchantments={ \
-        levels: {binding_curse:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:$(color_hex), \
-        show_in_tooltip:false \
-        }, \
+    enchantments={binding_curse:1}, \
+    dyed_color=$(color_hex), \
     trim={ \
         pattern:"wild", \
         material:gold, \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 

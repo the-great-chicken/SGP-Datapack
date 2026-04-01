@@ -9,13 +9,11 @@ item replace entity @s hotbar.0 with wooden_sword[\
         {text:"--------------------", color:"#C0C0C0", italic:false}, \
         {text:"4 dégats", color:blue, italic:false} \
         ], \
-    attribute_modifiers={ \
-        modifiers: [\
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    attribute_modifiers=[\
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -26,15 +24,9 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
         ], \
-    enchantments={ \
-        levels: {infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -44,31 +36,20 @@ item replace entity @s armor.head with leather_helmet[ \
     lore=[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}], \
-    enchantments={ \
-        levels: {protection:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:9633536, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1}, \
+    dyed_color=9633536, \
     trim={ \
         pattern:"coast", \
-        material:"quartz", \
-        show_in_tooltip:false \
+        material:"quartz" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 item replace entity @s armor.chest with chainmail_chestplate[ \
     custom_name={text:"Cotte de Mailles", color:green, italic:false, bold:true}, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers"]} \
     ]
 
 item replace entity @s armor.legs with leather_leggings[ \
@@ -77,23 +58,14 @@ item replace entity @s armor.legs with leather_leggings[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:9633536, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1}, \
+    dyed_color=9633536, \
     trim={ \
         pattern:"spire", \
-        material:"quartz", \
-        show_in_tooltip:false \
+        material:"quartz" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 item replace entity @s armor.feet with leather_boots[ \
@@ -115,23 +87,14 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, "sgp.kits:depth_strider_boosted":2}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:9633536, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, "sgp.kits:depth_strider_boosted":2}, \
+    dyed_color=9633536, \
     trim={ \
         pattern:"spire", \
-        material:"quartz", \
-        show_in_tooltip:false \
+        material:"quartz" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false}, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 
@@ -148,7 +111,7 @@ item replace entity @s hotbar.5 with tipped_arrow[ \
             {id:"slowness", amplifier:1, duration:1760} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 2
 
 item replace entity @s weapon.offhand with tipped_arrow[ \
@@ -157,7 +120,7 @@ item replace entity @s weapon.offhand with tipped_arrow[ \
         {text:"☠ Poison (0:11)", color:"#55741B", italic:false} \
         ], \
     potion_contents="long_poison", \
-    hide_additional_tooltip={} \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 5
 
 

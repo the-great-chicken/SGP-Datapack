@@ -23,7 +23,7 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
                 {id:"speed", amplifier:1, duration:440} \
                 ] \
             }, \
-        hide_additional_tooltip={}, \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \
