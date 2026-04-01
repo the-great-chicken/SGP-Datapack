@@ -6,6 +6,6 @@ title @a[tag=sgp.in_game] title {text:"CONFINEMENT!", color:gray, bold:true}
 execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
     run playsound minecraft:music_disc.strad master @a[tag=sgp.in_game] ~ ~ ~ 100
 
-experience set @a[tag=sgp.in_game] 181 levels
+experience set @a[tag=sgp.in_game] 150 levels
 
-schedule function sgp.mineurs:confinement/running 15s
+schedule function sgp.mineurs:confinement/running 1s

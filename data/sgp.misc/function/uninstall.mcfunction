@@ -170,3 +170,8 @@ schedule clear sgp.misc:bossbar/cycle_color
 
 schedule clear sgp.misc:bossbar/cycle_name
 
+# ---------- Remove Storages -----------
+
+data remove storage sgp:data majeurs
+data remove storage sgp:data mineurs
+data remove storage sgp.text prefix

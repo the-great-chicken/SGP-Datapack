@@ -31,5 +31,8 @@ Each fonction should be documented in the following way:
 # You can have multiple lines!
 ```
 
+### World <-> Datapack separation
+Do NOT ever hardcode coordinates even if you're working on the official SGP server. Always reference markers instead.
+
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
