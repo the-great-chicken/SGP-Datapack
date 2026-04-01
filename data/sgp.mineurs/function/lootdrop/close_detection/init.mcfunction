@@ -20,7 +20,7 @@ execute unless entity @s[tag=sgp.peaceful] \
         if block ~ ~ ~ trapped_chest \
             run data modify block ~ ~ ~ Items set from storage sgp:close_detection Items
 
-function #bs.schedule:schedule {with:{id:"close_detection",command:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",time:1,unit:"t"}}
+function #bs.schedule:schedule {run:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",with:{id:"close_detection",time:1,unit:"t"}}
 
 
 # The tick advancement below helps us run a function in the subtick after the LootTable is generated within the subtick.
