@@ -1230,17 +1230,14 @@
             {
               "function": "minecraft:set_components",
               "components": {
-                "minecraft:attribute_modifiers": {
-                  "modifiers": [
-                    {
-                      "id": "sgp.damage",
-                      "type": "minecraft:attack_damage",
-                      "amount": 5,
-                      "operation": "add_value"
-                    }
-                  ],
-                  "show_in_tooltip": false
-                }
+                "minecraft:attribute_modifiers": [
+                  {
+                    "id": "sgp.damage",
+                    "type": "minecraft:attack_damage",
+                    "amount": 5,
+                    "operation": "add_value"
+                  }
+                ]
               }
             },
             {
@@ -1565,6 +1562,12 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
+              "function":"toggle_tooltips",
+              "toggles": {
+                "minecraft:potion_contents": false
+              }
+            },
+            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1575,8 +1578,7 @@
                       "duration": 1760
                     }
                   ]
-                },
-                "minecraft:hide_additional_tooltip": {}
+                }
               }
             },
             {
@@ -1618,12 +1620,17 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
+              "function":"toggle_tooltips",
+              "toggles": {
+                "minecraft:potion_contents": false
+              }
+            },
+            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
                   "potion": "minecraft:long_poison"
-                },
-                "minecraft:hide_additional_tooltip": {}
+                }
               }
             },
             {
@@ -1665,6 +1672,12 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
+              "function":"toggle_tooltips",
+              "toggles": {
+                "minecraft:potion_contents": false
+              }
+            },
+            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1676,8 +1689,7 @@
                       "duration": 256
                     }
                   ]
-                },
-                "minecraft:hide_additional_tooltip": {}
+                }
               }
             },
             {
@@ -1719,12 +1731,17 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
+              "function":"toggle_tooltips",
+              "toggles": {
+                "minecraft:potion_contents": false
+              }
+            },
+            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
                   "potion": "minecraft:harming"
-                },
-                "minecraft:hide_additional_tooltip": {}
+                }
               }
             },
             {
@@ -1766,6 +1783,12 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
+              "function":"toggle_tooltips",
+              "toggles": {
+                "minecraft:potion_contents": false
+              }
+            },
+            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1777,8 +1800,7 @@
                       "duration": 120
                     }
                   ]
-                },
-                "minecraft:hide_additional_tooltip": {}
+                }
               }
             },
             {
