@@ -14,5 +14,5 @@ execute as @s[scores={sgp.jump_diff_2_done=2}] \
         Va dans la Salle des ", color:aqua}, {text:"Cosmétiques", color:light_purple, bold:true}, {text:" depuis la Salle d'Accueil pour l'activer !", color:aqua}]
 
 execute as @s[scores={sgp.jump_diff_2_done=2}] run scoreboard players set @s sgp.splash_kill_unlocked 1
-execute as @s[scores={sgp.jump_diff_2_done=2}] at @s run summon firework_rocket ~ ~ ~ {LifeTime:20,FireworksItem:{id:"firework_rocket",count:1,components:{fireworks:{explosions:[{shape:"large_ball",has_twinkle:true,has_trail:true,colors:[I;2437522]}],flight_duration:1}}}}
+execute as @s[scores={sgp.jump_diff_2_done=2}] at @s run summon firework_rocket ~ ~ ~ {LifeTime:20,FireworksItem:{id:"firework_rocket",count:1,components:{fireworks:{explosions:[{shape:"large_ball",has_twinkle:true,has_trail:true,colors:[2437522]}],flight_duration:1}}}}
 execute as @s[scores={sgp.jump_diff_2_done=2}] run scoreboard players set @s sgp.jump_diff_2_done 3
