@@ -12,4 +12,4 @@
 data modify block ~ ~ ~ LootTable set value "sgp.mineurs:empty"
 
 # Shut off if no players have the container open.
-execute if entity @a[tag=sgp.container_open] run function #bs.schedule:schedule {with:{id:"close_detection",command:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",time:1,unit:"t"}}
+execute if entity @a[tag=sgp.container_open] run function #bs.schedule:schedule {run:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",with:{id:"close_detection",time:1,unit:"t"}}

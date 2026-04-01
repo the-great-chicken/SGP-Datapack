@@ -5,5 +5,5 @@
 removeglow @s
 team leave @s
 gamemode spectator @s
-function #bs.schedule:schedule {with:{command:"tp @s @e[type=marker,tag=sgp.marker,name='pvp_arena',limit=1]",time:2,unit:"t"}}
+function #bs.schedule:schedule {run:"tp @s @e[type=marker,tag=sgp.marker,name='pvp_arena',limit=1]",with:{time:2,unit:"t"}}
 move @s #Morts

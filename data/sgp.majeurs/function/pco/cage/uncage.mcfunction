@@ -21,4 +21,4 @@ $title @a[team=sgp.$(team)] title {text:"Libération :D",color:"$(team_color)",b
 $tellraw @a[team=sgp.$(catchers)] {text:"Les $(team)s se sont évadées !",color:"$(team_color)",bold:true}
 $title @a[team=sgp.$(catchers)] title {text:"Évasion D:",color:"$(team_color)",bold:true}
 
-$function #bs.schedule:schedule {with:{command:"execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name='pco_cage_storage',nbt={data:{cage:$(cage)}}] run function sgp.majeurs:pco/cage/clone_cage with entity @s data",time:3,unit:"s"}}
+$function #bs.schedule:schedule {run:"execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name='pco_cage_storage',nbt={data:{cage:$(cage)}}] run function sgp.majeurs:pco/cage/clone_cage with entity @s data",with:{time:3,unit:"s"}}
