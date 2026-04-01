@@ -9,12 +9,11 @@ item replace entity @s hotbar.0 with iron_axe[ \
         {text:"-----------", color:"#C0C0C0", italic:false}, \
         {text:"7 dégats", color:blue, italic:false} \
         ], \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false}, \
-    unbreakable={show_in_tooltip:false} \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -23,28 +22,20 @@ item replace entity @s armor.head with iron_helmet[ \
     custom_name={text:"Casque en Fer", color:dark_green, italic:false, bold:true}, \
     trim={ \
         pattern:"rib", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with diamond_chestplate[ \
     custom_name={text:"Plastron en Diamant", color:dark_green, italic:false, bold:true}, \
     trim={ \
         pattern:"rib", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with leather_leggings[ \
@@ -53,23 +44,14 @@ item replace entity @s armor.legs with leather_leggings[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={ \
-        levels: {thorns:1}, \
-        show_in_tooltip:false}, \
-    dyed_color={ \
-        rgb:9533531, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={thorns:1}, \
+    dyed_color=9533531, \
     trim={ \
         pattern:"rib", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 item replace entity @s armor.feet with leather_boots[ \
@@ -89,24 +71,14 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {thorns:3, "sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-        }, \
-    dyed_color={ \
-        rgb:9533531, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={thorns:3, "sgp.kits:depth_strider_boosted":1}, \
+    dyed_color=9533531, \
     trim={ \
         pattern:"rib", \
-        material:"copper", \
-        show_in_tooltip:false \
+        material:"copper" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
 
 
@@ -121,7 +93,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"weakness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={}, \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
     ]
 

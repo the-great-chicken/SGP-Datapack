@@ -10,18 +10,13 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.k
             {text:"---------", color:"#C0C0C0", italic:false}, \
             {text:"7,5 dégats", color:blue, italic:false} \
             ], \
-        enchantments={ \
-            levels: {impaling:4}, \
-            show_in_tooltip:false \
-            }, \
+        enchantments={impaling:4}, \
         enchantment_glint_override=false, \
-        attribute_modifiers={ \
-            modifiers: [ \
-                {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
-                ], \
-            show_in_tooltip:false \
-            }, \
-        unbreakable={show_in_tooltip:false} \
+        attribute_modifiers=[ \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+            ], \
+        unbreakable={}, \
+        tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
         ] 2', \
     give_2:air, \
     actionbar:{text:"+ 2 🔱 Tridents !", color:dark_aqua, bold:true} \

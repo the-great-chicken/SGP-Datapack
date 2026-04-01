@@ -10,17 +10,12 @@ item replace entity @s hotbar.0 with stone_sword[ \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
         {text:"6 dégats", color:blue, italic:false} \
         ], \
-   enchantments={ \
-        levels: {sharpness:1}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"} \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+   enchantments={sharpness:1}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"} \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 
@@ -31,20 +26,13 @@ item replace entity @s armor.head with chainmail_helmet[ \
         {text:"------------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1}, \
     trim={ \
         pattern:"tide", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with chainmail_chestplate[ \
@@ -54,20 +42,13 @@ item replace entity @s armor.chest with chainmail_chestplate[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"➹ Protection II", color:dark_blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, projectile_protection:2}, \
     trim={ \
         pattern:"sentry", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with chainmail_leggings[ \
@@ -76,20 +57,13 @@ item replace entity @s armor.legs with chainmail_leggings[ \
         {text:"--------------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1}, \
     trim={ \
         pattern:"sentry", \
-        material:"amethyst", \
-        show_in_tooltip:false \
+        material:"amethyst" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with minecraft:chainmail_boots[ \
@@ -109,20 +83,13 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {protection:1, "sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \
         pattern:'sentry', \
         material:'amethyst', \
-        show_in_tooltip:false \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 
@@ -137,7 +104,7 @@ item replace entity @s hotbar.1 with splash_potion[ \
             ] \
         ], \
     potion_contents="minecraft:healing", \
-    hide_additional_tooltip={}, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
     ] 8
 
@@ -147,7 +114,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
         {text:"Inflige jusqu'à 3", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]} \
         ], \
     potion_contents="minecraft:harming", \
-    hide_additional_tooltip={}, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
     ] 10
 
@@ -161,7 +128,7 @@ item replace entity @s hotbar.3 with splash_potion[ \
             {id:"blindness", amplifier:0, duration:100} \
             ] \
         }, \
-    hide_additional_tooltip={}, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
     ]
 

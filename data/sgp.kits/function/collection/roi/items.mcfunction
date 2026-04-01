@@ -10,17 +10,12 @@ item replace entity @s hotbar.0 with golden_sword[ \
         {text:"⚔ Tranchant VII", color:dark_red, italic:false}, \
         {text:"8 dégats", color:blue, italic:false} \
         ], \
-    enchantments={ \
-        levels: {sharpness:7}, \
-        show_in_tooltip:false \
-        }, \
-    attribute_modifiers={ \
-        modifiers: [ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
-            ], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={sharpness:7}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
+        ], \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -29,19 +24,14 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"🏹 Puissance II", color:dark_red, italic:false} \
         ], \
-    enchantments={ \
-        levels: {power:2}, \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    enchantments={power:2}, \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 # ---------- ARMOR ----------
 item replace entity @s armor.head with golden_helmet[ \
-    enchantments={ \
-        levels: {protection:1, projectile_protection:2}, \
-        show_in_tooltip:false \
-        }, \
+    enchantments={protection:1, projectile_protection:2}, \
     custom_name={text:"Couronne", color:yellow, italic:false, bold:true}, \
     lore=[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
@@ -50,42 +40,30 @@ item replace entity @s armor.head with golden_helmet[ \
         ], \
     trim={ \
         pattern:"ward", \
-        material:"redstone", \
-        show_in_tooltip:false \
+        material:"redstone" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.chest with golden_chestplate[ \
     custom_name={text:"Cuirasse Cérémoniale", color:yellow, italic:false, bold:true}, \
     trim={ \
         pattern:"wild", \
-        material:"diamond", \
-        show_in_tooltip:false \
+        material:"diamond" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.legs with golden_leggings[ \
     custom_name={text:"Jambières Cérémoniales", color:yellow, italic:false, bold:true}, \
     trim={ \
         pattern:"eye", \
-        material:"diamond", \
-        show_in_tooltip:false \
+        material:"diamond" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 item replace entity @s armor.feet with golden_boots[ \
@@ -102,20 +80,13 @@ item replace entity @s armor.feet with golden_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={ \
-        levels: {"sgp.kits:depth_strider_boosted":1}, \
-        show_in_tooltip:false \
-    }, \
+    enchantments={"sgp.kits:depth_strider_boosted":1}, \
     trim={ \
         pattern:"dune", \
-        material:"diamond", \
-        show_in_tooltip:false \
+        material:"diamond" \
         }, \
-    attribute_modifiers={ \
-        modifiers: [], \
-        show_in_tooltip:false \
-        }, \
-    unbreakable={show_in_tooltip:false} \
+    unbreakable={}, \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
 
 

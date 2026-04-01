@@ -10,7 +10,7 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_1=1..}] run function sgp.kit
             {text:"☠ Poison (0:11)", color:"#55741B", italic:false} \
             ], \
         potion_contents="long_poison", \
-        hide_additional_tooltip={} \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 ☠ Flèche de Poison !", color:"#55741B", bold:true} \
@@ -28,7 +28,7 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 {id:"slowness", amplifier:1, duration:1760} \
                 ] \
             }, \
-        hide_additional_tooltip={} \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
     actionbar:' \

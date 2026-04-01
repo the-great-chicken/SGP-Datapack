@@ -9,7 +9,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
             {text:"Régénère jusqu\'à 2", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]}\
             ], \
         potion_contents={potion:"minecraft:healing"}, \
-        hide_additional_tooltip={}, \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64] \
         2', \
     give_2: 'splash_potion[ \
@@ -18,7 +18,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
             {text:"Inflige jusqu\'à 3", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]} \
             ], \
         potion_contents={potion:"minecraft:harming"}, \
-        hide_additional_tooltip={}, \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
         ] 3\
         ', \
@@ -39,7 +39,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
                 {id:"blindness", amplifier:0, duration:100} \
                 ] \
             }, \
-        hide_additional_tooltip={} \
+        tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \

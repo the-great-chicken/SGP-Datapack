@@ -32,7 +32,7 @@ give @a[team=sgp.Defenseur] potion[ \
         {text:"⬳ Lenteur VI (0:20)", color:"#555555", italic:false} \
         ], \
     potion_contents="strong_turtle_master", \
-    hide_additional_tooltip={} \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     ] 3
 
 effect give @a[tag=sgp.in_game] minecraft:saturation 10 2
@@ -50,5 +50,5 @@ item replace entity @a[team=sgp.Defenseur] hotbar.7 with tipped_arrow[ \
             {id:"resistance", amplifier:1, duration:160} \
             ] \
         }, \
-    hide_additional_tooltip={} \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     ] 10
