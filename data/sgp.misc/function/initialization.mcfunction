@@ -170,8 +170,6 @@ execute unless score #protect_max_rounds sgp.dummy matches 0.. \
 execute unless score #protect_max_rounds sgp.dummy matches 0.. \
     run scoreboard players set #pco_max_rounds sgp.dummy 3
 
-execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]
-
 
 
 # ---------- Create teams ----------

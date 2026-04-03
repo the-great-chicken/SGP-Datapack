@@ -6,7 +6,7 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true},
 title @a[tag=sgp.in_game] title {text:"CONFINEMENT!", color:gray, bold:true}
 
 execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
-    run playsound minecraft:music_disc.strad master @a[tag=sgp.in_game] ~ ~ ~ 100
+    run playsound sgp.mineurs:confinement/siren master @a[tag=sgp.in_game] ~ ~ ~ 100
 
 experience set @a[tag=sgp.in_game] 165 levels
 
