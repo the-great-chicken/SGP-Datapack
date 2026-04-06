@@ -52,7 +52,7 @@
       {
         "effect": {
           "type": "minecraft:run_function",
-          "function": "sgp.kits:enchantments/cooldown/trigger_repulsion"
+          "function": "sgp.kits:enchantments/trigger_repulsion"
         },
         "requirements": {
           "condition": "minecraft:inverted",

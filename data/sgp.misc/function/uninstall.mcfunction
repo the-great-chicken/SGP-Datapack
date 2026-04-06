@@ -68,6 +68,7 @@ scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
 
 scoreboard objectives remove sgp.cooldown_repulsion
+scoreboard objectives remove sgp.cooldown_water_trident
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 

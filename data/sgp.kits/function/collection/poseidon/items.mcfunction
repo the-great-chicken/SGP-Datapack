@@ -15,6 +15,7 @@ give @s trident[ \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
         ], \
+    custom_data={sgp.water_trident:true}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
