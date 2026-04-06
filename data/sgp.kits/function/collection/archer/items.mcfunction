@@ -24,7 +24,8 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
         ], \
-    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1, "sgp.kits:kd_projectile_scaling":1}, \
+    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1, "sgp.kits:kd_projectile_scaling":1, "sgp.kits:repulsion":1}, \
+    piercing_weapon={"deals_knockback":false}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

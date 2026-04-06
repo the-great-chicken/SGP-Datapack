@@ -1,0 +1,1 @@
+scoreboard players remove @a[tag=sgp.in_game,scores={sgp.cooldown_repulsion=1..}] sgp.cooldown_repulsion 1
