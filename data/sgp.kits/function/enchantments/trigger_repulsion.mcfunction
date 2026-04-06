@@ -1,1 +1,0 @@
-scoreboard players set @s sgp.cooldown_repulsion 200

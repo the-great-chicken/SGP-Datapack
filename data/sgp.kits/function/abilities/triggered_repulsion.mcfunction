@@ -1,0 +1,1 @@
+scoreboard players set @s sgp.trigger_repulsion 0

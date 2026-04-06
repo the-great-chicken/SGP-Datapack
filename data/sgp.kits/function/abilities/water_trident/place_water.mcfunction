@@ -1,4 +1,4 @@
-#> sgp.kits:enchantments/water_trident/place_water
+#> sgp.kits:abilities/water_trident/place_water
 #
 # This function only runs when the player has passed the cooldown check and is standing in a valid air block.
 # It summons the marker, places the water, and applies the cooldown.

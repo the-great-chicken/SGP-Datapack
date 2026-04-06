@@ -37,6 +37,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: location of lootdrop chests
 - optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
+- 1 `abilities_shulker`: somewhere hidden, in an empty block, to allow abilities to work.
 
 ### Major Events
 

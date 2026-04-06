@@ -98,7 +98,7 @@ scoreboard players add #52_ticks_clock sgp.dummy 1
 execute if score #52_ticks_clock sgp.dummy matches 52.. run \
     scoreboard players set #52_ticks_clock sgp.dummy 0
 
-function sgp.kits:enchantments/tick
+function sgp.kits:abilities/tick
 
 
 # ---------- MISCELLANEOUS ----------

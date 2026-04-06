@@ -74,7 +74,10 @@ scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
 
 scoreboard objectives add sgp.cooldown_repulsion dummy
+scoreboard objectives add sgp.trigger_repulsion dummy
 scoreboard objectives add sgp.cooldown_water_trident dummy
+scoreboard objectives add sgp.drop_any custom:drop
+execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run setblock ~ ~ ~ magenta_shulker_box
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 

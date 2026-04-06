@@ -24,7 +24,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
         ], \
-    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1, "sgp.kits:kd_projectile_scaling":1, "sgp.kits:repulsion":1}, \
+    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1, "sgp.kits:kd_projectile_scaling":1}, \
     piercing_weapon={"deals_knockback":false}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -37,7 +37,7 @@ item replace entity @s armor.head with leather_helmet[ \
     lore=[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}], \
-    enchantments={protection:1}, \
+    enchantments={protection:1, "sgp.kits:repulsion":1}, \
     dyed_color=9633536, \
     trim={ \
         pattern:"coast", \
@@ -49,6 +49,7 @@ item replace entity @s armor.head with leather_helmet[ \
 
 item replace entity @s armor.chest with chainmail_chestplate[ \
     custom_name={text:"Cotte de Mailles", color:green, italic:false, bold:true}, \
+    enchantments={"sgp.kits:repulsion":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers"]} \
     ]
@@ -59,7 +60,7 @@ item replace entity @s armor.legs with leather_leggings[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false} \
         ], \
-    enchantments={protection:1}, \
+    enchantments={protection:1, "sgp.kits:repulsion":1}, \
     dyed_color=9633536, \
     trim={ \
         pattern:"spire", \
@@ -88,7 +89,7 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={protection:1, "sgp.kits:depth_strider_boosted":2}, \
+    enchantments={protection:1, "sgp.kits:depth_strider_boosted":2, "sgp.kits:repulsion":1}, \
     dyed_color=9633536, \
     trim={ \
         pattern:"spire", \

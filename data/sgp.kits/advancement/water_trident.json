@@ -23,6 +23,6 @@
     }
   },
   "rewards": {
-    "function": "sgp.kits:enchantments/water_trident/use"
+    "function": "sgp.kits:abilities/water_trident/use"
   }
 }

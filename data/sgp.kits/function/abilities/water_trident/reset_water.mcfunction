@@ -1,4 +1,4 @@
-#> sgp.kits:enchantments/water_trident/reset_water
+#> sgp.kits:abilities/water_trident/reset_water
 #
 # Check for temp water markers without players on them,
 # and replace their water back with the correct air and kill them
