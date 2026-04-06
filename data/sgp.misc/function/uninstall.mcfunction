@@ -67,7 +67,7 @@ scoreboard objectives remove sgp.alchimiste_found
 scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
 
-scoreboard objectives remove sgp.cooldown_repulsion
+scoreboard objectives remove sgp.cooldown_ability
 scoreboard objectives remove sgp.trigger_repulsion
 scoreboard objectives remove sgp.cooldown_water_trident
 scoreboard objectives remove sgp.drop_any

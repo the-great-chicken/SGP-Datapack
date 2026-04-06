@@ -7,6 +7,6 @@ execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run loot give
 execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run item replace block ~ ~ ~ container.0 with air
 kill @e[type=item,tag=sgp.dropped,limit=1]
 
-execute if entity @s[tag=sgp.archer] if score @s sgp.cooldown_repulsion matches ..0 run function sgp.kits:abilities/trigger_repulsion
+execute if score @s sgp.cooldown_ability matches ..0 run function sgp.kits:abilities/route_ability
 
 scoreboard players reset @s sgp.drop_any

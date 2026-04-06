@@ -73,7 +73,7 @@ scoreboard objectives add sgp.alchimiste_found trigger
 scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
 
-scoreboard objectives add sgp.cooldown_repulsion dummy
+scoreboard objectives add sgp.cooldown_ability dummy
 scoreboard objectives add sgp.trigger_repulsion dummy
 scoreboard objectives add sgp.cooldown_water_trident dummy
 scoreboard objectives add sgp.drop_any custom:drop
