@@ -37,7 +37,7 @@
             },
             {
               "type": "minecraft:run_function",
-              "function": "sgp.kits:abilities/triggered_repulsion"
+              "function": "sgp.kits:abilities/repulsion/triggered"
             }
           ]
         },

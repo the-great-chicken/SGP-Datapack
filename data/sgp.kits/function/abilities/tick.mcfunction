@@ -7,4 +7,14 @@ execute as @e[type=marker,tag=sgp.marker,name="temp_water"] \
         unless entity @a[tag=sgp.in_game,dx=1,dy=1,dz=1] positioned ~0.5 ~0.5 ~0.5 \
             run function sgp.kits:abilities/water_trident/reset_water
 
+# Prevents enabling ability into kit swapping exploit
+execute as @a[scores={sgp.cooldown_ability=100}] \
+    if data entity @s attributes[{id:"minecraft:scale"}].modifiers[{id:"sgp:bigger"}] \
+        run function sgp.kits:abilities/bigger/disable
+
+# Detect when a smoke grenade hits the ground
+tag @e[type=item_display,tag=sgp.smoke_visual] remove sgp.is_riding
+execute as @e[type=snowball,tag=sgp.smoke_grenade] at @s run tag @e[type=item_display,tag=sgp.smoke_visual,distance=..0.5,limit=1] add sgp.is_riding
+execute as @e[type=item_display,tag=sgp.smoke_visual,tag=!sgp.is_riding] at @s run function sgp.kits:abilities/smoke_grenade/on_ground
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger

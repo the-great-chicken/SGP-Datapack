@@ -7,6 +7,8 @@ execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run loot give
 execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run item replace block ~ ~ ~ container.0 with air
 kill @e[type=item,tag=sgp.dropped,limit=1]
 
+execute if score @s sgp.cooldown_ability matches 1.. run tellraw @s [{"text": "Vous êtes encore en cooldown pendant ", "color": "red"}, {"score": {"name": "*", "objective": "sgp.cooldown_ability"}, "color": "gold", "bold": true}, " ticks"]
+
 execute if score @s sgp.cooldown_ability matches ..0 run function sgp.kits:abilities/route_ability
 
 scoreboard players reset @s sgp.drop_any

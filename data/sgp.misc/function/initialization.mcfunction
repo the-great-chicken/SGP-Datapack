@@ -246,6 +246,7 @@ team modify sgp.seeker color dark_green
 
 # Misc
 bossbar add sgp:lgp "a"
+forceload add 0 0
 
 
 
