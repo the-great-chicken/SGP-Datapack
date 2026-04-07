@@ -1,0 +1,147 @@
+{
+  "period_ticks": 24000,
+  "tracks": {
+    "minecraft:visual/sky_color": {
+      "ease": "in_quad",
+      "keyframes": [
+        {
+          "ticks": 10000,
+          "value": "#78A7FF"
+        },
+        {
+          "ticks": 10300,
+          "value": "#91D467"
+        },
+        {
+          "ticks": 10450,
+          "value": "#78A7FF"
+        }
+      ],
+      "modifier": "override"
+    },
+    "minecraft:visual/sky_light_color": {
+      "ease": "in_quad",
+      "keyframes": [
+        {
+          "ticks": 10000,
+          "value": "#FFFFFF"
+        },
+        {
+          "ticks": 10300,
+          "value": "#a6ec9e"
+        },
+        {
+          "ticks": 10450,
+          "value": "#FFFFFF"
+        }
+      ],
+      "modifier": "override"
+    },
+    "minecraft:visual/fog_color": {
+      "ease": "in_quad",
+      "keyframes": [
+        {
+          "ticks": 10000,
+          "value": "#78A7FF"
+        },
+        {
+          "ticks": 10300,
+          "value": "#91D467"
+        },
+        {
+          "ticks": 10450,
+          "value": "#78A7FF"
+        }
+      ],
+      "modifier": "override"
+    },
+    "minecraft:visual/ambient_particles": {
+      "keyframes": [
+        {
+          "ticks": 10000,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0
+            }
+          ]
+        },
+        {
+          "ticks": 10100,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.001
+            }
+          ]
+        },
+        {
+          "ticks": 10180,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.002
+            }
+          ]
+        },
+        {
+          "ticks": 10250,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.003
+            }
+          ]
+        },
+        {
+          "ticks": 10280,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.005
+            }
+          ]
+        },
+        {
+          "ticks": 10300,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.006
+            }
+          ]
+        },
+        {
+          "ticks": 10430,
+          "value": [
+            {
+              "particle": {
+                "type": "minecraft:entity_effect",
+                "color": -10832635
+              },
+              "probability": 0.002
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

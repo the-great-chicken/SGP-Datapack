@@ -56,6 +56,9 @@ Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can shar
 ## Storages to initialize
 - `sgp:kits` with the data about hints for each kits, example: `eclaireur:{hint:"Zone Noire", hint_color:dark_gray}`. Merge it (there is more data in sgp:kits eclaireur for example)
 
+## Other stuff
+- `gamerule advance_time` must be set to `false` for some effects to work properly, and the time to be set at 10000. This limitation should be removed when the pack will be upgraded to Minecraft 26.1.
+
 # Uninstallation
 
-Run the `sgp.misc:uninstall` function, it will remove all the sgp objectives
+Run the `sgp.misc:uninstall` function, it will remove all the sgp objectives and non-usermade data
