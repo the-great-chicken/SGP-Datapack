@@ -1,6 +1,6 @@
 execute if entity @s[tag=sgp.archer] run return run function sgp.kits:abilities/repulsion/trigger
 execute if entity @s[tag=sgp.alchimiste] run return run function sgp.kits:abilities/nothing
-execute if entity @s[tag=sgp.cancer] run return run function sgp.kits:abilities/nothing
+execute if entity @s[tag=sgp.cancer] run return run function sgp.kits:abilities/bats/trigger
 execute if entity @s[tag=sgp.combattant] run return run function sgp.kits:abilities/nothing
 execute if entity @s[tag=sgp.eclaireur] run return run function sgp.kits:abilities/smoke_grenade/launch
 execute if entity @s[tag=sgp.enderman] run return run function sgp.kits:abilities/nothing

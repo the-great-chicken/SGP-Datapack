@@ -263,6 +263,9 @@ function sgp.misc:bossbar/cycle_color
 schedule clear sgp.misc:bossbar/cycle_name
 function sgp.misc:bossbar/cycle_name
 
+schedule clear sgp.kits:abilities/bats/check_for_explosion
+function sgp.kits:abilities/bats/check_for_explosion
+
 
 
 # ---------- Initialize Storages ----------
