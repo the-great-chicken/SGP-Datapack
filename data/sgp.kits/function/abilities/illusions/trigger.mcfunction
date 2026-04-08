@@ -24,7 +24,7 @@ kill @e[type=text_display,tag=sgp.temp_name]
 summon marker ~ ~00.1 ~ {Tags:["sgp.marker", "sgp.illusion_center", "sgp.illusion_init"]}
 
 execute as @e[tag=sgp.illusion_init] run function #bs.link:create_link_ata
-execute as @e[tag=sgp.illusion_init] run function #bs.health:time_to_live {with:{time:10,unit:"s",on_death:"tp @s ~ -1000 ~"}}
+execute as @e[tag=sgp.illusion_init] run function #bs.health:time_to_live {with:{time:8,unit:"s",on_death:"tp @s ~ -1000 ~"}}
 execute as @e[tag=sgp.illusion_init] run team join sgp.Illusion @s
 
 # Copy the stuff from the player
