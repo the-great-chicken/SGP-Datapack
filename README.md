@@ -22,7 +22,7 @@ You can bypass these dependencies by removing every non-vanilla command from the
 
 # Installation
 
-Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tags `sgp.marker` and `global.ignore`
+Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tag `sgp.marker` and `smithed.entity`.
 
 ## Markers to create
 

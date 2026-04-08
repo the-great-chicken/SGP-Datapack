@@ -163,6 +163,8 @@ team remove sgp.Canard
 
 team remove sgp.PGSEC
 
+team remove sgp.Illusion
+
 
 # Misc
 bossbar remove sgp:lgp

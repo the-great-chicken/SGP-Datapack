@@ -244,6 +244,9 @@ team add sgp.seeker "Chasseurs"
 team modify sgp.seeker friendlyFire false
 team modify sgp.seeker color dark_green
 
+team add sgp.Illusion
+team modify sgp.Illusion collisionRule never
+
 # Misc
 bossbar add sgp:lgp "a"
 forceload add 0 0

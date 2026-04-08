@@ -18,6 +18,7 @@ execute as @e[type=snowball,tag=sgp.smoke_grenade] at @s run tag @e[type=item_di
 execute as @e[type=item_display,tag=sgp.smoke_visual,tag=!sgp.is_riding] at @s run function sgp.kits:abilities/smoke_grenade/on_ground
 
 # Make mannequins imitate players
-execute as @e[type=mannequin,tag=sgp.illusion,predicate=bs.link:has_link] run function sgp.kits:abilities/illusions/tick
+# As soon as https://github.com/mcbookshelf/bookshelf/issues/38 is implemented, make everything use bookshelf
+execute as @a[tag=sgp.in_game,tag=sgp.alchimiste] at @s run function sgp.kits:abilities/illusions/tick
 
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger

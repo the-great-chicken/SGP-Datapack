@@ -16,8 +16,8 @@ Every commit to the repository's main branche must be made from a pull request. 
 The datapack's prefix is `sgp.` ; every **namespace**, **objective** or **tag** should start with this prefix
 
 ### Entities Tags
-When you call @e you shoud not forget to add `tag=!global.ignore` and also `global.ignore.pos`, `global.ignore.gui` and `global.ignore.kill` depending on the action you're doing, to prevent your command from interacting with potential entities from other datapacks.
-You should add the necessary tags to custom entities you create, and also add `sgp.marker` to markers for example, so that you can use `@n[type=marker,tag=sgp.marker,name=<name>]`
+When you call @e you shoud not forget to add `tag=!smithed.entity` to prevent your command from interacting with potential entities from other datapacks (if you don't add `tag=sgp.<something>` of course).
+You should add `smithed.entity` to custom vanilla-like entities you create (not markers or mannequins for ex), and also add `sgp.marker` to markers for example, so that you can use `@n[type=marker,tag=sgp.marker,name=<name>]`
 
 ### Function Documentation
 Each fonction should be documented in the following way:
