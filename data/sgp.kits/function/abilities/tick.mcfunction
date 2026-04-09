@@ -21,4 +21,11 @@ execute as @e[type=item_display,tag=sgp.smoke_visual,tag=!sgp.is_riding] at @s r
 # As soon as https://github.com/mcbookshelf/bookshelf/issues/38 is implemented, make everything use bookshelf
 execute as @a[tag=sgp.in_game,tag=sgp.alchimiste] at @s run function sgp.kits:abilities/illusions/tick
 
+# Update cleave animation
+execute if entity @a[tag=sgp.in_game,tag=sgp.combattant,scores={sgp.cooldown_ability=1..}] run function sgp.kits:abilities/cleave/animation_tick
+
+# We need to know the attack damage of the player for Cleave, but if he drops his weapon, the attribute becomes 1...
+# This should get optimized if a solution is found (we shouldn't have to edit a score every time)
+execute as @a[tag=sgp.in_game] unless score @s sgp.drop_any matches 1.. store result score @s sgp.current_attack_damage run attribute @s attack_damage get 10
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger

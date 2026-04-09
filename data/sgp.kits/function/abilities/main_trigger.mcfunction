@@ -1,6 +1,8 @@
 execute unless entity @s[tag=sgp.in_game] run return run scoreboard players reset @s sgp.drop_any
 
 tag @e[type=item,tag=!smithed.entity,distance=..4,nbt={Age:0s},limit=1] add sgp.dropped
+
+# Gives the item back with /loot give, making it go automatically in the right stack
 execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] \
     run item replace block ~ ~ ~ container.0 from entity @e[type=item,tag=sgp.dropped,limit=1] contents
 execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run loot give @s mine ~ ~ ~

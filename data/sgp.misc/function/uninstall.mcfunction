@@ -72,6 +72,7 @@ scoreboard objectives remove sgp.trigger_repulsion
 scoreboard objectives remove sgp.cooldown_water_trident
 scoreboard objectives remove sgp.drop_any
 execute as @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run setblock ~ ~ ~ air
+scoreboard objectives remove sgp.current_attack_damage
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
