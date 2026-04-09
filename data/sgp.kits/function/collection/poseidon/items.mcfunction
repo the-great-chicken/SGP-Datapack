@@ -13,7 +13,7 @@ give @s trident[ \
     enchantment_glint_override=true, \
     enchantments={riptide:1}, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:7.5, operation:"add_value"}, \
         ], \
     custom_data={sgp.water_trident:true}, \
     unbreakable={}, \
@@ -29,7 +29,7 @@ give @s trident[ \
     enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     enchantment_glint_override=false, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:7.5, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \

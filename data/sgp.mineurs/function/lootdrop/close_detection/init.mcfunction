@@ -9,7 +9,7 @@ advancement revoke @s only sgp.mineurs:open_chest
 
 execute as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
     if block ~ ~ ~ trapped_chest \
-        run data modify block ~ ~ ~ LootTable set value "sgp.mineurs:empty"
+        run data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
 
 # Tagging player for schedule function to keep running.
 tag @s add sgp.container_open

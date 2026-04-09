@@ -12,7 +12,7 @@ item replace entity @s hotbar.0 with diamond_sword[ \
         ], \
     enchantments={sweeping_edge:3}, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.0, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:6.0, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \

@@ -9,7 +9,7 @@
     run data modify storage sgp:close_detection Items set from block ~ ~ ~ Items
 
 # Empty LootTable is applied to container after checks.
-data modify block ~ ~ ~ LootTable set value "sgp.mineurs:empty"
+data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
 
 # Shut off if no players have the container open.
 execute if entity @a[tag=sgp.container_open] run function #bs.schedule:schedule {run:"execute as @e[type=marker,tag=sgp.marker,name=\"Lootdrop\"] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",with:{id:"close_detection",time:1,unit:"t"}}

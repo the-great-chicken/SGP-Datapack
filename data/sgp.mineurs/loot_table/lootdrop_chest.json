@@ -1232,7 +1232,7 @@
               "components": {
                 "minecraft:attribute_modifiers": [
                   {
-                    "id": "sgp.damage",
+                    "id": "sgp:damage",
                     "type": "minecraft:attack_damage",
                     "amount": 5,
                     "operation": "add_value"

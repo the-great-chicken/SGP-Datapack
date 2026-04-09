@@ -10,7 +10,7 @@ item replace entity @s hotbar.0 with stone_sword[ \
         {text:"6 dégâts", color:blue, italic:false} \
         ], \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:5.0, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
