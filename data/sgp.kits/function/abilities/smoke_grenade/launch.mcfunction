@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/smoke_grenade/launch
 
-scoreboard players set @s sgp.cooldown_ability 20
+scoreboard players set @s sgp.cooldown_ability 200
 
 # Summons a marker at 0 0 0, but 1 block in the direction where the player is looking at. That gives vectors of where the player is aiming as the marker's coordinates
 execute rotated as @s positioned 0.0 0.0 0.0 run summon marker ^ ^ ^1 {Tags:["sgp.aim_vector"]}

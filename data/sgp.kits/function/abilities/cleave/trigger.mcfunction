@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/cleave/trigger
 
-scoreboard players add @s sgp.cooldown_ability 40
+scoreboard players add @s sgp.cooldown_ability 200
 
 # Cool sound (to be modified)
 playsound minecraft:entity.player.attack.sweep player @a[tag=sgp.in_game] ~ ~ ~ 1 0.5
@@ -24,6 +24,6 @@ tag @e[tag=sgp.giant_sweep_new] remove sgp.giant_sweep_new
 tag @s add sgp.attacker
 
 # Target all entities within 5 blocks and run the damage check on them
-execute as @e[tag=sgp.in_game,tag=!sgp.peaceful,distance=0.1..5] at @s run function sgp.kits:abilities/cleave/check
+execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,distance=0.1..5] at @s run function sgp.kits:abilities/cleave/check
 
 tag @s remove sgp.attacker

@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/fangs/trigger
 
-scoreboard players set @s sgp.cooldown_ability 40
+scoreboard players set @s sgp.cooldown_ability 200
 
 scoreboard players set #nbr_fangs sgp.dummy 9
 

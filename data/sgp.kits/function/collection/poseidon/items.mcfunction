@@ -64,7 +64,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
 
 
 # ---------- FOOD ----------
-item replace entity @s weapon.offhand with cooked_cod[ \
+item replace entity @s hotbar.1 with cooked_cod[ \
     custom_name={text:"Morue", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
         [ \

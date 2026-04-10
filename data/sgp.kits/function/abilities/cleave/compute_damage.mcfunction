@@ -10,7 +10,7 @@ execute unless data entity @s {HurtTime:0s} run data modify storage sgp:data kit
 execute unless data entity @s {HurtTime:0s} run function sgp.kits:abilities/cleave/get_last_damage with storage sgp:data kits.cleave
 
 # Cleave damage here
-scoreboard players add #math_instant sgp.dummy 5
+scoreboard players add #math_instant sgp.dummy 60
 
 execute store result storage sgp:data kits.cleave.last_damage float 0.1 run scoreboard players get #math_instant sgp.dummy
 function sgp.kits:abilities/cleave/deal_damage with storage sgp:data kits.cleave
