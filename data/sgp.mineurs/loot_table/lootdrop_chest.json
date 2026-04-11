@@ -1578,7 +1578,8 @@
                       "duration": 1760
                     }
                   ]
-                }
+                },
+                "potion_duration_scale": 1.0
               }
             },
             {
@@ -1689,7 +1690,8 @@
                       "duration": 256
                     }
                   ]
-                }
+                },
+                "potion_duration_scale": 1.0
               }
             },
             {
@@ -1800,7 +1802,8 @@
                       "duration": 120
                     }
                   ]
-                }
+                },
+                "potion_duration_scale": 1.0
               }
             },
             {

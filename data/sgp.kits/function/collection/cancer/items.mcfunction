@@ -114,6 +114,7 @@ item replace entity @s hotbar.3 with tipped_arrow[ \
             {id:"levitation", amplifier:3, duration:256} \
             ] \
         }, \
+    potion_duration_scale=1.0, \
     tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 5
 
@@ -127,6 +128,7 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
             {id:"slowness", amplifier:3, duration:512} \
             ] \
         }, \
+    potion_duration_scale=1.0, \
     tooltip_display= {hidden_components:["potion_contents"]}, \
     ] 5
 

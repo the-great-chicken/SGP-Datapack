@@ -27,6 +27,7 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_1=1..}] run function sgp.kits:
                 {id:"resistance", amplifier:1, duration:160} \
                 ] \
             }, \
+        potion_duration_scale=1.0, \
         tooltip_display={hidden_components:["potion_contents"]}, \
         ]', \
     actionbar:' \

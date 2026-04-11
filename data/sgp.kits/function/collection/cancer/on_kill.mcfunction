@@ -14,6 +14,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
                 {id:"levitation", amplifier:3, duration:256} \
                 ] \
             }, \
+        potion_duration_scale=1.0, \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:'tipped_arrow[ \
@@ -26,6 +27,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
                 {id:"slowness", amplifier:3, duration:512} \
                 ] \
             }, \
+        potion_duration_scale=1.0, \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     actionbar:' \

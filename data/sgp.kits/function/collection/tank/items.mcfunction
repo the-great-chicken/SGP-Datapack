@@ -144,6 +144,7 @@ item replace entity @s hotbar.7 with tipped_arrow[ \
             {id:"resistance", amplifier:1, duration:160} \
             ] \
         }, \
+    potion_duration_scale=1.0, \
     tooltip_display={hidden_components:["potion_contents"]}, \
     ] 5
 

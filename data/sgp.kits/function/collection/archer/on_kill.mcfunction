@@ -28,6 +28,7 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 {id:"slowness", amplifier:1, duration:1760} \
                 ] \
             }, \
+        potion_duration_scale=1.0, \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
