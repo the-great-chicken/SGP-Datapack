@@ -28,4 +28,6 @@ execute if entity @a[tag=sgp.in_game,tag=sgp.combattant,scores={sgp.cooldown_abi
 # This should get optimized if a solution is found (we shouldn't have to edit a score every time)
 execute as @a[tag=sgp.in_game] unless score @s sgp.drop_any matches 1.. store result score @s sgp.current_attack_damage run attribute @s attack_damage get 10
 
+execute as @e[type=marker,tag=sgp.fire_explosion] run function sgp.kits:abilities/tnt/do_fire
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
