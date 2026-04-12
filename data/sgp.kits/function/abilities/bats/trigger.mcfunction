@@ -12,4 +12,4 @@ execute summon armor_stand run function sgp.kits:abilities/bats/hide_equipment
 
 tag @s remove sgp.processing
 
-schedule function sgp.kits:abilities/bats/restore_scheduled 100t
+schedule function sgp.kits:abilities/bats/restore_scheduled 100t append

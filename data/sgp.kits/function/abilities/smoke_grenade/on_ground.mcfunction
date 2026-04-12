@@ -1,5 +1,5 @@
 #> sgp.kits:abilities/smoke_grenade/on_ground
 
-particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 2700 normal @a[tag=!sgp.eclaireur]
-particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 300 force
+particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 2750 normal @a[tag=!sgp.eclaireur]
+particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 250 force
 kill @s

@@ -20,6 +20,7 @@ scoreboard players add @s sgp.eclaireur_found 0
 
 scoreboard players add @s sgp.cooldown_ability 0
 scoreboard players add @s sgp.cooldown_water_trident 0
+scoreboard players add @s sgp.pecking_timer 0
 
 execute unless score @s sgp.uuid matches 0.. unless score @s sgp.uuid matches ..0 store result score @s sgp.uuid run data get entity @s UUID[1]
 

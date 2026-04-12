@@ -31,6 +31,9 @@ execute as @a[tag=sgp.in_game] unless score @s sgp.drop_any matches 1.. store re
 # Summon particles around exploded tnts, and do fire damage to players inside
 execute as @e[type=marker,tag=sgp.fire_explosion] run function sgp.kits:abilities/tnt/do_fire
 
-execute as @a[tag=sgp.is_pecking] run function sgp.kits:abilities/pecking/damage
+execute as @a[tag=sgp.is_pecking] anchored eyes at @s run function sgp.kits:abilities/pecking/damage
+
+# Make the interaction entity imitate the TNT position, to be able to hit it
+execute as @e[type=interaction,tag=sgp.tnt_interaction,predicate=bs.link:has_link] run function #bs.link:imitate_pos
 
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
