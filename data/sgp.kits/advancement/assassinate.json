@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "took_hit": {
+      "trigger": "minecraft:entity_hurt_player"
+    }
+  },
+  "rewards": {
+    "function": "sgp.kits:abilities/assassinate/trigger"
+  }
+}

@@ -24,7 +24,7 @@ item replace entity @s armor.head with player_head[ \
     profile="WelcomeToMoes48", \
     enchantments={binding_curse:1, "sgp.kits:water_damage":1}, \
     unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","profile"]} \
     ]
 
 item replace entity @s armor.chest with leather_chestplate[ \

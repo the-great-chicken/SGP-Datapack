@@ -36,4 +36,6 @@ execute as @a[tag=sgp.is_pecking] anchored eyes at @s run function sgp.kits:abil
 # Make the interaction entity imitate the TNT position, to be able to hit it
 execute as @e[type=interaction,tag=sgp.tnt_interaction,predicate=bs.link:has_link] run function #bs.link:imitate_pos
 
+execute as @a[tag=sgp.assassin] at @s rotated as @s run function sgp.kits:abilities/assassinate/particles
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
