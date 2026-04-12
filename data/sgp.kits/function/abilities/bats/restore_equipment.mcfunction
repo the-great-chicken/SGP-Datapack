@@ -57,10 +57,7 @@ function sgp.kits:abilities/bats/restore_hotbar_slot {slot: "hotbar.7"}
 function sgp.kits:abilities/bats/restore_hotbar_slot {slot: "hotbar.8"}
 
 # Offhand
-data remove entity @s equipment.offhand.components."minecraft:item_model"
-data modify entity @s equipment.offhand.components."minecraft:item_model" set from entity @s equipment.offhand.components."minecraft:custom_data".backup_model
-data remove entity @s equipment.offhand.components."minecraft:custom_data".backup_model
-item replace entity @a[tag=sgp.processing,limit=1] weapon.offhand from entity @s weapon.offhand
+function sgp.kits:abilities/bats/restore_hotbar_slot {slot: "weapon.offhand"}
 
 
 # --- CLEANUP ---

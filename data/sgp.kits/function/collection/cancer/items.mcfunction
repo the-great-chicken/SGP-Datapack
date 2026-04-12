@@ -13,9 +13,10 @@ item replace entity @s hotbar.0 with stick[ \
         ], \
     enchantments={knockback:4}, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.5, operation:"add_value"} \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:6.5, operation:"add_value"} \
         ], \
-    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]}, \
+    item_model="sgp.kits:cancer/stick" \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -27,7 +28,8 @@ item replace entity @s hotbar.1 with bow[ \
         ], \
     enchantments={punch:4, flame:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]}, \
+    item_model="sgp.kits:cancer/bow" \
     ]
 
 
@@ -118,7 +120,8 @@ item replace entity @s hotbar.3 with tipped_arrow[ \
             ] \
         }, \
     potion_duration_scale=1.0, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display={hidden_components:["potion_contents"]}, \
+    item_model="sgp.kits:cancer/levitation" \
     ] 5
 
 item replace entity @s hotbar.4 with tipped_arrow[ \
@@ -133,35 +136,38 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
         }, \
     potion_duration_scale=1.0, \
     tooltip_display= {hidden_components:["potion_contents"]}, \
+    item_model="sgp.kits:cancer/slowness" \
     ] 5
 
 item replace entity @s hotbar.5 with splash_potion[ \
-        custom_name={text:"Potion de Rapidité", color:dark_red, italic:false, bold:true}, \
-        lore=[ \
-            {text:"➠ Rapidité II (0:15)", color:aqua, italic:false} \
-            ], \
-        potion_contents={ \
-            custom_effects: [ \
-                {id:"speed", amplifier:1, duration:300} \
-                ] \
-            }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
-        max_stack_size=64 \
+    custom_name={text:"Potion de Rapidité", color:dark_red, italic:false, bold:true}, \
+    lore=[ \
+        {text:"➠ Rapidité II (0:15)", color:aqua, italic:false} \
+        ], \
+    potion_contents={ \
+        custom_effects: [ \
+            {id:"speed", amplifier:1, duration:300} \
+            ] \
+        }, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
+    item_model="sgp.kits:cancer/speed", \
+    max_stack_size=64 \
     ] 3
 
 
 item replace entity @s hotbar.6 with splash_potion[ \
-        custom_name={text:"Potion de Saut", color:dark_red, italic:false, bold:true}, \
-        lore=[ \
-            {text:"⇪ Sauts améliorés III (0:30)", color:green, italic:false} \
-            ], \
-        potion_contents={ \
-            custom_effects: [ \
-                {id:"jump_boost", amplifier:2, duration:600} \
-                ] \
-            }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
-        max_stack_size=64 \
+    custom_name={text:"Potion de Saut", color:dark_red, italic:false, bold:true}, \
+    lore=[ \
+        {text:"⇪ Sauts améliorés III (0:30)", color:green, italic:false} \
+        ], \
+    potion_contents={ \
+        custom_effects: [ \
+            {id:"jump_boost", amplifier:2, duration:600} \
+            ] \
+        }, \
+    tooltip_display= {hidden_components:["potion_contents"]}, \
+    item_model="sgp.kits:cancer/jump", \
+    max_stack_size=64 \
     ] 3
 
 
@@ -173,7 +179,8 @@ item replace entity @s weapon.offhand with cooked_beef[ \
             {text:"Régénère jusqu'à 5", color:gray, italic:false}, \
             {text:"❤", color:red} \
             ] \
-        ] \
+        ], \
+    item_model="sgp.kits:cancer/beef" \
     ] 32
 
 item replace entity @s hotbar.2 with golden_apple[ \
@@ -185,5 +192,6 @@ item replace entity @s hotbar.2 with golden_apple[ \
             {text:" + 2"}, \
             {text:"❤", color:yellow} \
             ] \
-        ] \
+        ], \
+    item_model="sgp.kits:cancer/golden_apple" \
     ] 4

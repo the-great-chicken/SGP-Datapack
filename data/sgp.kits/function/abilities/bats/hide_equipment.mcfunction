@@ -38,13 +38,19 @@ data modify entity @s equipment.head.components."minecraft:item_model" set value
 
 # --- HIDE HELD ITEMS (Mainhand, Offhand) ---
 # Mainhand
-data modify entity @s equipment.mainhand.components."minecraft:custom_data".backup_model set from entity @s equipment.mainhand.components."minecraft:item_model"
-data modify entity @s equipment.mainhand.components."minecraft:item_model" set value "sgp.kits:empty_model"
+# Mark special items (they already have an item_model) vs vanilla items (no item_model)
+execute if data entity @s equipment.mainhand.components."minecraft:item_model" run data modify entity @s equipment.mainhand.components."minecraft:custom_data".hidden_special set value 1b
+execute unless data entity @s equipment.mainhand.components."minecraft:item_model" run data modify entity @s equipment.mainhand.components."minecraft:custom_data".hidden_vanilla set value 1b
 
-# Offhand
-data modify entity @s equipment.offhand.components."minecraft:custom_data".backup_model set from entity @s equipment.offhand.components."minecraft:item_model"
-data modify entity @s equipment.offhand.components."minecraft:item_model" set value "sgp.kits:empty_model"
+# For special items, merge the "hidden" string into custom_model_data; For vanilla items, apply the empty item_model
+execute if data entity @s equipment.mainhand.components."minecraft:custom_data".hidden_special run data modify entity @s equipment.mainhand.components."minecraft:custom_model_data" merge value {strings:["hidden"]}
+execute if data entity @s equipment.mainhand.components."minecraft:custom_data".hidden_vanilla run data modify entity @s equipment.mainhand.components."minecraft:item_model" set value "sgp.kits:empty_model"
 
+# Offhand (same)
+execute if data entity @s equipment.offhand.components."minecraft:item_model" run data modify entity @s equipment.offhand.components."minecraft:custom_data".hidden_special set value 1b
+execute unless data entity @s equipment.offhand.components."minecraft:item_model" run data modify entity @s equipment.offhand.components."minecraft:custom_data".hidden_vanilla set value 1b
+execute if data entity @s equipment.offhand.components."minecraft:custom_data".hidden_special run data modify entity @s equipment.offhand.components."minecraft:custom_model_data" merge value {strings:["hidden"]}
+execute if data entity @s equipment.offhand.components."minecraft:custom_data".hidden_vanilla run data modify entity @s equipment.offhand.components."minecraft:item_model" set value "sgp.kits:empty_model"
 
 # --- RETURN ITEMS TO PLAYER ---
 item replace entity @a[tag=sgp.processing,limit=1] armor.head from entity @s armor.head
