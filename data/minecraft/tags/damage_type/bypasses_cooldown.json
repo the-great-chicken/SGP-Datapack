@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "sgp.kits:giant_sweep",
-    "sgp.kits:pecking"
+    "sgp.kits:pecking",
+    "sgp.kits:ray"
   ]
 }

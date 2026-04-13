@@ -38,4 +38,6 @@ execute as @e[type=interaction,tag=sgp.tnt_interaction,predicate=bs.link:has_lin
 
 execute as @a[tag=sgp.assassin] at @s rotated as @s run function sgp.kits:abilities/assassinate/particles
 
+execute as @a[tag=sgp.is_radiating] at @s run function sgp.kits:abilities/rays/tick
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger

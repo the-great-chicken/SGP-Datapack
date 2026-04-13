@@ -7,6 +7,6 @@ execute if entity @s[tag=sgp.enderman] run return run function sgp.kits:abilitie
 execute if entity @s[tag=sgp.pigeon] anchored eyes run return run function sgp.kits:abilities/pecking/start
 execute if entity @s[tag=sgp.poseidon] run return run function sgp.kits:abilities/splash
 execute if entity @s[tag=sgp.pyromane] run return run function sgp.kits:abilities/tnt/summon
-execute if entity @s[tag=sgp.roi] run return run function sgp.kits:abilities/nothing
+execute if entity @s[tag=sgp.roi] run return run function sgp.kits:abilities/rays/summon
 execute if entity @s[tag=sgp.tank] run return run function sgp.kits:abilities/bigger/enable
 execute if entity @s[tag=sgp.vindicateur] run return run function sgp.kits:abilities/fangs/trigger
