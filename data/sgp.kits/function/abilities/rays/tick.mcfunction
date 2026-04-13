@@ -15,5 +15,4 @@ playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 
 tag @s remove sgp.radiator
 
-execute if score @s sgp.cooldown_ability matches ..100 run tag @s remove sgp.is_radiating
-execute if score @s sgp.cooldown_ability matches ..100 run kill @e[type=item_display,tag=sgp.ray,sort=nearest,limit=8]
+execute if score @s sgp.cooldown_ability matches ..100 run function sgp.kits:abilities/rays/end
