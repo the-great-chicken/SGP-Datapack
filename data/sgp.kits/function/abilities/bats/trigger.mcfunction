@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/bats/trigger
 
-scoreboard players set @s sgp.cooldown_ability 200
+scoreboard players set @s sgp.cooldown_ability 400
 
 effect give @s invisibility 5 0 true
 effect give @s weakness 5 0 true

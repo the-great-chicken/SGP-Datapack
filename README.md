@@ -20,6 +20,10 @@ The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from
 You need [**CommandAPI**](https://commandapi.jorel.dev/) to use plugin commands in datapacks, as well as [**Luckperms**](https://luckperms.net/), the [**TGCPlugin**](https://github.com/the-great-chicken/TGC-Plugin-v2/tree/main) and [**DiscordSRV**](https://www.spigotmc.org/resources/discordsrv.18494/) + **_an add-on for the /move command_**.
 You can bypass these dependencies by removing every non-vanilla command from the datapack. The actions performed by these custom commands are independent from the rest of the datapack (making players glow, moving them from a voice channel to another...) so removing them shouldn't break anything.
 
+## Compatibility issues
+
+We do replace the #bypasses_shield damage type tag with all its vanilla damage type, to allow us to have a damage type that bypasses armor but not shield.
+
 # Installation
 
 Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tag `sgp.marker` and `smithed.entity`.

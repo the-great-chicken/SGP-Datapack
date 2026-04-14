@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/assassinate/enable
 
-scoreboard players set @s sgp.cooldown_ability 200
+scoreboard players set @s sgp.cooldown_ability 400
 
 tag @s add sgp.assassin
 

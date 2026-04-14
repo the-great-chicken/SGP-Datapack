@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/cleave/trigger
 
-scoreboard players add @s sgp.cooldown_ability 200
+scoreboard players add @s sgp.cooldown_ability 300
 
 # Cool sound (to be modified)
 playsound minecraft:entity.player.attack.sweep player @a[tag=sgp.in_game] ~ ~ ~ 1 0.5

@@ -29,7 +29,7 @@ execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned
 tag @s remove sgp.source_peck
 
 # Stop pecking if not looking at player for more than 5 ticks
-execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run scoreboard players set @s sgp.cooldown_ability 200
+execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run scoreboard players set @s sgp.cooldown_ability 400
 execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run return run tag @s remove sgp.is_pecking
 
 

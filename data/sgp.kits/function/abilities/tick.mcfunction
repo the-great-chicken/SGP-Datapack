@@ -13,7 +13,7 @@ execute as @e[tag=sgp.marker,name="temp_water",type=marker] \
 
 
 # Prevents enabling ability into kit swapping exploit
-execute as @a[scores={sgp.cooldown_ability=100}] \
+execute as @a[scores={sgp.cooldown_ability=300}] \
     if data entity @s attributes[{id:"minecraft:scale"}].modifiers[{id:"sgp:bigger"}] \
         run function sgp.kits:abilities/bigger/disable
 

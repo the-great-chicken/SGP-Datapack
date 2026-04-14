@@ -2,7 +2,7 @@
 #
 # Summons 3 mannequins in the other cardinal directions, with a 10s TTL
 
-scoreboard players set @s sgp.cooldown_ability 200
+scoreboard players set @s sgp.cooldown_ability 400
 team join sgp.Illusion @s
 
 # Summon mannequins with the player's profile

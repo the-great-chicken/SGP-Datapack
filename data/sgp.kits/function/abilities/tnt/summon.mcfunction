@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/tnt/summon
 
-scoreboard players set @s sgp.cooldown_ability 20
+scoreboard players set @s sgp.cooldown_ability 400
 
 summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt"]}
 

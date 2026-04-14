@@ -41,4 +41,4 @@ playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 
 tag @s remove sgp.radiator
 
-execute if score @s sgp.cooldown_ability matches ..100 run function sgp.kits:abilities/rays/end
+execute if score @s sgp.cooldown_ability matches ..300 run function sgp.kits:abilities/rays/end
