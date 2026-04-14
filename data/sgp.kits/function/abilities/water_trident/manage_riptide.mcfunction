@@ -1,3 +1,5 @@
+#> sgp.kits:abilities/water_trident/manage_riptide
+
 # If the player is NOT in water and DOES NOT have a cooldown.
 # We attempt to remove Riptide (if they have it), and instantly END the function using `return`.
 execute positioned ~ ~ ~ unless predicate sgp.misc:is_in_water \

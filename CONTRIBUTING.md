@@ -4,6 +4,7 @@
 I suggest using the following VSCode extensions (ordered by importance):
 - [Data-pack Helper Plus](https://marketplace.visualstudio.com/items?itemName=SPGoding.datapack-language-server)
 - [syntax-mcfunction](https://marketplace.visualstudio.com/items?itemName=MinecraftCommands.syntax-mcfunction)
+- [Datapack Optimization Helper](https://marketplace.visualstudio.com/items?itemName=TheSalt.datapack-optimization)
 - [Datapack Icons](https://marketplace.visualstudio.com/items?itemName=SuperAnt.mc-dp-icons)
 - [NBT Viewer](https://marketplace.visualstudio.com/items?itemName=Misodee.vscode-nbt)
 - [VSCode Progressive Increment](https://marketplace.visualstudio.com/items?itemName=narsenico.vscode-progressive-increment) if your code is bad

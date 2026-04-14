@@ -3,6 +3,8 @@
 # Checks if we are looking at player. If we are, start pecking.
 # Else make a noise but doesn't start ability cooldown
 
+# warn-off-file execute-group
+
 # execute as @s run function #bs.view:at_aimed_entity {run:"tag @s add sgp.is_pecking", with:{max_distance:5}}
 
 # Not using bookshelf, to have a "thick" ray cuz else it's too hard to aim, and desyncs are too frequent

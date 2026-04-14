@@ -1,13 +1,15 @@
+#> sgp.kits:abilities/cleave/animation_tick
+
 # 1. Increment the age of all active sweeps
-scoreboard players add @e[type=item_display,tag=sgp.giant_sweep] sgp.timer 1
+scoreboard players add @s sgp.timer 1
 
 # 2. Swap the item model based on their exact age
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=1}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_1']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=2}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_2']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=3}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_3']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=4}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_4']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=5}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_5']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=6}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_6']
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=7}] run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_7']
+execute if score @s sgp.timer matches 1 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_1']
+execute if score @s sgp.timer matches 2 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_2']
+execute if score @s sgp.timer matches 3 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_3']
+execute if score @s sgp.timer matches 4 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_4']
+execute if score @s sgp.timer matches 5 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_5']
+execute if score @s sgp.timer matches 6 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_6']
+execute if score @s sgp.timer matches 7 run return run item replace entity @s container.0 with paper[item_model='sgp.kits:giant_sweep_7']
 
-execute as @e[type=item_display,tag=sgp.giant_sweep,scores={sgp.timer=8..}] run kill @s
+execute if score @s sgp.timer matches 8 run return run kill @s

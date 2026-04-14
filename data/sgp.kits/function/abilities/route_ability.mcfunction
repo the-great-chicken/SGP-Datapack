@@ -1,3 +1,5 @@
+#> sgp.kits:abilities/route_ability
+
 execute if entity @s[tag=sgp.archer] run return run function sgp.kits:abilities/repulsion/trigger
 execute if entity @s[tag=sgp.alchimiste] run return run function sgp.kits:abilities/illusions/trigger
 execute if entity @s[tag=sgp.cancer] run return run function sgp.kits:abilities/bats/trigger

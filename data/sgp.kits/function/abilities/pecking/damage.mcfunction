@@ -3,6 +3,8 @@
 # Find the player we are pecking. Damage him every few tick.
 # If we're not looking at a player anymore, start ability cooldown.
 
+# warn-off-file execute-group
+
 # execute as @s run function #bs.view:as_aimed_entity {run:"tag @s add sgp.is_being_pecked", with:{max_distance:5}}
 
 # Not using bookshelf, to have a "thick" ray cuz else it's too hard, and desyncs are too frequent

@@ -180,8 +180,6 @@ schedule clear sgp.misc:bossbar/cycle_color
 
 schedule clear sgp.misc:bossbar/cycle_name
 
-schedule clear sgp.kits:abilities/bats/check_for_explosion
-
 # ---------- Remove Storages -----------
 
 data remove storage sgp:data majeurs

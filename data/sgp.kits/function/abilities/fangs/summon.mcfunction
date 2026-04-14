@@ -2,6 +2,7 @@
 #
 # Recursively summons the fangs, snapping them on a block, in the direction the player is looking towards
 
+# warn-off unreachable-condition
 execute if score #nbr_fangs sgp.dummy matches ..0 run return 1
 execute unless predicate sgp.kits:is_context_inside_bounds run return fail
 

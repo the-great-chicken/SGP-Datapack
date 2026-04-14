@@ -16,14 +16,11 @@ playsound minecraft:entity.player.attack.sweep player @a[tag=sgp.in_game] ~ ~ ~ 
 playsound minecraft:entity.player.attack.sweep player @a[tag=sgp.in_game] ~ ~ ~ 1 1.5
 
 # Summon the giant sweep display entity 2 blocks in front of the player
-execute at @s rotated ~ 0 run summon item_display ^ ^-0.5 ^3.5 {Tags:["sgp.giant_sweep", "sgp.giant_sweep_new"], item:{id:"minecraft:paper", count:1, components:{"minecraft:item_model":"sgp.kits:giant_sweep_0"}}, transformation:{translation:[0f,0f,0f], scale:[9,9,9], left_rotation:[0.707f, 0f, 0f, 0.707f], right_rotation:[0f,0f,0f,1f]}}
-scoreboard players set @e[type=item_display,tag=sgp.giant_sweep_new] sgp.timer 0
-execute rotated as @s as @e[type=item_display,tag=sgp.giant_sweep_new] positioned as @s run tp @s ~ ~1 ~ ~ 0
-tag @e[tag=sgp.giant_sweep_new] remove sgp.giant_sweep_new
+execute rotated ~ 0 run summon item_display ^ ^-0.5 ^3.5 {Tags:["sgp.giant_sweep", "sgp.giant_sweep_new"], item:{id:"minecraft:paper", count:1, components:{"minecraft:item_model":"sgp.kits:giant_sweep_0"}}, transformation:{translation:[0f,0f,0f], scale:[9,9,9], left_rotation:[0.707f, 0f, 0f, 0.707f], right_rotation:[0f,0f,0f,1f]}}
 
-tag @s add sgp.attacker
+execute rotated as @s as @e[tag=sgp.giant_sweep_new,distance=..5,type=item_display] run function sgp.kits:abilities/cleave/setup_display
 
 # Target all entities within 5 blocks and run the damage check on them
+tag @s add sgp.attacker
 execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,distance=0.1..5] at @s run function sgp.kits:abilities/cleave/check
-
 tag @s remove sgp.attacker
