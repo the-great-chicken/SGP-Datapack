@@ -5,6 +5,3 @@ execute as @a[tag=sgp.attacker,limit=1] store result score #result bs.data run f
 
 # If the target is inside the 180-degree semi-circle (score = 1), deal damage to it
 execute if score #result bs.data matches 1 run damage @s 5 sgp.kits:giant_sweep by @p[tag=sgp.attacker] from @p[tag=sgp.attacker]
-
-# This is if we're not using the bypass_cooldown damage type
-# execute if score #result bs.data matches 1 run function sgp.kits:abilities/cleave/compute_damage
