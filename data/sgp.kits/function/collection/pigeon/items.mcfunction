@@ -11,9 +11,11 @@ item replace entity @s hotbar.0 with feather[ \
         {text:"⬱ Recul III", color:"#6F4E37", italic:false}, \
         {text:"4 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={knockback:3, sharpness:5}, \
-    unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    enchantments={knockback:3}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.0, operation:"add_value"} \
+        ], \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \

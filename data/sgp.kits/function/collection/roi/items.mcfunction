@@ -10,9 +10,9 @@ item replace entity @s hotbar.0 with golden_sword[ \
         {text:"⚔ Tranchant VII", color:dark_red, italic:false}, \
         {text:"9 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={sharpness:7}, \
+    enchantment_glint_override=true, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:8.0, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \

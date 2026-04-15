@@ -11,8 +11,11 @@ item replace entity @s hotbar.0 with stick[ \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false}, \
         {text:"7,5 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={knockback:4, sharpness:12}, \
-    tooltip_display={hidden_components:["enchantments"]} \
+    enchantments={knockback:4}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.5, operation:"add_value"} \
+        ], \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \

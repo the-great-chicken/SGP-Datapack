@@ -10,9 +10,9 @@ item replace entity @s hotbar.0 with stone_sword[ \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
         {text:"7 dégâts", color:blue, italic:false} \
         ], \
-   enchantments={sharpness:1}, \
+    enchantment_glint_override=true, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"} \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.0, operation:"add_value"} \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \

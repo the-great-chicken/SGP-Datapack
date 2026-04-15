@@ -10,6 +10,7 @@ give @s trident[ \
         {text:"⚡ Impulsion I", color:yellow, italic:false}, \
         {text:"8,5 dégâts", color:blue, italic:false} \
         ], \
+    enchantment_glint_override=true, \
     enchantments={riptide:1}, \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
