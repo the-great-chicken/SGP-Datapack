@@ -1,7 +1,7 @@
 #> sgp.kits:abilities/bigger/start
 
-scoreboard players set @s sgp.cooldown_ability 400
-scoreboard players set @s sgp.duration_ability 100
+execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.bigger.cooldown
+execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.bigger.duration
 
 attribute @s minecraft:scale modifier add sgp:bigger 1 add_multiplied_base
 attribute @s minecraft:jump_strength modifier add sgp:bigger 0.25 add_multiplied_base

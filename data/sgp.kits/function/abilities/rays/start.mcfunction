@@ -1,7 +1,7 @@
 #> sgp.kits:abilities/rays/start
 
-scoreboard players set @s sgp.cooldown_ability 400
-scoreboard players set @s sgp.duration_ability 100
+execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.rays.cooldown
+execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.rays.duration
 
 summon item_display ~ ~0.6 ~ {Tags:["sgp.ray","sgp.south","sgp.new"], item:{id:"minecraft:yellow_stained_glass",count:1}, item_display:"fixed", teleport_duration:2, transformation:{translation:[0.0f, 0.0f, 8.0f], scale:[0.5f, 0.5f, 32.0f], left_rotation:[0f,0f,1f,1f], right_rotation:[0f,0f,0f,1f]}}
 

@@ -9,4 +9,4 @@ execute if block ~ ~ ~ minecraft:void_air run summon marker ~ ~ ~ {CustomName:"t
 
 setblock ~ ~ ~ water strict
 
-scoreboard players set @s sgp.cooldown_water_trident 100
+execute store result score @s sgp.cooldown_water_trident run data get storage sgp:data kits.ability_cooldowns.water_trident.cooldown

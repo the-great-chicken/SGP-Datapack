@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/cleave/start
 
-scoreboard players add @s sgp.cooldown_ability 300
+execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.cleave.cooldown
 
 # Cool sound (to be modified)
 playsound minecraft:entity.player.attack.sweep player @a[tag=sgp.in_game] ~ ~ ~ 1 0.5

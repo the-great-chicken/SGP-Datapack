@@ -1,7 +1,7 @@
 #> sgp.kits:abilities/bats/start
 
-scoreboard players set @s sgp.cooldown_ability 400
-scoreboard players set @s sgp.duration_ability 100
+execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.bats.cooldown
+execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.bats.duration
 
 effect give @s invisibility 5 0 true
 effect give @s weakness 5 0 true

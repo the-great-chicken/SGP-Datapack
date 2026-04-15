@@ -164,9 +164,12 @@ scoreboard players set 0 sgp.dummy 0
 scoreboard players set 1 sgp.dummy 1
 scoreboard players set 2 sgp.dummy 2
 scoreboard players set 3 sgp.dummy 3
+scoreboard players set 4 sgp.dummy 4
 scoreboard players set 7 sgp.dummy 7
+scoreboard players set 8 sgp.dummy 8
 scoreboard players set 10 sgp.dummy 10
 scoreboard players set 16 sgp.dummy 16
+scoreboard players set 20 sgp.dummy 20
 scoreboard players set 29 sgp.dummy 29
 scoreboard players set 37 sgp.dummy 37
 scoreboard players set 49 sgp.dummy 49
@@ -283,6 +286,8 @@ function sgp.misc:bossbar/cycle_name
 # ---------- Initialize Storages ----------
 
 execute unless data storage sgp:kill_counter KillArray run data merge storage sgp:kill_counter {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}
+
+execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{ assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 
 data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Vous pouvez chasser de la volaille à votre tour !"}}},"mineurs":{}}
 

@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/tnt/start
 
-scoreboard players set @s sgp.cooldown_ability 400
+execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.tnt.cooldown
 
 summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt"]}
 
