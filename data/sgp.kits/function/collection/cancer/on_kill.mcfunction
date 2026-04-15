@@ -16,6 +16,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
             }, \
         potion_duration_scale=1.0, \
         tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/levitation" \
         ]', \
     give_2:'tipped_arrow[ \
         custom_name={text:"Flèche de Lenteur", color:dark_red, italic:false, bold:true}, \
@@ -29,6 +30,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
             }, \
         potion_duration_scale=1.0, \
         tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/slowness" \
         ]', \
     actionbar:' \
         {text:"+ 1 ⟰ Flèche de Lévitation ", color:"#F2F3F4", bold:true}, \
@@ -45,7 +47,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run give @s golden_a
             {text:" + 2"}, \
             {text:"❤", color:yellow} \
             ] \
-        ] \
+        ], \
+    item_model="sgp.kits:cancer/golden_apple" \
     ]
 
 execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
@@ -61,6 +64,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 ] \
             }, \
         tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/speed", \
         max_stack_size=64 \
         ]', \
     give_2: 'splash_potion[ \
@@ -74,6 +78,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 ] \
             }, \
         tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/jump", \
         max_stack_size=64 \
         ]', \
     actionbar:' \

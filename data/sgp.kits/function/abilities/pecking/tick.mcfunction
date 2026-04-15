@@ -5,7 +5,7 @@
 
 # warn-off-file execute-group
 
-execute if score @s sgp.duration_ability matches 1 run return run tag @s remove sgp.is_pecking
+execute if score @s sgp.duration_ability matches 1 run return run function sgp.kits:abilities/pecking/end
 
 # execute as @s run function #bs.view:as_aimed_entity {run:"tag @s add sgp.is_being_pecked", with:{max_distance:5}}
 
@@ -31,14 +31,13 @@ execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned
 tag @s remove sgp.source_peck
 
 # Stop pecking if not looking at player
-execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.pecking.cooldown
-execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run return run tag @s remove sgp.is_pecking
+execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run return run function sgp.kits:abilities/pecking/end
 
 # Only peck every few ticks (modifiable value)
 scoreboard players add @s sgp.pecking_timer 1
 execute unless score @s sgp.pecking_timer matches 2.. run return run tag @a[tag=sgp.is_being_pecked] remove sgp.is_being_pecked
 
-damage @p[tag=sgp.is_being_pecked] 1 sgp.kits:pecking by @s
+damage @p[tag=sgp.is_being_pecked] 1.5 sgp.kits:pecking by @s
 tag @a[tag=sgp.is_being_pecked] remove sgp.is_being_pecked
 
 scoreboard players set @s sgp.pecking_timer 0

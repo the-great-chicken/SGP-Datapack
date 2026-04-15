@@ -3,9 +3,13 @@
 execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.bats.cooldown
 execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.bats.duration
 
-effect give @s invisibility 5 0 true
-effect give @s weakness 5 0 true
-execute positioned ~ ~0.2 ~ run function sgp.misc:summon_multiple {nbr:10, entity:bat, nbt:{Tags:["sgp.bat_grenade"]},execute:'function #bs.health:time_to_live {with:{time:10,unit:"s"}}'}
+
+execute store result score #backup_duration sgp.dummy run data get storage sgp:data kits.ability_cooldowns.bats.duration
+scoreboard players operation #seconds_duration sgp.dummy = #backup_duration sgp.dummy
+scoreboard players operation #seconds_duration sgp.dummy /= 20 sgp.dummy
+execute store result storage sgp:data kits.ability_cooldowns.bats.duration short 1 run scoreboard players get #seconds_duration sgp.dummy
+function sgp.kits:abilities/bats/invisible_for_time with storage sgp:data kits.ability_cooldowns.bats
+execute store result storage sgp:data kits.ability_cooldowns.bats.duration short 1 run scoreboard players get #backup_duration sgp.dummy
 
 tag @s add sgp.processing
 

@@ -87,6 +87,7 @@ scoreboard objectives add sgp.old_z dummy
 scoreboard objectives add sgp.dx dummy
 scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
+scoreboard objectives add sgp.id dummy
 
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data

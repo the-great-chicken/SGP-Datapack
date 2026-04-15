@@ -34,6 +34,7 @@ execute unless entity @s[tag=sgp.is_pecking] positioned ^ ^ ^4.0 positioned ~ ~-
 
 tag @s remove sgp.source_peck
 
+execute unless entity @s[tag=sgp.is_pecking] run scoreboard players set @s sgp.duration_ability 0
 execute unless entity @s[tag=sgp.is_pecking] run return run playsound entity.villager.no master @s ~ ~ ~ 1 1.0
 
 function sgp.kits:abilities/pecking/tick

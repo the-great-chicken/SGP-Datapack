@@ -22,4 +22,4 @@ execute unless block ~ ~-0.1 ~ #bs.block:has_state[type=bottom] \
         run summon evoker_fangs
 
 scoreboard players remove #nbr_fangs sgp.dummy 1
-execute positioned ^ ^ ^1 run function sgp.kits:abilities/fangs/summon
+execute positioned ^ ^ ^1.6 run function sgp.kits:abilities/fangs/summon
