@@ -1,4 +1,4 @@
-#> sgp.misc:kd_buff_and_debuffs/main
+#> sgp.misc:kd_buffs_and_debuffs/main
 # 
 # Buff players who got low kd, debuff players who got high kd
 

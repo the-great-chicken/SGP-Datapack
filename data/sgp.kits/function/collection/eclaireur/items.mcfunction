@@ -18,6 +18,8 @@ item replace entity @s hotbar.0 with stone_sword[ \
 
 item replace entity @s hotbar.1 with crossbow[\
     custom_name={text:"Arbalète", color:aqua, italic:false, bold:true}, \
+    enchantment_glint_override=false, \
+    enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

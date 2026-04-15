@@ -1,4 +1,4 @@
-#> sgp.misc:kd_buff_and_debuffs/damage_buff
+#> sgp.misc:kd_buffs_and_debuffs/damage_buff
 # 
 # Give a gradually increasing increase in damage the lower the kd of the player is
 

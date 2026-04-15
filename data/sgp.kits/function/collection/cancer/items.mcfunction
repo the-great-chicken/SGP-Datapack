@@ -22,7 +22,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={punch:4, flame:1}, \
+    enchantments={punch:4, flame:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

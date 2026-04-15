@@ -24,7 +24,7 @@ give @s trident[ \
         {text:"---------", color:"#C0C0C0", italic:false}, \
         {text:"7,5 dégats", color:blue, italic:false} \
         ], \
-    enchantments={impaling:4}, \
+    enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     enchantment_glint_override=false, \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \

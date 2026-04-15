@@ -1,7 +1,8 @@
-#> sgp.misc:kd_buff_and_debuffs/damage_debuff
+#> sgp.misc:kd_buffs_and_debuffs/damage_debuff
 # 
 # Give a gradually increasing reduction in damage the higher the kd of the player is
 
+# If you change the values, remember to also change them in the sgp.kits:kd_projectile_scaling enchantment!
 execute if score @s sgp.kd matches 200.. if score @s sgp.kd matches ..250 \
         run attribute @s minecraft:attack_damage modifier add kd -0.1 add_multiplied_total
 
