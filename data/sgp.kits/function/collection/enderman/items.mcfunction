@@ -8,7 +8,7 @@ item replace entity @s hotbar.0 with diamond_sword[ \
     lore=[ \
         {text:"------------------", color:"#C0C0C0", italic:false}, \
         {text:"❊ Affilage III", color:"#ADDBD9", italic:false}, \
-        {text:"6 dégats", color:blue, italic:false} \
+        {text:"7 dégâts", color:blue, italic:false} \
         ], \
     enchantments={sweeping_edge:3}, \
     attribute_modifiers=[ \

@@ -8,12 +8,12 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.k
         custom_name={text:"Trident", color:dark_aqua, italic:false, bold:true}, \
         lore=[ \
             {text:"---------", color:"#C0C0C0", italic:false}, \
-            {text:"7,5 dégats", color:blue, italic:false} \
+            {text:"8,5 dégâts", color:blue, italic:false} \
             ], \
-        enchantments={impaling:4}, \
+        enchantments={"sgp.kits:kd_projectile_scaling":1}, \
         enchantment_glint_override=false, \
         attribute_modifiers=[ \
-            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+            {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"} \
             ], \
         unbreakable={}, \
         tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -43,5 +43,5 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.k
     actionbar:' \
         {text:"+ 2 🔱 Tridents ", color:dark_aqua, bold:true}, \
         {text:" et 1 ❤ Pomme d\'or Enchantée !", color:light_purple} \
-        ', \
+        ' \
     }

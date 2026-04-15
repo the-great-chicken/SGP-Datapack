@@ -117,9 +117,10 @@ execute if score #128_ticks_clock sgp.dummy matches 0 \
     unless entity @a[predicate=sgp.majeurs:event_in_progress] \
         run function sgp.misc:kill_streaks_management
 
-execute if score #128_ticks_clock sgp.dummy matches 0 as @a[tag=sgp.in_game] \
+execute if score #128_ticks_clock sgp.dummy matches 0 \
     unless entity @a[predicate=sgp.majeurs:event_in_progress] \
-        run function sgp.misc:kd_buff_and_debuffs
+        as @a[tag=sgp.in_game] \
+            run function sgp.misc:kd_buffs_and_debuffs/main
 
 scoreboard players add #128_ticks_clock sgp.dummy 1
 

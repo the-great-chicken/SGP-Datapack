@@ -8,11 +8,11 @@ item replace entity @s hotbar.0 with iron_sword[ \
     lore=[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
-        {text:"7 dégats", color:blue, italic:false} \
+        {text:"8 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={sharpness:1}, \
+    enchantment_glint_override=true, \
     attribute_modifiers=[ \
-        {type:"attack_damage",slot:"mainhand",id:"sgp.damage",amount:6.0,operation:"add_value"}, \
+        {type:"attack_damage",slot:"mainhand",id:"sgp.damage",amount:7.0,operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -20,8 +20,10 @@ item replace entity @s hotbar.0 with iron_sword[ \
 
 item replace entity @s hotbar.1 with bow[ \
     custom_name={text:"Arc", color:white, italic:false, bold:true}, \
+    enchantment_glint_override=false, \
+    enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable"]} \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
 
 

@@ -8,7 +8,7 @@ item replace entity @s hotbar.0 with wooden_sword[ \
     lore=[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
-        {text:"3,5 dégats", color:blue, italic:false} \
+        {text:"4,5 dégâts", color:blue, italic:false} \
         ], \
     enchantments={knockback:1}, \
     attribute_modifiers=[ \
@@ -24,7 +24,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"--------", color:"#C0C0C0", italic:false}, \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={punch:1}, \
+    enchantments={punch:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

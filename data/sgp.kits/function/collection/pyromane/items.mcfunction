@@ -10,9 +10,12 @@ item replace entity @s hotbar.0 with blaze_rod[ \
         {text:"⚔ Tranchant IX", color:dark_red, italic:false}, \
         {text:"🔥 Flamme I", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
-        {text:"6 dégats", color:blue, italic:false} \
+        {text:"6 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={sharpness:9, knockback:1, fire_aspect:1}, \
+    enchantments={knockback:1, fire_aspect:1}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"} \
+        ], \
     tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
@@ -22,7 +25,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false} \
         ], \
-    enchantments={flame:1}, \
+    enchantments={flame:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

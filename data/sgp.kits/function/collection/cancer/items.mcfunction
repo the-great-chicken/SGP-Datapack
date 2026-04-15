@@ -9,10 +9,13 @@ item replace entity @s hotbar.0 with stick[ \
         {text:"-------------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant XII", color:dark_red, italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false}, \
-        {text:"7,5 dégats", color:blue, italic:false} \
+        {text:"7,5 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={knockback:4, sharpness:12}, \
-    tooltip_display={hidden_components:["enchantments"]} \
+    enchantments={knockback:4}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.5, operation:"add_value"} \
+        ], \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
@@ -22,7 +25,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={punch:4, flame:1}, \
+    enchantments={punch:4, flame:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

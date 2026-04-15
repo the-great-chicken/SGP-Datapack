@@ -7,7 +7,7 @@ item replace entity @s hotbar.0 with wooden_sword[\
     custom_name={text:"Épée d'Entraînement", color:green, italic:false, bold:true}, \
     lore=[ \
         {text:"--------------------", color:"#C0C0C0", italic:false}, \
-        {text:"4 dégats", color:blue, italic:false} \
+        {text:"5 dégâts", color:blue, italic:false} \
         ], \
     attribute_modifiers=[\
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
@@ -24,7 +24,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
         ], \
-    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1}, \
+    enchantments={infinity:1, power:3, punch:1, "sgp.kits:splash_arrow":1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

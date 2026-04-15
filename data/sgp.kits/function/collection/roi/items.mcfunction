@@ -8,11 +8,11 @@ item replace entity @s hotbar.0 with golden_sword[ \
     lore=[ \
         {text:"--------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant VII", color:dark_red, italic:false}, \
-        {text:"8 dégats", color:blue, italic:false} \
+        {text:"9 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={sharpness:7}, \
+    enchantment_glint_override=true, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:8.0, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -24,7 +24,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"🏹 Puissance II", color:dark_red, italic:false} \
         ], \
-    enchantments={power:2}, \
+    enchantments={power:2, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

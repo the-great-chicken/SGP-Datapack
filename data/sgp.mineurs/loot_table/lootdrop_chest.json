@@ -1506,7 +1506,7 @@
               "function": "minecraft:set_lore",
               "lore": [
                 {
-                  "text": "6 dégats",
+                  "text": "7 dégâts",
                   "color": "blue",
                   "italic": false
                 }
@@ -1771,7 +1771,7 @@
                   "italic": false
                 },
                 {
-                  "text": "⚔ Dégats Instantanés",
+                  "text": "⚔ Dégâts Instantanés",
                   "color": "dark_red",
                   "italic": false
                 }

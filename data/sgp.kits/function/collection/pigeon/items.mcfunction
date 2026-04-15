@@ -9,21 +9,23 @@ item replace entity @s hotbar.0 with feather[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant V", color:dark_red, italic:false}, \
         {text:"⬱ Recul III", color:"#6F4E37", italic:false}, \
-        {text:"4 dégats", color:blue, italic:false} \
+        {text:"4 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={knockback:3, sharpness:5}, \
-    unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    enchantments={knockback:3}, \
+    attribute_modifiers=[ \
+        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:3.0, operation:"add_value"} \
+        ], \
+    tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
 item replace entity @s hotbar.1 with bow[ \
-    enchantments={power:2, infinity:1}, \
     custom_name={text:"Lance Plumes", color:dark_gray, italic:false, bold:true}, \
     lore=[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"🏹 Puissance II", color:dark_red, italic:false}, \
         {text:"∞ Infinité", color:"#E5E4E2", italic:false} \
         ], \
+    enchantments={power:2, infinity:1, "sgp.kits:kd_projectile_scaling":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
