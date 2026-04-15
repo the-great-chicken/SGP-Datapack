@@ -5,6 +5,9 @@
 
 # warn-off-file execute-group
 
+# Can't peck for more than 5 seconds (safeguard)
+scoreboard players set @s sgp.duration_ability 100
+
 # execute as @s run function #bs.view:at_aimed_entity {run:"tag @s add sgp.is_pecking", with:{max_distance:5}}
 
 # Not using bookshelf, to have a "thick" ray cuz else it's too hard to aim, and desyncs are too frequent
@@ -33,4 +36,4 @@ tag @s remove sgp.source_peck
 
 execute unless entity @s[tag=sgp.is_pecking] run return run playsound entity.villager.no master @s ~ ~ ~ 1 1.0
 
-function sgp.kits:abilities/pecking/damage
+function sgp.kits:abilities/pecking/tick

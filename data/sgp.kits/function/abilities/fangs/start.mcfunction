@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/fangs/trigger
+#> sgp.kits:abilities/fangs/start
 
 scoreboard players set @s sgp.cooldown_ability 260
 

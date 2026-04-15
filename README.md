@@ -19,6 +19,8 @@ The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from
 
 You need [**CommandAPI**](https://commandapi.jorel.dev/) to use plugin commands in datapacks, as well as [**Luckperms**](https://luckperms.net/), the [**TGCPlugin**](https://github.com/the-great-chicken/TGC-Plugin-v2/tree/main) and [**DiscordSRV**](https://www.spigotmc.org/resources/discordsrv.18494/) + **_an add-on for the /move command_**.
 You can bypass these dependencies by removing every non-vanilla command from the datapack. The actions performed by these custom commands are independent from the rest of the datapack (making players glow, moving them from a voice channel to another...) so removing them shouldn't break anything.
+We strongly recommend the Worldguard plugin, as some things in the datapack might have not been tested without it.
+For example tnt-based abilities will destroy your world, or poseidon's trident ability will place water that might flow under certain circumstances.
 
 ## Compatibility issues
 

@@ -1,8 +1,9 @@
-#> sgp.kits:abilities/illusions/trigger
+#> sgp.kits:abilities/illusions/start
 #
 # Summons 3 mannequins in the other cardinal directions, with a 10s TTL
 
 scoreboard players set @s sgp.cooldown_ability 400
+scoreboard players set @s sgp.duration_ability 140
 team join sgp.Illusion @s
 
 # Summon mannequins with the player's profile

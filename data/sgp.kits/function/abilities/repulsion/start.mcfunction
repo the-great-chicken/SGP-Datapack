@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/repulsion/trigger
+#> sgp.kits:abilities/repulsion/start
 
 scoreboard players set @s sgp.cooldown_ability 400
 

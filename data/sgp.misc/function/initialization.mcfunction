@@ -74,12 +74,19 @@ scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
 
 scoreboard objectives add sgp.cooldown_ability dummy
+scoreboard objectives add sgp.duration_ability dummy
 scoreboard objectives add sgp.trigger_repulsion dummy
 scoreboard objectives add sgp.cooldown_water_trident dummy
 scoreboard objectives add sgp.drop_any custom:drop
-execute at @e[type=marker,tag=sgp.marker,name="abilities_shulker"] run setblock ~ ~ ~ magenta_shulker_box
+execute at @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ magenta_shulker_box
 scoreboard objectives add sgp.current_attack_damage dummy
 scoreboard objectives add sgp.pecking_timer dummy
+scoreboard objectives add sgp.old_x dummy
+scoreboard objectives add sgp.old_y dummy
+scoreboard objectives add sgp.old_z dummy
+scoreboard objectives add sgp.dx dummy
+scoreboard objectives add sgp.dy dummy
+scoreboard objectives add sgp.dz dummy
 
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
@@ -154,8 +161,9 @@ scoreboard objectives add sgp.lieu_count dummy
 scoreboard players set #ench_particle sgp.dummy 0
 scoreboard players set #flame_crown_particle sgp.dummy 0
 scoreboard players set 0 sgp.dummy 0
-scoreboard players set 3 sgp.dummy 3
 scoreboard players set 1 sgp.dummy 1
+scoreboard players set 2 sgp.dummy 2
+scoreboard players set 3 sgp.dummy 3
 scoreboard players set 7 sgp.dummy 7
 scoreboard players set 10 sgp.dummy 10
 scoreboard players set 16 sgp.dummy 16
@@ -253,6 +261,7 @@ team modify sgp.Illusion collisionRule never
 # Misc
 bossbar add sgp:lgp "a"
 forceload add 0 0
+summon marker 0 0 0 {Tags:["sgp.predictor"]}
 
 
 

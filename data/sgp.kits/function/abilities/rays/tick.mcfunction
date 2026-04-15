@@ -1,8 +1,11 @@
 #> sgp.kits:abilities/rays/tick
 
+execute if score @s sgp.duration_ability matches 1 run return run function sgp.kits:abilities/rays/end
+
 tag @s add sgp.radiator
 
-# Extrapolation system to 
+# Extrapolation system to be able to smooth the rays movement with teleport-duration
+# While having them not lag behind too much
 function #bs.position:get_pos {scale:1000}
 
 # 2. Calculate the Delta (Velocity)
@@ -40,5 +43,3 @@ function #bs.link:as_children {run:"function sgp.kits:abilities/rays/tick_childr
 playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 
 tag @s remove sgp.radiator
-
-execute if score @s sgp.cooldown_ability matches ..300 run function sgp.kits:abilities/rays/end

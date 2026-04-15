@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/cleave/trigger
+#> sgp.kits:abilities/cleave/start
 
 scoreboard players add @s sgp.cooldown_ability 300
 

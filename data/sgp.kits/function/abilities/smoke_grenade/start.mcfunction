@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/smoke_grenade/launch
+#> sgp.kits:abilities/smoke_grenade/start
 
 scoreboard players set @s sgp.cooldown_ability 400
 

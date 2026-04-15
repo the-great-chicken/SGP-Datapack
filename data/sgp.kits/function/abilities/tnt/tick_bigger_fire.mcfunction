@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/tnt/do_bigger_fire
+#> sgp.kits:abilities/tnt/tick_bigger_fire
 
 particle flame ~ ~ ~ 3 3 3 0 50
 particle soul_fire_flame ~ ~ ~ 3 3 3 0 5

@@ -8,4 +8,4 @@ execute on attacker at @s rotated ~ 0 run function sgp.kits:abilities/assassinat
 
 tag @s remove sgp.assassin_triggered
 
-function sgp.kits:abilities/assassinate/disable
+function sgp.kits:abilities/assassinate/end

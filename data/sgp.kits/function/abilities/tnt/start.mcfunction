@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/tnt/summon
+#> sgp.kits:abilities/tnt/start
 
 scoreboard players set @s sgp.cooldown_ability 400
 

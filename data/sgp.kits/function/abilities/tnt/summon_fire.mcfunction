@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/tnt/summon_fire
+#> sgp.kits:abilities/tnt/start_fire
 
 summon marker ~ ~ ~ {Tags:["sgp.marker", "sgp.fire_explosion"]}
 scoreboard players set @e[tag=sgp.fire_explosion,distance=..0.1,limit=1,type=marker] sgp.timer 100

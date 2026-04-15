@@ -1,9 +1,11 @@
-#> sgp.kits:abilities/pecking/damage
+#> sgp.kits:abilities/pecking/tick
 #
 # Find the player we are pecking. Damage him every few tick.
 # If we're not looking at a player anymore, start ability cooldown.
 
 # warn-off-file execute-group
+
+execute if score @s sgp.duration_ability matches 1 run return run tag @s remove sgp.is_pecking
 
 # execute as @s run function #bs.view:as_aimed_entity {run:"tag @s add sgp.is_being_pecked", with:{max_distance:5}}
 
@@ -28,10 +30,9 @@ execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned
 
 tag @s remove sgp.source_peck
 
-# Stop pecking if not looking at player for more than 5 ticks
+# Stop pecking if not looking at player
 execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run scoreboard players set @s sgp.cooldown_ability 400
 execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run return run tag @s remove sgp.is_pecking
-
 
 # Only peck every few ticks (modifiable value)
 scoreboard players add @s sgp.pecking_timer 1
