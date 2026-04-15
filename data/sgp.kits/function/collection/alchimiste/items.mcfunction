@@ -8,7 +8,7 @@ item replace entity @s hotbar.0 with stone_sword[ \
     lore=[ \
         {text:"---------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
-        {text:"6 dégats", color:blue, italic:false} \
+        {text:"7 dégâts", color:blue, italic:false} \
         ], \
    enchantments={sharpness:1}, \
     attribute_modifiers=[ \
@@ -109,7 +109,7 @@ item replace entity @s hotbar.1 with splash_potion[ \
     ] 8
 
 item replace entity @s hotbar.2 with splash_potion[ \
-    custom_name={text:"Potion de Dégats", color:light_purple, italic:false, bold:true}, \
+    custom_name={text:"Potion de Dégâts", color:light_purple, italic:false, bold:true}, \
     lore=[ \
         {text:"Inflige jusqu'à 3", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]} \
         ], \

@@ -7,7 +7,7 @@ item replace entity @s hotbar.0 with stone_sword[ \
     custom_name={text:"Épée en Pierre", color:aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"---------------", color:gray, italic:false}, \
-        {text:"5 dégats", color:blue, italic:false} \
+        {text:"6 dégâts", color:blue, italic:false} \
         ], \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"}, \

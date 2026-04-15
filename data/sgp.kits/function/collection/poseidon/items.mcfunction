@@ -8,7 +8,7 @@ give @s trident[ \
     lore=[ \
         {text:"-----------", color:"#C0C0C0", italic:false}, \
         {text:"⚡ Impulsion I", color:yellow, italic:false}, \
-        {text:"7,5 dégats", color:blue, italic:false} \
+        {text:"8,5 dégâts", color:blue, italic:false} \
         ], \
     enchantments={riptide:1}, \
     attribute_modifiers=[ \
@@ -22,7 +22,7 @@ give @s trident[ \
     custom_name={text:"Trident", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"---------", color:"#C0C0C0", italic:false}, \
-        {text:"7,5 dégats", color:blue, italic:false} \
+        {text:"8,5 dégâts", color:blue, italic:false} \
         ], \
     enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     enchantment_glint_override=false, \

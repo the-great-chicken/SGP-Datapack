@@ -7,7 +7,7 @@ item replace entity @s hotbar.0 with iron_axe[ \
     custom_name={text:"Hache usée", color:dark_green, italic:false, bold:true}, \
     lore=[ \
         {text:"-----------", color:"#C0C0C0", italic:false}, \
-        {text:"7 dégats", color:blue, italic:false} \
+        {text:"8 dégâts", color:blue, italic:false} \
         ], \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7, operation:"add_value"}, \

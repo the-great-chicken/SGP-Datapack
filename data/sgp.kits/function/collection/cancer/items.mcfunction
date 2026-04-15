@@ -9,7 +9,7 @@ item replace entity @s hotbar.0 with stick[ \
         {text:"-------------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant XII", color:dark_red, italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false}, \
-        {text:"7,5 dégats", color:blue, italic:false} \
+        {text:"7,5 dégâts", color:blue, italic:false} \
         ], \
     enchantments={knockback:4, sharpness:12}, \
     tooltip_display={hidden_components:["enchantments"]} \

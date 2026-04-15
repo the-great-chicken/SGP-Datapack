@@ -8,7 +8,7 @@ item replace entity @s hotbar.0 with iron_sword[ \
     lore=[ \
         {text:"------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
-        {text:"7 dégats", color:blue, italic:false} \
+        {text:"8 dégâts", color:blue, italic:false} \
         ], \
     enchantments={sharpness:1}, \
     attribute_modifiers=[ \

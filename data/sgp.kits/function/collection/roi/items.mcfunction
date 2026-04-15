@@ -8,7 +8,7 @@ item replace entity @s hotbar.0 with golden_sword[ \
     lore=[ \
         {text:"--------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant VII", color:dark_red, italic:false}, \
-        {text:"8 dégats", color:blue, italic:false} \
+        {text:"9 dégâts", color:blue, italic:false} \
         ], \
     enchantments={sharpness:7}, \
     attribute_modifiers=[ \

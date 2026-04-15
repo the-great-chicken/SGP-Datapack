@@ -13,7 +13,7 @@ $item replace entity @s hotbar.0 with feather[ \
     lore=[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
-        {text:"4 dégats", color:blue, italic:false} \
+        {text:"4 dégâts", color:blue, italic:false} \
         ], \
     enchantments={unbreaking:0, sharpness:1} \
     tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \

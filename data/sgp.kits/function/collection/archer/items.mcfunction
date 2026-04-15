@@ -7,7 +7,7 @@ item replace entity @s hotbar.0 with wooden_sword[\
     custom_name={text:"Épée d'Entraînement", color:green, italic:false, bold:true}, \
     lore=[ \
         {text:"--------------------", color:"#C0C0C0", italic:false}, \
-        {text:"4 dégats", color:blue, italic:false} \
+        {text:"5 dégâts", color:blue, italic:false} \
         ], \
     attribute_modifiers=[\
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:4.0, operation:"add_value"}, \

@@ -9,7 +9,7 @@ item replace entity @s hotbar.0 with feather[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant V", color:dark_red, italic:false}, \
         {text:"⬱ Recul III", color:"#6F4E37", italic:false}, \
-        {text:"4 dégats", color:blue, italic:false} \
+        {text:"4 dégâts", color:blue, italic:false} \
         ], \
     enchantments={knockback:3, sharpness:5}, \
     unbreakable={}, \
