@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/bats/hide/armor_item
-#
 # `{slot: head|chest|legs|feet}`
+#
 # Back up the $slot armor item model, and replace it with an empty one
 
 

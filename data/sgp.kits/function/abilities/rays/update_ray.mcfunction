@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/rays/update_ray
-#
 # `{direction: north|south|east|west|north_east|..., rotation: int}`
+#
 # Update the ray size, and rotation animation
 
 $execute positioned as @e[tag=sgp.predictor,limit=1,type=marker] run teleport @s ~ ~0.6 ~ $(rotation) 0

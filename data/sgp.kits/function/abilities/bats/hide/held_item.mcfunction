@@ -1,5 +1,4 @@
 #> sgp.kits:abilities/bats/hide/held_item
-#
 # `{slot: item_slot}`
 
 $item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)

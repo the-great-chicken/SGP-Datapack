@@ -1,6 +1,7 @@
 #> sgp.kits:abilities/illusions/tick
 #
-## Make mannequins imitate players
+# Make mannequins imitate players
+
 # As soon as https://github.com/mcbookshelf/bookshelf/issues/38 is implemented, make everything use bookshelf
 
 execute if score @s sgp.duration_ability matches 1 run return run function sgp.kits:abilities/illusions/end

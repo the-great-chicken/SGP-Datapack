@@ -1,5 +1,4 @@
 #> sgp.kits:abilities/bats/restore/armor_item
-#
 # `{slot: head|chest|legs|feet}`
 
 $item replace entity @s armor.$(slot) from entity @p[tag=sgp.processing] armor.$(slot)

@@ -1,5 +1,4 @@
 #> sgp.kits:abilities/display_cooldown
-#
 # `{type: name of the scoreboard containing the cooldown, every: int}`
 
 # Stop execution unless ticks are a multiple of $every ticks

@@ -1,5 +1,4 @@
 #> sgp.kits:abilities/bats/restore/held_item
-#
 # `{slot: player item_slot}`
 
 $item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)
@@ -20,5 +19,12 @@ execute if data entity @s equipment.mainhand.components."minecraft:custom_data".
 
 data remove entity @s equipment.mainhand.components."minecraft:custom_data".hidden_special
 data remove entity @s equipment.mainhand.components."minecraft:custom_data".hidden_vanilla
+
+# Remove the nbt path if there's nothing in it
+execute if data entity @s equipment.mainhand.components."minecraft:custom_data" \
+    store result score #is_data_present sgp.dummy \
+        run data get entity @s equipment.mainhand.components."minecraft:custom_data"
+
+execute if score #is_data_present sgp.dummy matches 0 run data remove entity @s equipment.mainhand.components."minecraft:custom_data"
 
 $item replace entity @p[tag=sgp.processing] $(slot) from entity @s weapon.mainhand
