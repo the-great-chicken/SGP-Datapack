@@ -25,8 +25,8 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_2=5..}] run function sg
     nb:2, \
     give:'totem_of_undying[ \
         enchantments={protection:1}, \
-        custom_name={text:"Totem", color:gold, italic:false, bold:true} \
-        tooltip_display={hidden_components:["enchantments"]} \
+        custom_name={text:"Totem", color:gold, italic:false, bold:true}, \
+        tooltip_display={hidden_components:["enchantments"]}, \
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 ⚚ Totem !", color:gold, bold:true} \
