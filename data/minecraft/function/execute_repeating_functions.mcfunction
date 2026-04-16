@@ -128,7 +128,15 @@ scoreboard players add #128_ticks_clock sgp.dummy 1
 execute if score #128_ticks_clock sgp.dummy matches 128 \
     run scoreboard players set #128_ticks_clock sgp.dummy 0
 
-execute as @a[tag=sgp.in_game] run function sgp.world:climbing_boost
+execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
+    run function sgp.world:climbing_boost/add
+execute as @a[tag=sgp.climbing,predicate=!sgp.world:is_climbing] \
+    run function sgp.world:climbing_boost/remove
+
+execute as @a[tag=sgp.in_game,tag=!sgp.sliding_up,predicate=sgp.world:is_pressing_jump_next_to_honey] at @s \
+    run function sgp.world:slide_honey_up/add
+execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_honey] \
+    run function sgp.world:slide_honey_up/remove
 
 
 
