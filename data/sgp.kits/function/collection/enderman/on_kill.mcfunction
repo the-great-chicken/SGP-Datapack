@@ -5,6 +5,8 @@
 execute as @a[tag=sgp.enderman,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic { \
     nb:1, \
     give:'ender_pearl[ \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true} \
         ] 2', \
     give_2:air, \

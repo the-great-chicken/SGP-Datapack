@@ -108,6 +108,8 @@ item replace entity @s hotbar.2 with splash_potion[ \
     ]
 
 item replace entity @s hotbar.1 with ender_pearl[ \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true} \
     ] 8
 

@@ -26,7 +26,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"🔥 Flamme", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul IV", color:"#6F4E37", italic:false} \
         ], \
-    enchantments={punch:4, flame:1, "sgp.kits:kd_projectile_scaling":1}, \
+    enchantments={punch:4, flame:1, "sgp.kits:kd_projectile_scaling":1, "sgp.kits:perfect_accuracy":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]}, \
     item_model="sgp.kits:cancer/bow" \
@@ -144,6 +144,8 @@ item replace entity @s hotbar.5 with splash_potion[ \
     lore=[ \
         {text:"➠ Rapidité II (0:15)", color:aqua, italic:false} \
         ], \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     potion_contents={ \
         custom_effects: [ \
             {id:"speed", amplifier:1, duration:300} \
@@ -160,6 +162,8 @@ item replace entity @s hotbar.6 with splash_potion[ \
     lore=[ \
         {text:"⇪ Sauts améliorés III (0:30)", color:green, italic:false} \
         ], \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     potion_contents={ \
         custom_effects: [ \
             {id:"jump_boost", amplifier:2, duration:600} \

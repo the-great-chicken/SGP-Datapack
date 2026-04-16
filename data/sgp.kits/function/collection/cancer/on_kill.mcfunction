@@ -58,6 +58,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         lore=[ \
             {text:"➠ Rapidité II (0:15)", color:aqua, italic:false} \
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={ \
             custom_effects: [ \
                 {duration:300, id:"speed", amplifier:1b} \
@@ -72,6 +74,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         lore=[ \
             {text:"⇪ Sauts améliorés III (0:30)", color:green, italic:false} \
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={ \
             custom_effects: [ \
                 {duration:600, id:"jump_boost", amplifier:2b} \

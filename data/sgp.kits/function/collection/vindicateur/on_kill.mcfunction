@@ -9,6 +9,8 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
         lore=[ \
             {text:"⬊ Faiblesse I (0:05)", color:"#777075", italic:false} \
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={ \
             custom_effects: [ \
                 {id:"weakness", amplifier:0, duration:100} \

@@ -103,6 +103,8 @@ item replace entity @s hotbar.1 with splash_potion[ \
             {text:" instantanément"} \
             ] \
         ], \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     potion_contents="minecraft:healing", \
     tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
@@ -113,6 +115,8 @@ item replace entity @s hotbar.2 with splash_potion[ \
     lore=[ \
         {text:"Inflige jusqu'à 3", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]} \
         ], \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     potion_contents="minecraft:harming", \
     tooltip_display= {hidden_components:["potion_contents"]}, \
     max_stack_size=64 \
@@ -123,6 +127,8 @@ item replace entity @s hotbar.3 with splash_potion[ \
     lore=[ \
         {text:"👁 Cécité (0:05)", color:"#8B8589", italic:false} \
         ], \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
     potion_contents={ \
         custom_effects: [ \
             {id:"blindness", amplifier:0, duration:100} \
