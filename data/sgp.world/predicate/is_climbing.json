@@ -1,20 +1,91 @@
 {
-    "condition": "minecraft:entity_properties",
-    "entity": "this",
-    "predicate": {
-      "location": {
-        "block": {
-          "blocks": "#minecraft:climbable"
+  "condition": "minecraft:all_of",
+  "terms": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "minecraft:player",
+              "input": {
+                "jump": true
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "minecraft:player",
+              "input": {
+                "left": true
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "minecraft:player",
+              "input": {
+                "right": true
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "minecraft:player",
+              "input": {
+                "forward": true
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "minecraft:player",
+              "input": {
+                "forward": true,
+                "backward": false
+              }
+            }
+          }
         }
-      },
-      "movement": {
-        "y": {
-          "min":  2.35,
-          "max": 20
+      ]
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "location": {
+          "block": {
+            "blocks": "#minecraft:climbable"
+          }
+        },
+        "movement": {
+          "y": {
+            "min": 2.35,
+            "max": 20
+          }
+        },
+        "flags": {
+          "is_on_ground": false
         }
-      },
-      "flags": {
-        "is_on_ground": false
       }
     }
-  }
+  ]
+}
