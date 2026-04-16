@@ -5,17 +5,34 @@
         "mcmetaSummaryOverrides": {
             "commands":{
                 "path": "command_registration.json",
-                "replace": 1
+                "replace": true
             }
         }
 	},
 	"format": {
 	},
 	"lint": {
-        "nameOfObjective": "^sgp\\.[a-z 1-9]+(_[a-z 1-9]+)*$",
-        "nameOfScoreHolder": "^\\d+$|^#[a-z]+$|^#([a-z]+|[0-9]+e?|[0-9]+)(_([a-z]+|[0-9]+e?|[0-9]+))+$",
-        "nameOfTag": "^(sgp\\.[a-z]+(_[a-z]+)*|global\\.[a-z]+(\\.[a-z]+)*)$",
-        "nameOfTeam": "^sgp\\.[a-z A-Z]+(_[a-z A-Z]+)*$"
+        "nameOfObjective": "^(sgp|bs)\\.[a-z 1-9]+((_|\\.)[a-z 1-9]+)*$",
+        "nameOfScoreHolder": "^\\d+$|^(#|\\$)[a-z]+$|^(#|\\$)([a-z]+|[0-9]+e?|[0-9]+)((_|\\.)([a-z]+|[0-9]+e?|[0-9]+))+$",
+        "nameOfTag": "^(sgp\\.[a-z]+(_[a-z]+)*|smithed\\.entity)$",
+        "nameOfTeam": "^sgp\\.[a-z A-Z]+(_[a-z A-Z]+)*$",
+        "undeclaredSymbol": [
+            {
+                "if": {
+                "pattern": "^(#?bs|smithed)\\..*"
+                },
+                "then": { "report": "hint" }
+            },
+            {
+                "if": {
+                "category": ["objective", "team", "bossbar", "function"]
+                },
+                "then": { "report": "warning" }
+            },
+            {
+                "then": { "declare": "block" }
+            }
+        ]
 	},
 	"snippet": {
 	}

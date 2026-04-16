@@ -73,6 +73,23 @@ scoreboard objectives add sgp.alchimiste_found trigger
 scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
 
+scoreboard objectives add sgp.cooldown_ability dummy
+scoreboard objectives add sgp.duration_ability dummy
+scoreboard objectives add sgp.trigger_repulsion dummy
+scoreboard objectives add sgp.cooldown_water_trident dummy
+scoreboard objectives add sgp.drop_any custom:drop
+execute at @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ magenta_shulker_box
+scoreboard objectives add sgp.current_attack_damage dummy
+scoreboard objectives add sgp.pecking_timer dummy
+scoreboard objectives add sgp.old_x dummy
+scoreboard objectives add sgp.old_y dummy
+scoreboard objectives add sgp.old_z dummy
+scoreboard objectives add sgp.dx dummy
+scoreboard objectives add sgp.dy dummy
+scoreboard objectives add sgp.dz dummy
+scoreboard objectives add sgp.id dummy
+
+
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/initialization_spawns with entity @s data
@@ -145,11 +162,15 @@ scoreboard objectives add sgp.lieu_count dummy
 scoreboard players set #ench_particle sgp.dummy 0
 scoreboard players set #flame_crown_particle sgp.dummy 0
 scoreboard players set 0 sgp.dummy 0
-scoreboard players set 3 sgp.dummy 3
 scoreboard players set 1 sgp.dummy 1
+scoreboard players set 2 sgp.dummy 2
+scoreboard players set 3 sgp.dummy 3
+scoreboard players set 4 sgp.dummy 4
 scoreboard players set 7 sgp.dummy 7
+scoreboard players set 8 sgp.dummy 8
 scoreboard players set 10 sgp.dummy 10
 scoreboard players set 16 sgp.dummy 16
+scoreboard players set 20 sgp.dummy 20
 scoreboard players set 29 sgp.dummy 29
 scoreboard players set 37 sgp.dummy 37
 scoreboard players set 49 sgp.dummy 49
@@ -238,8 +259,13 @@ team add sgp.seeker "Chasseurs"
 team modify sgp.seeker friendlyFire false
 team modify sgp.seeker color dark_green
 
+team add sgp.Illusion
+team modify sgp.Illusion collisionRule never
+
 # Misc
 bossbar add sgp:lgp "a"
+forceload add 0 0
+summon marker 0 0 0 {Tags:["sgp.predictor"]}
 
 
 
@@ -261,6 +287,8 @@ function sgp.misc:bossbar/cycle_name
 # ---------- Initialize Storages ----------
 
 execute unless data storage sgp:kill_counter KillArray run data merge storage sgp:kill_counter {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}
+
+execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{ assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 
 data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Vous pouvez chasser de la volaille à votre tour !"}}},"mineurs":{}}
 

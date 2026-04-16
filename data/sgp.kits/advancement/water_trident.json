@@ -1,0 +1,17 @@
+{
+  "criteria": {
+    "use_water_trident": {
+      "trigger": "minecraft:using_item",
+      "conditions": {
+        "item": {
+          "predicates": {
+            "minecraft:custom_data": "{sgp.water_trident:true}"
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "sgp.kits:abilities/water_trident/use"
+  }
+}

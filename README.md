@@ -12,16 +12,23 @@ You can join the discord of the original SGP at https://www.discord.gg/FqGKSqPBb
 
 ## Required
 
-The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from Smithed is required
+The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from Smithed is required.
+[**Bookshelf**](https://docs.mcbookshelf.dev/en/latest/) is also required.
 
 ## Optional
 
 You need [**CommandAPI**](https://commandapi.jorel.dev/) to use plugin commands in datapacks, as well as [**Luckperms**](https://luckperms.net/), the [**TGCPlugin**](https://github.com/the-great-chicken/TGC-Plugin-v2/tree/main) and [**DiscordSRV**](https://www.spigotmc.org/resources/discordsrv.18494/) + **_an add-on for the /move command_**.
 You can bypass these dependencies by removing every non-vanilla command from the datapack. The actions performed by these custom commands are independent from the rest of the datapack (making players glow, moving them from a voice channel to another...) so removing them shouldn't break anything.
+We strongly recommend the Worldguard plugin, as some things in the datapack might have not been tested without it.
+For example tnt-based abilities will destroy your world, or poseidon's trident ability will place water that might flow under certain circumstances.
+
+## Compatibility issues
+
+We do replace the #bypasses_shield damage type tag with all its vanilla damage type, to allow us to have a damage type that bypasses armor but not shield.
 
 # Installation
 
-Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tags `sgp.marker` and `global.ignore`
+Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tag `sgp.marker` and `smithed.entity`.
 
 ## Markers to create
 
@@ -37,6 +44,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: location of lootdrop chests
 - optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
+- 1 `abilities_shulker`: somewhere hidden, in an empty block, to allow abilities to work.
 
 ### Major Events
 

@@ -15,7 +15,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
                 ] \
             }, \
         potion_duration_scale=1.0, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/levitation" \
         ]', \
     give_2:'tipped_arrow[ \
         custom_name={text:"Flèche de Lenteur", color:dark_red, italic:false, bold:true}, \
@@ -28,7 +29,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
                 ] \
             }, \
         potion_duration_scale=1.0, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/slowness" \
         ]', \
     actionbar:' \
         {text:"+ 1 ⟰ Flèche de Lévitation ", color:"#F2F3F4", bold:true}, \
@@ -45,41 +47,44 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run give @s golden_a
             {text:" + 2"}, \
             {text:"❤", color:yellow} \
             ] \
-        ] \
+        ], \
+    item_model="sgp.kits:cancer/golden_apple" \
     ]
 
 execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
     nb:2, \
     give: 'splash_potion[ \
-        custom_name={bold:true,color:dark_red,italic:false,text:"Potion de Rapidité"}, \
-        lore= [ \
+        custom_name={text:"Potion de Rapidité", color:dark_red, italic:false, bold:true}, \
+        lore=[ \
             {text:"➠ Rapidité II (0:15)", color:aqua, italic:false} \
             ], \
         potion_contents={ \
             custom_effects: [ \
-                {duration:300, id:"minecraft:speed", amplifier:1b} \
+                {duration:300, id:"speed", amplifier:1b} \
                 ] \
             }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/speed", \
         max_stack_size=64 \
-        ] 1', \
+        ]', \
     give_2: 'splash_potion[ \
-        custom_name={bold:true,color:dark_red,italic:false,text:"Potion de Saut"}, \
-        lore= [ \
-            {color:green,italic:false,text:"⇪ Sauts améliorés III (0:30)"} \
+        custom_name={text:"Potion de Saut", bold:true, color:dark_red, italic:false}, \
+        lore=[ \
+            {text:"⇪ Sauts améliorés III (0:30)", color:green, italic:false} \
             ], \
         potion_contents={ \
             custom_effects: [ \
-                {duration:600, id:"minecraft:jump_boost", amplifier:2b} \
+                {duration:600, id:"jump_boost", amplifier:2b} \
                 ] \
             }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents"]}, \
+        item_model="sgp.kits:cancer/jump", \
         max_stack_size=64 \
-        ] 1', \
+        ]', \
     actionbar:' \
-        {text:"+ 1 ❤ Pomme d\'or, ", color:yellow, bold:true}, \
+        {text:"+ 1 ❤ Pomme d\\\'or, ", color:yellow, bold:true}, \
         {text:"1 ⟰ Flèche de Lévitation, ", color:white}, \
         {text:"1 ⬳ Flèche de Lenteur, ", color:"#555555"}, \
         {text:"1 ➠ Potion de Rapidité ", color:aqua}, \
-        {text:"et 1 ⇪ Potion de Saut !", color:green} ', \
+        {text:"et 1 ⇪ Potion de Saut !", color:green} ' \
     }

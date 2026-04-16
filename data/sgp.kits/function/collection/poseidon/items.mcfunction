@@ -13,8 +13,9 @@ give @s trident[ \
     enchantment_glint_override=true, \
     enchantments={riptide:1}, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:7.5, operation:"add_value"}, \
         ], \
+    custom_data={sgp.water_trident:true}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]
@@ -28,7 +29,7 @@ give @s trident[ \
     enchantments={"sgp.kits:kd_projectile_scaling":1}, \
     enchantment_glint_override=false, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:7.5, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:7.5, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -63,7 +64,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
 
 
 # ---------- FOOD ----------
-item replace entity @s weapon.offhand with cooked_cod[ \
+item replace entity @s hotbar.1 with cooked_cod[ \
     custom_name={text:"Morue", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
         [ \

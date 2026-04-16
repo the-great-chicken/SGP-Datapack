@@ -67,6 +67,22 @@ scoreboard objectives remove sgp.alchimiste_found
 scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
 
+scoreboard objectives remove sgp.cooldown_ability
+scoreboard objectives remove sgp.duration_ability
+scoreboard objectives remove sgp.trigger_repulsion
+scoreboard objectives remove sgp.cooldown_water_trident
+scoreboard objectives remove sgp.drop_any
+execute as @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ air
+scoreboard objectives remove sgp.current_attack_damage
+scoreboard objectives remove sgp.pecking_timer
+scoreboard objectives remove sgp.old_x
+scoreboard objectives remove sgp.old_y
+scoreboard objectives remove sgp.old_z
+scoreboard objectives remove sgp.dx
+scoreboard objectives remove sgp.dy
+scoreboard objectives remove sgp.dz
+scoreboard objectives remove sgp.id
+
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
 execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/uninstallation_spawns with entity @s data
@@ -157,9 +173,12 @@ team remove sgp.Canard
 
 team remove sgp.PGSEC
 
+team remove sgp.Illusion
+
 
 # Misc
 bossbar remove sgp:lgp
+kill @e[tag=sgp.predictor,type=marker]
 
 
 # ---------- Clear Schedules ----------

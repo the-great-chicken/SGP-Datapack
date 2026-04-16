@@ -12,7 +12,7 @@ item replace entity @s hotbar.0 with diamond_sword[ \
         ], \
     enchantments={sweeping_edge:3}, \
     attribute_modifiers=[ \
-        {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:6.0, operation:"add_value"}, \
+        {type:"attack_damage", slot:"mainhand", id:"sgp:damage", amount:6.0, operation:"add_value"}, \
         ], \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
@@ -24,7 +24,7 @@ item replace entity @s armor.head with player_head[ \
     profile="WelcomeToMoes48", \
     enchantments={binding_curse:1, "sgp.kits:water_damage":1}, \
     unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","profile"]} \
     ]
 
 item replace entity @s armor.chest with leather_chestplate[ \
