@@ -8,6 +8,8 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
         lore=[ \
             {text:"Régénère jusqu\'à 2", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]}\
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={potion:"minecraft:healing"}, \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64] \
@@ -17,6 +19,8 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
         lore=[ \
             {text:"Inflige jusqu\'à 3", color:gray, italic:false, extra:[{text:"❤", color:red}, " instantanément"]} \
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={potion:"minecraft:harming"}, \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         max_stack_size=64 \
@@ -34,6 +38,8 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
         lore=[ \
             {text:"👁 Cécité (0:05)", color:"#8B8589", italic:false} \
             ], \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
         potion_contents={ \
             custom_effects: [ \
                 {id:"blindness", amplifier:0, duration:100} \

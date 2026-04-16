@@ -1060,6 +1060,13 @@
           "weight": 4,
           "functions": [
             {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:power": 1,
+                "sgp.kits:perfect_accuracy": 1
+              }
+            },
+            {
               "function": "minecraft:set_potion",
               "id": "minecraft:strong_healing"
             },
@@ -1077,6 +1084,13 @@
           "name": "minecraft:splash_potion",
           "weight": 4,
           "functions": [
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:power": 1,
+                "sgp.kits:perfect_accuracy": 1
+              }
+            },
             {
               "function": "minecraft:set_potion",
               "id": "minecraft:regeneration"
@@ -1957,7 +1971,8 @@
                 {
                   "function": "minecraft:set_enchantments",
                   "enchantments": {
-                    "minecraft:power": 1
+                    "minecraft:power": 1,
+                    "sgp.kits:perfect_accuracy": 1
                   }
                 },
                 {

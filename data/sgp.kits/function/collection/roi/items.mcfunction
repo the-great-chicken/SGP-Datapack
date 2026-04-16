@@ -24,7 +24,7 @@ item replace entity @s hotbar.1 with bow[ \
         {text:"-------------", color:"#C0C0C0", italic:false}, \
         {text:"🏹 Puissance II", color:dark_red, italic:false} \
         ], \
-    enchantments={power:2, "sgp.kits:kd_projectile_scaling":1}, \
+    enchantments={power:2, "sgp.kits:kd_projectile_scaling":1, "sgp.kits:perfect_accuracy":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
     ]

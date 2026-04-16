@@ -1,0 +1,48 @@
+{
+  "description": {
+    "text": "Perfect Accuracy"
+  },
+  "supported_items": [
+    "minecraft:bow",
+    "minecraft:crossbow",
+    "minecraft:trident",
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion",
+    "minecraft:ender_pearl",
+    "minecraft:snowball",
+    "minecraft:egg"
+  ],
+  "weight": 1,
+  "max_level": 1,
+  "min_cost": {
+    "base": 0,
+    "per_level_above_first": 0
+  },
+  "max_cost": {
+    "base": 0,
+    "per_level_above_first": 0
+  },
+  "anvil_cost": 0,
+  "slots": [
+    "mainhand",
+    "offhand"
+  ],
+  "effects": {
+    "projectile_spread": [
+      {
+        "effect": {
+          "type": "set",
+          "value": 0
+        }
+      }
+    ],
+    "projectile_spawned": [
+      {
+        "effect": {
+          "type": "run_function",
+          "function": "sgp.kits:projectile/reset_velocity"
+        }
+      }
+    ]
+  }
+}
