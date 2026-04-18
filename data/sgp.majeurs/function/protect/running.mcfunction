@@ -3,11 +3,11 @@
 # Things that are executed all the time when the event is running
 # Like checking if ppl die, if a team wins,...
 
-execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
+execute at @e[type=marker,tag=sgp.marker,name="respawn",limit=1] \
     as @a[distance=..3,tag=sgp.roi_rouge] \
         run tag @s remove sgp.roi_rouge
 
-execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
+execute at @e[type=marker,tag=sgp.marker,name="respawn",limit=1] \
     as @a[distance=..3,tag=sgp.roi_bleu] \
         run tag @s remove sgp.roi_bleu
 

@@ -17,5 +17,5 @@ execute as @s[scores={sgp.laby_fin=2}] run \
     tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Tu as débloqué le Kill Effect ", color:aqua}, {text:"Portail", color:dark_purple, bold:true},{text:" ! \n \
         Tu peux l'activer en allant dans la salle des ",color:aqua}, {text:"cosmétiques", color:light_purple}, {text:" depuis l'accueil", color:aqua}]
 
-scoreboard players set @s[scores={sgp.laby_fin=2}] sgp.portal_kill_unlocked 1
+scoreboard players set @s[scores={sgp.laby_fin=2}] sgp.kill.portal_unlocked 1
 execute as @s[scores={sgp.laby_fin=2}] run scoreboard players set @s sgp.laby_fin 3

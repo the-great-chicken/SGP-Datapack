@@ -3,60 +3,25 @@
 # Remove the datapack's data
 
 # ---------- Remove Objectives ----------
-scoreboard objectives remove sgp.veut_light
-scoreboard objectives remove sgp.veut_medium
-scoreboard objectives remove sgp.veut_heavy
-scoreboard objectives remove sgp.veut_super_heavy
-scoreboard objectives remove sgp.veut_flame_crown
-scoreboard objectives remove sgp.veut_marine
-scoreboard objectives remove sgp.veut_ench
-scoreboard objectives remove sgp.veut_smoke
-scoreboard objectives remove sgp.veut_cloud
-scoreboard objectives remove sgp.veut_desactiver
-scoreboard objectives remove sgp.light_particle_unlocked
-scoreboard objectives remove sgp.medium_particle_unlocked
-scoreboard objectives remove sgp.heavy_particle_unlocked
-scoreboard objectives remove sgp.super_heavy_particle_unlocked
-scoreboard objectives remove sgp.flame_crown_particle_unlocked
-scoreboard objectives remove sgp.marine_particle_unlocked
-scoreboard objectives remove sgp.ench_particle_unlocked
-scoreboard objectives remove sgp.smoke_particle_unlocked
-scoreboard objectives remove sgp.cloud_particle_unlocked
+scoreboard objectives remove sgp.intensity.light_unlocked
+scoreboard objectives remove sgp.intensity.medium_unlocked
+scoreboard objectives remove sgp.intensity.heavy_unlocked
+scoreboard objectives remove sgp.intensity.super_heavy_unlocked
+scoreboard objectives remove sgp.particle.flame_crown_unlocked
+scoreboard objectives remove sgp.particle.marine_unlocked
+scoreboard objectives remove sgp.particle.ench_unlocked
+scoreboard objectives remove sgp.particle.smoke_unlocked
+scoreboard objectives remove sgp.particle.cloud_unlocked
 
-scoreboard objectives remove sgp.veut_kill_disabled
-scoreboard objectives remove sgp.veut_kill_anvil
-scoreboard objectives remove sgp.veut_kill_portal
-scoreboard objectives remove sgp.veut_kill_explosion
-scoreboard objectives remove sgp.veut_kill_witch
-scoreboard objectives remove sgp.veut_kill_hurt
-scoreboard objectives remove sgp.veut_kill_cloud
-scoreboard objectives remove sgp.veut_kill_splash
-scoreboard objectives remove sgp.veut_kill_firework
-scoreboard objectives remove sgp.veut_kill_random
-scoreboard objectives remove sgp.anvil_kill_unlocked
-scoreboard objectives remove sgp.portal_kill_unlocked
-scoreboard objectives remove sgp.explosion_kill_unlocked
-scoreboard objectives remove sgp.witch_kill_unlocked
-scoreboard objectives remove sgp.hurt_kill_unlocked
-scoreboard objectives remove sgp.cloud_kill_unlocked
-scoreboard objectives remove sgp.splash_kill_unlocked
-scoreboard objectives remove sgp.firework_kill_unlocked
-scoreboard objectives remove sgp.disabled_kill_unlocked
+scoreboard objectives remove sgp.kill.anvil_unlocked
+scoreboard objectives remove sgp.kill.portal_unlocked
+scoreboard objectives remove sgp.kill.explosion_unlocked
+scoreboard objectives remove sgp.kill.witch_unlocked
+scoreboard objectives remove sgp.kill.hurt_unlocked
+scoreboard objectives remove sgp.kill.cloud_unlocked
+scoreboard objectives remove sgp.kill.splash_unlocked
+scoreboard objectives remove sgp.kill.firework_unlocked
 
-scoreboard objectives remove sgp.veut_alchimiste
-scoreboard objectives remove sgp.veut_archer
-scoreboard objectives remove sgp.veut_cancer
-scoreboard objectives remove sgp.veut_combattant
-scoreboard objectives remove sgp.veut_eclaireur
-scoreboard objectives remove sgp.veut_enderman
-scoreboard objectives remove sgp.veut_pigeon
-scoreboard objectives remove sgp.veut_poseidon
-scoreboard objectives remove sgp.veut_pyromane
-scoreboard objectives remove sgp.veut_random
-scoreboard objectives remove sgp.veut_roi
-scoreboard objectives remove sgp.veut_tank
-scoreboard objectives remove sgp.veut_vindicateur
-scoreboard objectives remove sgp.veut_peaceful
 scoreboard objectives remove sgp.pyromane_found
 scoreboard objectives remove sgp.cancer_found
 scoreboard objectives remove sgp.roi_found
@@ -66,6 +31,7 @@ scoreboard objectives remove sgp.enderman_found
 scoreboard objectives remove sgp.alchimiste_found
 scoreboard objectives remove sgp.poseidon_found
 scoreboard objectives remove sgp.eclaireur_found
+scoreboard objectives remove sgp.peaceful_found
 
 scoreboard objectives remove sgp.cooldown_ability
 scoreboard objectives remove sgp.duration_ability
@@ -84,9 +50,6 @@ scoreboard objectives remove sgp.dz
 scoreboard objectives remove sgp.id
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
-
-execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/uninstallation_spawns with entity @s data
-scoreboard objectives remove sgp.spawn_random
 
 scoreboard objectives remove sgp.laby_fin
 scoreboard objectives remove sgp.jump_hardest_done
@@ -119,13 +82,6 @@ scoreboard objectives remove sgp.kills_give_3
 scoreboard objectives remove sgp.streak_en_cours
 scoreboard objectives remove sgp.last_kill_count
 
-scoreboard objectives remove sgp.entre_cosm
-scoreboard objectives remove sgp.sort_cosm
-scoreboard objectives remove sgp.kits_vers_spawn
-scoreboard objectives remove sgp.sort_kits
-scoreboard objectives remove sgp.entre_kits
-scoreboard objectives remove sgp.spawn_vers_kits
-
 scoreboard objectives remove sgp.devenir_pigeon
 scoreboard objectives remove sgp.devenir_chasseur
 scoreboard objectives remove sgp.devenir_roi_rouge
@@ -139,13 +95,13 @@ scoreboard objectives remove sgp.temps_cabane_pco
 scoreboard objectives remove sgp.temps_cabane_pco_secondes
 scoreboard objectives remove sgp.en_cage
 
+scoreboard objectives remove sgp.link_teams
+
 scoreboard objectives remove sgp.reflexes_joueur
 
 scoreboard objectives remove sgp.teleporteur
 scoreboard objectives remove sgp.dummy
 scoreboard objectives remove sgp.timer
-
-scoreboard objectives remove sgp.sneak_particle
 
 scoreboard objectives remove sgp.lieu_count
 

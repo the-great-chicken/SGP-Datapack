@@ -40,56 +40,15 @@ execute as @a[tag=sgp.in_game] \
 execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
 
 
-# ---------- SPAWNS ----------
-execute as @e[type=marker,tag=sgp.marker,name="spawn"] \
-    run function sgp.spawns:check_and_execute_spawn with entity @s data
-
-execute as @a[scores={sgp.spawn_random=1..}] run \
-    function sgp.spawns:random
-
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] \
-    as @a[scores={sgp.kits_vers_spawn=1..}] run \
-        function sgp.kits:misc/sort_salle
-
-execute if entity @a[predicate=sgp.majeurs:event_in_progress] \
-    as @a[scores={sgp.kits_vers_spawn=1..}] run \
-        function sgp.majeurs:common/kits_to_spawn
-
-execute as @a[scores={sgp.spawn_vers_kits=1..}] run \
-    function sgp.kits:misc/entre_salle
-
-
 
 # ---------- KITS ----------
-function sgp.kits:misc/check_and_run
-
 function sgp.kits:unlocking/check_kit_unlock
-
-execute as @p[scores={sgp.veut_random=1..}] run \
-    function sgp.kits:misc/random
 
 function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
 
-execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] \
-    unless score @s sgp.entre_kits matches 1.. run \
-        scoreboard players enable @s sgp.entre_kits
-
-execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=0] run \
-    function sgp.kits:misc/sort_salle
-
-execute as @a[scores={sgp.entre_kits=1..}] run \
-    function sgp.kits:misc/entre_salle
-
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] \
-    as @a[scores={sgp.sort_kits=1..}] run \
-        function sgp.kits:misc/sort_salle
-
-execute if entity @a[predicate=sgp.majeurs:event_in_progress] \
-    as @a[scores={sgp.sort_kits=1..}] run \
-        function sgp.majeurs:common/cannot_tp_to_lobby
-
+# This is the most frequent we can do luckperms prefixes update
 execute if score #52_ticks_clock sgp.dummy matches 0 run \
     function sgp.kits:kit_tags/prefixes_check
 
@@ -114,19 +73,8 @@ execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
-execute if score #128_ticks_clock sgp.dummy matches 0 \
-    unless entity @a[predicate=sgp.majeurs:event_in_progress] \
-        run function sgp.misc:kill_streaks_management
+function sgp.misc:128_ticks_functions
 
-execute if score #128_ticks_clock sgp.dummy matches 0 \
-    unless entity @a[predicate=sgp.majeurs:event_in_progress] \
-        as @a[tag=sgp.in_game] \
-            run function sgp.misc:kd_buffs_and_debuffs/main
-
-scoreboard players add #128_ticks_clock sgp.dummy 1
-
-execute if score #128_ticks_clock sgp.dummy matches 128 \
-    run scoreboard players set #128_ticks_clock sgp.dummy 0
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
     run function sgp.world:climbing_boost/add
@@ -141,32 +89,7 @@ execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_h
 
 
 # ---------- COSMETICS ----------
-execute as @a[scores={sgp.veut_desactiver=1..}] run \
-    function sgp.cosmetics:particles/disable
-
-function sgp.cosmetics:particles/individual/ench_cycle
-function sgp.cosmetics:particles/individual/flame_crown_cycle
-function sgp.cosmetics:particles/individual/smoke_spawn
-function sgp.cosmetics:particles/individual/cloud_spawn
-function sgp.cosmetics:particles/individual/marine_spawn
-
-execute as @a[predicate=sgp.cosmetics:veut_particle_type] run \
-    function sgp.cosmetics:particles/disable_type
-
-execute as @a[predicate=sgp.cosmetics:veut_particle_weight] run \
-    function sgp.cosmetics:particles/disable_weight
-
-function sgp.cosmetics:common/check_and_run_update
-
-execute as @a[scores={sgp.sort_cosm=1..}] run \
-    function sgp.cosmetics:misc/sort_cosm
-
-execute as @a[scores={sgp.entre_cosm=1..}] run \
-    function sgp.cosmetics:misc/entre_cosm
-
-execute at @e[type=marker,tag=sgp.marker,name="accueil",limit=1] as @a[distance=..1.5] \
-    unless score @s sgp.entre_cosm matches 1.. run \
-        scoreboard players enable @s sgp.entre_cosm
+function sgp.cosmetics:tick
 
 
 

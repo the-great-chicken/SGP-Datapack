@@ -26,7 +26,7 @@ execute as @s run item replace entity @s hotbar.2 with golden_apple[ \
 
 $tp @s @e[type=marker,tag=sgp.marker,name="protect_spawn_$(side)s",limit=1]
 
-$execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_$(side)",limit=1] as @a[distance=..2] run function sgp.kits:misc/entre_salle
+$execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_$(side)",limit=1] as @a[distance=..2] run function sgp.kits:clear_and_tp_to_kits
 
 $scoreboard players set @s sgp.devenir_roi_$(side) 0
 

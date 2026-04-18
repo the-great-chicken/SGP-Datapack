@@ -1,1 +1,0 @@
-$scoreboard objectives add sgp.spawn_$(number) trigger

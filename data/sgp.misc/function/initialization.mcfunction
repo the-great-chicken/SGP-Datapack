@@ -3,62 +3,25 @@
 # Create the necessary objectives, initialize values, create teams,...
 
 # ---------- Create Objectives ----------
-scoreboard objectives add sgp.veut_light trigger
-scoreboard objectives add sgp.veut_medium trigger
-scoreboard objectives add sgp.veut_heavy trigger
-scoreboard objectives add sgp.veut_super_heavy trigger
-scoreboard objectives add sgp.veut_flame_crown trigger
-scoreboard objectives add sgp.veut_marine trigger
-scoreboard objectives add sgp.veut_ench trigger
-scoreboard objectives add sgp.veut_smoke trigger
-scoreboard objectives add sgp.veut_cloud trigger
-scoreboard objectives add sgp.veut_desactiver trigger
 scoreboard objectives add sgp.reward trigger
-scoreboard objectives add sgp.light_particle_unlocked dummy
-scoreboard objectives add sgp.medium_particle_unlocked dummy
-scoreboard objectives add sgp.heavy_particle_unlocked dummy
-scoreboard objectives add sgp.super_heavy_particle_unlocked dummy
-scoreboard objectives add sgp.flame_crown_particle_unlocked dummy
-scoreboard objectives add sgp.marine_particle_unlocked dummy
-scoreboard objectives add sgp.ench_particle_unlocked dummy
-scoreboard objectives add sgp.smoke_particle_unlocked dummy
-scoreboard objectives add sgp.cloud_particle_unlocked dummy
-scoreboard objectives add sgp.link_teams dummy
+scoreboard objectives add sgp.intensity.light_unlocked dummy
+scoreboard objectives add sgp.intensity.medium_unlocked dummy
+scoreboard objectives add sgp.intensity.heavy_unlocked dummy
+scoreboard objectives add sgp.intensity.super_heavy_unlocked dummy
+scoreboard objectives add sgp.particle.flame_crown_unlocked dummy
+scoreboard objectives add sgp.particle.marine_unlocked dummy
+scoreboard objectives add sgp.particle.ench_unlocked dummy
+scoreboard objectives add sgp.particle.smoke_unlocked dummy
+scoreboard objectives add sgp.particle.cloud_unlocked dummy
 
-scoreboard objectives add sgp.veut_kill_disabled trigger
-scoreboard objectives add sgp.veut_kill_anvil trigger
-scoreboard objectives add sgp.veut_kill_portal trigger
-scoreboard objectives add sgp.veut_kill_explosion trigger
-scoreboard objectives add sgp.veut_kill_witch trigger
-scoreboard objectives add sgp.veut_kill_hurt trigger
-scoreboard objectives add sgp.veut_kill_cloud trigger
-scoreboard objectives add sgp.veut_kill_splash trigger
-scoreboard objectives add sgp.veut_kill_firework trigger
-scoreboard objectives add sgp.veut_kill_random trigger
-scoreboard objectives add sgp.anvil_kill_unlocked dummy
-scoreboard objectives add sgp.portal_kill_unlocked dummy
-scoreboard objectives add sgp.explosion_kill_unlocked dummy
-scoreboard objectives add sgp.witch_kill_unlocked dummy
-scoreboard objectives add sgp.hurt_kill_unlocked dummy
-scoreboard objectives add sgp.cloud_kill_unlocked dummy
-scoreboard objectives add sgp.splash_kill_unlocked dummy
-scoreboard objectives add sgp.firework_kill_unlocked dummy
-scoreboard objectives add sgp.disabled_kill_unlocked dummy
-
-scoreboard objectives add sgp.veut_alchimiste trigger
-scoreboard objectives add sgp.veut_archer trigger
-scoreboard objectives add sgp.veut_cancer trigger
-scoreboard objectives add sgp.veut_combattant trigger
-scoreboard objectives add sgp.veut_eclaireur trigger
-scoreboard objectives add sgp.veut_enderman trigger
-scoreboard objectives add sgp.veut_pigeon trigger
-scoreboard objectives add sgp.veut_poseidon trigger
-scoreboard objectives add sgp.veut_pyromane trigger
-scoreboard objectives add sgp.veut_random trigger
-scoreboard objectives add sgp.veut_roi trigger
-scoreboard objectives add sgp.veut_tank trigger
-scoreboard objectives add sgp.veut_vindicateur trigger
-scoreboard objectives add sgp.veut_peaceful trigger
+scoreboard objectives add sgp.kill.anvil_unlocked dummy
+scoreboard objectives add sgp.kill.portal_unlocked dummy
+scoreboard objectives add sgp.kill.explosion_unlocked dummy
+scoreboard objectives add sgp.kill.witch_unlocked dummy
+scoreboard objectives add sgp.kill.hurt_unlocked dummy
+scoreboard objectives add sgp.kill.cloud_unlocked dummy
+scoreboard objectives add sgp.kill.splash_unlocked dummy
+scoreboard objectives add sgp.kill.firework_unlocked dummy
 
 scoreboard objectives add sgp.combattant_found trigger
 scoreboard objectives add sgp.vindicateur_found trigger
@@ -72,6 +35,7 @@ scoreboard objectives add sgp.enderman_found trigger
 scoreboard objectives add sgp.alchimiste_found trigger
 scoreboard objectives add sgp.poseidon_found trigger
 scoreboard objectives add sgp.eclaireur_found trigger
+scoreboard objectives add sgp.peaceful_found trigger
 
 scoreboard objectives add sgp.cooldown_ability dummy
 scoreboard objectives add sgp.duration_ability dummy
@@ -91,9 +55,6 @@ scoreboard objectives add sgp.id dummy
 
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
-
-execute as @e[type=marker,tag=sgp.marker,name="spawn"] run function sgp.misc:scoreboards/initialization_spawns with entity @s data
-scoreboard objectives add sgp.spawn_random trigger
 
 scoreboard objectives add sgp.laby_fin trigger
 scoreboard objectives add sgp.jump_hardest_done trigger
@@ -126,13 +87,6 @@ scoreboard objectives add sgp.kills_give_3 playerKillCount
 scoreboard objectives add sgp.streak_en_cours minecraft.custom:minecraft.player_kills
 scoreboard objectives add sgp.last_kill_count playerKillCount
 
-scoreboard objectives add sgp.entre_cosm trigger
-scoreboard objectives add sgp.sort_cosm trigger
-scoreboard objectives add sgp.kits_vers_spawn trigger
-scoreboard objectives add sgp.sort_kits trigger
-scoreboard objectives add sgp.entre_kits trigger
-scoreboard objectives add sgp.spawn_vers_kits trigger
-
 scoreboard objectives add sgp.devenir_pigeon trigger
 scoreboard objectives add sgp.devenir_chasseur trigger
 scoreboard objectives add sgp.devenir_roi_rouge trigger
@@ -146,13 +100,13 @@ scoreboard objectives add sgp.temps_cabane_pco dummy
 scoreboard objectives add sgp.temps_cabane_pco_secondes dummy
 scoreboard objectives add sgp.en_cage dummy
 
+scoreboard objectives add sgp.link_teams dummy
+
 scoreboard objectives add sgp.reflexes_joueur trigger
 
 scoreboard objectives add sgp.teleporteur dummy
 scoreboard objectives add sgp.dummy dummy
 scoreboard objectives add sgp.timer dummy
-
-scoreboard objectives add sgp.sneak_particle minecraft.custom:minecraft.sneak_time
 
 scoreboard objectives add sgp.lieu_count dummy
 

@@ -5,9 +5,10 @@
 
 scoreboard players add @s sgp.plus_grande_streak 0
 
-scoreboard players add @s sgp.combattant_found 3
-scoreboard players add @s sgp.vindicateur_found 3
-scoreboard players add @s sgp.archer_found 3
+scoreboard players set @s sgp.combattant_found 3
+scoreboard players set @s sgp.vindicateur_found 3
+scoreboard players set @s sgp.archer_found 3
+scoreboard players set @s sgp.peaceful_found 3
 scoreboard players add @s sgp.pyromane_found 0
 scoreboard players add @s sgp.cancer_found 0
 scoreboard players add @s sgp.roi_found 0
@@ -35,9 +36,4 @@ scoreboard players add @s sgp.jump_diff_2_done 0
 
 scoreboard players add @s sgp.teleporteur 0
 
-bossbar set sgp:lgp players @a
-
-execute at @e[type=marker,tag=sgp.marker,name="kits",limit=1] \
-    run spawnpoint @s ~ ~ ~ ~ ~
-
-execute store result score #nbr_lieu sgp.lieu_count if entity @e[type=marker,tag=sgp.marker,name="lieu"]
+bossbar set sgp:lgp players @s

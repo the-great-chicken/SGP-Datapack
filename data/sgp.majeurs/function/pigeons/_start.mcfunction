@@ -13,7 +13,6 @@ scoreboard players set #pigeons_minutes sgp.timer 0
 scoreboard players set #chasseurs_tues sgp.dummy 0
 
 scoreboard players enable @a[tag=sgp.in_game] sgp.devenir_chasseur
-execute as @a[tag=sgp.in_game] run function sgp.kits:misc/sort_salle
 setblock 2480 230 2166 minecraft:prismarine_brick_slab[type=bottom]
 title @a[tag=sgp.in_game] title [{text:"Chasse aux Pigeons",color:gray,bold:true}]
 tag @a[tag=sgp.in_game] remove tag1

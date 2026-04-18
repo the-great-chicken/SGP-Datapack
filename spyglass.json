@@ -14,7 +14,7 @@
 	"lint": {
         "nameOfObjective": "^(sgp|bs)\\.[a-z 1-9]+((_|\\.)[a-z 1-9]+)*$",
         "nameOfScoreHolder": "^\\d+$|^(#|\\$)[a-z]+$|^(#|\\$)([a-z]+|[0-9]+e?|[0-9]+)((_|\\.)([a-z]+|[0-9]+e?|[0-9]+))+$",
-        "nameOfTag": "^(sgp\\.[a-z]+(_[a-z]+)*|smithed\\.entity)$",
+        "nameOfTag": "^(sgp\\.[a-z]+((_|\\.)[a-z]+)*|smithed\\.entity)$",
         "nameOfTeam": "^sgp\\.[a-z A-Z]+(_[a-z A-Z]+)*$",
         "undeclaredSymbol": [
             {

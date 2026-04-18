@@ -25,26 +25,23 @@ For example tnt-based abilities will destroy your world, or poseidon's trident a
 ## Compatibility issues
 
 We do replace the #bypasses_shield damage type tag with all its vanilla damage type, to allow us to have a damage type that bypasses armor but not shield.
+We also replace the vanilla magenta_shulker_box death loot table.
 
 # Installation
 
-Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tag `sgp.marker` and `smithed.entity`.
+Add the datapack to your world, and add the necessary markers in your world, that specify the location of objects. These markers **must** all have the tag `sgp.marker`.
 
 ## Markers to create
 
 ### Base
 
-- 1 `accueil`: room where the players spawn
-- 1 `salle_cosm`: room where the players can change cosmetics
-- 1 `kits`: room where the players can choose their kit
-- 1 `spawns`: room where the players choose their spawnpoint
+- 1 `respawn`: spawnpoint of the players when they die, should be also the place where they choose their kit
 - any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`. Need 8 `\` to escape a `'`.
 - any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
-- at least 1 `spawn` : one of the spawnpoints players can choose. `data:{number:<int>, text:"<escaped_json_text_component>"}`. `number` should be serial (unique and incremented), starting from one. Example of `text` : `"[\"Tu as spawn au \",{\"text\":\"Labyrinthe\", \"color\":\"light_purple\", \"bold\":true}]"`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: location of lootdrop chests
 - optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
-- 1 `abilities_shulker`: somewhere hidden, in an empty block, to allow abilities to work.
+- 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 
 ### Major Events
 
@@ -61,11 +58,24 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 
 Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
 
-## Storages to initialize
-- `sgp:kits` with the data about hints for each kits, example: `eclaireur:{hint:"Zone Noire", hint_color:dark_gray}`. Merge it (there is more data in sgp:kits eclaireur for example)
+## Interaction Entities
+
+The template to summon one is `/summon interaction ~ ~ ~ {CustomName:"<name>",Tags:["sgp.interaction"], data:{args:{<args>}, function: "<func>"}, width: 1f, height: 0.7f, response:true}`.
+Each of these is optional (or can be present multiple times), depending on how you want to make your players' UX.
+
+- `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, text:"<escaped_text_component>` <a href="#note1">*</a>
+- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no args
+- `to_spawns`, with the function `sgp.misc:interactions/go_to_choose_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
+- `to_cosm`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
+- `to_reception`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
+- `to_kits`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
+
+<a id="note1">*</a> There needs to be the same number of `spawn_tper` for each spawn type, or else the random will be skewed.
 
 ## Other stuff
 - `gamerule advance_time` must be set to `false` for some effects to work properly, and the time to be set at 10000. This limitation should be removed when the pack will be upgraded to Minecraft 26.1.
+- Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
+- Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
 
 # Uninstallation
 
