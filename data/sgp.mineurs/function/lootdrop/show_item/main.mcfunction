@@ -31,4 +31,5 @@ execute if data storage sgp:macro item_hover.components."minecraft:custom_name" 
 execute if data storage sgp:macro item_hover run data modify storage sgp:macro item_hover.action set value "show_item"
 execute if data storage sgp:macro item_hover run function sgp.mineurs:lootdrop/show_item/chat_sent_macro with storage sgp:macro
 
-execute unless data storage sgp:macro item_hover run tellraw @s {"text": "Tu n'es pas en train de tenir un item !", "color": "red"}
+execute unless data storage sgp:macro item_hover run tellraw @s {"text": "Prend un item dans ta main avant de cliquer !", "color": "red"}
+execute unless data storage sgp:macro item_hover run scoreboard players enable @s sgp.share_item

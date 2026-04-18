@@ -1678,7 +1678,7 @@
                   "italic": false
                 },
                 {
-                  "text": "☠ Poison (0:11)",
+                  "text": "💀 Poison (0:11)",
                   "color": "#55741B",
                   "italic": false
                 }
@@ -2646,7 +2646,7 @@
               "function": "minecraft:set_name",
               "name": [
                 {
-                  "text": "  |O",
+                  "text": " |O",
                   "color": "#b70079",
                   "bold": true,
                   "italic": false,
@@ -2710,7 +2710,7 @@
                   "obfuscated": true
                 },
                 {
-                  "text": "O|  ",
+                  "text": "O| ",
                   "color": "#0031a3",
                   "bold": true,
                   "obfuscated": true

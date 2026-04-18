@@ -66,10 +66,6 @@ function sgp.misc:kill_counter
 execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
     run function sgp.world:teleporter/run
 
-execute at @e[type=marker,tag=sgp.marker,name="Lootdrop"] \
-    if block ~ ~ ~ minecraft:trapped_chest run \
-        particle dust{color:[1.0, 0.8, 0.1],scale:2.5} ~ ~ ~ 0.3 40 0.3 10 30 force
-
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 

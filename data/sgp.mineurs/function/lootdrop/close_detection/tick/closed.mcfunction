@@ -5,8 +5,8 @@
 scoreboard players enable @a[tag=sgp.container_open] sgp.share_item
 tellraw @a[tag=sgp.container_open] [ \
     {storage:"sgp.text", nbt:"prefix", interpret:true}, \
-    {translate: "Bravo d'avoir trouvé le %s ! Tu as obtenu un %s intéressant ?\n", "color": "yellow", \
-        with: [{"text": "coffre", "color": "green"}, {"text": "item", "color": aqua}]}, \
+    {translate: "Bravo d'avoir trouvé le %s ! As-tu obtenu un %s ?\n", "color": "yellow", \
+        with: [{"text": "coffre", "color": "green"}, {"text": "item intéressant", "color": aqua}]}, \
     {storage:"sgp.text", nbt:"prefix", interpret:true}, \
     {text:"Si oui, ", "color": "yellow"}, \
     {text: "[Clique ici pour le montrer à tout le monde]", underlined:true, "color": "yellow", \
@@ -24,3 +24,5 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true},
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000
 
 tag @s remove sgp.opened_chest
+
+kill @e[dx=1,dz=1,dy=300,limit=8,name=lootdrop_beacon,type=text_display]
