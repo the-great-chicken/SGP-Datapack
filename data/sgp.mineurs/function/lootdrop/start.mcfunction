@@ -4,7 +4,8 @@
 # Announces it, removes the potentially existing lootdrops, and summons a new one
 
 title @a[tag=sgp.in_game] title {text:"LOOTDROP!",color:gold,bold:true}
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"LOOTDROP! ", color:gold, bold:true}, {text:"Le Grand Poulet a fait apparaitre 2 coffres contenant du loot précieux quelque part sur la map !",color:yellow}]
+tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"LOOTDROP! ", color:gold, bold:true}, \
+    {translate:"Le Grand Poulet a fait apparaitre 2 %s contenant du loot précieux quelque part sur la map !",color:yellow, with:[{text:"coffres", color:green}]}]
 
 execute as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
     run setblock ~ ~ ~ air

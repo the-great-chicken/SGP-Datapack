@@ -86,6 +86,8 @@ execute as @a[tag=sgp.in_game,tag=!sgp.sliding_up,predicate=sgp.world:is_pressin
 execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_honey] \
     run function sgp.world:slide_honey_up/remove
 
+execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/show_item/main
+
 
 
 # ---------- COSMETICS ----------

@@ -103,6 +103,7 @@ scoreboard objectives add sgp.en_cage dummy
 scoreboard objectives add sgp.link_teams dummy
 
 scoreboard objectives add sgp.reflexes_joueur trigger
+scoreboard objectives add sgp.share_item trigger
 
 scoreboard objectives add sgp.teleporteur dummy
 scoreboard objectives add sgp.dummy dummy
