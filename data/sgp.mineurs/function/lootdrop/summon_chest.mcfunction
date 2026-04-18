@@ -9,7 +9,7 @@ setblock ~ ~ ~ minecraft:trapped_chest{LootTable:"sgp.mineurs:lootdrop_chest"} r
 
 item replace block ~ ~ ~ container.0 with air
 
-data modify storage sgp:close_detection Items set from block ~ ~ ~ Items
+data modify entity @s data.Items set from block ~ ~ ~ Items
 
 setblock ~ ~ ~ air
 setblock ~ ~ ~ minecraft:trapped_chest{LootTable:"sgp.misc:empty"} replace

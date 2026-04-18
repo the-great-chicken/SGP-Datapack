@@ -11,7 +11,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
         enchantments={"sgp.kits:perfect_accuracy":1}, \
         enchantment_glint_override=false, \
         potion_contents={potion:"minecraft:healing"}, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
         max_stack_size=64] \
         2', \
     give_2: 'splash_potion[ \
@@ -22,7 +22,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
         enchantments={"sgp.kits:perfect_accuracy":1}, \
         enchantment_glint_override=false, \
         potion_contents={potion:"minecraft:harming"}, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
         max_stack_size=64 \
         ] 3\
         ', \
@@ -45,7 +45,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
                 {id:"blindness", amplifier:0, duration:100} \
                 ] \
             }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \

@@ -2,8 +2,8 @@
 #
 # Things that happen when the chest is closed (remove the chest, particles,...)
 
-scoreboard players enable @a[tag=sgp.container_open] sgp.share_item
-tellraw @a[tag=sgp.container_open] [ \
+scoreboard players enable @p[tag=sgp.container_open] sgp.share_item
+tellraw @p[tag=sgp.container_open] [ \
     {storage:"sgp.text", nbt:"prefix", interpret:true}, \
     {translate: "Bravo d'avoir trouvé le %s ! As-tu obtenu un %s ?\n", "color": "yellow", \
         with: [{"text": "coffre", "color": "green"}, {"text": "item intéressant", "color": aqua}]}, \
@@ -13,16 +13,16 @@ tellraw @a[tag=sgp.container_open] [ \
         "hover_event": {"action": "show_text", "value": "Cela affichera dans le chat l'item que tu tiens actuellement"}, \
         click_event: {action: "run_command", command: "/trigger sgp.share_item"}}]
 
-tag @a[tag=sgp.container_open] remove sgp.container_open
+tag @p[tag=sgp.container_open] remove sgp.container_open
 
 setblock ~ ~ ~ air replace
 
 playsound minecraft:block.beacon.power_select master @a[tag=sgp.in_game] ~ ~ ~ 1 0.5
 
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Le coffre a été trouvé !", color:gold}]
+tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {translate:"Un %s a été trouvé !", color:gold,with:[{text:"coffre",color:green}]}]
 
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000
 
 tag @s remove sgp.opened_chest
 
-kill @e[dx=1,dz=1,dy=300,limit=8,name=lootdrop_beacon,type=text_display]
+kill @e[limit=8,sort=nearest,name=lootdrop_beacon,type=text_display]

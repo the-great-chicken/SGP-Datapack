@@ -7,13 +7,13 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_1=1..}] run function sgp.kit
     give:'tipped_arrow[ \
         custom_name={text:"Flèche de Poison", color:green, italic:false, bold:true}, \
         lore=[ \
-            {text:"☠ Poison (0:11)", color:"#55741B", italic:false} \
+            {text:"💀 Poison (0:11)", color:"#55741B", italic:false} \
             ], \
         potion_contents="long_poison", \
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ☠ Flèche de Poison !", color:"#55741B", bold:true} \
+    actionbar:{text:"+ 1 💀 Flèche de Poison !", color:"#55741B", bold:true} \
     }
 
 execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
@@ -33,7 +33,7 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         ]', \
     give_2:air, \
     actionbar:' \
-        {text:"+ 1 ☠ Flèche de Poison ", color:"#55741B", bold:true}, \
+        {text:"+ 1 💀 Flèche de Poison ", color:"#55741B", bold:true}, \
         {text:"et 1 ⬳ Flèche de Lenteur !", color:"#555555"}' \
     }
 
@@ -52,7 +52,7 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_3=3..}] run function sgp.kit
         ]', \
     give_2:air, \
     actionbar:' \
-        {text:"+ 1 ☠ Flèche de Poison ", color:green, bold:true}, \
+        {text:"+ 1 💀 Flèche de Poison ", color:green, bold:true}, \
         {text:"et 1 ❤ Pomme d\\\'or !", color:yellow} \
         ' \
     }

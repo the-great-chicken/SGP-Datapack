@@ -7,7 +7,8 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_1=1..}] run function sgp.k
     give:'ender_pearl[ \
         enchantments={"sgp.kits:perfect_accuracy":1}, \
         enchantment_glint_override=false, \
-        custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true} \
+        custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true}, \
+        tooltip_display={hidden_components:["enchantments"]} \
         ] 2', \
     give_2:air, \
     actionbar:{text:"+ 2 Ⓞ Yeux !", color:dark_purple, bold:true} \
@@ -25,7 +26,9 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
                 {id:"speed", amplifier:1, duration:440} \
                 ] \
             }, \
-        tooltip_display= {hidden_components:["potion_contents"]}, \
+        enchantments={"sgp.kits:perfect_accuracy":1}, \
+        enchantment_glint_override=false, \
+        tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \

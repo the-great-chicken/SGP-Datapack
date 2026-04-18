@@ -103,14 +103,17 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"speed", amplifier:1, duration:440} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    enchantments={"sgp.kits:perfect_accuracy":1}, \
+    enchantment_glint_override=false, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     max_stack_size=64 \
     ]
 
 item replace entity @s hotbar.1 with ender_pearl[ \
     enchantments={"sgp.kits:perfect_accuracy":1}, \
     enchantment_glint_override=false, \
-    custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true} \
+    custom_name={text:"Yeux", color:dark_purple, italic:false, bold:true}, \
+    tooltip_display={hidden_components:["enchantments"]} \
     ] 8
 
 

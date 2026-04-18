@@ -106,7 +106,7 @@ item replace entity @s hotbar.1 with splash_potion[ \
     enchantments={"sgp.kits:perfect_accuracy":1}, \
     enchantment_glint_override=false, \
     potion_contents="minecraft:healing", \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     max_stack_size=64 \
     ] 8
 
@@ -118,7 +118,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
     enchantments={"sgp.kits:perfect_accuracy":1}, \
     enchantment_glint_override=false, \
     potion_contents="minecraft:harming", \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     max_stack_size=64 \
     ] 10
 
@@ -134,7 +134,7 @@ item replace entity @s hotbar.3 with splash_potion[ \
             {id:"blindness", amplifier:0, duration:100} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     max_stack_size=64 \
     ]
 

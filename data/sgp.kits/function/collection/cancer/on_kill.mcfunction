@@ -65,7 +65,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 {duration:300, id:"speed", amplifier:1b} \
                 ] \
             }, \
-        tooltip_display={hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
         item_model="sgp.kits:cancer/speed", \
         max_stack_size=64 \
         ]', \
@@ -81,7 +81,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
                 {duration:600, id:"jump_boost", amplifier:2b} \
                 ] \
             }, \
-        tooltip_display={hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
         item_model="sgp.kits:cancer/jump", \
         max_stack_size=64 \
         ]', \

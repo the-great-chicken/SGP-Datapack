@@ -120,7 +120,7 @@ item replace entity @s hotbar.5 with tipped_arrow[ \
 item replace entity @s weapon.offhand with tipped_arrow[ \
     custom_name={text:"Flèche de Poison", color:green, italic:false, bold:true}, \
     lore=[ \
-        {text:"☠ Poison (0:11)", color:"#55741B", italic:false} \
+        {text:"💀 Poison (0:11)", color:"#55741B", italic:false} \
         ], \
     potion_contents="long_poison", \
     tooltip_display= {hidden_components:["potion_contents"]}, \

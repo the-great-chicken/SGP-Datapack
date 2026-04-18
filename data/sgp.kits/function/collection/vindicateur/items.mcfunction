@@ -95,7 +95,7 @@ item replace entity @s hotbar.2 with splash_potion[ \
             {id:"weakness", amplifier:0, duration:100} \
             ] \
         }, \
-    tooltip_display={hidden_components:["potion_contents"]}, \
+    tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
     max_stack_size=64 \
     ]
 

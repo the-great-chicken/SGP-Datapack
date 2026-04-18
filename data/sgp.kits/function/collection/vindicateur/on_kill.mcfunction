@@ -16,7 +16,7 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
                 {id:"weakness", amplifier:0, duration:100} \
                 ] \
             }, \
-        tooltip_display={hidden_components:["potion_contents"]}, \
+        tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
         max_stack_size=64 \
         ]', \
     give_2:air, \

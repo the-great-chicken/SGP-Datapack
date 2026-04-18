@@ -151,7 +151,7 @@ item replace entity @s hotbar.5 with splash_potion[ \
             {id:"speed", amplifier:1, duration:300} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     item_model="sgp.kits:cancer/speed", \
     max_stack_size=64 \
     ] 3
@@ -169,7 +169,7 @@ item replace entity @s hotbar.6 with splash_potion[ \
             {id:"jump_boost", amplifier:2, duration:600} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
     item_model="sgp.kits:cancer/jump", \
     max_stack_size=64 \
     ] 3
