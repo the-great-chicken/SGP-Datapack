@@ -11,3 +11,5 @@ playsound minecraft:block.beacon.power_select master @a[tag=sgp.in_game] ~ ~ ~ 1
 tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Le coffre a été trouvé !", color:gold}]
 
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000
+
+tag @s remove sgp.opened_chest
