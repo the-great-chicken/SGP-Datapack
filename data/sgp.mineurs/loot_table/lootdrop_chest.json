@@ -978,8 +978,9 @@
     },
     {
       "rolls": {
-        "min": 1,
-        "max": 3
+        "type": "minecraft:binomial",
+        "n": 4,
+        "p": 0.5
       },
       "entries": [
         {
@@ -1060,9 +1061,14 @@
           "weight": 4,
           "functions": [
             {
+              "function": "minecraft:toggle_tooltips",
+              "toggles": {
+                "minecraft:enchantments": false
+              }
+            },
+            {
               "function": "minecraft:set_enchantments",
               "enchantments": {
-                "minecraft:power": 1,
                 "sgp.kits:perfect_accuracy": 1
               }
             },
@@ -1085,9 +1091,14 @@
           "weight": 4,
           "functions": [
             {
+              "function": "minecraft:toggle_tooltips",
+              "toggles": {
+                "minecraft:enchantments": false
+              }
+            },
+            {
               "function": "minecraft:set_enchantments",
               "enchantments": {
-                "minecraft:power": 1,
                 "sgp.kits:perfect_accuracy": 1
               }
             },
@@ -1224,6 +1235,11 @@
               "mode": "append"
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:milk_bucket",
+          "weight": 3
         }
       ]
     },
@@ -1539,8 +1555,9 @@
     },
     {
       "rolls": {
-        "min": 1,
-        "max": 3
+        "type": "minecraft:binomial",
+        "n": 4,
+        "p": 0.5
       },
       "entries": [
         {
@@ -1576,12 +1593,6 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
-              "function":"toggle_tooltips",
-              "toggles": {
-                "minecraft:potion_contents": false
-              }
-            },
-            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1593,7 +1604,7 @@
                     }
                   ]
                 },
-                "potion_duration_scale": 1.0
+                "potion_duration_scale": 1
               }
             },
             {
@@ -1635,12 +1646,6 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
-              "function":"toggle_tooltips",
-              "toggles": {
-                "minecraft:potion_contents": false
-              }
-            },
-            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1673,7 +1678,7 @@
                   "italic": false
                 },
                 {
-                  "text": "☠ Poison (0:11)",
+                  "text": "💀 Poison (0:11)",
                   "color": "#55741B",
                   "italic": false
                 }
@@ -1687,12 +1692,6 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
-              "function":"toggle_tooltips",
-              "toggles": {
-                "minecraft:potion_contents": false
-              }
-            },
-            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1705,7 +1704,7 @@
                     }
                   ]
                 },
-                "potion_duration_scale": 1.0
+                "potion_duration_scale": 1
               }
             },
             {
@@ -1746,12 +1745,6 @@
           "type": "minecraft:item",
           "name": "minecraft:tipped_arrow",
           "functions": [
-            {
-              "function":"toggle_tooltips",
-              "toggles": {
-                "minecraft:potion_contents": false
-              }
-            },
             {
               "function": "minecraft:set_components",
               "components": {
@@ -1799,12 +1792,6 @@
           "name": "minecraft:tipped_arrow",
           "functions": [
             {
-              "function":"toggle_tooltips",
-              "toggles": {
-                "minecraft:potion_contents": false
-              }
-            },
-            {
               "function": "minecraft:set_components",
               "components": {
                 "minecraft:potion_contents": {
@@ -1817,7 +1804,7 @@
                     }
                   ]
                 },
-                "potion_duration_scale": 1.0
+                "potion_duration_scale": 1
               }
             },
             {
@@ -1853,6 +1840,15 @@
               "mode": "append"
             }
           ]
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:toggle_tooltips",
+          "toggles": {
+            "minecraft:potion_contents": false,
+            "minecraft:attribute_modifiers": false
+          }
         }
       ]
     },
@@ -2205,6 +2201,652 @@
         {
           "condition": "minecraft:random_chance",
           "chance": 0.8
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:binomial",
+        "n": 2,
+        "p": 0.5
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "target": "custom_name",
+              "name": {
+                "text": "Potion de Famine",
+                "color": "light_purple",
+                "italic": false,
+                "bold": true
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "mode": "replace_all",
+              "lore": [
+                {
+                  "text": "🍖 Faim CC (0:02)",
+                  "color": "#587653",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:potion_contents": {
+                  "custom_effects": [
+                    {
+                      "id": "minecraft:hunger",
+                      "amplifier": 199,
+                      "duration": 40
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "target": "custom_name",
+              "name": {
+                "text": "Potion de Décomposition",
+                "color": "light_purple",
+                "italic": false,
+                "bold": true
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "mode": "replace_all",
+              "lore": [
+                {
+                  "text": "☠ Décomposition III (0:05)",
+                  "color": "#726055",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:potion_contents": {
+                  "custom_effects": [
+                    {
+                      "id": "minecraft:wither",
+                      "amplifier": 2,
+                      "duration": 100
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "target": "custom_name",
+              "name": {
+                "text": "Potion de Nausée",
+                "color": "light_purple",
+                "italic": false,
+                "bold": true
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "mode": "replace_all",
+              "lore": [
+                {
+                  "text": "☹ Nausée (0:10)",
+                  "color": "#541d49",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:potion_contents": {
+                  "custom_effects": [
+                    {
+                      "id": "minecraft:nausea",
+                      "duration": 200
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lingering_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "target": "custom_name",
+              "name": {
+                "text": "Potion Persistante de Lenteur",
+                "color": "light_purple",
+                "italic": false,
+                "bold": true
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "mode": "replace_all",
+              "lore": [
+                {
+                  "text": "⬳ Lenteur V (0:10)",
+                  "color": "#555555",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:potion_contents": {
+                  "custom_effects": [
+                    {
+                      "id": "minecraft:slowness",
+                      "amplifier": 4,
+                      "duration": 200
+                    }
+                  ]
+                },
+                "minecraft:potion_duration_scale": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lingering_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "target": "custom_name",
+              "name": {
+                "text": "Potion Persistante de Dégâts",
+                "color": "light_purple",
+                "italic": false,
+                "bold": true
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "mode": "replace_all",
+              "lore": [
+                {
+                  "text": "⚔ Dégâts Instantanés",
+                  "color": "dark_red",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:potion_contents": {
+                  "custom_effects": [
+                    {
+                      "id": "minecraft:instant_damage",
+                      "amplifier": 0
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:toggle_tooltips",
+          "toggles": {
+            "minecraft:enchantments": false,
+            "minecraft:potion_contents": false
+          }
+        },
+        {
+          "function": "minecraft:set_enchantments",
+          "enchantments": {
+            "sgp.kits:perfect_accuracy": 1
+          }
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:binomial",
+        "n": 3,
+        "p": 0.25
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:crossbow",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.01,
+                "max": 0.2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:shield",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.05,
+                "max": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:flint_and_steel",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.2,
+                "max": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "rolls": 1,
+                "entries": [
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:elytra",
+                    "functions": [
+                      {
+                        "function": "minecraft:set_damage",
+                        "damage": {
+                          "min": 0.15,
+                          "max": 0.4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "rolls": 1,
+                "entries": [
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:firework_rocket",
+                    "functions": [
+                      {
+                        "function": "minecraft:set_count",
+                        "count": {
+                          "type": "minecraft:binomial",
+                          "n": 6,
+                          "p": 0.5
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:toggle_tooltips",
+          "toggles": {
+            "minecraft:attribute_modifiers": false
+          }
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:binomial",
+        "n": 2,
+        "p": 0.5
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_pearl",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:binomial",
+                "n": 10,
+                "p": 0.25
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:snowball",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:binomial",
+                "n": 16,
+                "p": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wind_charge",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:binomial",
+                "n": 6,
+                "p": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:fishing_rod",
+          "functions": [
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Long Cast II",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "replace_all"
+            }
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_enchantments",
+          "enchantments": {
+            "sgp.kits:perfect_accuracy": 1
+          }
+        },
+        {
+          "function": "minecraft:toggle_tooltips",
+          "toggles": {
+            "minecraft:enchantments": false,
+            "minecraft:attribute_modifiers": false
+          }
+        },
+        {
+          "function": "minecraft:set_components",
+          "components": {
+            "minecraft:enchantment_glint_override": false
+          }
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:binomial",
+        "n": 1,
+        "p": 0.1
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bow",
+          "functions": [
+            {
+              "function": "minecraft:toggle_tooltips",
+              "toggles": {
+                "minecraft:enchantments": false,
+                "minecraft:attribute_modifiers": false
+              }
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": [
+                {
+                  "text": " |O",
+                  "color": "#b70079",
+                  "bold": true,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#a5057d",
+                  "bold": true,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#920a81",
+                  "bold": true,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#800f86",
+                  "bold": true,
+                  "italic": false,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#6e148a",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#5c198e",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#491d92",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#372296",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#25279b",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O",
+                  "color": "#122c9f",
+                  "bold": true,
+                  "obfuscated": true
+                },
+                {
+                  "text": "O| ",
+                  "color": "#0031a3",
+                  "bold": true,
+                  "obfuscated": true
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "---------------",
+                  "color": "#C0C0C0",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:power_2"
+            },
+            {
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:flame"
+            },
+            {
+              "function": "minecraft:reference",
+              "name": "sgp.mineurs:infinity"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Blizzard III",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Firestorm III",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Fireworks IV",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Potion III",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Reaper IV",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "Toxic IV",
+                  "color": "gray",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            },
+            {
+              "function": "minecraft:set_damage",
+              "damage": 0.002
+            },
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:punch": 2
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "⬱ Recul II",
+                  "color": "#6F4E37",
+                  "italic": false
+                }
+              ],
+              "mode": "append"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:binomial",
+        "n": 1,
+        "p": 0.15
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:goat_horn",
+          "functions": [
+            {
+              "function": "minecraft:set_instrument",
+              "options": "#minecraft:goat_horns"
+            }
+          ]
         }
       ]
     }

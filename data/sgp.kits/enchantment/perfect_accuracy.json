@@ -10,7 +10,8 @@
     "minecraft:lingering_potion",
     "minecraft:ender_pearl",
     "minecraft:snowball",
-    "minecraft:egg"
+    "minecraft:egg",
+    "minecraft:wind_charge"
   ],
   "weight": 1,
   "max_level": 1,

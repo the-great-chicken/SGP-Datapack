@@ -98,6 +98,7 @@ scoreboard objectives remove sgp.en_cage
 scoreboard objectives remove sgp.link_teams
 
 scoreboard objectives remove sgp.reflexes_joueur
+scoreboard objectives remove sgp.share_item
 
 scoreboard objectives remove sgp.teleporteur
 scoreboard objectives remove sgp.dummy
