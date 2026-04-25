@@ -10,6 +10,9 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true},
 execute as @e[type=marker,tag=sgp.marker,name="Lootdrop"] at @s \
     run setblock ~ ~ ~ air
 kill @e[name=lootdrop_beacon,type=text_display]
+kill @e[name=lootdrop_glowing_chest,type=block_display]
     
 execute as @e[type=marker,tag=sgp.marker,name="Lootdrop",limit=2,sort=random] at @s \
     run function sgp.mineurs:lootdrop/summon_chest
+
+function sgp.mineurs:lootdrop/check_for_players_around_chest

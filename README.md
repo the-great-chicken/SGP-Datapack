@@ -39,7 +39,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`. Need 8 `\` to escape a `'`.
 - any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
-- at least 1 `Lootdrop`: location of lootdrop chests
+- at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
 - optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 

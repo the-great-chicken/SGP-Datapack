@@ -12,10 +12,12 @@ item replace block ~ ~ ~ container.0 with air
 data modify entity @s data.Items set from block ~ ~ ~ Items
 
 setblock ~ ~ ~ air
-setblock ~ ~ ~ minecraft:trapped_chest{LootTable:"sgp.misc:empty"} replace
+function sgp.mineurs:lootdrop/summon_chest_macro with entity @s data
 
 # Normalize y level position
 summon marker ~ ~ ~ {Tags:["sgp.y_anchor"]}
 data modify entity @e[tag=sgp.y_anchor,limit=1,distance=..1,type=marker] Pos[1] set from entity @e[type=marker,tag=sgp.marker,name=pvp_arena,limit=1] Pos[1]
 execute at @e[tag=sgp.y_anchor,limit=1,type=marker] run function sgp.mineurs:lootdrop/summon_beacon with entity @e[type=marker,tag=sgp.marker,name=pvp_arena,limit=1] data
 kill @e[tag=sgp.y_anchor,limit=1,type=marker]
+
+tag @s remove sgp.glow_spawned

@@ -7,22 +7,11 @@
 
 advancement revoke @s only sgp.mineurs:open_chest
 
-execute as @n[tag=sgp.marker,name="Lootdrop",distance=..7,type=marker] run tag @s add sgp.opened_chest
-
-execute as @e[tag=sgp.opened_chest,distance=..7,limit=1,type=marker] at @s \
-    if block ~ ~ ~ trapped_chest \
-        run data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
-
-tag @s add sgp.container_open
-
-# Summoning the items in the chest
 execute unless entity @s[tag=sgp.peaceful] \
-    as @e[tag=sgp.opened_chest,distance=..7,limit=1,type=marker] at @s \
-        if block ~ ~ ~ trapped_chest \
-            run data modify block ~ ~ ~ Items set from entity @s data.Items
+    as @n[tag=sgp.marker,name="Lootdrop",distance=..7,type=marker] at @s \
+        run function sgp.mineurs:lootdrop/close_detection/on_open
 
-function #bs.schedule:schedule {run:"execute as @e[tag=sgp.opened_chest,limit=1,type=marker] at @s if block ~ ~ ~ trapped_chest run function sgp.mineurs:lootdrop/close_detection/schedule",with:{id:"close_detection",time:1,unit:"t"}}
-
+execute unless entity @s[tag=sgp.peaceful] run tag @s add sgp.container_open
 
 # The tick advancement below helps us run a function in the subtick after the LootTable is generated within the subtick.
 advancement revoke @s only sgp.mineurs:tick

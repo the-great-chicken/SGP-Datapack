@@ -84,6 +84,11 @@ execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_h
 
 execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/show_item/main
 
+execute as @e[tag=sgp.marker,name="Lootdrop",tag=!sgp.opened_chest,type=marker] at @s \
+    if block ~ ~ ~ trapped_chest \
+    unless data block ~ ~ ~ LootTable \
+        run data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
+
 
 
 # ---------- COSMETICS ----------
