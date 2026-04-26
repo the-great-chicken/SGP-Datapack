@@ -1,4 +1,4 @@
-#> sgp.misc:player_mannequins/update_pos
+#> sgp.misc:player_mannequins/update_small_pos
 
 # Grab the player's exact position and rotation
 # We scale by 1000 (milliblocks/millidegrees) to prevent the division by 16 from wiping out fractional precision!

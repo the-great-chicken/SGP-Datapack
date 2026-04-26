@@ -17,4 +17,4 @@ scoreboard players set @s sgp.death_reset_tags 0
 
 function sgp.kits:clear
 
-function sgp.misc:player_mannequins/disappear
+function sgp.misc:player_mannequins/disappear {type:"small"}
