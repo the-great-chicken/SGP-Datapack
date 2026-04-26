@@ -11,3 +11,22 @@ execute as @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] at @s 
 execute as @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] run scoreboard players operation #model_x sgp.dummy = @s bs.pos.x
 execute as @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] run scoreboard players operation #model_y sgp.dummy = @s bs.pos.y
 execute as @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] run scoreboard players operation #model_z sgp.dummy = @s bs.pos.z
+
+# --- Fetch Map Dimensions from the marker data ---
+execute as @e[tag=sgp.marker,name=playable_map,limit=1,type=marker] store result score #map_dx sgp.dummy run data get entity @s data.dx
+execute as @e[tag=sgp.marker,name=playable_map,limit=1,type=marker] store result score #map_dz sgp.dummy run data get entity @s data.dz
+
+# Calculate Map Half-Widths in milliblocks (dx * 1000 / 2 = dx * 500)
+scoreboard players operation #map_hw_x sgp.dummy = #map_dx sgp.dummy
+scoreboard players operation #map_hw_x sgp.dummy *= 500 sgp.dummy
+scoreboard players operation #map_hw_z sgp.dummy = #map_dz sgp.dummy
+scoreboard players operation #map_hw_z sgp.dummy *= 500 sgp.dummy
+
+# Calculate Map Center (Map Origin + Half-Width)
+scoreboard players operation #map_center_x sgp.dummy = #map_x sgp.dummy
+scoreboard players operation #map_center_x sgp.dummy += #map_hw_x sgp.dummy
+scoreboard players operation #map_center_z sgp.dummy = #map_z sgp.dummy
+scoreboard players operation #map_center_z sgp.dummy += #map_hw_z sgp.dummy
+
+# Define the maximum pushback (in blocks). Change this number to adjust how far away the giant stands!
+scoreboard players set #giant_offset sgp.dummy 8
