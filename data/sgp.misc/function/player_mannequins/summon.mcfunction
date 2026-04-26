@@ -6,11 +6,11 @@
 tag @s add sgp.mannequin_init
 
 # Summon mannequin with the player's skin and link them together
-$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, attributes:[{id:"minecraft:scale", base:$(size)f}], Tags:["sgp.$(type)_mannequin", "sgp.new"], immovable:true, hide_description:true, Invulnerable:true}
+$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, attributes:[{id:"minecraft:scale", base:$(size)f}], Tags:["sgp.$(type)_mannequin", "sgp.new"], immovable:true, hide_description:true, Invulnerable:true, HasVisualFire:false}
 execute as @e[tag=sgp.new,limit=1,type=mannequin] at @p[tag=sgp.mannequin_init] run function #bs.link:create_link_ata
 
 # Give player's name to mannequin
-summon text_display ~ ~ ~ {Tags:["sgp.temp_name"], billboard:"center", transformation:{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f, 0.02f, 0f], scale:[0.1f, 0.1f, 0.1f]}, text:{selector:"@p[tag=sgp.mannequin_init]"}}
+summon text_display ~ ~ ~ {Tags:["sgp.temp_name","sgp.fake_nametag"], billboard:"center", transformation:{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f, 0.02f, 0f], scale:[0.1f, 0.1f, 0.1f]}, text:{selector:"@p[tag=sgp.mannequin_init]"}}
 ride @e[tag=sgp.temp_name,limit=1,distance=..0.1,type=text_display] mount @e[tag=sgp.new,limit=1,type=mannequin]
 
 # Give player's gear to mannequin (will not update if player changes gear)

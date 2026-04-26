@@ -19,6 +19,42 @@ scoreboard players operation @s bs.pos.x += #map_x sgp.dummy
 scoreboard players operation @s bs.pos.y += #map_y sgp.dummy
 scoreboard players operation @s bs.pos.z += #map_z sgp.dummy
 
+# --- NEW: GRADUAL RAMP PUSHBACK ---
+
+# 1. Calculate relative X distance from the center of the map
+scoreboard players operation #rx sgp.dummy = @s bs.pos.x
+scoreboard players operation #rx sgp.dummy -= #map_center_x sgp.dummy
+
+# 2. Scale down to a percentage (per-mille: 1000 = exactly at the edge of map)
+scoreboard players operation #rx sgp.dummy *= 1000 sgp.dummy
+scoreboard players operation #rx sgp.dummy /= #map_hw_x sgp.dummy
+
+# 3. Clamp the percentage between -1000 (West edge) and 1000 (East edge)
+execute if score #rx sgp.dummy matches 1000.. run scoreboard players set #rx sgp.dummy 1000
+execute if score #rx sgp.dummy matches ..-1000 run scoreboard players set #rx sgp.dummy -1000
+
+# 4. Multiply by our chosen offset to get the final milliblock pushback
+# (Because the percentage is /1000 and blocks-to-milliblocks is *1000, multiplying by the block count perfectly balances the math)
+scoreboard players operation #rx sgp.dummy *= #giant_offset sgp.dummy
+
+# 5. Apply the pushback to the giant's X position
+scoreboard players operation @s bs.pos.x += #rx sgp.dummy
+
+# 6. Repeat identical logic for the Z axis
+scoreboard players operation #rz sgp.dummy = @s bs.pos.z
+scoreboard players operation #rz sgp.dummy -= #map_center_z sgp.dummy
+
+scoreboard players operation #rz sgp.dummy *= 1000 sgp.dummy
+scoreboard players operation #rz sgp.dummy /= #map_hw_z sgp.dummy
+
+execute if score #rz sgp.dummy matches 1000.. run scoreboard players set #rz sgp.dummy 1000
+execute if score #rz sgp.dummy matches ..-1000 run scoreboard players set #rz sgp.dummy -1000
+
+scoreboard players operation #rz sgp.dummy *= #giant_offset sgp.dummy
+scoreboard players operation @s bs.pos.z += #rz sgp.dummy
+
+# --- END NEW ---
+
 # Store the final position and rotation into global temporary fake players
 scoreboard players operation #temp_x sgp.dummy = @s bs.pos.x
 scoreboard players operation #temp_y sgp.dummy = @s bs.pos.y
