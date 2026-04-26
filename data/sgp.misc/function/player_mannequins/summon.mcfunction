@@ -1,12 +1,12 @@
 #> sgp.misc:player_mannequins/summon
-# `{current_uuid: player UUID}`
+# `{current_uuid: player UUID, type: giant|small, size: 16.0|0.0625}`
 #
 # Summons a smaller mannequin with the same profile, name and gear as the player 
 
 tag @s add sgp.mannequin_init
 
 # Summon mannequin with the player's skin and link them together
-$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, Tags:["sgp.small_mannequin", "sgp.new"], immovable:true, hide_description:true}
+$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, attributes:[{id:"minecraft:scale", base:$(size)f}], Tags:["sgp.$(type)_mannequin", "sgp.new"], immovable:true, hide_description:true, Invulnerable:true}
 execute as @e[tag=sgp.new,limit=1,type=mannequin] at @p[tag=sgp.mannequin_init] run function #bs.link:create_link_ata
 
 # Give player's name to mannequin
@@ -20,8 +20,6 @@ item replace entity @e[tag=sgp.new,limit=1,type=mannequin] armor.legs from entit
 item replace entity @e[tag=sgp.new,limit=1,type=mannequin] armor.feet from entity @s armor.feet
 item replace entity @e[tag=sgp.new,limit=1,type=mannequin] weapon.mainhand from entity @s weapon.mainhand
 item replace entity @e[tag=sgp.new,limit=1,type=mannequin] weapon.offhand from entity @s weapon.offhand
-
-attribute @e[tag=sgp.new,limit=1,type=mannequin] scale base set 0.0625
 
 tag @e[tag=sgp.temp_name,limit=1,type=text_display] remove sgp.temp_name
 tag @e[tag=sgp.new,limit=1,type=mannequin] remove sgp.new

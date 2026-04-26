@@ -43,7 +43,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 - 1 `playable_map` in the corner of the playable map: `{dx, dy, dz}`
-- Optionally 1 `playable_map_model` in the corner of the smaller model of the map.
+- Optionally 1 `playable_map_model` in the corner of the smaller model of the map: `{mdx, mdy, mdz, mdx_plus_6, mdy_plus_6, mdz_plus_6}` (`mdx` is 1/16 of the `playable_map` `dx`, but `mdx_plus_6` is `mdx` + 6)
 
 ### Major Events
 
