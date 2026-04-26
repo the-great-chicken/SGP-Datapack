@@ -1,5 +1,9 @@
 #> sgp.misc:128_ticks_functions
 
+scoreboard players add #128_ticks_clock sgp.dummy 1
+
+execute unless score #128_ticks_clock sgp.dummy matches 128 run return 0
+
 execute unless entity @a[predicate=sgp.majeurs:event_in_progress] \
     run function sgp.misc:kill_streaks_management
 
@@ -15,7 +19,6 @@ execute store result score #nbr_lieu sgp.lieu_count \
 execute at @e[type=marker,tag=sgp.marker,name="respawn",limit=1] \
     run spawnpoint @a ~ ~ ~ ~ ~
 
-scoreboard players add #128_ticks_clock sgp.dummy 1
+function sgp.misc:player_mannequins/init_markers_pos
 
-execute if score #128_ticks_clock sgp.dummy matches 128 \
-    run scoreboard players set #128_ticks_clock sgp.dummy 0
+scoreboard players set #128_ticks_clock sgp.dummy 0
