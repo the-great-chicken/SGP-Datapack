@@ -16,3 +16,5 @@ scoreboard players set @s sgp.kills_give_3 0
 scoreboard players set @s sgp.death_reset_tags 0
 
 function sgp.kits:clear
+
+function sgp.misc:player_mannequins/disappear

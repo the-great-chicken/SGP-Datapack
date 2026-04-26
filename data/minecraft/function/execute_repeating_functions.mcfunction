@@ -22,6 +22,9 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
     if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
+execute if entity @e[tag=sgp.marker,name="playable_map_model",type=marker] \
+    run function sgp.misc:player_mannequins/tick
+
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
     function sgp.misc:on_death
 
@@ -58,6 +61,7 @@ execute if score #52_ticks_clock sgp.dummy matches 52.. run \
     scoreboard players set #52_ticks_clock sgp.dummy 0
 
 function sgp.kits:abilities/tick
+
 
 
 # ---------- MISCELLANEOUS ----------
