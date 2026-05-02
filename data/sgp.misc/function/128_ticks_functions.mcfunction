@@ -19,6 +19,4 @@ execute store result score #nbr_lieu sgp.lieu_count \
 execute at @e[type=marker,tag=sgp.marker,name="respawn",limit=1] \
     run spawnpoint @a ~ ~ ~ ~ ~
 
-function sgp.misc:player_mannequins/init_markers_pos
-
 scoreboard players set #128_ticks_clock sgp.dummy 0

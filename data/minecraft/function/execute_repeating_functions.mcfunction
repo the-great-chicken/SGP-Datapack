@@ -22,7 +22,7 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
     if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
-execute if entity @e[tag=sgp.marker,name="playable_map_model",type=marker] \
+execute if score #diorama_enabled sgp.dummy matches 1 \
     run function sgp.misc:player_mannequins/tick
 
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
@@ -67,14 +67,10 @@ function sgp.kits:abilities/tick
 # ---------- MISCELLANEOUS ----------
 function sgp.misc:kill_counter
 
-execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
-    run function sgp.world:teleporter/run
-
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
 function sgp.misc:128_ticks_functions
-
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
     run function sgp.world:climbing_boost/add
@@ -88,10 +84,13 @@ execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_h
 
 execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/show_item/main
 
-execute as @e[tag=sgp.marker,name="Lootdrop",tag=!sgp.opened_chest,type=marker] at @s \
-    if block ~ ~ ~ trapped_chest \
-    unless data block ~ ~ ~ LootTable \
-        run data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
+function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
 
 
 
