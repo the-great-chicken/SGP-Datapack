@@ -1,4 +1,4 @@
-#> sgp.misc:players_in_game
+#> sgp.misc:players_in_game/check
 # `{radius: int}`
 #
 # Players who are inside the radius have a tag, others don't

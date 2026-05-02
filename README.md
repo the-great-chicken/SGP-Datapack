@@ -78,6 +78,7 @@ Each of these is optional (or can be present multiple times), depending on how y
 - `gamerule advance_time` must be set to `false` for some effects to work properly, and the time to be set at 10000. This limitation should be removed when the pack will be upgraded to Minecraft 26.1.
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
+- You should forceload all the chunks in which you placed markers.
 
 # Uninstallation
 
