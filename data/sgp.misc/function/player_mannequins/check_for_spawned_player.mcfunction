@@ -10,4 +10,4 @@ $execute as @a[tag=sgp.has_small_mannequin] unless entity @s[dx=$(dx),dy=$(dy),d
 
 # Detects if a player just entered bounds
 $execute as @a[tag=sgp.in_game,tag=!sgp.has_small_mannequin,dx=$(dx),dy=$(dy),dz=$(dz)] \
-    run function sgp.misc:player_mannequins/on_player_spawn
+    run function sgp.misc:player_mannequins/on_player_spawn with storage sgp:data markers_lists.playable_map_model[0]

@@ -12,4 +12,4 @@ execute as @a[scores={sgp.cancer_found=2}] run function sgp.kits:unlocking/unloc
 execute as @a[scores={sgp.enderman_found=2}] run function sgp.kits:unlocking/unlocking_kit {kit:enderman, kit_color:dark_purple, fw_color:"8073150"}
 execute as @a[scores={sgp.alchimiste_found=2}] run function sgp.kits:unlocking/unlocking_kit {kit:alchimiste, kit_color:light_purple, fw_color:"12801229"}
 
-execute as @e[type=marker,tag=sgp.marker,name="kit_unlock"] at @s run function sgp.kits:unlocking/enable_kit_unlock with entity @s data
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.kit_unlock", command:"run function sgp.kits:unlocking/enable_kit_unlock with entity @s data"}

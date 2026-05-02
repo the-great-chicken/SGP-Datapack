@@ -2,8 +2,7 @@
 
 # Grab the player's exact position and rotation
 # We scale by 1000 (milliblocks/millidegrees) to prevent the division by 16 from wiping out fractional precision!
-function #bs.position:get_pos {scale:1000}
-function #bs.position:get_rot {scale:1000}
+function #bs.position:get_pos_and_rot {scale:1000}
 
 # Subtract the original map's origin to get the player's relative offset inside the maze
 scoreboard players operation @s bs.pos.x -= #map_x sgp.dummy
@@ -32,4 +31,6 @@ scoreboard players set #pose sgp.dummy 0
 execute if predicate sgp.misc:is_sneaking run scoreboard players set #pose sgp.dummy 1
 execute if predicate sgp.misc:is_swimming run scoreboard players set #pose sgp.dummy 2
 
-function #bs.link:as_children {run:"execute if entity @s[tag=sgp.small_mannequin,type=mannequin] run function sgp.misc:player_mannequins/apply_mannequin_pos"}
+# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
+scoreboard players operation $link.to bs.in = @s bs.id
+execute as @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin,type=mannequin] run function sgp.misc:player_mannequins/apply_mannequin_pos

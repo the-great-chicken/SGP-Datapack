@@ -38,7 +38,9 @@ scoreboard players operation @e[tag=sgp.predictor,limit=1,type=marker] bs.pos.z 
 # Use Bookshelf to offset the marker by those delta scores
 execute as @e[tag=sgp.predictor,limit=1,type=marker] run function #bs.position:add_pos {scale:0.001}
 
-function #bs.link:as_children {run:"function sgp.kits:abilities/rays/tick_children"}
+# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
+scoreboard players operation $link.to bs.in = @s bs.id
+execute as @e[predicate=bs.link:link_equal,limit=8,type=item_display] run function sgp.kits:abilities/rays/tick_children
 
 playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 
