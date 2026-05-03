@@ -30,10 +30,6 @@ scoreboard players add @a[tag=sgp.initialize_lieux,limit=1] sgp.lieu_count 0
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/player_initialization_lieux with entity @s data
 tag @s remove sgp.initialize_lieux
 
-scoreboard players add @s sgp.laby_fin 0
-scoreboard players add @s sgp.jump_hardest_done 0
-scoreboard players add @s sgp.jump_diff_2_done 0
-
 scoreboard players add @s sgp.teleporteur 0
 
 bossbar set sgp:lgp players @s
