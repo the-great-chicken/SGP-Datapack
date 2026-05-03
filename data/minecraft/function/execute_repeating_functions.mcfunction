@@ -31,8 +31,6 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
 
 
 # ---------- KITS ----------
-function sgp.kits:unlocking/check_kit_unlock
-
 function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
