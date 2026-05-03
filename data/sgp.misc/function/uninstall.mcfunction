@@ -51,10 +51,6 @@ scoreboard objectives remove sgp.id
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
-scoreboard objectives remove sgp.laby_fin
-scoreboard objectives remove sgp.jump_hardest_done
-scoreboard objectives remove sgp.jump_diff_2_done
-
 scoreboard objectives remove sgp.uuid
 scoreboard objectives remove sgp.killer
 scoreboard objectives remove sgp.posx1

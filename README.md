@@ -40,8 +40,9 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 - any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
-- optionally 1 `jump_diff_2`, 1 `jump_hardest`, 1 `laby_fin`: specific locations for parkour rewards. Not really flexible though.
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
+- 1 `playable_map` in the corner of the playable map: `{dx, dy, dz}`
+- Optionally 1 `playable_map_model` in the corner of the smaller model of the map: `{mdx, mdy, mdz, mdx_plus_6, mdy_plus_6, mdz_plus_6}` (`mdx` is 1/16 of the `playable_map` `dx`, but `mdx_plus_6` is `mdx` + 6)
 
 ### Major Events
 
@@ -60,13 +61,13 @@ Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can shar
 
 ## Interaction Entities
 
-The template to summon one is `/summon interaction ~ ~ ~ {CustomName:"<name>",Tags:["sgp.interaction"], data:{args:{<args>}, function: "<func>"}, width: 1f, height: 0.7f, response:true}`.
+The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction", "sgp.<name>"], data:{args:{<args>}, function: "<func>"}, response:true}`.
 Each of these is optional (or can be present multiple times), depending on how you want to make your players' UX.
 
 - `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, text:"<escaped_text_component>` <a href="#note1">*</a>
 - `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no args
 - `to_spawns`, with the function `sgp.misc:interactions/go_to_choose_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
-- `to_cosm`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
+- `to_cosms`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_reception`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_kits`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 
@@ -76,6 +77,7 @@ Each of these is optional (or can be present multiple times), depending on how y
 - `gamerule advance_time` must be set to `false` for some effects to work properly, and the time to be set at 10000. This limitation should be removed when the pack will be upgraded to Minecraft 26.1.
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
+- You should forceload all the chunks in which you placed markers.
 
 # Uninstallation
 

@@ -22,28 +22,15 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
     if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
+execute if score #diorama_enabled sgp.dummy matches 1 \
+    run function sgp.misc:player_mannequins/tick
+
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
     function sgp.misc:on_death
 
 
 
-
-# ---------- TRIGGER REWARDS ----------
-execute as @a[tag=sgp.in_game] \
-    unless entity @s[tag=sgp.enderman] \
-    unless entity @s[tag=sgp.pigeon] \
-    unless entity @s[tag=sgp.eclaireur] \
-    unless entity @s[tag=sgp.cancer] \
-    unless entity @s[tag=sgp.archer] run \
-        function sgp.world:reward/parkour_rewards
-
-execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
-
-
-
 # ---------- KITS ----------
-function sgp.kits:unlocking/check_kit_unlock
-
 function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
@@ -60,17 +47,14 @@ execute if score #52_ticks_clock sgp.dummy matches 52.. run \
 function sgp.kits:abilities/tick
 
 
+
 # ---------- MISCELLANEOUS ----------
 function sgp.misc:kill_counter
-
-execute as @e[type=marker,tag=sgp.marker,name="teleporter"] at @s \
-    run function sgp.world:teleporter/run
 
 execute if score #reflexes_ticks sgp.timer matches 1..99 \
     run function sgp.mineurs:reflexes/running
 
 function sgp.misc:128_ticks_functions
-
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
     run function sgp.world:climbing_boost/add
@@ -84,10 +68,15 @@ execute as @a[tag=sgp.sliding_up,predicate=!sgp.world:is_pressing_jump_next_to_h
 
 execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/show_item/main
 
-execute as @e[tag=sgp.marker,name="Lootdrop",tag=!sgp.opened_chest,type=marker] at @s \
-    if block ~ ~ ~ trapped_chest \
-    unless data block ~ ~ ~ LootTable \
-        run data modify block ~ ~ ~ LootTable set value "sgp.misc:empty"
+function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
+
+execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
 
 
 

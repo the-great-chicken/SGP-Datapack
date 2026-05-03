@@ -56,10 +56,6 @@ scoreboard objectives add sgp.id dummy
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
-scoreboard objectives add sgp.laby_fin trigger
-scoreboard objectives add sgp.jump_hardest_done trigger
-scoreboard objectives add sgp.jump_diff_2_done trigger
-
 scoreboard objectives add sgp.uuid dummy
 scoreboard objectives add sgp.killer dummy
 scoreboard objectives add sgp.posx1 dummy
@@ -132,6 +128,8 @@ scoreboard players set 49 sgp.dummy 49
 scoreboard players set 50 sgp.dummy 50
 scoreboard players set 100 sgp.dummy 100
 scoreboard players set 300 sgp.dummy 300
+scoreboard players set 500 sgp.dummy 500
+scoreboard players set 1000 sgp.dummy 1000
 scoreboard players set #even_tick sgp.dummy 0
 scoreboard players set #20_ticks sgp.dummy 0
 scoreboard players set #128_ticks_clock sgp.dummy 0
@@ -262,3 +260,35 @@ data merge storage sgp:kits {\
     }
 
 data modify storage sgp.text prefix set value {text:"[", color:gray, extra:[{text:"SGP", color:gold}, {text:"] "}]}
+
+data modify storage sgp:data const.hex set value ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+
+
+
+# ---------- Enable and init Diorama ----------
+
+scoreboard players set #diorama_enabled sgp.dummy 0
+execute if entity @e[tag=sgp.marker,name="playable_map_model",limit=1,type=marker] \
+    run scoreboard players set #diorama_enabled sgp.dummy 1
+
+function sgp.misc:player_mannequins/init_markers_pos
+
+
+
+# ---------- Init marker uuids ----------
+
+data remove storage sgp:data markers_lists.lootdrop
+execute as @e[tag=sgp.marker,name="Lootdrop",type=marker] \
+    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.lootdrop"}
+
+data remove storage sgp:data markers_lists.location
+execute as @e[tag=sgp.marker,name="lieu",type=marker] \
+    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.location"}
+    
+data remove storage sgp:data markers_lists.pvp_arena
+execute as @e[tag=sgp.marker,name="pvp_arena",limit=1,type=marker] \
+    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.pvp_arena"}
+
+data remove storage sgp:data markers_lists.teleporter
+execute as @e[tag=sgp.marker,name="teleporter",type=marker] \
+    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.teleporter"}

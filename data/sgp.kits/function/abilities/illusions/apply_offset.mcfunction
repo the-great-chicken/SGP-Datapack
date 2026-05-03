@@ -13,6 +13,6 @@ execute if entity @s[tag=sgp.direction_right] run function sgp.kits:abilities/il
 function #bs.position:add_pos {scale:0.001}
 
 # Update the illusions' pose
-execute if score #pose sgp.dummy matches 1 unless data entity @s {pose:"crouching"} run return run data modify entity @s pose set value "crouching"
-execute if score #pose sgp.dummy matches 2 unless data entity @s {pose:"swimming"} run return run data modify entity @s pose set value "swimming"
-execute if score #pose sgp.dummy matches 0 unless data entity @s {pose:"standing"} run return run data modify entity @s pose set value "standing"
+execute if score #pose sgp.dummy matches 1 run return run data modify entity @s pose set value "crouching"
+execute if score #pose sgp.dummy matches 2 run return run data modify entity @s pose set value "swimming"
+execute if score #pose sgp.dummy matches 0 run return run data modify entity @s pose set value "standing"
