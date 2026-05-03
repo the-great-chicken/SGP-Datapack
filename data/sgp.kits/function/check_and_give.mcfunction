@@ -3,6 +3,10 @@
 # 
 # Checks if the player has unlocked the kit, giving it or not
 
-$execute if score @s sgp.$(kit)_found matches 3 run function sgp.kits:give {kit:$(kit)}
-$execute if score @s sgp.$(kit)_found matches 3 run tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Tu as obtenu le kit ", color:aqua}, {text:"$(kit_name)", color:$(kit_color), bold:true}]
-$execute if score @s sgp.$(kit)_found matches 0 run tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Débloque le kit ", color:red}, {text:"$(kit)", bold:true, color:"$(kit_color)"}, {text:" en le trouvant dans la map !\n Indice : ",color:red}, {text:"$(hint)", color:"$(hint_color)", bold:true}]
+$execute unless score @s sgp.$(kit)_found matches 1 run return \
+    run tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, \
+                    {translate:"Débloque le kit %s en le trouvant dans la map !\n Indice : %s",color:red, \
+                        with:[{text:"$(kit)", bold:true, color:"$(kit_color)"},{text:"$(hint)", color:"$(hint_color)", bold:true}]}]
+
+$function sgp.kits:give {kit:$(kit)}
+$tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Tu as obtenu le kit ", color:aqua}, {text:"$(kit_name)", color:$(kit_color), bold:true}]

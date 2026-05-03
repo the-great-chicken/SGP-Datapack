@@ -281,10 +281,6 @@ data remove storage sgp:data markers_lists.lootdrop
 execute as @e[tag=sgp.marker,name="Lootdrop",type=marker] \
     run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.lootdrop"}
 
-data remove storage sgp:data markers_lists.kit_unlock
-execute as @e[tag=sgp.marker,name="kit_unlock",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.kit_unlock"}
-
 data remove storage sgp:data markers_lists.location
 execute as @e[tag=sgp.marker,name="lieu",type=marker] \
     run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.location"}

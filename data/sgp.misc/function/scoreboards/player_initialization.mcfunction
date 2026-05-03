@@ -5,19 +5,10 @@
 
 scoreboard players add @s sgp.plus_grande_streak 0
 
-scoreboard players set @s sgp.combattant_found 3
-scoreboard players set @s sgp.vindicateur_found 3
-scoreboard players set @s sgp.archer_found 3
-scoreboard players set @s sgp.peaceful_found 3
-scoreboard players add @s sgp.pyromane_found 0
-scoreboard players add @s sgp.cancer_found 0
-scoreboard players add @s sgp.roi_found 0
-scoreboard players add @s sgp.pigeon_found 0
-scoreboard players add @s sgp.tank_found 0
-scoreboard players add @s sgp.enderman_found 0
-scoreboard players add @s sgp.alchimiste_found 0
-scoreboard players add @s sgp.poseidon_found 0
-scoreboard players add @s sgp.eclaireur_found 0
+scoreboard players set @s sgp.combattant_found 1
+scoreboard players set @s sgp.vindicateur_found 1
+scoreboard players set @s sgp.archer_found 1
+scoreboard players set @s sgp.peaceful_found 1
 
 scoreboard players add @s sgp.cooldown_ability 0
 scoreboard players add @s sgp.cooldown_water_trident 0
