@@ -56,10 +56,6 @@ scoreboard objectives add sgp.id dummy
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
-scoreboard objectives add sgp.laby_fin trigger
-scoreboard objectives add sgp.jump_hardest_done trigger
-scoreboard objectives add sgp.jump_diff_2_done trigger
-
 scoreboard objectives add sgp.uuid dummy
 scoreboard objectives add sgp.killer dummy
 scoreboard objectives add sgp.posx1 dummy

@@ -30,20 +30,6 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
 
 
 
-
-# ---------- TRIGGER REWARDS ----------
-execute as @a[tag=sgp.in_game] \
-    unless entity @s[tag=sgp.enderman] \
-    unless entity @s[tag=sgp.pigeon] \
-    unless entity @s[tag=sgp.eclaireur] \
-    unless entity @s[tag=sgp.cancer] \
-    unless entity @s[tag=sgp.archer] run \
-        function sgp.world:reward/parkour_rewards
-
-execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
-
-
-
 # ---------- KITS ----------
 function sgp.kits:unlocking/check_kit_unlock
 
@@ -91,6 +77,8 @@ function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", c
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
+
+execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
 
 
 
