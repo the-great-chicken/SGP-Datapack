@@ -131,7 +131,7 @@ scoreboard players set 100 sgp.dummy 100
 scoreboard players set 300 sgp.dummy 300
 scoreboard players set 500 sgp.dummy 500
 scoreboard players set 1000 sgp.dummy 1000
-scoreboard players set 6000 sgp.dummy 6000
+scoreboard players set 9000 sgp.dummy 9000
 scoreboard players set #even_tick sgp.dummy 0
 scoreboard players set #20_ticks sgp.dummy 0
 scoreboard players set #128_ticks_clock sgp.dummy 0

@@ -1,4 +1,4 @@
-# Subtract the original map's origin to get the player's relative offset inside the maze
+# Subtract the original map's origin to get the player's relative offset
 scoreboard players operation @s bs.pos.x -= #map_x sgp.dummy
 scoreboard players operation @s bs.pos.y -= #map_y sgp.dummy
 scoreboard players operation @s bs.pos.z -= #map_z sgp.dummy

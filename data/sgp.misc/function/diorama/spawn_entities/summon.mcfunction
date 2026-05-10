@@ -1,6 +1,6 @@
 #> sgp.misc:diorama/spawn_entities/summon
 
-data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.0625f, height:0.0625f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
+data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.12f, height:0.12f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
 
 data modify entity @s data.args set from storage sgp:data temp.spawns_list[0]
 
@@ -15,3 +15,5 @@ function #bs.position:set_pos {scale: 0.001}
 execute store result score @s bs.rot.h run data get storage sgp:data temp.spawns_list[0].yaw 1000
 execute store result score @s bs.rot.v run data get storage sgp:data temp.spawns_list[0].pitch 1000
 function #bs.position:set_rot {scale: 0.001}
+
+execute at @s summon text_display run function sgp.misc:diorama/spawn_entities/set_text_name with entity @e[tag=sgp.spawn_tper,distance=..0.01,limit=1,type=interaction] data.args

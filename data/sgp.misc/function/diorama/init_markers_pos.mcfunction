@@ -68,10 +68,11 @@ execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,ty
 execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdy float 0.001 run scoreboard players get #model_dy sgp.dummy
 execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdz float 0.001 run scoreboard players get #model_dz sgp.dummy
 
-scoreboard players operation #model_dx sgp.dummy += 6000 sgp.dummy
-scoreboard players operation #model_dy sgp.dummy += 6000 sgp.dummy
-scoreboard players operation #model_dz sgp.dummy += 6000 sgp.dummy
 
-execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdx_plus_6 float 0.001 run scoreboard players get #model_dx sgp.dummy
-execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdy_plus_6 float 0.001 run scoreboard players get #model_dy sgp.dummy
-execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdz_plus_6 float 0.001 run scoreboard players get #model_dz sgp.dummy
+scoreboard players operation #model_dx sgp.dummy += 9000 sgp.dummy
+scoreboard players operation #model_dy sgp.dummy += 9000 sgp.dummy
+scoreboard players operation #model_dz sgp.dummy += 9000 sgp.dummy
+
+execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdx_end float 0.001 run scoreboard players get #model_dx sgp.dummy
+execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdy_end float 0.001 run scoreboard players get #model_dy sgp.dummy
+execute store result entity @e[tag=sgp.marker,name=playable_map_model,limit=1,type=marker] data.mdz_end float 0.001 run scoreboard players get #model_dz sgp.dummy
