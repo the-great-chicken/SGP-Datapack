@@ -1,0 +1,1 @@
+$kill @e[tag=sgp.spawn_tper, dx=$(dx), dy=$(dy), dz=$(dz), type=interaction]

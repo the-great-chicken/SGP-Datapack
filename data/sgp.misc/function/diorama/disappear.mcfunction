@@ -1,4 +1,4 @@
-#> sgp.misc:player_mannequins/disappear
+#> sgp.misc:diorama/disappear
 # `{type: giant|small}`
 #
 # Executed on player's death or leaving diorama

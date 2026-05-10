@@ -1,4 +1,4 @@
-#> sgp.misc:player_mannequins/apply_mannequin_pos
+#> sgp.misc:diorama/apply_mannequin_pos
 
 # Pull the calculated coordinates and rotation from the temporary global storage
 scoreboard players operation @s bs.pos.x = #temp_x sgp.dummy

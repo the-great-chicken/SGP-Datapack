@@ -23,7 +23,7 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:player_mannequins/tick
+    run function sgp.misc:diorama/tick
 
 execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
     function sgp.misc:on_death

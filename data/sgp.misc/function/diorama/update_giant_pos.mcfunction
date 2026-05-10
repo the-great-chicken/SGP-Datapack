@@ -1,4 +1,4 @@
-#> sgp.misc:player_mannequins/update_giant_pos
+#> sgp.misc:diorama/update_giant_pos
 
 # Grab the player's exact position and rotation
 function #bs.position:get_pos_and_rot {scale:1000}
@@ -68,4 +68,4 @@ execute if predicate sgp.misc:is_swimming run scoreboard players set #pose sgp.d
 
 # Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
 scoreboard players operation $link.to bs.in = @s bs.id
-execute as @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin,type=mannequin] run function sgp.misc:player_mannequins/apply_mannequin_pos
+execute as @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin,type=mannequin] run function sgp.misc:diorama/apply_mannequin_pos

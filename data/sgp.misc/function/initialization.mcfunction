@@ -117,6 +117,7 @@ scoreboard players set 1 sgp.dummy 1
 scoreboard players set 2 sgp.dummy 2
 scoreboard players set 3 sgp.dummy 3
 scoreboard players set 4 sgp.dummy 4
+scoreboard players set 6 sgp.dummy 6
 scoreboard players set 7 sgp.dummy 7
 scoreboard players set 8 sgp.dummy 8
 scoreboard players set 10 sgp.dummy 10
@@ -130,6 +131,7 @@ scoreboard players set 100 sgp.dummy 100
 scoreboard players set 300 sgp.dummy 300
 scoreboard players set 500 sgp.dummy 500
 scoreboard players set 1000 sgp.dummy 1000
+scoreboard players set 6000 sgp.dummy 6000
 scoreboard players set #even_tick sgp.dummy 0
 scoreboard players set #20_ticks sgp.dummy 0
 scoreboard players set #128_ticks_clock sgp.dummy 0
@@ -271,8 +273,11 @@ scoreboard players set #diorama_enabled sgp.dummy 0
 execute if entity @e[tag=sgp.marker,name="playable_map_model",limit=1,type=marker] \
     run scoreboard players set #diorama_enabled sgp.dummy 1
 
-function sgp.misc:player_mannequins/init_markers_pos
+execute if score #diorama_enabled sgp.dummy matches 1 \
+    run function sgp.misc:diorama/init_markers_pos
 
+execute if score #diorama_enabled sgp.dummy matches 1 \
+    run function sgp.misc:diorama/spawn_entities/clear_and_recreate
 
 
 # ---------- Init marker uuids ----------
