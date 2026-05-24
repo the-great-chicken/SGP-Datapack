@@ -107,6 +107,8 @@ scoreboard objectives add sgp.timer dummy
 
 scoreboard objectives add sgp.lieu_count dummy
 
+scoreboard objectives add sgp.anim_timer dummy
+
 
 
 # ---------- Initialize values ----------
