@@ -131,7 +131,6 @@ team remove sgp.Illusion
 
 # Misc
 bossbar remove sgp:lgp
-kill @e[tag=sgp.predictor,type=marker]
 
 
 # ---------- Clear Schedules ----------

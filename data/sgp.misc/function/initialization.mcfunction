@@ -220,7 +220,6 @@ team modify sgp.Illusion collisionRule never
 # Misc
 bossbar add sgp:lgp "a"
 forceload add 0 0
-summon marker 0 0 0 {Tags:["sgp.predictor"]}
 
 
 
