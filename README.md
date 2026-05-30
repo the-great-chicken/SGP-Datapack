@@ -80,7 +80,6 @@ Each of these is optional (or can be present multiple times), depending on how y
 - `sgp:data spawns` is a list containing all the spawns, and will be used if you're using the diorama to automatically place the interation entities and text displays. Each element should be exactly what would have been the `args` of the `spawn_tper`s
 
 ## Other stuff
-- `gamerule advance_time` must be set to `false` for some effects to work properly, and the time to be set at 10000. This limitation should be removed when the pack will be upgraded to Minecraft 26.1.
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
 - You should forceload all the chunks in which you placed markers.

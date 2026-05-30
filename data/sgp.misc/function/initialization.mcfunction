@@ -223,6 +223,9 @@ team modify sgp.Illusion collisionRule never
 bossbar add sgp:lgp "a"
 forceload add 0 0
 
+time of sgp.mineurs:confinement_clock set 10000t
+time of sgp.mineurs:confinement_clock pause
+
 
 
 # ---------- Run Functions ----------

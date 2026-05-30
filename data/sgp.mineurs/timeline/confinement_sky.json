@@ -1,4 +1,5 @@
 {
+  "clock": "sgp.mineurs:confinement_clock",
   "period_ticks": 24000,
   "tracks": {
     "minecraft:visual/sky_color": {

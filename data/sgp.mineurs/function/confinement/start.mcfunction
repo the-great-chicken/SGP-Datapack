@@ -10,6 +10,6 @@ execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
 
 experience set @a[tag=sgp.in_game] 165 levels
 
-gamerule advance_time true
+function sgp.mineurs:confinement/add_time_clock
 
 schedule function sgp.mineurs:confinement/running 1s
