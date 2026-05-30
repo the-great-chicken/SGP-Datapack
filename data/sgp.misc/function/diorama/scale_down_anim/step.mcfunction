@@ -3,7 +3,7 @@
 scoreboard players remove @s sgp.anim_timer 1
 
 execute store result storage sgp:macro diorama/scale_down_anim.id int 1 \
-    run scoreboard players get @s bs.id
+    run scoreboard players get @s sgp.id
 execute store result storage sgp:macro diorama/scale_down_anim.scale double 0.0625 \
     run scoreboard players get @s sgp.anim_timer
 

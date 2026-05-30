@@ -17,4 +17,5 @@ function #bs.health:time_to_live {with:{time:5,unit:"s",on_death:"execute on pas
 
 execute if score #pose sgp.dummy matches 1 run return run data modify entity @s pose set value "crouching"
 execute if score #pose sgp.dummy matches 2 run return run data modify entity @s pose set value "swimming"
+execute if score #pose sgp.dummy matches 3 run return run data modify entity @s pose set value "fall_flying"
 execute if score #pose sgp.dummy matches 0 run return run data modify entity @s pose set value "standing"

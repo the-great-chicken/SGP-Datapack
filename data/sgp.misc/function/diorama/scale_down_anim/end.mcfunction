@@ -1,5 +1,5 @@
 #> sgp.misc:diorama/scale_down_anim/end
-# `{id: int}`
+# `{[x, y, z, yaw, pitch]: coordinates, id: int}`
 
 gamemode survival @s
 
