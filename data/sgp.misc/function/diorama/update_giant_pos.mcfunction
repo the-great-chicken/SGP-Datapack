@@ -1,12 +1,13 @@
 #> sgp.misc:diorama/update_giant_pos
+# `{id: int}`
 
 # Grab the player's exact position and rotation
 function #bs.position:get_pos_and_rot {scale:1000}
 
 # Subtract the miniature map's origin to get the relative offset
-scoreboard players operation @s bs.pos.x -= #model_x sgp.dummy
-scoreboard players operation @s bs.pos.y -= #model_y sgp.dummy
-scoreboard players operation @s bs.pos.z -= #model_z sgp.dummy
+$scoreboard players operation @s bs.pos.x -= #model_$(id)_x sgp.dummy
+$scoreboard players operation @s bs.pos.y -= #model_$(id)_y sgp.dummy
+$scoreboard players operation @s bs.pos.z -= #model_$(id)_z sgp.dummy
 
 # MULTIPLY by 16 to scale the movement up to the real map's size
 scoreboard players operation @s bs.pos.x *= 16 sgp.dummy
@@ -14,19 +15,19 @@ scoreboard players operation @s bs.pos.y *= 16 sgp.dummy
 scoreboard players operation @s bs.pos.z *= 16 sgp.dummy
 
 # Add the original map's origin to translate back to absolute world coordinates
-scoreboard players operation @s bs.pos.x += #map_x sgp.dummy
-scoreboard players operation @s bs.pos.y += #map_y sgp.dummy
-scoreboard players operation @s bs.pos.z += #map_z sgp.dummy
+$scoreboard players operation @s bs.pos.x += #map_$(id)_x sgp.dummy
+$scoreboard players operation @s bs.pos.y += #map_$(id)_y sgp.dummy
+$scoreboard players operation @s bs.pos.z += #map_$(id)_z sgp.dummy
 
-# --- NEW: GRADUAL RAMP PUSHBACK ---
+# --- GRADUAL RAMP PUSHBACK ---
 
 # 1. Calculate relative X distance from the center of the map
 scoreboard players operation #rx sgp.dummy = @s bs.pos.x
-scoreboard players operation #rx sgp.dummy -= #map_center_x sgp.dummy
+$scoreboard players operation #rx sgp.dummy -= #map_$(id)_center_x sgp.dummy
 
 # 2. Scale down to a percentage (per-mille: 1000 = exactly at the edge of map)
 scoreboard players operation #rx sgp.dummy *= 1000 sgp.dummy
-scoreboard players operation #rx sgp.dummy /= #map_hw_x sgp.dummy
+$scoreboard players operation #rx sgp.dummy /= #map_$(id)_hw_x sgp.dummy
 
 # 3. Clamp the percentage between -1000 (West edge) and 1000 (East edge)
 execute if score #rx sgp.dummy matches 1000.. run scoreboard players set #rx sgp.dummy 1000
@@ -41,10 +42,10 @@ scoreboard players operation @s bs.pos.x += #rx sgp.dummy
 
 # 6. Repeat identical logic for the Z axis
 scoreboard players operation #rz sgp.dummy = @s bs.pos.z
-scoreboard players operation #rz sgp.dummy -= #map_center_z sgp.dummy
+$scoreboard players operation #rz sgp.dummy -= #map_$(id)_center_z sgp.dummy
 
 scoreboard players operation #rz sgp.dummy *= 1000 sgp.dummy
-scoreboard players operation #rz sgp.dummy /= #map_hw_z sgp.dummy
+$scoreboard players operation #rz sgp.dummy /= #map_$(id)_hw_z sgp.dummy
 
 execute if score #rz sgp.dummy matches 1000.. run scoreboard players set #rz sgp.dummy 1000
 execute if score #rz sgp.dummy matches ..-1000 run scoreboard players set #rz sgp.dummy -1000
@@ -52,25 +53,24 @@ execute if score #rz sgp.dummy matches ..-1000 run scoreboard players set #rz sg
 scoreboard players operation #rz sgp.dummy *= #giant_offset sgp.dummy
 scoreboard players operation @s bs.pos.z += #rz sgp.dummy
 
-# --- END NEW ---
 
 # Store the final position and rotation into global temporary fake players
-scoreboard players operation #temp_x sgp.dummy = @s bs.pos.x
-scoreboard players operation #temp_y sgp.dummy = @s bs.pos.y
-scoreboard players operation #temp_z sgp.dummy = @s bs.pos.z
-scoreboard players operation #temp_h sgp.dummy = @s bs.rot.h
-scoreboard players operation #temp_v sgp.dummy = @s bs.rot.v
+scoreboard players operation $temp_x sgp.dummy = @s bs.pos.x
+scoreboard players operation $temp_y sgp.dummy = @s bs.pos.y
+scoreboard players operation $temp_z sgp.dummy = @s bs.pos.z
+scoreboard players operation $temp_h sgp.dummy = @s bs.rot.h
+scoreboard players operation $temp_v sgp.dummy = @s bs.rot.v
 
 # Update the player's pose status
-scoreboard players set #pose sgp.dummy 0
-execute if predicate sgp.misc:is_sneaking run scoreboard players set #pose sgp.dummy 1
-execute if predicate sgp.misc:is_swimming run scoreboard players set #pose sgp.dummy 2
-execute if predicate sgp.misc:is_fall_flying run scoreboard players set #pose sgp.dummy 3
+scoreboard players set $pose sgp.dummy 0
+execute if predicate sgp.misc:is_sneaking run scoreboard players set $pose sgp.dummy 1
+execute if predicate sgp.misc:is_swimming run scoreboard players set $pose sgp.dummy 2
+execute if predicate sgp.misc:is_fall_flying run scoreboard players set $pose sgp.dummy 3
 
 # Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
 scoreboard players operation $link.to bs.in = @s bs.id
-execute as @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin,type=mannequin] run function sgp.misc:diorama/apply_mannequin_pos
+$execute as @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] run function sgp.misc:diorama/apply_mannequin_pos
 
 # Update the mannequin's weapons
-item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin,type=mannequin] weapon.mainhand from entity @s weapon.mainhand
-item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin,type=mannequin] weapon.offhand from entity @s weapon.offhand
+$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] weapon.mainhand from entity @s weapon.mainhand
+$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] weapon.offhand from entity @s weapon.offhand

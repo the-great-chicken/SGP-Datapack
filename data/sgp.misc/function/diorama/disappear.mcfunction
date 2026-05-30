@@ -1,9 +1,9 @@
 #> sgp.misc:diorama/disappear
-# `{type: giant|small}`
+# `{type: giant|small, id: int}`
 #
 # Executed on player's death or leaving diorama
 
-$tag @s remove sgp.has_$(type)_mannequin
-$function #bs.link:as_children {run:"execute if entity @s[tag=sgp.$(type)_mannequin,type=mannequin] on passengers run kill @s"}
-$function #bs.link:as_children {run:"execute if entity @s[tag=sgp.$(type)_mannequin,type=mannequin] run tp @s ~ ~-1000 ~"}
-$function #bs.link:as_children {run:"execute if entity @s[tag=sgp.$(type)_mannequin,type=mannequin] run kill @s"}
+$tag @s remove sgp.has_$(type)_mannequin_$(id)
+scoreboard players operation $link.to bs.in = @s bs.id
+
+$function sgp.misc:diorama/kill_linked_mannequins {type:$(type), id:$(id)}

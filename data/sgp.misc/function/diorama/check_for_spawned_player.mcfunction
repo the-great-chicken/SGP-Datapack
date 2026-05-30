@@ -5,9 +5,13 @@
 # just spawned in the map
 
 # Remove player mannequin if they somehow go out of bounds (like by disconnecting)
-$execute as @a[tag=sgp.has_small_mannequin] unless entity @s[dx=$(dx),dy=$(dy),dz=$(dz)] \
-    run function sgp.misc:diorama/disappear {type:"small"}
+$execute as @a[tag=sgp.has_small_mannequin_$(id)] unless entity @s[dx=$(dx),dy=$(dy),dz=$(dz)] \
+    run function sgp.misc:diorama/disappear {type:"small", id:$(id)}
+
+
+scoreboard players operation $id.suid bs.in = @s bs.link.to
 
 # Detects if a player just entered bounds
-$execute as @a[tag=sgp.in_game,tag=!sgp.has_small_mannequin,dx=$(dx),dy=$(dy),dz=$(dz)] \
-    run function sgp.misc:diorama/on_player_spawn with storage sgp:data markers_lists.playable_map_model[0]
+$execute as @a[tag=sgp.in_game,tag=!sgp.has_small_mannequin_$(id),dx=$(dx),dy=$(dy),dz=$(dz)] \
+    at @n[predicate=bs.id:suid_equal,tag=sgp.marker,name=playable_map_model,limit=1,type=marker] \
+        run function sgp.misc:diorama/on_player_spawn {id:$(id)}

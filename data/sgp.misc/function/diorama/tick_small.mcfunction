@@ -1,6 +1,6 @@
 #> sgp.misc:diorama/tick_small
-# `{uuid: playable_map marker uuid}`
+# `{id: int}`
 
-$execute as $(uuid) at @s \
-    run function sgp.misc:diorama/check_for_spawned_player with entity @s data
-execute as @a[tag=sgp.has_small_mannequin] at @s run function sgp.misc:diorama/update_small_pos
+function sgp.misc:diorama/check_for_spawned_player with entity @s data
+data modify storage sgp:data temp.diorama set from entity @s data
+$execute as @a[tag=sgp.has_small_mannequin_$(id)] at @s run function sgp.misc:diorama/update_small_pos with storage sgp:data temp.diorama

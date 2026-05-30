@@ -1,14 +1,16 @@
 #> sgp.misc:diorama/spawn_entities/summon
+# `{id: int}`
 
 data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.12f, height:0.12f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
 
 data modify entity @s data.args set from storage sgp:data temp.spawns_list[0]
+$data modify entity @s data.args.id set value $(id)
 
 execute store result score @s bs.pos.x run data get storage sgp:data temp.spawns_list[0].x 1000
 execute store result score @s bs.pos.y run data get storage sgp:data temp.spawns_list[0].y 1000
 execute store result score @s bs.pos.z run data get storage sgp:data temp.spawns_list[0].z 1000
 
-function sgp.misc:diorama/compute_diorama_pos
+$function sgp.misc:diorama/compute_diorama_pos {id:$(id)}
 
 function #bs.position:set_pos {scale: 0.001}
 

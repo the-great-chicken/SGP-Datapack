@@ -8,7 +8,11 @@ $execute as @a[dx=$(mdx),dy=$(mdy),dz=$(mdz)] run tag @s add sgp.inside_model
 tag @a remove sgp.around_model
 $execute positioned ~-4 ~-4 ~-4 as @a[dx=$(mdx_end),dy=$(mdy_end),dz=$(mdz_end),tag=!sgp.inside_model] run tag @s add sgp.around_model
 
-execute as @a[tag=sgp.has_giant_mannequin,tag=!sgp.around_model] run function sgp.misc:diorama/disappear {type:"giant"}
+$execute as @a[tag=sgp.has_giant_mannequin_$(id),tag=!sgp.around_model] run function sgp.misc:diorama/disappear {type:"giant", id:$(id)}
 
-execute as @a[tag=sgp.around_model,tag=!sgp.has_giant_mannequin] \
-    run function sgp.misc:diorama/on_player_around_model with storage sgp:data markers_lists.playable_map[0]
+
+scoreboard players operation $link.to bs.in = @s bs.id
+
+$execute as @a[tag=sgp.around_model,tag=!sgp.has_giant_mannequin_$(id)] \
+    at @e[predicate=bs.link:link_equal,tag=sgp.marker,name=playable_map,limit=1,type=marker] \
+        run function sgp.misc:diorama/on_player_around_model {id:$(id)}

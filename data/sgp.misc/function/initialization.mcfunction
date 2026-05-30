@@ -278,10 +278,12 @@ execute if entity @e[tag=sgp.marker,name="playable_map_model",limit=1,type=marke
     run scoreboard players set #diorama_enabled sgp.dummy 1
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:diorama/init_markers_pos
+    run function sgp.misc:diorama/init_markers
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:diorama/spawn_entities/clear_and_recreate
+    as @e[tag=sgp.marker,name=playable_map_model,type=marker] at @s \
+        run function sgp.misc:diorama/spawn_entities/clear_and_recreate \
+            with entity @s data
 
 
 # ---------- Init marker uuids ----------

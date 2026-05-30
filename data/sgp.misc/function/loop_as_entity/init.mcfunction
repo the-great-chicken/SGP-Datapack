@@ -1,10 +1,9 @@
 #> sgp.misc:loop_as_entity/init
 # `{list_location: nbt path, command: string}`
 
-# 1. Copy the full list to a temporary array
 $data modify storage sgp:data temp.loop_list set from storage sgp:data $(list_location)
+execute unless data storage sgp:data temp.loop_list[0] run return fail
 
-# 2. Save the command globally so it persists across recursion steps
 $data modify storage sgp:data temp.current_command set value "$(command)"
 
 # 3. If the list isn't empty, prepare the arguments for the first run (merging uuid and command)

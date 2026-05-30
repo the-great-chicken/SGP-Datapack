@@ -1,5 +1,4 @@
 #> sgp.misc:diorama/tick
-# `{model_marker_uuid,map_marker_uuid: uuids of the markers}`
 
-function sgp.misc:diorama/tick_small with storage sgp:data markers_lists.playable_map[0]
-function sgp.misc:diorama/tick_giant with storage sgp:data markers_lists.playable_map_model[0]
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.playable_map", command:"run function sgp.misc:diorama/tick_small with entity @s data"}
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.playable_map_model", command:"run function sgp.misc:diorama/tick_giant with entity @s data"}
