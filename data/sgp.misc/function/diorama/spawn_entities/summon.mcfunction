@@ -1,7 +1,7 @@
 #> sgp.misc:diorama/spawn_entities/summon
 # `{id: int}`
 
-data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.12f, height:0.12f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
+data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.14f, height:0.14f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
 
 data modify entity @s data.args set from storage sgp:data temp.spawns_list[0]
 $data modify entity @s data.args.id set value $(id)
