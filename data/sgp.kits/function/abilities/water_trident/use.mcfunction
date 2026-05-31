@@ -22,3 +22,7 @@ execute at @s anchored eyes positioned ^ ^ ^1 align xyz \
     if block ~ ~ ~ #minecraft:air \
         unless entity @e[tag=sgp.marker,name="temp_water",dx=0,dy=0,dz=0,type=marker] \
             run function sgp.kits:abilities/water_trident/place_water
+
+# If no air block was found, reapply riptide to avoid the trident being launched
+execute if score @s sgp.cooldown_water_trident matches ..0 \
+    run item modify entity @s weapon.mainhand sgp.kits:add_riptide

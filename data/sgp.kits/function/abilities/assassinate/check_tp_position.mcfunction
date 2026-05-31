@@ -1,27 +1,12 @@
 #> sgp.kits:abilities/assassinate/check_tp_position
 #
-# Check the blocks behind the attacker, to determine the right position to tp to
-# Summons an entity to collide the summoned enderpearl with (it's cooler than tp'ing) 
+# Check the lane behind the attacker/target and summon the pearl at the best safe position.
+# Priority:
+#   1. 2 blocks behind, if the whole lane to it is usable at the same height
+#   2. 1 block behind
+#   3. very close behind as a last resort
 
-# Check A: If there is a solid block 1 block behind (at either feet OR head level), position 0.2 blocks behind instead.
-# Case A1: Solid at feet level
-execute unless block ^ ^ ^-1 #bs.hitbox:can_pass_through positioned ^ ^ ^-0.2 \
-        run return run function sgp.kits:abilities/assassinate/summon_pearl
+execute if function sgp.kits:abilities/assassinate/try_summon_2_behind run return 1
+execute if function sgp.kits:abilities/assassinate/try_summon_1_behind run return 1
 
-# Case A2: Clear at feet level, but solid at head level
-execute unless block ^ ^1 ^-1 #bs.hitbox:can_pass_through positioned ^ ^ ^-0.2 \
-        run return run function sgp.kits:abilities/assassinate/summon_pearl
-
-
-# Check B: If 1 block behind is clear (both levels), but 2 blocks behind is a solid block (at either feet OR head level), position 1 block behind.
-# Case B1: Solid at feet level 2 blocks behind
-execute unless block ^ ^ ^-2 #bs.hitbox:can_pass_through positioned ^ ^ ^-1 \
-        run return run function sgp.kits:abilities/assassinate/summon_pearl
-
-# Case B2: Clear at feet level 2 blocks behind, but solid at head level 2 blocks behind
-execute unless block ^ ^1 ^-2 #bs.hitbox:can_pass_through positioned ^ ^ ^-1 \
-        run return run function sgp.kits:abilities/assassinate/summon_pearl
-
-
-# Check C: If both 1 block and 2 blocks behind are clear (at both feet AND head levels), position 2 blocks behind.
-execute positioned ^ ^ ^-2 run return run function sgp.kits:abilities/assassinate/summon_pearl
+execute positioned ^ ^ ^-0.2 run return run function sgp.kits:abilities/assassinate/summon_pearl
