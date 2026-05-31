@@ -51,9 +51,6 @@ function sgp.kits:abilities/tick
 # ---------- MISCELLANEOUS ----------
 function sgp.misc:kill_counter
 
-execute if score #reflexes_ticks sgp.timer matches 1..99 \
-    run function sgp.mineurs:reflexes/running
-
 function sgp.misc:128_ticks_functions
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \

@@ -1,4 +1,4 @@
-# sgp.mineurs:bounty/init_wanted
+#> sgp.mineurs:bounty/init_wanted
 #
 # give the wanted player his effects and message
 
