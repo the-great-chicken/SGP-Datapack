@@ -109,6 +109,8 @@ scoreboard objectives add sgp.lieu_count dummy
 
 scoreboard objectives add sgp.anim_timer dummy
 
+scoreboard objectives add sgp.left_click_count dummy
+
 
 
 # ---------- Initialize values ----------
@@ -144,6 +146,8 @@ scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
+
+scoreboard players add #mannequins_swing_enabled sgp.dummy 0
 
 execute unless score #hide_and_seek_max_rounds sgp.dummy matches 0.. \
     run scoreboard players set #hide_and_seek_max_rounds sgp.dummy 3

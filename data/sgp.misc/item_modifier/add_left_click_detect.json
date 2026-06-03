@@ -1,0 +1,19 @@
+[
+  {
+    "function": "minecraft:set_components",
+    "components": {
+      "minecraft:piercing_weapon": {
+        "deals_knockback": false
+      },
+      "minecraft:enchantments": {
+        "sgp.misc:left_click_detection": 1
+      }
+    }
+  },
+  {
+    "function": "toggle_tooltips",
+    "toggles": {
+      "enchantments": false
+    }
+  }
+]

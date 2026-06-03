@@ -84,6 +84,7 @@ Each of these is optional (or can be present multiple times), depending on how y
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
 - You should forceload all the chunks in which you placed markers.
+- If you want the diorama mannequins to replicate players' swings, and don't use `/give` in general (else you'll have stacking issues), you can enable it with `/scoreboard players set #mannequins_swing_enabled sgp.dummy 1`
 
 # Uninstallation
 

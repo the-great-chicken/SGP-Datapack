@@ -78,6 +78,14 @@ execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function
 execute as @a[scores={sgp.anim_timer=1..}] at @s \
     run function sgp.misc:diorama/scale_down_anim/step
 
+# @r so that it doesn't cost so much: we don't need the enchants to be up-to-date all the time
+# That means some players may get the piercing weapon only after a few seconds if unlucky
+execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
+    as @r[tag=sgp.in_game] run function sgp.misc:add_piercing_weapon
+
+execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
+    as @a[tag=sgp.in_game] run function sgp.misc:remove_piercing_weapon
+
 
 
 # ---------- COSMETICS ----------
