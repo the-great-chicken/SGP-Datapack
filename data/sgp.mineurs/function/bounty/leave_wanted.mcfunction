@@ -1,5 +1,6 @@
-#> sgp.mineurs:bounty/leave_wanteds
+#> sgp.mineurs:bounty/leave_wanted
 #
-# remove wanted tag and send the reward message to the attacker
+# Remove wanted tag and send the reward message to the attacker
+
 execute on attacker run function sgp.mineurs:bounty/reward/message
 tag @s remove sgp.wanted

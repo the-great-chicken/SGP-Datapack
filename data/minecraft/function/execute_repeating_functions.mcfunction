@@ -73,7 +73,8 @@ function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", c
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
 
-execute as @a[tag=sgp.in_game] unless score @s sgp.reward matches 0 run function sgp.mineurs:bounty/reward/trigger
+execute as @a[tag=sgp.in_game,scores={sgp.reward=1..}] \
+    run function sgp.mineurs:bounty/reward/trigger
 
 execute as @a[scores={sgp.anim_timer=1..}] at @s \
     run function sgp.misc:diorama/scale_down_anim/step

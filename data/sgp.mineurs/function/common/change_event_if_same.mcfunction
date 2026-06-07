@@ -5,11 +5,15 @@
 # Also prevents the same event to be chosen multiple times in the same round
 
 $execute if score 2 sgp.dummy matches $(nbr) \
-    if score #random_event_roll_2 sgp.dummy = #random_event_roll 1 sgp.dummy \
+    if score #random_event_roll_2 sgp.dummy = #random_event_roll_1 sgp.dummy \
         run scoreboard players operation #random_event_roll_2 sgp.dummy += 1 sgp.dummy
 
 $execute if score 3 sgp.dummy matches $(nbr) \
-    if score #random_event_roll_3 sgp.dummy = #random_event_roll 1 sgp.dummy \
+    if score #random_event_roll_3 sgp.dummy = #random_event_roll_1 sgp.dummy \
+        run scoreboard players operation #random_event_roll_3 sgp.dummy += 1 sgp.dummy
+
+$execute if score 3 sgp.dummy matches $(nbr) \
+    if score #random_event_roll_3 sgp.dummy = #random_event_roll_2 sgp.dummy \
         run scoreboard players operation #random_event_roll_3 sgp.dummy += 1 sgp.dummy
 
 

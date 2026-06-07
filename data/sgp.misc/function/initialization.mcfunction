@@ -3,7 +3,6 @@
 # Create the necessary objectives, initialize values, create teams,...
 
 # ---------- Create Objectives ----------
-scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.intensity.light_unlocked dummy
 scoreboard objectives add sgp.intensity.medium_unlocked dummy
 scoreboard objectives add sgp.intensity.heavy_unlocked dummy
@@ -53,7 +52,6 @@ scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
 scoreboard objectives add sgp.id dummy
 
-
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
 scoreboard objectives add sgp.uuid dummy
@@ -99,6 +97,7 @@ scoreboard objectives add sgp.en_cage dummy
 scoreboard objectives add sgp.link_teams dummy
 
 scoreboard objectives add sgp.reflexes_joueur trigger
+scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.share_item trigger
 
 scoreboard objectives add sgp.teleporteur dummy
