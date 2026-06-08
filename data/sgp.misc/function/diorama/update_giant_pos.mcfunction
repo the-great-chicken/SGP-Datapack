@@ -71,6 +71,7 @@ execute if predicate sgp.misc:is_fall_flying run scoreboard players set $pose sg
 scoreboard players operation $link.to bs.in = @s bs.id
 $execute as @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] run function sgp.misc:diorama/apply_mannequin_pos
 
-# Update the mannequin's weapons
+# Only update weapons once every few ticks else it's too performance-intensive 
+execute unless score #mannequin_update_time sgp.dummy matches 4.. run return 1
 $item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] weapon.mainhand from entity @s weapon.mainhand
 $item replace entity @e[predicate=bs.link:link_equal,tag=sgp.giant_mannequin_$(id),type=mannequin] weapon.offhand from entity @s weapon.offhand

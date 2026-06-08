@@ -7,13 +7,10 @@ scoreboard players operation @s bs.pos.z = $temp_z sgp.dummy
 scoreboard players operation @s bs.rot.h = $temp_h sgp.dummy
 scoreboard players operation @s bs.rot.v = $temp_v sgp.dummy
 
-# Set the position and rotation
-# We scale by 0.001 to reverse the milliblock/millidegree precision multiplier so the game teleports them perfectly smoothly.
-function #bs.position:set_pos {scale:0.001}
-function #bs.position:set_rot {scale:0.001}
+function #bs.position:set_pos_and_rot {scale:0.001}
 
-# Reset the mannequins' timeout
-function #bs.health:time_to_live {with:{time:5,unit:"s",on_death:"execute on passengers run kill @s"}}
+# Reset the mannequins' timeout, bypassing bs' API for performance
+scoreboard players set @s bs.ttl 100
 
 execute if score $pose sgp.dummy matches 1 run return run data modify entity @s pose set value "crouching"
 execute if score $pose sgp.dummy matches 2 run return run data modify entity @s pose set value "swimming"

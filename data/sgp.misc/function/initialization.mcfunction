@@ -147,6 +147,7 @@ scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
 
 scoreboard players add #mannequins_swing_enabled sgp.dummy 0
+scoreboard players set #mannequin_update_time sgp.dummy 0
 
 execute unless score #hide_and_seek_max_rounds sgp.dummy matches 0.. \
     run scoreboard players set #hide_and_seek_max_rounds sgp.dummy 3

@@ -23,4 +23,4 @@ tag @s remove sgp.initialize_lieux
 
 scoreboard players add @s sgp.teleporteur 0
 
-bossbar set sgp:lgp players @s
+bossbar set sgp:lgp players @a
