@@ -19,7 +19,7 @@ execute as @a[tag=sgp.in_game] at @s \
     unless block ~ ~2 ~ #sgp.mineurs:confinement_invincible_waterlogged[waterlogged=true] \
     run tag @s add sgp.unprotected 
     
-title @a[tag=sgp.unprotected] title "Rentrez en Intérieur !"
+title @a[tag=sgp.unprotected] title "Rentre en Intérieur !"
 execute as @a[tag=sgp.unprotected] run damage @s 4 starve
 
 tag @a[tag=sgp.unprotected] remove sgp.unprotected

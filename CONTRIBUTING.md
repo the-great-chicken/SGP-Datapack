@@ -37,3 +37,4 @@ Do NOT ever hardcode coordinates even if you're working on the official SGP serv
 
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
+Pour les messages en français, il faut toujours tutoyer le joueur, et accorder avec `(e)` ou `/` les mots. Exemple: `"Tu es devenu(e) un(e) chasseur/euse !"`

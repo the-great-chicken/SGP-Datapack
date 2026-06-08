@@ -17,8 +17,8 @@ scoreboard players operation #invasion_joueurs sgp.dummy *= 16 sgp.dummy
 experience set @a[tag=sgp.in_game] 0 levels
 execute as @a[tag=sgp.in_game] run experience add @a[tag=sgp.in_game] 16 levels
 
-title @a[team=sgp.Defenseur] title [{text:"Vous êtes Défenseur", color:blue, bold:true}]
-title @a[team=sgp.Attaquant] title [{text:"Vous êtes sgp.Attaquant", color:red, bold:true}]
+title @a[team=sgp.Defenseur] title [{text:"Tu es Défenseur(e)", color:blue, bold:true}]
+title @a[team=sgp.Attaquant] title [{text:"Tu es Attaquant(e)", color:red, bold:true}]
 move @a[team=sgp.Defenseur] #Défenseurs
 move @a[team=sgp.Attaquant] #Attaquants
 

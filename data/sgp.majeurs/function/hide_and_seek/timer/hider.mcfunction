@@ -3,7 +3,7 @@
 # This function is called every second to update the timer of the hider.
 
 data modify storage smithed.actionbar:input message set value { \
-    json:'[{text: "vous avez "},{score:{name:"#hider",objective:"sgp.timer"}},{text: " secondes pour vous cacher"}]', \
+    json:'[{text: "Tu as "},{score:{name:"#hider",objective:"sgp.timer"}},{text: " secondes pour te cacher"}]', \
     priority:'notification'}
 execute as @a[team=sgp.hider] run function #smithed.actionbar:message
 

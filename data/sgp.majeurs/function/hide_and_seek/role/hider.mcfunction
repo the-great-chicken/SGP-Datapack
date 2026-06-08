@@ -12,8 +12,4 @@ effect give @s resistance 60 10 true
 
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_hider]
-tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true},{text: "Vous êtes une Volaille ! ", color: green}]
-
-
-
-
+tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true},{text: "Tu es une Volaille ! ", color: green}]

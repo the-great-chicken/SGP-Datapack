@@ -75,10 +75,10 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
-            {text:"Vous n'êtes pas", color:white} \
+            {text:"Tu n'es pas", color:white} \
             ], \
         [ \
-            {text:"ralenti dans l'", color:white, italic:false}, \
+            {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \

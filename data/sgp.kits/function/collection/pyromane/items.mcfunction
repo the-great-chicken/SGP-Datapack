@@ -77,8 +77,8 @@ item replace entity @s armor.feet with iron_boots[ \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈", color:yellow, italic:false}, \
         [ \
             {text:"× ", color:red, italic:false}, \
-            {text:"Vous êtes ", color:white}, \
-            {text:"lent", color:red} \
+            {text:"Tu es ", color:white}, \
+            {text:"lent(e)", color:red} \
             ], \
         [ \
             {text:"dans l'", color:white, italic:false}, \

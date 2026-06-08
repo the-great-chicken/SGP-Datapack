@@ -71,7 +71,7 @@ item replace entity @s armor.feet with leather_boots[ \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:dark_purple, italic:false}, \
         [ \
             {text:"⚠ ", color:dark_red, italic:false}, \
-            {text:"Vous prenez des", color:red} \
+            {text:"Tu prends des", color:red} \
             ], \
         [ \
             {text:"dégâts ", color:dark_red, italic:false}, \
