@@ -8,6 +8,5 @@ effect give @s hunger infinite 3
 effect give @s conduit_power infinite
 
 tag @s add sgp.poseidon_a_setup_egapp
-tag @s add sgp.poseidon_voulu
 
 scoreboard players set @s sgp.kit_id 11
