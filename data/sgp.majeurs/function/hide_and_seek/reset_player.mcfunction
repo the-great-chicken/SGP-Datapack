@@ -3,11 +3,20 @@
 # Reset the player
 
 title @s times 10t 70t 20t
+
 tag @s remove sgp.hider
 tag @s remove sgp.seeker
-attribute @s attack_damage modifier remove sgp.hider
-attribute @s attack_damage modifier remove sgp.seeker
-attribute @s movement_speed modifier remove sgp.hider
-attribute @s jump_strength modifier remove sgp.hider
+tag @s remove sgp.seeker_waiting
+
+effect clear @s
+
+attribute @s attack_damage modifier remove sgp:hide_and_seek.hider
+attribute @s attack_damage modifier remove sgp:hide_and_seek.seeker
+attribute @s water_movement_efficiency modifier remove sgp:hide_and_seek.water_movement
+
+clear @s
+
 scoreboard players reset @s sgp.link_teams
-function sgp.majeurs:hide_and_seek/stun/unstun
+scoreboard players reset @s sgp.teammate_deaths
+scoreboard players reset @s sgp.timer
+function sgp.misc:stun/clear
