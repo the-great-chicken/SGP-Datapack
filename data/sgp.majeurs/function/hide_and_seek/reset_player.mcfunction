@@ -7,6 +7,8 @@ title @s times 10t 70t 20t
 tag @s remove sgp.hider
 tag @s remove sgp.seeker
 tag @s remove sgp.seeker_waiting
+tag @s remove sgp.lost_jump_msg
+tag @s remove sgp.lost_speed_msg
 
 effect clear @s
 

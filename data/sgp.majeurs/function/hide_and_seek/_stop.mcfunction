@@ -11,11 +11,14 @@ scoreboard players reset * sgp.link_teams
 execute as @a[tag=sgp.in_game] run function sgp.majeurs:hide_and_seek/reset_player
 
 #stop the game
+scoreboard players set #second sgp.timer 0
+
 function #bs.schedule:cancel_all {with:{id:"hide_and_seek"}}
 schedule clear sgp.majeurs:hide_and_seek/_stop
-scoreboard players set #second sgp.timer 0
 schedule clear sgp.majeurs:hide_and_seek/timer/seeker
 schedule clear sgp.majeurs:hide_and_seek/timer/hider
 schedule clear sgp.majeurs:hide_and_seek/timer/glow
+schedule clear sgp.majeurs:hide_and_seek/timer/glow_announce
+
 function sgp.majeurs:common/stop
 function sgp.majeurs:common/rounds with storage sgp:data majeurs.hide_and_seek

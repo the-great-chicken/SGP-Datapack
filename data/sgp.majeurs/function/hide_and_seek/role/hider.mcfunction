@@ -12,4 +12,6 @@ effect give @s resistance 60 10 true
 
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_hider]
-tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true},{text: "Tu es une Volaille ! ", color: green}]
+tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text: "Tu es une Volaille ! ", color: green}]
+tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Quand la chasse commence, tu obtiens Vitesse I et Saut Amélioré I.", color:yellow}]
+tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Chaque mort dans ton équipe t'affaiblit : 1 mort = perte du saut, 2 morts = perte de la vitesse.", color:gold}]
