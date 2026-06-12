@@ -49,6 +49,11 @@ scoreboard objectives remove sgp.dy
 scoreboard objectives remove sgp.dz
 scoreboard objectives remove sgp.id
 
+scoreboard objectives remove sgp.ab.reward
+scoreboard objectives remove sgp.ab.location
+scoreboard objectives remove sgp.ab.hide_hider
+scoreboard objectives remove sgp.ab.pco_cabane
+
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
 scoreboard objectives remove sgp.uuid
@@ -132,6 +137,7 @@ team remove sgp.Illusion
 
 # Misc
 bossbar remove sgp:lgp
+execute as @a run function sgp.misc:actionbar/clear
 
 
 # ---------- Clear Schedules ----------

@@ -52,6 +52,11 @@ scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
 scoreboard objectives add sgp.id dummy
 
+scoreboard objectives add sgp.ab.reward dummy
+scoreboard objectives add sgp.ab.location dummy
+scoreboard objectives add sgp.ab.hide_hider dummy
+scoreboard objectives add sgp.ab.pco_cabane dummy
+
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
 scoreboard objectives add sgp.uuid dummy
@@ -229,6 +234,9 @@ forceload add 0 0
 
 time of sgp.mineurs:confinement_clock set 10000t
 time of sgp.mineurs:confinement_clock pause
+
+data modify storage dah:actbar default_separator set value {text:" | ", color:white, bold:true, shadow:false}
+function dah.actbar_mixer:separator/reset_all
 
 
 

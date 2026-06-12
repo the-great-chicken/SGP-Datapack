@@ -5,6 +5,5 @@
 
 $give @s $(give)
 $give @s $(give_2)
-$data modify storage smithed.actionbar:input message set value {json:[$(actionbar)],priority:'notification'}
-function #smithed.actionbar:message
+$function sgp.misc:actionbar/reward {text:[$(actionbar)],duration:40}
 $scoreboard players set @s sgp.kills_give_$(nb) 0

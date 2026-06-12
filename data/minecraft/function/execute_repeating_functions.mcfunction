@@ -13,6 +13,9 @@ execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
 scoreboard players add #20_ticks sgp.dummy 1
 execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
+# Expire actionbar segments before systems refresh the parts they still need.
+function sgp.misc:actionbar/tick
+
 
 # Must be in this order
 execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \

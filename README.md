@@ -12,7 +12,7 @@ You can join the discord of the original SGP at https://www.discord.gg/FqGKSqPBb
 
 ## Required
 
-The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from Smithed is required.
+The [**Actionbar Mixer**](https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft) datapack is required.
 [**Bookshelf**](https://docs.mcbookshelf.dev/en/latest/) is also required.
 
 ## Optional
