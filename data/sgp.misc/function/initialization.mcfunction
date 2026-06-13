@@ -58,6 +58,14 @@ scoreboard objectives add sgp.ab.reward_3 dummy
 scoreboard objectives add sgp.ab.location dummy
 scoreboard objectives add sgp.ab.hide_hider dummy
 scoreboard objectives add sgp.ab.pco_cabane dummy
+scoreboard objectives add sgp.ab.ability_cooldown dummy
+scoreboard objectives add sgp.ab.ability_cooldown_max dummy
+scoreboard objectives add sgp.ab.ability_cooldown_last_fill dummy
+scoreboard objectives add sgp.ab.ability_cooldown_last_current dummy
+scoreboard objectives add sgp.ab.water_trident_cooldown dummy
+scoreboard objectives add sgp.ab.water_trident_cooldown_max dummy
+scoreboard objectives add sgp.ab.water_trident_cooldown_last_fill dummy
+scoreboard objectives add sgp.ab.water_trident_cooldown_last_current dummy
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/initialization_lieux with entity @s data
 
@@ -282,6 +290,8 @@ data merge storage sgp:kits {\
 data modify storage sgp.text prefix set value {text:"[", color:gray, extra:[{text:"SGP", color:gold}, {text:"] "}]}
 
 data modify storage sgp:data const.hex set value ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+
+data modify storage sgp:data misc.actionbar.progress_bar.bars set value [{gold:"",white:"||||||||||||||||||||"},{gold:"|",white:"|||||||||||||||||||"},{gold:"||",white:"||||||||||||||||||"},{gold:"|||",white:"|||||||||||||||||"},{gold:"||||",white:"||||||||||||||||"},{gold:"|||||",white:"|||||||||||||||"},{gold:"||||||",white:"||||||||||||||"},{gold:"|||||||",white:"|||||||||||||"},{gold:"||||||||",white:"||||||||||||"},{gold:"|||||||||",white:"|||||||||||"},{gold:"||||||||||",white:"||||||||||"},{gold:"|||||||||||",white:"|||||||||"},{gold:"||||||||||||",white:"||||||||"},{gold:"|||||||||||||",white:"|||||||"},{gold:"||||||||||||||",white:"||||||"},{gold:"|||||||||||||||",white:"|||||"},{gold:"||||||||||||||||",white:"||||"},{gold:"|||||||||||||||||",white:"|||"},{gold:"||||||||||||||||||",white:"||"},{gold:"|||||||||||||||||||",white:"|"},{gold:"||||||||||||||||||||",white:""}]
 
 
 
