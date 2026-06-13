@@ -40,8 +40,5 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.k
             ] \
         ]', \
     give_2:air, \
-    actionbar:' \
-        {text:"+ 2 🔱 Tridents ", color:dark_aqua, bold:true}, \
-        {text:" et 1 ❤ Pomme d\\\'or Enchantée !", color:light_purple} \
-        ' \
+    actionbar:{text:"+ 1 ❤ Pomme d'or Enchantée !", color:light_purple, bold:true} \
     }

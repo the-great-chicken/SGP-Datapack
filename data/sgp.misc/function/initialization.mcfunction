@@ -52,7 +52,9 @@ scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
 scoreboard objectives add sgp.id dummy
 
-scoreboard objectives add sgp.ab.reward dummy
+scoreboard objectives add sgp.ab.reward_1 dummy
+scoreboard objectives add sgp.ab.reward_2 dummy
+scoreboard objectives add sgp.ab.reward_3 dummy
 scoreboard objectives add sgp.ab.location dummy
 scoreboard objectives add sgp.ab.hide_hider dummy
 scoreboard objectives add sgp.ab.pco_cabane dummy

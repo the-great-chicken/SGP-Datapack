@@ -49,7 +49,9 @@ scoreboard objectives remove sgp.dy
 scoreboard objectives remove sgp.dz
 scoreboard objectives remove sgp.id
 
-scoreboard objectives remove sgp.ab.reward
+scoreboard objectives remove sgp.ab.reward_1
+scoreboard objectives remove sgp.ab.reward_2
+scoreboard objectives remove sgp.ab.reward_3 
 scoreboard objectives remove sgp.ab.location
 scoreboard objectives remove sgp.ab.hide_hider
 scoreboard objectives remove sgp.ab.pco_cabane

@@ -5,5 +5,5 @@
 
 $give @s $(give)
 $give @s $(give_2)
-$function sgp.misc:actionbar/reward {text:[$(actionbar)],duration:40}
+$function sgp.misc:actionbar/reward {id:"sgp:reward_$(nb)", slot:$(nb), text:[$(actionbar)]}
 $scoreboard players set @s sgp.kills_give_$(nb) 0

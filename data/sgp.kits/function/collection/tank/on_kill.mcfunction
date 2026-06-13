@@ -48,9 +48,5 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_2=3..}] run function sgp.kits:
         tooltip_display={hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
-    actionbar:' \
-        {text:"+ 1 ➶ Flèche, ", color:"#545F67", bold:true}, \
-        {text:"1 🧪 Potion ", color:dark_blue}, \
-        {text:"et 1 ❤ Pomme d\\\'or !", color:yellow} \
-        ' \
+    actionbar:{text:"+ 1 🧪 Potion !", color:dark_blue, bold:true} \
     }

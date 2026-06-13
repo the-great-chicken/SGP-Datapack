@@ -19,10 +19,12 @@ give @s arrow 2
 effect give @s regeneration 1 3
 
 function sgp.misc:actionbar/reward { \
+    id:"sgp:reward_1", \
+    slot:1, \
     text:[ \
-        {text:"+ 2 ➶ Flèches ", color:gray, bold:true}, \
-        {text:"et 1 ❤ Pomme d'or !", color:yellow} \
-        ], \
-    duration:40 \
+        {text:"+ 2 ➶ Flèches, ", color:gray, bold:true}, \
+        {text:"1 ❤ Pomme d'or ", color:yellow}, \
+        {text:"et 1,5 ❤ !", color:light_purple} \
+        ] \
     }
 scoreboard players set @s sgp.kills_give_1 0

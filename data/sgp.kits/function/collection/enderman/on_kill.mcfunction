@@ -32,8 +32,5 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
         max_stack_size=64 \
         ]', \
     give_2:air, \
-    actionbar:' \
-        {text:"+ 2 Ⓞ Yeux ", color:dark_purple, bold:true}, \
-        {text:"et 1 Potion de ➠ Rapidité !", color:aqua} \
-        ' \
+    actionbar:{text:"+ 1 ➠ Potion de Rapidité !", color:aqua, bold:true} \
     }

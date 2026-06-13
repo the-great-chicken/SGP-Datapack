@@ -49,9 +49,5 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
         max_stack_size=64 \
         ]', \
     give_2:air, \
-    actionbar:' \
-        {text:"+ 2 ❤ Potions de Soin, ", color:red, bold:true}, \
-        {text:"3 ⚔ Potions de Dégâts ", color:dark_red}, \
-        {text:"et 1 👁 Potion de Cécité !", color:"#8B8589"} \
-        ', \
+    actionbar:{text:"+ 1 👁 Potion de Cécité !", color:"#8B8589", bold:true} \
     }

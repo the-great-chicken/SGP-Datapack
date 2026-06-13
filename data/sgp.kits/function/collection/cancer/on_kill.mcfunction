@@ -87,8 +87,6 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         ]', \
     actionbar:' \
         {text:"+ 1 ❤ Pomme d\\\'or, ", color:yellow, bold:true}, \
-        {text:"1 ⟰ Flèche de Lévitation, ", color:white}, \
-        {text:"1 ⬳ Flèche de Lenteur, ", color:"#555555"}, \
         {text:"1 ➠ Potion de Rapidité ", color:aqua}, \
         {text:"et 1 ⇪ Potion de Saut !", color:green} ' \
     }
