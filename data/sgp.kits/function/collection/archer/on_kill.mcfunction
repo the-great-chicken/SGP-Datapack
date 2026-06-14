@@ -13,7 +13,8 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_1=1..}] run function sgp.kit
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 💀 Flèche de Poison !", color:"#55741B", bold:true} \
+    actionbar:{text:"+ 1 💀 Flèche de Poison !", color:"#55741B", bold:true}, \
+    width:146, \
     }
 
 execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
@@ -32,7 +33,8 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         tooltip_display= {hidden_components:["potion_contents"]}, \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ⬳ Flèche de Lenteur !", color:"#555555", bold:true} \
+    actionbar:{text:"+ 1 ⬳ Flèche de Lenteur !", color:"#555555", bold:true}, \
+    width:156, \
     }
 
 execute as @a[tag=sgp.archer,scores={sgp.kills_give_3=3..}] run function sgp.kits:kills_give/basic { \
@@ -49,5 +51,6 @@ execute as @a[tag=sgp.archer,scores={sgp.kills_give_3=3..}] run function sgp.kit
             ] \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ❤ Pomme d'or !", color:yellow, bold:true} \
+    actionbar:{text:"+ 1 ❤ Pomme d'or !", color:yellow, bold:true}, \
+    width:110, \
     }

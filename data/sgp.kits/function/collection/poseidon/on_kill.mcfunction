@@ -19,7 +19,8 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.k
         tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
         ] 2', \
     give_2:air, \
-    actionbar:{text:"+ 2 🔱 Tridents !", color:dark_aqua, bold:true} \
+    actionbar:{text:"+ 2 🔱 Tridents !", color:dark_aqua, bold:true}, \
+    width:96, \
     }
 
 execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.kits:kills_give/basic { \
@@ -40,5 +41,6 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.k
             ] \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ❤ Pomme d'or Enchantée !", color:light_purple, bold:true} \
+    actionbar:{text:"+ 1 ❤ Pomme d'or Enchantée !", color:light_purple, bold:true}, \
+    width:176, \
     }

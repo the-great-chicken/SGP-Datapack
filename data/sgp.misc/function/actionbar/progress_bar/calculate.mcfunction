@@ -9,8 +9,6 @@
 #
 # Fill-up style: gold = elapsed cooldown, white = remaining cooldown.
 
-scoreboard players set #sgp.ab.bar_length sgp.dummy 20
-
 execute unless score #sgp.ab.current sgp.dummy matches 0.. run scoreboard players set #sgp.ab.current sgp.dummy 0
 execute unless score #sgp.ab.max sgp.dummy matches 1.. run scoreboard players operation #sgp.ab.max sgp.dummy = #sgp.ab.current sgp.dummy
 execute unless score #sgp.ab.max sgp.dummy matches 1.. run scoreboard players set #sgp.ab.max sgp.dummy 1

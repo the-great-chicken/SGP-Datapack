@@ -1,4 +1,4 @@
-#> sgp.kits:collection/Enderman/on_kill
+#> sgp.kits:collection/enderman/on_kill
 # 
 # Gives the Enderman kill rewards
 
@@ -11,7 +11,8 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_1=1..}] run function sgp.k
         tooltip_display={hidden_components:["enchantments"]} \
         ] 2', \
     give_2:air, \
-    actionbar:{text:"+ 2 Ⓞ Yeux !", color:dark_purple, bold:true} \
+    actionbar:{text:"+ 2 Ⓞ Yeux !", color:dark_purple, bold:true}, \
+    width:76, \
     }
 
 execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.kits:kills_give/basic { \
@@ -32,5 +33,6 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
         max_stack_size=64 \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ➠ Potion de Rapidité !", color:aqua, bold:true} \
+    actionbar:{text:"+ 1 ➠ Potion de Rapidité !", color:aqua, bold:true}, \
+    width:152, \
     }
