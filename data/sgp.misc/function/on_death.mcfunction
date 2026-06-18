@@ -3,6 +3,7 @@
 # Executed when a players dies: resets things,...
 
 execute store result score #kit_id_victime sgp.dummy run scoreboard players get @s sgp.kit_id
+scoreboard players reset @s sgp.kit_id
 
 # Reset ability
 scoreboard players set @s sgp.duration_ability 1

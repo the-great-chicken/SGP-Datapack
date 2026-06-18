@@ -6,21 +6,24 @@
 # The storage is global, but this function is called from display/self as each player, so it is safe to rebuild it for the current @s just before `title`.
 data remove storage sgp:actionbar_hud overlay
 
+execute unless score @s sgp.kit_id matches 0.. run return 0
+
 execute unless score @s sgp.ab.hud_ability matches 1 run return 0
+
+# Select the current kit visual data once. Icon and color both come from sgp:kits.
+data modify storage sgp:macro actionbar_hud.kit set value {kit_color:white, kit_icon:""}
+execute store result storage sgp:macro actionbar_hud.index int 1 run scoreboard players get @s sgp.kit_id
+data modify storage sgp:macro actionbar_hud.function set value "sgp.misc:actionbar/hud/select_current_kit"
+data modify storage sgp:macro actionbar_hud.list set value "sgp:kits kit_id_order"
+function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_hud
 
 function sgp.misc:actionbar/hud/build_width
 
 # Move from the beginning of the centered normal actionbar line to the HUD glyph start position.
 scoreboard players operation #sgp.ab.hud_space sgp.dummy = @s sgp.ab.normal_width
-
-scoreboard players operation #sgp.ab.hud_space_remainder sgp.dummy = #sgp.ab.hud_space sgp.dummy
-scoreboard players operation #sgp.ab.hud_space_remainder sgp.dummy %= 4 sgp.dummy
 scoreboard players operation #sgp.ab.hud_space sgp.dummy += 1 sgp.dummy
-
 scoreboard players operation #sgp.ab.hud_space sgp.dummy /= 4 sgp.dummy
-execute if score #sgp.ab.hud_space_remainder sgp.dummy matches 1..2 run scoreboard players add #sgp.ab.hud_x sgp.dummy 1
 scoreboard players operation #sgp.ab.hud_space sgp.dummy += #sgp.ab.hud_x sgp.dummy
-execute if score #sgp.ab.hud_space_remainder sgp.dummy matches 1..2 run scoreboard players remove #sgp.ab.hud_x sgp.dummy 1
 
 # Clamp the signed offset to the available space glyph LUTs.
 scoreboard players operation #sgp.ab.neg_space_limit sgp.dummy = #sgp.ab.space_limit sgp.dummy
@@ -45,15 +48,22 @@ execute if score #sgp.ab.hud_space sgp.dummy matches ..-1 run data modify storag
 execute if score #sgp.ab.hud_space sgp.dummy matches ..-1 run data modify storage sgp:macro actionbar_hud.list set value "sgp:data misc.actionbar.hud.space_negative"
 function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_hud
 
-# Background: draw one static HUD glyph from its own texture/key.
-data modify storage sgp:macro actionbar_hud.background set from storage sgp:data misc.actionbar.hud.ability_background
-function sgp.misc:actionbar/hud/append_ability_bar with storage sgp:macro actionbar_hud.background
+# Background: draw the current kit icon centered under the cooldown frame.
+# There are special cases depending on the icon...
+data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.7",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 8 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 4 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 9 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 1 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
+
+function sgp.misc:actionbar/hud/append_ability_bar with storage sgp:macro actionbar_hud.kit
 
 # Rewind by the static background advance so the filled frame starts on top.
-execute store result storage sgp:macro actionbar_hud.index int 1 run scoreboard players get #sgp.ab.hud_bar_width sgp.dummy
-data modify storage sgp:macro actionbar_hud.function set value "sgp.misc:actionbar/hud/append_negative_space"
-data modify storage sgp:macro actionbar_hud.list set value "sgp:data misc.actionbar.hud.space_negative"
-function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_hud
+data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.15",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 8 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.2",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 5 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 1 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 4 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.2",font:"sgp.kits:space",shadow:false}}
 
 # Draw the current cooldown HUD frame tinted to the player's kit color.
 execute store result storage sgp:macro actionbar_hud.index int 1 run scoreboard players get @s sgp.ab.hud_ability_fill
