@@ -21,7 +21,7 @@ effect give @s regeneration 1 3
 function sgp.misc:actionbar/reward { \
     id:"sgp:reward_1", \
     slot:1, \
-    width:242, \
+    width:483, \
     text:[ \
         {text:"+ 2 ➶ Flèches, ", color:gray, bold:true}, \
         {text:"1 ❤ Pomme d'or ", color:yellow}, \

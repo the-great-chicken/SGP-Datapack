@@ -21,7 +21,7 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.k
         {text:"+ 1 ➶ Flèche ", color:gray, bold:true}, \
         {text:"et 2 ☀ Explosifs !", color:red} \
         ', \
-    width:186, \
+    width:373, \
     }
 
 execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_2=3..}] run function sgp.kits:kills_give/basic { \
@@ -39,5 +39,5 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_2=3..}] run function sgp.k
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 ❤ Pomme d'or !", color:yellow, bold:true}, \
-    width:110, \
+    width:222, \
     }

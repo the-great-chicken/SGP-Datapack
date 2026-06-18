@@ -11,9 +11,9 @@ execute unless score @s sgp.ab.hud_ability matches 1 run return 0
 
 function sgp.misc:actionbar/hud/build_width
 
-# S = normal_actionbar_width / 2 + configured HUD x-offset.
 scoreboard players operation #sgp.ab.hud_space sgp.dummy = @s sgp.ab.normal_width
-scoreboard players operation #sgp.ab.hud_space sgp.dummy /= #sgp.ab.two sgp.dummy
+scoreboard players operation #sgp.ab.hud_space sgp.dummy += 1 sgp.dummy
+scoreboard players operation #sgp.ab.hud_space sgp.dummy /= 4 sgp.dummy
 scoreboard players operation #sgp.ab.hud_space sgp.dummy += #sgp.ab.hud_x sgp.dummy
 execute if score #sgp.ab.hud_space sgp.dummy matches ..0 run \
     scoreboard players set #sgp.ab.hud_space sgp.dummy 0

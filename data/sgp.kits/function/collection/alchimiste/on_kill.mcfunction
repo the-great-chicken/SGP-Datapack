@@ -29,7 +29,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
     actionbar:' \
         {text:"+ 2 ❤ Potions de Soin ", color:red, bold:true}, \
         {text:"et 3 ⚔ Potions de Dégâts !", color:dark_red} ', \
-    width:292, \
+    width:584, \
     nb:1 }
 
 execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
@@ -51,5 +51,5 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 👁 Potion de Cécité !", color:"#8B8589", bold:true}, \
-    width:142, \
+    width:283, \
     }

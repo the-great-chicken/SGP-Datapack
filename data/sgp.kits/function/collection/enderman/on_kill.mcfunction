@@ -12,7 +12,7 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_1=1..}] run function sgp.k
         ] 2', \
     give_2:air, \
     actionbar:{text:"+ 2 Ⓞ Yeux !", color:dark_purple, bold:true}, \
-    width:76, \
+    width:152, \
     }
 
 execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.kits:kills_give/basic { \
@@ -34,5 +34,5 @@ execute as @a[tag=sgp.enderman,scores={sgp.kills_give_2=3..}] run function sgp.k
         ]', \
     give_2:air, \
     actionbar:{text:"+ 1 ➠ Potion de Rapidité !", color:aqua, bold:true}, \
-    width:152, \
+    width:303, \
     }

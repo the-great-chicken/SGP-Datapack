@@ -20,5 +20,5 @@ execute as @a[tag=sgp.eclaireur,scores={sgp.kills_give_1=1..}] run function sgp.
         {text:"+ 2 ➶ Flèches ", color:gray, bold:true}, \
         {text:"et 2 ❤ Pommes d\\\'or !", color:yellow} \
         ', \
-    width:210, \
+    width:419, \
     }
