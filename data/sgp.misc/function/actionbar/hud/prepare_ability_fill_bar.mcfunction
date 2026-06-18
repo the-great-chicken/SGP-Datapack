@@ -21,4 +21,3 @@ execute if score @s sgp.kit_id matches 10 run data modify storage sgp:macro acti
 execute if score @s sgp.kit_id matches 11 run data modify storage sgp:macro actionbar_ability_fill.color set from storage sgp:kits poseidon.kit_color
 
 function sgp.misc:actionbar/hud/append_ability_fill_bar with storage sgp:macro actionbar_ability_fill
-data remove storage sgp:macro actionbar_ability_fill

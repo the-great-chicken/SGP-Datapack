@@ -139,6 +139,7 @@ scoreboard objectives add sgp.left_click_count dummy
 scoreboard players set #ench_particle sgp.dummy 0
 scoreboard players set #flame_crown_particle sgp.dummy 0
 
+scoreboard players set -1 sgp.dummy -1
 scoreboard players set 0 sgp.dummy 0
 scoreboard players set 1 sgp.dummy 1
 scoreboard players set 2 sgp.dummy 2
@@ -342,10 +343,10 @@ execute as @e[tag=sgp.marker,name="teleporter",type=marker] \
 data modify storage dah:actbar default_separator set value {text:" | ", color:white, bold:true, shadow:false}
 function dah.actbar_mixer:separator/reset_all
 
-# HUD x-offset is the left edge of the cooldown bar relative to screen center.
-# Increase this to move the bar further right; decrease it to move left.
-scoreboard players set #sgp.ab.hud_x sgp.dummy 7
-scoreboard players set #sgp.ab.hud_bar_width sgp.dummy 83
+# HUD x-offset is the glyph start position relative to screen center.
+# Negative values are allowed; use this with the width LUT to center any HUD glyph.
+scoreboard players set #sgp.ab.hud_x sgp.dummy -8
+scoreboard players set #sgp.ab.hud_bar_width sgp.dummy 17
 scoreboard players set #sgp.ab.bar_length sgp.dummy 20
 scoreboard players set #sgp.ab.space_limit sgp.dummy 768
 
@@ -360,8 +361,10 @@ data modify storage sgp:data misc.actionbar.hud.space_negative set value [{key:"
 
 data modify storage sgp:data misc.actionbar.hud.ability_bars set value [{key:"sgp.kits.ability_bar.0"},{key:"sgp.kits.ability_bar.1"},{key:"sgp.kits.ability_bar.2"},{key:"sgp.kits.ability_bar.3"},{key:"sgp.kits.ability_bar.4"},{key:"sgp.kits.ability_bar.5"},{key:"sgp.kits.ability_bar.6"},{key:"sgp.kits.ability_bar.7"},{key:"sgp.kits.ability_bar.8"},{key:"sgp.kits.ability_bar.9"},{key:"sgp.kits.ability_bar.10"},{key:"sgp.kits.ability_bar.11"},{key:"sgp.kits.ability_bar.12"},{key:"sgp.kits.ability_bar.13"},{key:"sgp.kits.ability_bar.14"},{key:"sgp.kits.ability_bar.15"},{key:"sgp.kits.ability_bar.16"},{key:"sgp.kits.ability_bar.17"},{key:"sgp.kits.ability_bar.18"},{key:"sgp.kits.ability_bar.19"},{key:"sgp.kits.ability_bar.20"}]
 
+data modify storage sgp:data misc.actionbar.hud.ability_background set value {key:"sgp.kits.ability_bar.background"}
+
 # Actual text advance width of each ability_bar.N glyph.
 # This is deliberately a LUT instead of `bar_width * fill / 20`, because the bitmap glyph advances are not perfectly linear in practice.
-data modify storage sgp:data misc.actionbar.hud.ability_bar_widths set value [{width:1},{width:7},{width:11},{width:15},{width:19},{width:23},{width:27},{width:31},{width:35},{width:39},{width:43},{width:47},{width:51},{width:55},{width:59},{width:63},{width:67},{width:71},{width:75},{width:79},{width:83}]
+data modify storage sgp:data misc.actionbar.hud.ability_bar_widths set value [{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16}]
 
 data modify storage sgp:data misc.actionbar.progress_bar.bars set value [{gold:"",white:"||||||||||||||||||||"},{gold:"|",white:"|||||||||||||||||||"},{gold:"||",white:"||||||||||||||||||"},{gold:"|||",white:"|||||||||||||||||"},{gold:"||||",white:"||||||||||||||||"},{gold:"|||||",white:"|||||||||||||||"},{gold:"||||||",white:"||||||||||||||"},{gold:"|||||||",white:"|||||||||||||"},{gold:"||||||||",white:"||||||||||||"},{gold:"|||||||||",white:"|||||||||||"},{gold:"||||||||||",white:"||||||||||"},{gold:"|||||||||||",white:"|||||||||"},{gold:"||||||||||||",white:"||||||||"},{gold:"|||||||||||||",white:"|||||||"},{gold:"||||||||||||||",white:"||||||"},{gold:"|||||||||||||||",white:"|||||"},{gold:"||||||||||||||||",white:"||||"},{gold:"|||||||||||||||||",white:"|||"},{gold:"||||||||||||||||||",white:"||"},{gold:"|||||||||||||||||||",white:"|"},{gold:"||||||||||||||||||||",white:""}]

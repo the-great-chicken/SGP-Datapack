@@ -8,5 +8,3 @@ data modify storage sgp:macro actionbar_progress.function set value "sgp.misc:ac
 data modify storage sgp:macro actionbar_progress.list set value "sgp:data misc.actionbar.progress_bar.bars"
 
 function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_progress
-
-data remove storage sgp:macro actionbar_progress
