@@ -53,7 +53,7 @@ function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_h
 data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.7",font:"sgp.kits:space",shadow:false}}
 execute if score @s sgp.kit_id matches 8 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
 execute if score @s sgp.kit_id matches 4 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
-execute if score @s sgp.kit_id matches 9 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
+execute if score @s sgp.kit_id matches 9 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.4",font:"sgp.kits:space",shadow:false}}
 execute if score @s sgp.kit_id matches 1 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1",font:"sgp.kits:space",shadow:false}}
 
 function sgp.misc:actionbar/hud/append_ability_bar with storage sgp:macro actionbar_hud.kit
