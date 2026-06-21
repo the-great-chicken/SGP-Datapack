@@ -72,7 +72,11 @@ function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
 
+scoreboard players reset @a[scores={sgp.ab.location_inside=1..}] sgp.ab.location_inside
+
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+
+execute as @a[scores={sgp.ab.location=1..}] unless score @s sgp.ab.location_inside matches 1 run function sgp.misc:actionbar/location_clear
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
 

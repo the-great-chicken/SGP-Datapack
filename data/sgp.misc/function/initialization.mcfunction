@@ -60,6 +60,7 @@ scoreboard objectives add sgp.ab.reward_2_width dummy
 scoreboard objectives add sgp.ab.reward_3_width dummy
 scoreboard objectives add sgp.ab.location dummy
 scoreboard objectives add sgp.ab.location_width dummy
+scoreboard objectives add sgp.ab.location_inside dummy
 scoreboard objectives add sgp.ab.hide_hider dummy
 scoreboard objectives add sgp.ab.pco_cabane dummy
 scoreboard objectives add sgp.ab.ability_cooldown dummy
