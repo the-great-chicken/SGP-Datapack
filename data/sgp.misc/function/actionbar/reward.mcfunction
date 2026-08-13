@@ -9,5 +9,5 @@
 
 $data modify storage dah:actbar new set value {id:"$(id)", order:10$(slot), text:$(text)}
 function dah.actbar_mixer:new/update_id
-$scoreboard players set @s sgp.ab.reward_$(slot) 50
+$scoreboard players set @s sgp.ab.reward_$(slot) 80
 $scoreboard players set @s sgp.ab.reward_$(slot)_width $(width)
