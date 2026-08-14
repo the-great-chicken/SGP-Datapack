@@ -5,4 +5,3 @@
 clear @s
 effect clear @s
 attribute @s minecraft:step_height modifier remove sgp:kit
-god @s off
