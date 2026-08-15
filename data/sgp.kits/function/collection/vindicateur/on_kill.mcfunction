@@ -20,7 +20,8 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_1=3..}] run function sg
         max_stack_size=64 \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ⬊ Potion de Faiblesse !", color:"#777075", bold:true} \
+    actionbar:{text:"+ 1 ⬊ Potion de Faiblesse !", color:"#777075", bold:true}, \
+    width:319, \
     }
 
 execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_2=5..}] run function sgp.kits:kills_give/basic { \
@@ -31,5 +32,6 @@ execute as @a[tag=sgp.vindicateur,scores={sgp.kills_give_2=5..}] run function sg
         tooltip_display={hidden_components:["enchantments"]}, \
         ]', \
     give_2:air, \
-    actionbar:{text:"+ 1 ⚚ Totem !", color:gold, bold:true} \
+    actionbar:{text:"+ 1 ⚚ Totem !", color:gold, bold:true}, \
+    width:157, \
     }

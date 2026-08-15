@@ -9,5 +9,6 @@ execute as @a[tag=sgp.pigeon,scores={sgp.kills_give_1=1..}] run function sgp.kit
         tooltip_display={hidden_components:["fireworks"]}, \
         ] 2', \
     give_2:air, \
-    actionbar:{text:"+ ✦ 2 Boost !", color:dark_gray, bold:true} \
+    actionbar:{text:"+ ✦ 2 Boost !", color:dark_gray, bold:true}, \
+    width:157, \
     }

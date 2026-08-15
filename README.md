@@ -12,7 +12,7 @@ You can join the discord of the original SGP at https://www.discord.gg/FqGKSqPBb
 
 ## Required
 
-The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from Smithed is required.
+The [**Actionbar Mixer**](https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft) datapack is required.
 [**Bookshelf**](https://docs.mcbookshelf.dev/en/latest/) is also required.
 
 ## Optional
@@ -26,6 +26,7 @@ For example tnt-based abilities will destroy your world, or poseidon's trident a
 
 We do replace the #bypasses_shield damage type tag with all its vanilla damage type, to allow us to have a damage type that bypasses armor but not shield.
 We also replace the vanilla magenta_shulker_box death loot table.
+We completely OWN the actionbar UwU. (Although it's possible to add things to it by calling our related functions)
 
 # Installation
 
@@ -36,13 +37,15 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 ### Base
 
 - 1 `respawn`: spawnpoint of the players when they die, should be also the place where they choose their kit
-- any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`. Need 8 `\` to escape a `'`.
+- any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72}`. Need 8 `\` to escape a `'`. <a href="#note4">*</a>
 - any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 - At least 1 `playable_map` in the corner of the playable map: `{dx, dy, dz, id: int}` (the `id` is not mandatory if you're not using dioramas)
 - Optionally at least 1 `playable_map_model` in the corner of the smaller model of the map: `{id: int}`. The id should correspond to the one of the `playable_map` it should be linked to. No duplicates.
+
+<a id="note4">*</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
 
 ### Major Events
 

@@ -49,6 +49,30 @@ scoreboard objectives remove sgp.dy
 scoreboard objectives remove sgp.dz
 scoreboard objectives remove sgp.id
 
+scoreboard objectives remove sgp.ab.reward_1
+scoreboard objectives remove sgp.ab.reward_2
+scoreboard objectives remove sgp.ab.reward_3
+scoreboard objectives remove sgp.ab.reward_1_width
+scoreboard objectives remove sgp.ab.reward_2_width
+scoreboard objectives remove sgp.ab.reward_3_width
+scoreboard objectives remove sgp.ab.location
+scoreboard objectives remove sgp.ab.location_width
+scoreboard objectives remove sgp.ab.location_inside
+scoreboard objectives remove sgp.ab.hide_hider
+scoreboard objectives remove sgp.ab.pco_cabane
+scoreboard objectives remove sgp.ab.ability_cooldown
+scoreboard objectives remove sgp.ab.ability_cooldown_max
+scoreboard objectives remove sgp.ab.ability_cooldown_last_fill
+scoreboard objectives remove sgp.ab.ability_cooldown_last_current
+scoreboard objectives remove sgp.ab.hud_ability
+scoreboard objectives remove sgp.ab.hud_ability_fill
+scoreboard objectives remove sgp.ab.normal_width
+scoreboard objectives remove sgp.ab.normal_count
+scoreboard objectives remove sgp.ab.water_trident_cooldown
+scoreboard objectives remove sgp.ab.water_trident_cooldown_max
+scoreboard objectives remove sgp.ab.water_trident_cooldown_last_fill
+scoreboard objectives remove sgp.ab.water_trident_cooldown_last_current
+
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/uninstallation_lieux with entity @s data
 
 scoreboard objectives remove sgp.uuid
@@ -132,6 +156,7 @@ team remove sgp.Illusion
 
 # Misc
 bossbar remove sgp:lgp
+execute as @a run function sgp.misc:actionbar/clear
 
 
 # ---------- Clear Schedules ----------
@@ -147,3 +172,5 @@ schedule clear sgp.misc:bossbar/cycle_name
 data remove storage sgp:data majeurs
 data remove storage sgp:data mineurs
 data remove storage sgp.text prefix
+data remove storage sgp:actionbar_hud overlay
+data remove storage sgp:data misc.actionbar

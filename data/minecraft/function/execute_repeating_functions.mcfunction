@@ -13,6 +13,9 @@ execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
 scoreboard players add #20_ticks sgp.dummy 1
 execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
+# Expire actionbar segments before systems refresh the parts they still need.
+function sgp.misc:actionbar/tick
+
 
 # Must be in this order
 execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
@@ -68,6 +71,9 @@ execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/sho
 function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
+
+scoreboard players set @a sgp.ab.location 0
+scoreboard players set @a sgp.ab.location_width 0
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
 

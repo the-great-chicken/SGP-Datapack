@@ -19,7 +19,7 @@
         "undeclaredSymbol": [
             {
                 "if": {
-                "pattern": "^(#?bs|smithed)\\..*"
+                "pattern": "^(#?bs|smithed|dah)\\..*"
                 },
                 "then": { "report": "hint" }
             },
