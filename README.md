@@ -34,18 +34,21 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 
 ## Markers to create
 
+The template to summon one is `/summon marker ~ ~ ~ {CustomName:"<name>", Tags:["sgp.marker"], data:{<data>}}`.
+All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner with coordinates `- - -` of the bounding box, at `<x>.0 <y>.0 <z>.0`.
+
 ### Base
 
 - 1 `respawn`: spawnpoint of the players when they die, should be also the place where they choose their kit
-- any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72}`. Need 8 `\` to escape a `'`. <a href="#note4">*</a>
-- any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
-- at least 1 `Confinement`: spawnpoints when the Confinement event is active
+- any number of `lieu` : They are bounding boxes corresponding to an in-game POI. The players can "collect" these by going inside, and it will show them the POI name everytime they come back in. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72}`. Need 8 `\` to escape a `'`. <a href="#note4">⚠</a>
+- any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`. When a player is on the same block as the marker, it gets teleported after a while. The teleporter is visible through particles.
+- at least 1 `Confinement`: spawnpoints when the Confinement event is active. Should better be "inside" buildings, else players will die UwU.
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 - At least 1 `playable_map` in the corner of the playable map: `{dx, dy, dz, id: int}` (the `id` is not mandatory if you're not using dioramas)
 - Optionally at least 1 `playable_map_model` in the corner of the smaller model of the map: `{id: int}`. The id should correspond to the one of the `playable_map` it should be linked to. No duplicates.
 
-<a id="note4">*</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
+<a id="note4">⚠</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
 
 ### Major Events
 
@@ -67,21 +70,23 @@ Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can shar
 The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction", "sgp.<name>"], data:{args:{<args>}, function: "<func>"}, response:true}`.
 Each of these is optional (or can be present multiple times), depending on how you want to make your players' UX.
 
-- `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, article:<"à la"|"au"|...>, title:"<escaped_text_component>", id:1` <a href="#note1">*</a> <a href="#note2">**</a>
-- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no arg: `id: <int>`. <a href="#note3">***</a>
+- `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, article:<"à la"|"au"|...>, title:"<escaped_text_component>", id:1` <a href="#note1">⚠</a> <a href="#note2">⚠⚠</a>
+- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no arg: `id: <int>`. <a href="#note3">⚠⚠⚠</a>
 - `to_spawns`, with the function `sgp.misc:interactions/go_to_choose_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_cosms`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_reception`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_kits`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 
-<a id="note1">*</a> There needs to be the same number of `spawn_tper` for each spawn type, or else the random will be skewed.
-<a id="note2">**</a> You do not need to add any if you're using the diorama! Instead initialize the storage.
-<a id="note3">***</a> If you're not using dioramas, choose `id: 1`. Else it should be the id of the diorama it will choose the spawns from.
+<a id="note1">⚠</a> There needs to be the same number of `spawn_tper` for each spawn type, or else the random will be skewed.
+
+<a id="note2">⚠⚠</a> You do not need to add any if you're using the diorama! Instead initialize the [storage](#storages).
+
+<a id="note3">⚠⚠⚠</a> If you're not using dioramas, choose `id: 1`. Else it should be the id of the diorama it will choose the spawns from.
 
 ## Storages
 
 - You can change the cooldowns and durations of all abilities by changing the values in `sgp:data kits.ability_cooldowns`
-- `sgp:data spawns[{id:int, list:[]}]` The `list` is containing all the spawns, and will be used if you're using the diorama to automatically place the interation entities and text displays. Each element should be exactly what would have been the `args` of the `spawn_tper`s. The id should correspond to the diorama in which you want these spawns to appear in.
+- `sgp:data spawns[{id:int, list:[]}]` The `list` is containing all the spawns, and will be used if you're using the diorama to automatically place the interation entities and text displays. Each element should be exactly what would have been the `args` of the `spawn_tper`s. But with `icon:<char>` in addition. The id should correspond to the diorama in which you want these spawns to appear in.
 
 ## Other stuff
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
