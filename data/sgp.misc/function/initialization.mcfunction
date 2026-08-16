@@ -250,12 +250,15 @@ team modify sgp.seeker color dark_green
 team add sgp.Illusion
 team modify sgp.Illusion collisionRule never
 
-# Misc
+# ---------- Misc ----------
+
 bossbar add sgp:lgp "a"
 forceload add 0 0
 
 time of sgp.mineurs:confinement_clock set 10000t
 time of sgp.mineurs:confinement_clock pause
+
+function sgp.kits:kit_tags/init_luckperms
 
 
 
