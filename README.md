@@ -89,6 +89,43 @@ Each of these is optional (or can be present multiple times), depending on how y
 - You should forceload all the chunks in which you placed markers.
 - If you want the diorama mannequins to replicate players' swings, and don't use `/give` in general (else you'll have stacking issues), you can enable it with `/scoreboard players set #mannequins_swing_enabled sgp.dummy 1`
 
+## Plugin configuration
+
+### CommandAPI
+
+Change these settings in CommandAPI's config.yml:
+```yml
+skip-initial-datapack-reload: false
+hook-paper-reload: true
+
+plugins-to-convert:
+- LuckPerms:
+  - luckperms (user) <user>[api:players] <args>[api:greedy_string]
+  - luckperms (creategroup|createtrack) <name>[brigadier:string]
+  - luckperms (group) <name>[brigadier:string] (meta) (setprefix) <priority>[brigadier:integer] <prefix>[api:greedy_string]
+  - luckperms (track) (kit) (append) <name>[brigadier:string]
+- TGCPlugin:
+  - statuswarp <name>[brigadier:string] (enabled|disabled)
+- DiscordSRV-SGP-extension:
+  - move <player>[api:players] <channel>[api:greedy_string]
+- Citizens:
+  - npc (spawn|despawn)
+  - npc (select) <id>[brigadier:integer]
+- Essentials:
+  - playerlist
+
+other-commands-to-convert:
+  - glow add <player>[api:players] <entities>[api:entities]
+  - glow add <player>[api:players] <entities>[api:entities] <color>[minecraft:color]
+  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer]
+  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer] <color>[minecraft:color]
+  - glow remove <entities>[api:entities]
+  - useglow (toggle)
+
+skip-sender-proxy:
+- LuckPerms
+```
+
 # Uninstallation
 
 Run the `sgp.misc:uninstall` function, it will remove all the sgp objectives and non-usermade data

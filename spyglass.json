@@ -4,8 +4,8 @@
 	"env": {
         "mcmetaSummaryOverrides": {
             "commands":{
-                "path": "command_registration.json",
-                "replace": true
+                "path": "converted_commands.json",
+                "replace": false
             }
         }
 	},
