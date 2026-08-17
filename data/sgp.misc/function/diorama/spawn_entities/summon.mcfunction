@@ -18,4 +18,11 @@ execute store result score @s bs.rot.h run data get storage sgp:data temp.spawns
 execute store result score @s bs.rot.v run data get storage sgp:data temp.spawns_list[0].pitch 1000
 function #bs.position:set_rot {scale: 0.001}
 
-execute at @s summon text_display run function sgp.misc:diorama/spawn_entities/set_text_name with entity @e[tag=sgp.spawn_tper,distance=..0.01,limit=1,type=interaction] data.args
+# Not using `execute summon`, as the function with macro parameters could fail, leaving empty text displays behind
+execute at @s run summon text_display ~ ~ ~ {Tags:["sgp.spawn_tper_text","sgp.new"]}
+
+execute at @s as @e[tag=sgp.new,distance=..0.1,limit=1,type=text_display] \
+    run function sgp.misc:diorama/spawn_entities/set_text_name \
+        with entity @e[tag=sgp.spawn_tper,distance=..0.1,limit=1,type=interaction] data.args
+
+execute at @s run tag @e[tag=sgp.new,distance=..0.1,limit=1,type=text_display] remove sgp.new

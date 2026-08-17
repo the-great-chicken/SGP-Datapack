@@ -1,0 +1,1 @@
+return run function sgp.world:lieu/check_exclusion with storage sgp:macro lieu.current_boxes

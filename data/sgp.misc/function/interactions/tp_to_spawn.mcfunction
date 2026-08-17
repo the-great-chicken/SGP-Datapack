@@ -16,4 +16,4 @@ data modify storage sgp:macro diorama.scale_down_anim.init_pitch set from entity
 
 function sgp.misc:diorama/scale_down_anim/init with storage sgp:macro diorama.scale_down_anim
 
-$tellraw @s ["Tu vas spawn $(article) ", $(title)]
+$tellraw @s ["Tu vas spawn $(article)", $(title)]

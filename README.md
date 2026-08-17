@@ -40,7 +40,7 @@ All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner 
 ### Base
 
 - 1 `respawn`: spawnpoint of the players when they die, should be also the place where they choose their kit
-- any number of `lieu` : They are bounding boxes corresponding to an in-game POI. The players can "collect" these by going inside, and it will show them the POI name everytime they come back in. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72}`. Need 8 `\` to escape a `'`. <a href="#note4">⚠</a>
+- any number of `lieu` : They are bounding boxes corresponding to an in-game POI. The players can "collect" these by going inside, and it will show them the POI name everytime they come back in. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72, exclusion_box{x:1, y:2, z:2, dx:2, dy:2, dz:2}}`. Need 8 `\` to escape a `'`. The `exclusion_box` parameter is completely optional. <a href="#note4">⚠</a>
 - any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`. When a player is on the same block as the marker, it gets teleported after a while. The teleporter is visible through particles.
 - at least 1 `Confinement`: spawnpoints when the Confinement event is active. Should better be "inside" buildings, else players will die UwU.
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
