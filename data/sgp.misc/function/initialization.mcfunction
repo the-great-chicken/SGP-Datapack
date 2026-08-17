@@ -119,6 +119,7 @@ scoreboard objectives add sgp.temps_cabane_pco_secondes dummy
 scoreboard objectives add sgp.en_cage dummy
 
 scoreboard objectives add sgp.link_teams dummy
+scoreboard objectives add sgp.teammate_deaths dummy
 
 scoreboard objectives add sgp.reflexes_joueur trigger
 scoreboard objectives add sgp.reward trigger
@@ -146,6 +147,7 @@ scoreboard players set 1 sgp.dummy 1
 scoreboard players set 2 sgp.dummy 2
 scoreboard players set 3 sgp.dummy 3
 scoreboard players set 4 sgp.dummy 4
+scoreboard players set 5 sgp.dummy 5
 scoreboard players set 6 sgp.dummy 6
 scoreboard players set 7 sgp.dummy 7
 scoreboard players set 8 sgp.dummy 8
@@ -283,7 +285,7 @@ execute unless data storage sgp:kill_counter KillArray run data merge storage sg
 
 execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{ assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 
-data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Tu peux chasser de la volaille à votre tour !"}}},"mineurs":{}}
+data merge storage sgp:data {majeurs:{pco:{event:"pco",text:"Poule Canard Oie"},ptk:{event:"ptk",text:"Protéger le Roi"},hide_and_seek:{event:"hide_and_seek",text:"Cache-cache",end:{seeker:"Que la chasse à la volaille commence !",hider:"Les chasseurs arrivent, gare à vos fesses !",become_seeker:"Tu peux chasser de la volaille à ton tour !"}}},"mineurs":{}}
 
 data merge storage sgp:kits {\
     kit_id_order:[{kit_path:pigeon},{kit_path:combattant},{kit_path:archer},{kit_path:vindicateur},{kit_path:pyromane},{kit_path:tank},{kit_path:roi},{kit_path:eclaireur},{kit_path:alchimiste},{kit_path:enderman},{kit_path:cancer},{kit_path:poseidon}], \
