@@ -1,3 +1,5 @@
-
 /.vscode
 /.datapack
+*.parquet
+*.dat
+__pycache__
