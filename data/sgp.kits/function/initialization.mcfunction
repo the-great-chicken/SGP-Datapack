@@ -40,6 +40,8 @@ scoreboard objectives add sgp.kit_id dummy
 scoreboard objectives add sgp.kit_prefix_set dummy
 scoreboard objectives add sgp.reset_tags dummy
 
+scoreboard objectives add sgp.last_kill_count playerKillCount
+
 
 
 # ---------- Create Teams ----------
@@ -63,7 +65,9 @@ function sgp.kits:kit_tags/prefixes_check
 
 # ---------- Initialize Storages ----------
 
-execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{ assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
+data merge storage sgp.kits:stats {kits_dict:{}}
+
+execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 
 data merge storage sgp:kits {\
     kit_id_order:[{kit_path:pigeon},{kit_path:combattant},{kit_path:archer},{kit_path:vindicateur},{kit_path:pyromane},{kit_path:tank},{kit_path:roi},{kit_path:eclaireur},{kit_path:alchimiste},{kit_path:enderman},{kit_path:cancer},{kit_path:poseidon}], \

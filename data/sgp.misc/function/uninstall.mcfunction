@@ -46,7 +46,6 @@ scoreboard objectives remove sgp.plus_grande_streak
 scoreboard objectives remove sgp.kills
 
 scoreboard objectives remove sgp.streak_en_cours
-scoreboard objectives remove sgp.last_kill_count
 
 scoreboard objectives remove sgp.dummy
 scoreboard objectives remove sgp.timer

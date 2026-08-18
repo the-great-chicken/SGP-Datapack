@@ -43,7 +43,6 @@ function sgp.kits:abilities/tick
 
 
 # ---------- MISCELLANEOUS ----------
-function sgp.misc:kill_counter
 
 function minecraft:128_ticks_functions
 

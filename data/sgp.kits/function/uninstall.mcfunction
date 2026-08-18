@@ -37,6 +37,8 @@ scoreboard objectives remove sgp.kit_id
 scoreboard objectives remove sgp.kit_prefix_set
 scoreboard objectives remove sgp.reset_tags
 
+scoreboard objectives remove sgp.last_kill_count
+
 
 
 # ---------- Remove Teams ----------
@@ -48,3 +50,9 @@ team remove sgp.Illusion
 # ---------- Clear Schedules ----------
 
 schedule clear sgp.kits:kit_tags/prefixes_check
+
+
+
+# ---------- Remove Storages ----------
+
+data remove storage sgp.kits:stats kits_dict
