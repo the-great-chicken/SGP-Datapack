@@ -14,6 +14,6 @@ $data modify storage sgp:macro diorama.scale_down_anim.z set value $(z)
 data modify storage sgp:macro diorama.scale_down_anim.init_yaw set from entity @s Rotation[0]
 data modify storage sgp:macro diorama.scale_down_anim.init_pitch set from entity @s Rotation[1]
 
-function sgp.misc:diorama/scale_down_anim/init with storage sgp:macro diorama.scale_down_anim
+function sgp.diorama:scale_down_anim/init with storage sgp:macro diorama.scale_down_anim
 
 $tellraw @s ["Tu vas spawn $(article)", $(title)]

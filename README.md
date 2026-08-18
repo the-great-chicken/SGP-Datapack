@@ -46,7 +46,6 @@ All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner 
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 - At least 1 `playable_map` in the corner of the playable map: `{dx, dy, dz, id: int}` (the `id` is not mandatory if you're not using dioramas)
-- Optionally at least 1 `playable_map_model` in the corner of the smaller model of the map: `{id: int}`. The id should correspond to the one of the `playable_map` it should be linked to. No duplicates.
 
 <a id="note4">⚠</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
 
@@ -86,13 +85,12 @@ Each of these is optional (or can be present multiple times), depending on how y
 ## Storages
 
 - You can change the cooldowns and durations of all abilities by changing the values in `sgp:data kits.ability_cooldowns`
-- `sgp:data spawns[{id:int, list:[]}]` The `list` is containing all the spawns, and will be used if you're using the diorama to automatically place the interation entities and text displays. Each element should be exactly what would have been the `args` of the `spawn_tper`s. But with `icon:<char>` in addition. The id should correspond to the diorama in which you want these spawns to appear in.
 
 ## Other stuff
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
+- Whatever is described in the [Diorama module Readme](data/sgp.diorama/README.md)
 - You should forceload all the chunks in which you placed markers.
-- If you want the diorama mannequins to replicate players' swings, and don't use `/give` in general (else you'll have stacking issues), you can enable it with `/scoreboard players set #mannequins_swing_enabled sgp.dummy 1`
 
 ## Plugin configuration
 

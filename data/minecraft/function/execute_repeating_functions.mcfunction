@@ -26,7 +26,7 @@ execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:diorama/tick
+    run function sgp.diorama:tick/main
 
 execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] run \
     function sgp.misc:on_death
@@ -45,7 +45,7 @@ function sgp.kits:abilities/tick
 # ---------- MISCELLANEOUS ----------
 function sgp.misc:kill_counter
 
-function sgp.misc:128_ticks_functions
+function minecraft:128_ticks_functions
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
     run function sgp.world:climbing_boost/add
@@ -74,15 +74,15 @@ execute as @a[tag=sgp.in_game,scores={sgp.reward=1..}] \
     run function sgp.mineurs:bounty/reward/trigger
 
 execute as @a[scores={sgp.anim_timer=1..}] at @s \
-    run function sgp.misc:diorama/scale_down_anim/step
+    run function sgp.diorama:scale_down_anim/step
 
 # @r so that it doesn't cost so much: we don't need the enchants to be up-to-date all the time
 # That means some players may get the piercing weapon only after a few seconds if unlucky
 execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
-    as @r[tag=sgp.in_game] run function sgp.misc:add_piercing_weapon
+    as @r[tag=sgp.in_game] run function sgp.diorama:left_click/add_piercing_weapon
 
 execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
-    as @a[tag=sgp.in_game] run function sgp.misc:remove_piercing_weapon
+    as @a[tag=sgp.in_game] run function sgp.diorama:left_click/remove_piercing_weapon
 
 
 

@@ -44,10 +44,6 @@ scoreboard objectives add sgp.last_kill_count playerKillCount
 scoreboard objectives add sgp.dummy dummy
 scoreboard objectives add sgp.timer dummy
 
-scoreboard objectives add sgp.anim_timer dummy
-
-scoreboard objectives add sgp.left_click_count dummy
-
 
 
 # ---------- Initialize Values ----------
@@ -81,9 +77,6 @@ scoreboard players set #bossbar_color sgp.dummy 0
 scoreboard players set #bossbar_name sgp.dummy 0
 scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
-scoreboard players add #mannequins_swing_enabled sgp.dummy 0
-scoreboard players set #mannequin_update_time sgp.dummy 0
-
 
 
 # ---------- Misc ----------
@@ -108,22 +101,6 @@ execute unless data storage sgp:kill_counter KillArray run data merge storage sg
 data modify storage sgp:text prefix set value {text:"[", color:gray, extra:[{text:"SGP", color:gold}, {text:"] "}]}
 
 data modify storage sgp:data const.hex set value ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
-
-
-
-# ---------- Enable and Init Diorama ----------
-
-scoreboard players set #diorama_enabled sgp.dummy 0
-execute if entity @e[tag=sgp.marker,name="playable_map_model",limit=1,type=marker] \
-    run scoreboard players set #diorama_enabled sgp.dummy 1
-
-execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:diorama/init_markers
-
-execute if score #diorama_enabled sgp.dummy matches 1 \
-    as @e[tag=sgp.marker,name=playable_map_model,type=marker] at @s \
-        run function sgp.misc:diorama/spawn_entities/clear_and_recreate \
-            with entity @s data
 
 
 

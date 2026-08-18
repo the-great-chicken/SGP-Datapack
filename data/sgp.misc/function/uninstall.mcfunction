@@ -3,6 +3,7 @@
 # Remove the datapack's data
 
 function sgp.cosmetics:uninstall
+function sgp.diorama:uninstall
 function sgp.kits:uninstall
 function sgp.majeurs:uninstall
 function sgp.mineurs:uninstall

@@ -21,7 +21,7 @@ function sgp.kits:clear
 
 scoreboard players operation $link.to bs.in = @s bs.id
 tag @s add sgp.diorama_death_cleanup
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.playable_map", command:"run function sgp.misc:diorama/remove_mannequins with entity @s data"}
+function sgp.misc:loop_as_entity/init {list_location:"markers_lists.playable_map", command:"run function sgp.diorama:tick/update_mannequin/remove with entity @s data"}
 tag @s remove sgp.diorama_death_cleanup
 
 function sgp.mineurs:bounty/reward/reset
