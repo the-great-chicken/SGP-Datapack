@@ -1,5 +1,7 @@
 #> sgp.kits:abilities/route_ability
 
+function sgp.kits:stats_collector/collect_ability_use_infos
+
 execute if entity @s[tag=sgp.archer] run return run function sgp.kits:abilities/repulsion/start
 execute if entity @s[tag=sgp.alchimiste] run return run function sgp.kits:abilities/illusions/start
 execute if entity @s[tag=sgp.cancer] run return run function sgp.kits:abilities/bats/start
