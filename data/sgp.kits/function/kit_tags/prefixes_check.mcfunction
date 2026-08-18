@@ -3,6 +3,8 @@
 # Find a player that needs his kit prefix changed, and call the update function
 # with the correct kit
 
+schedule function sgp.kits:kit_tags/prefixes_check 1t
+
 execute if entity @a[tag=sgp.in_game] run playerlist
 
 execute unless entity @a[scores={sgp.kit_prefix_set=0}] run return 0

@@ -1,0 +1,50 @@
+#> sgp.kits:uninstall
+
+# ---------- Remove Objectives ----------
+
+scoreboard objectives remove sgp.pyromane_found
+scoreboard objectives remove sgp.cancer_found
+scoreboard objectives remove sgp.roi_found
+scoreboard objectives remove sgp.pigeon_found
+scoreboard objectives remove sgp.tank_found
+scoreboard objectives remove sgp.enderman_found
+scoreboard objectives remove sgp.alchimiste_found
+scoreboard objectives remove sgp.poseidon_found
+scoreboard objectives remove sgp.eclaireur_found
+scoreboard objectives remove sgp.peaceful_found
+
+scoreboard objectives remove sgp.cooldown_ability
+scoreboard objectives remove sgp.duration_ability
+scoreboard objectives remove sgp.trigger_repulsion
+scoreboard objectives remove sgp.cooldown_water_trident
+scoreboard objectives remove sgp.drop_any
+execute as @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ air
+scoreboard objectives remove sgp.current_attack_damage
+scoreboard objectives remove sgp.pecking_timer
+
+scoreboard objectives remove sgp.old_x
+scoreboard objectives remove sgp.old_y
+scoreboard objectives remove sgp.old_z
+scoreboard objectives remove sgp.dx
+scoreboard objectives remove sgp.dy
+scoreboard objectives remove sgp.dz
+
+scoreboard objectives remove sgp.kills_give_1
+scoreboard objectives remove sgp.kills_give_2
+scoreboard objectives remove sgp.kills_give_3
+
+scoreboard objectives remove sgp.kit_id
+scoreboard objectives remove sgp.kit_prefix_set
+scoreboard objectives remove sgp.reset_tags
+
+
+
+# ---------- Remove Teams ----------
+
+team remove sgp.Illusion
+
+
+
+# ---------- Clear Schedules ----------
+
+schedule clear sgp.kits:kit_tags/prefixes_check

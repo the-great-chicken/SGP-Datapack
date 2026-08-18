@@ -2,7 +2,7 @@
 # 
 # Start the major event Invasion
 
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Lancement d'Invasion...", color:dark_blue, bold:true}]
+tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Lancement d'Invasion...", color:dark_blue, bold:true}]
 
 function sgp.majeurs:common/start
 

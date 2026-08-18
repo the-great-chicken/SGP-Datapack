@@ -3,7 +3,7 @@
 # Send the reward message to the player
 
 scoreboard players enable @s sgp.reward
-tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text: "Choisis une récompense :", color: white}]
+tellraw @s [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text: "Choisis une récompense :", color: white}]
 tellraw @s ["", \
     {color:dark_red, text:" [Force] ", hover_event:{action:show_text, value:[{text:"Donne "}, {text:"Force ", color:dark_red}, {text:"I pendant 2 minutes"}]}, click_event:{action:run_command, command:"/trigger sgp.reward set 1"}}, \
     {text: "/ ", color: white}, \

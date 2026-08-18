@@ -21,14 +21,14 @@ function sgp.misc:actionbar/tick
 execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
     function sgp.majeurs:pigeons/running
 
-execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
+execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] \
     if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
     run function sgp.misc:diorama/tick
 
-execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
+execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] run \
     function sgp.misc:on_death
 
 
@@ -37,15 +37,6 @@ execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
 function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
-
-# This is the most frequent we can do luckperms prefixes update
-execute if score #52_ticks_clock sgp.dummy matches 0 run \
-    function sgp.kits:kit_tags/prefixes_check
-
-scoreboard players add #52_ticks_clock sgp.dummy 1
-
-execute if score #52_ticks_clock sgp.dummy matches 52.. run \
-    scoreboard players set #52_ticks_clock sgp.dummy 0
 
 function sgp.kits:abilities/tick
 

@@ -15,7 +15,7 @@ function sgp.kits:kit_tags/reset
 scoreboard players set @s sgp.kills_give_1 0
 scoreboard players set @s sgp.kills_give_2 0
 scoreboard players set @s sgp.kills_give_3 0
-scoreboard players set @s sgp.death_reset_tags 0
+scoreboard players set @s sgp.just_died 0
 
 function sgp.kits:clear
 
