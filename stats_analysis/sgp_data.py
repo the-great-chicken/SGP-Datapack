@@ -70,6 +70,7 @@ class ReportData:
     kit_exposure: pd.DataFrame
     player_kit_metrics: pd.DataFrame
     kit_metrics: pd.DataFrame
+    top_killer_exposure: pd.DataFrame
     reach: pd.DataFrame
     combined_totals: pd.DataFrame
     summary: pd.DataFrame
@@ -237,6 +238,10 @@ def prepare_report_data(
         kit_exposure,
         player_rate_stats,
     )
+    top_killer_exposure = _build_top_killer_exposure(
+        player_kit_metrics,
+        kit_metrics,
+    )
 
     reach = _build_reach(
         player_kit_kills,
@@ -304,6 +309,7 @@ def prepare_report_data(
         kit_exposure=kit_exposure,
         player_kit_metrics=player_kit_metrics,
         kit_metrics=kit_metrics,
+        top_killer_exposure=top_killer_exposure,
         reach=reach,
         combined_totals=combined_totals,
         summary=summary,
@@ -774,6 +780,102 @@ def _build_kit_metrics(
         metrics["ability_use_share"], metrics["time_share"]
     )
     return metrics.sort_values("kit_id").reset_index(drop=True)
+
+
+def _build_top_killer_exposure(
+    player_kit_metrics: pd.DataFrame,
+    kit_metrics: pd.DataFrame,
+) -> pd.DataFrame:
+    """Pair each kit's top killer with that same player's exposure share."""
+
+    output_columns = [
+        "kit_id",
+        "kit_name",
+        "top_killer_id",
+        "top_killer_kills",
+        "top_killer_hours",
+        "top_killer_completed_lives",
+        "top_killer_kills_per_hour",
+        "top_killer_kills_per_completed_life",
+        "top_killer_kill_share",
+        "top_killer_time_share",
+        "top_killer_kill_share_minus_time_share",
+        "top_killer_kill_to_time_share_ratio",
+        "kit_kills",
+        "kit_total_hours",
+        "kit_completed_lives",
+        "kit_players_with_time",
+    ]
+    active = player_kit_metrics.loc[
+        player_kit_metrics["kills"] > 0
+    ].copy()
+    if active.empty:
+        return pd.DataFrame(columns=output_columns)
+
+    # A deterministic ID tie-breaker only matters when multiple players have
+    # the same maximum kill count; their kill shares are then identical.
+    top_killers = (
+        active.sort_values(
+            ["kit_id", "kills", "id"],
+            ascending=[True, False, True],
+            kind="stable",
+        )
+        .drop_duplicates("kit_id", keep="first")
+        [
+            [
+                "kit_id",
+                "kit_name",
+                "id",
+                "kills",
+                "total_hours",
+                "completed_lives",
+                "kills_per_hour",
+                "kills_per_completed_life",
+                "player_kill_share_of_kit",
+                "player_time_share_of_kit",
+                "kill_share_minus_time_share",
+                "kill_to_time_share_ratio",
+            ]
+        ]
+        .rename(
+            columns={
+                "id": "top_killer_id",
+                "kills": "top_killer_kills",
+                "total_hours": "top_killer_hours",
+                "completed_lives": "top_killer_completed_lives",
+                "kills_per_hour": "top_killer_kills_per_hour",
+                "kills_per_completed_life": (
+                    "top_killer_kills_per_completed_life"
+                ),
+                "player_kill_share_of_kit": "top_killer_kill_share",
+                "player_time_share_of_kit": "top_killer_time_share",
+                "kill_share_minus_time_share": (
+                    "top_killer_kill_share_minus_time_share"
+                ),
+                "kill_to_time_share_ratio": (
+                    "top_killer_kill_to_time_share_ratio"
+                ),
+            }
+        )
+    )
+    kit_context = kit_metrics[
+        [
+            "kit_id",
+            "kills",
+            "total_hours",
+            "completed_lives",
+            "players_with_time",
+        ]
+    ].rename(
+        columns={
+            "kills": "kit_kills",
+            "total_hours": "kit_total_hours",
+            "completed_lives": "kit_completed_lives",
+            "players_with_time": "kit_players_with_time",
+        }
+    )
+    result = top_killers.merge(kit_context, on="kit_id", how="left")
+    return result[output_columns].sort_values("kit_id").reset_index(drop=True)
 
 
 def _build_reach(
