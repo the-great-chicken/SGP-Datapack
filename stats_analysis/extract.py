@@ -8,25 +8,37 @@ import nbtlib
 import pandas as pd
 
 
-KITS_PATH = ("data", "contents", "stats", "kits_dict")
+STATS_PATH = ("data", "contents", "stats")
+KITS_PATH = (*STATS_PATH, "kits_dict")
+KIT_SETTINGS_PATH = (*STATS_PATH, "kit_settings")
 
 
-def get_kits_dict(nbt_file: nbtlib.File) -> Any:
-    """Return kits_dict from command_storage.dat."""
+def get_nbt_path(nbt_file: nbtlib.File, path: tuple[str, ...]) -> Any:
+    """Return a value from command_storage.dat at the given NBT path."""
     try:
         value = nbt_file
 
-        for key in KITS_PATH:
+        for key in path:
             value = value[key]
 
         return value
 
     except KeyError as exc:
-        path = ".".join(KITS_PATH)
+        dotted_path = ".".join(path)
         raise RuntimeError(
-            f"Could not find the expected NBT path: {path}\n"
+            f"Could not find the expected NBT path: {dotted_path}\n"
             "Check that this is the correct command_storage.dat file."
         ) from exc
+
+
+def get_kits_dict(nbt_file: nbtlib.File) -> Any:
+    """Return the per-player kit statistics from command_storage.dat."""
+    return get_nbt_path(nbt_file, KITS_PATH)
+
+
+def get_kit_settings(nbt_file: nbtlib.File) -> Any:
+    """Return the kit settings snapshot from command_storage.dat."""
+    return get_nbt_path(nbt_file, KIT_SETTINGS_PATH)
 
 
 def extract_kills(kits_dict: Any) -> pd.DataFrame:
@@ -141,30 +153,71 @@ def extract_picks(kits_dict: Any) -> pd.DataFrame:
     )
 
 
+def extract_kit_settings(kit_settings: Any) -> pd.DataFrame:
+    """
+    Extract the kit settings snapshot.
+
+    Columns:
+        kit_id
+        ability_cooldown
+
+    Ability cooldowns are expressed in ticks.
+    """
+    rows: list[dict[str, Any]] = []
+
+    for kit_id, settings in kit_settings.items():
+        if "ability_cooldown" not in settings:
+            continue
+
+        rows.append(
+            {
+                "kit_id": int(kit_id),
+                "ability_cooldown": int(settings["ability_cooldown"]),
+            }
+        )
+
+    return (
+        pd.DataFrame(
+            rows,
+            columns=[
+                "kit_id",
+                "ability_cooldown",
+            ],
+        )
+        .sort_values("kit_id")
+        .reset_index(drop=True)
+    )
+
+
 def extract(input_path: Path, output_dir: Path) -> None:
     """Extract statistics from command_storage.dat into Parquet files."""
     print(f"Reading {input_path}")
 
     nbt_file = nbtlib.load(input_path)
     kits_dict = get_kits_dict(nbt_file)
+    kit_settings = get_kit_settings(nbt_file)
 
     kills = extract_kills(kits_dict)
     abilities = extract_ability_usage(kits_dict)
     picks = extract_picks(kits_dict)
+    settings = extract_kit_settings(kit_settings)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
     kills_path = output_dir / "kills.parquet"
     abilities_path = output_dir / "abilities.parquet"
     picks_path = output_dir / "picks.parquet"
+    settings_path = output_dir / "kit_settings.parquet"
 
     kills.to_parquet(kills_path, index=False)
     abilities.to_parquet(abilities_path, index=False)
     picks.to_parquet(picks_path, index=False)
+    settings.to_parquet(settings_path, index=False)
 
     print(f"Kills:     {len(kills):,} rows -> {kills_path}")
     print(f"Abilities: {len(abilities):,} rows -> {abilities_path}")
     print(f"Picks:     {len(picks):,} rows -> {picks_path}")
+    print(f"Settings:  {len(settings):,} rows -> {settings_path}")
 
 
 def main() -> None:

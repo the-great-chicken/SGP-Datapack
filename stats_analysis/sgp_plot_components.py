@@ -143,6 +143,7 @@ def player_contribution_figure(
     median_per_hour_col: str,
     median_per_life_col: str,
     metric_views: Sequence[AggregateMetricView],
+    aggregate_customdata_cols: Sequence[str] = (),
 ) -> go.Figure:
     """Build aggregate-rate modes plus the player-contribution interaction.
 
@@ -155,16 +156,18 @@ def player_contribution_figure(
         raise ValueError("metric_views must contain at least one mode")
 
     fig = go.Figure()
-    aggregate_customdata = np.column_stack(
-        [
-            totals[player_value_col],
-            totals["total_hours"],
-            totals["completed_lives"],
-            totals["players_with_time"],
-            totals[median_per_hour_col],
-            totals[median_per_life_col],
-        ]
+    aggregate_customdata_columns = [
+        totals[player_value_col],
+        totals["total_hours"],
+        totals["completed_lives"],
+        totals["players_with_time"],
+        totals[median_per_hour_col],
+        totals[median_per_life_col],
+    ]
+    aggregate_customdata_columns.extend(
+        totals[column] for column in aggregate_customdata_cols
     )
+    aggregate_customdata = np.column_stack(aggregate_customdata_columns)
     for mode_index, mode in enumerate(metric_views):
         fig.add_trace(
             go.Bar(
@@ -487,6 +490,12 @@ def _quadrant_modes_figure(
     data: pd.DataFrame,
     *,
     modes: Sequence[QuadrantMode],
+    customdata_cols: Sequence[str] = (
+        "ability_use",
+        "kills",
+        "total_hours",
+        "completed_lives",
+    ),
 ) -> go.Figure:
     """Build one kit-colored quadrant scatter with switchable axis metrics."""
 
@@ -494,9 +503,7 @@ def _quadrant_modes_figure(
         raise ValueError("modes must contain at least one quadrant mode")
 
     plot_data = data.sort_values("kit_id").reset_index(drop=True)
-    customdata = plot_data[
-        ["ability_use", "kills", "total_hours", "completed_lives"]
-    ].to_numpy()
+    customdata = plot_data[list(customdata_cols)].to_numpy()
     first_mode = modes[0]
     fig = go.Figure()
     for row_index, row in plot_data.iterrows():

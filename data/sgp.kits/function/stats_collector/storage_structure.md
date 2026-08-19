@@ -2,6 +2,11 @@
 
 ```snbt
 {
+  kit_settings: {
+    "<kit_id:int>": {
+      ability_cooldown: int
+    }
+  },
   kits_dict: {
     "<player_id:int>": {
       "<kit_id:int>": {

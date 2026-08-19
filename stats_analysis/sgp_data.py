@@ -1,6 +1,6 @@
 """Loading, validation, and derived datasets for the SGP kit report.
 
-This module deliberately contains no visualization code.  It turns the three
+This module deliberately contains no visualization code.  It turns the four
 normalized extracts into analysis-ready kit and player-kit tables that can be
 consumed by the notebook, charts, or future exports.
 """
@@ -37,11 +37,14 @@ NO_PLAYER_ID = "-1"
 KILL_COLUMNS = ("id_killer", "kit_id_killer", "kit_id_victim", "kills")
 ABILITY_COLUMNS = ("id", "kit_id", "ability_use")
 PICK_COLUMNS = ("id", "kit_id", "total_time", "nbr_picks")
+KIT_SETTING_COLUMNS = ("kit_id", "ability_cooldown")
 
 # The default assumes ``total_time`` is logged in Minecraft game ticks.  Keep
 # the conversion configurable at the public entry points in case the datapack
 # increments this counter at another cadence.
-DEFAULT_TIME_UNITS_PER_HOUR = 20 * 60 * 60
+MINECRAFT_TICKS_PER_SECOND = 20
+MINECRAFT_TICKS_PER_HOUR = MINECRAFT_TICKS_PER_SECOND * 60 * 60
+DEFAULT_TIME_UNITS_PER_HOUR = MINECRAFT_TICKS_PER_HOUR
 
 
 @dataclass(frozen=True)
@@ -56,6 +59,7 @@ class ReportData:
     kills: pd.DataFrame
     abilities: pd.DataFrame
     picks: pd.DataFrame
+    kit_settings: pd.DataFrame
     all_kits: pd.DataFrame
     player_kit_kills: pd.DataFrame
     total_kills_by_kit: pd.DataFrame
@@ -84,7 +88,7 @@ def load_report_data(
     *,
     time_units_per_hour: float = DEFAULT_TIME_UNITS_PER_HOUR,
 ) -> ReportData:
-    """Load the three normalized extracts and prepare shared report tables.
+    """Load the four normalized extracts and prepare shared report tables.
 
     ``time_units_per_hour`` defaults to 72,000, assuming ``total_time`` is
     measured in Minecraft ticks.  Override it if the datapack records a
@@ -95,10 +99,12 @@ def load_report_data(
     kills = pd.read_parquet(data_dir / "kills.parquet")
     abilities = pd.read_parquet(data_dir / "abilities.parquet")
     picks = pd.read_parquet(data_dir / "picks.parquet")
+    kit_settings = pd.read_parquet(data_dir / "kit_settings.parquet")
     return prepare_report_data(
         kills,
         abilities,
         picks,
+        kit_settings,
         time_units_per_hour=time_units_per_hour,
     )
 
@@ -107,6 +113,7 @@ def prepare_report_data(
     kills: pd.DataFrame,
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
+    kit_settings: pd.DataFrame,
     *,
     time_units_per_hour: float = DEFAULT_TIME_UNITS_PER_HOUR,
 ) -> ReportData:
@@ -115,16 +122,29 @@ def prepare_report_data(
     if not np.isfinite(time_units_per_hour) or time_units_per_hour <= 0:
         raise ValueError("time_units_per_hour must be a positive finite value")
 
-    kills, abilities, picks = _validate_and_normalize(
+    kills, abilities, picks, kit_settings = _validate_and_normalize(
         kills,
         abilities,
         picks,
+        kit_settings,
     )
     all_kits = pd.DataFrame(
         {
             "kit_id": list(KIT_ID_TO_NAME),
             "kit_name": list(KIT_ID_TO_NAME.values()),
         }
+    )
+    kit_settings = all_kits.merge(
+        kit_settings[list(KIT_SETTING_COLUMNS)],
+        on="kit_id",
+        how="left",
+        validate="one_to_one",
+    )
+    kit_settings["ability_cooldown_seconds"] = (
+        kit_settings["ability_cooldown"] / MINECRAFT_TICKS_PER_SECOND
+    )
+    kit_settings["theoretical_ability_uses_per_hour"] = (
+        MINECRAFT_TICKS_PER_HOUR / kit_settings["ability_cooldown"]
     )
 
     player_kit_kills = (
@@ -226,6 +246,7 @@ def prepare_report_data(
         player_kit_exposure,
         player_kit_kills,
         player_kit_abilities,
+        kit_settings,
     )
     player_rate_stats = _build_player_rate_stats(
         player_kit_metrics,
@@ -237,6 +258,7 @@ def prepare_report_data(
         total_abilities_by_kit,
         kit_exposure,
         player_rate_stats,
+        kit_settings,
     )
     top_killer_exposure = _build_top_killer_exposure(
         player_kit_metrics,
@@ -295,6 +317,7 @@ def prepare_report_data(
         kills=kills,
         abilities=abilities,
         picks=picks,
+        kit_settings=kit_settings,
         all_kits=all_kits,
         player_kit_kills=player_kit_kills,
         total_kills_by_kit=total_kills_by_kit,
@@ -323,18 +346,22 @@ def _validate_and_normalize(
     kills: pd.DataFrame,
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    kit_settings: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     _require_columns(kills, KILL_COLUMNS, "kills")
     _require_columns(abilities, ABILITY_COLUMNS, "abilities")
     _require_columns(picks, PICK_COLUMNS, "picks")
+    _require_columns(kit_settings, KIT_SETTING_COLUMNS, "kit_settings")
 
     kills = kills.copy()
     abilities = abilities.copy()
     picks = picks.copy()
+    kit_settings = kit_settings.copy()
     for frame, columns, name in (
         (kills, KILL_COLUMNS, "kills"),
         (abilities, ABILITY_COLUMNS, "abilities"),
         (picks, PICK_COLUMNS, "picks"),
+        (kit_settings, KIT_SETTING_COLUMNS, "kit_settings"),
     ):
         if frame[list(columns)].isna().any().any():
             raise ValueError(f"{name} contains missing values")
@@ -353,6 +380,11 @@ def _validate_and_normalize(
     for column in ("kit_id", "total_time", "nbr_picks"):
         picks[column] = pd.to_numeric(picks[column], errors="raise").astype(int)
 
+    for column in KIT_SETTING_COLUMNS:
+        kit_settings[column] = pd.to_numeric(
+            kit_settings[column], errors="raise"
+        ).astype(int)
+
     if (kills["kills"] < 0).any():
         raise ValueError("Negative kill count found")
     if (abilities["ability_use"] < 0).any():
@@ -361,6 +393,8 @@ def _validate_and_normalize(
         raise ValueError("Negative total_time found")
     if (picks["nbr_picks"] < 0).any():
         raise ValueError("Negative nbr_picks found")
+    if (kit_settings["ability_cooldown"] <= 0).any():
+        raise ValueError("Ability cooldowns must be positive")
     if not kills["kit_id_killer"].isin(KIT_ID_TO_NAME).all():
         raise ValueError("Unknown killer kit ID found")
     if not kills["kit_id_victim"].isin(KIT_ID_TO_NAME).all():
@@ -370,6 +404,8 @@ def _validate_and_normalize(
     valid_pick_ids = set(KIT_ID_TO_NAME) | {NO_KIT_ID}
     if not picks["kit_id"].isin(valid_pick_ids).all():
         raise ValueError("Unknown pick kit ID found")
+    if not kit_settings["kit_id"].isin(KIT_ID_TO_NAME).all():
+        raise ValueError("Unknown kit-settings kit ID found")
     if kills.duplicated(
         ["id_killer", "kit_id_killer", "kit_id_victim"]
     ).any():
@@ -378,8 +414,17 @@ def _validate_and_normalize(
         raise ValueError("Duplicate ability-use rows found")
     if picks.duplicated(["id", "kit_id"]).any():
         raise ValueError("Duplicate pick-stat rows found")
+    if kit_settings.duplicated(["kit_id"]).any():
+        raise ValueError("Duplicate kit-settings rows found")
 
-    return kills, abilities, picks
+    missing_settings = set(KIT_ID_TO_NAME) - set(kit_settings["kit_id"])
+    if missing_settings:
+        raise ValueError(
+            "Missing ability cooldowns for kit IDs: "
+            f"{sorted(missing_settings)}"
+        )
+
+    return kills, abilities, picks, kit_settings
 
 
 def _require_columns(
@@ -599,6 +644,7 @@ def _build_player_kit_metrics(
     player_kit_exposure: pd.DataFrame,
     player_kit_kills: pd.DataFrame,
     player_kit_abilities: pd.DataFrame,
+    kit_settings: pd.DataFrame,
 ) -> pd.DataFrame:
     kills = player_kit_kills.rename(columns={"id_killer": "id"})[
         ["id", "kit_id", "kills"]
@@ -634,6 +680,19 @@ def _build_player_kit_metrics(
         )
         .merge(kills, on=["id", "kit_id"], how="left")
         .merge(abilities, on=["id", "kit_id"], how="left")
+        .merge(
+            kit_settings[
+                [
+                    "kit_id",
+                    "ability_cooldown",
+                    "ability_cooldown_seconds",
+                    "theoretical_ability_uses_per_hour",
+                ]
+            ],
+            on="kit_id",
+            how="left",
+            validate="many_to_one",
+        )
     )
     metrics["kit_name"] = metrics["kit_name"].fillna(
         metrics["kit_id"].map(KIT_ID_TO_NAME)
@@ -662,6 +721,10 @@ def _build_player_kit_metrics(
     )
     metrics["ability_uses_per_completed_life"] = _safe_divide(
         metrics["ability_use"], metrics["completed_lives"]
+    )
+    metrics["cooldown_normalized_use_rate"] = _safe_divide(
+        metrics["ability_uses_per_hour"],
+        metrics["theoretical_ability_uses_per_hour"],
     )
 
     kit_kills = metrics.groupby("kit_id")["kills"].transform("sum")
@@ -695,6 +758,9 @@ def _build_player_rate_stats(
         "kills_per_hour": "players_with_kill_rate_per_hour",
         "kills_per_completed_life": "players_with_kill_rate_per_life",
         "ability_uses_per_hour": "players_with_ability_rate_per_hour",
+        "cooldown_normalized_use_rate": (
+            "players_with_cooldown_normalized_use_rate"
+        ),
         "ability_uses_per_completed_life": (
             "players_with_ability_rate_per_life"
         ),
@@ -724,9 +790,16 @@ def _build_kit_metrics(
     total_abilities_by_kit: pd.DataFrame,
     kit_exposure: pd.DataFrame,
     player_rate_stats: pd.DataFrame,
+    kit_settings: pd.DataFrame,
 ) -> pd.DataFrame:
     metrics = (
         all_kits.merge(
+            kit_settings.drop(columns="kit_name"),
+            on="kit_id",
+            how="left",
+            validate="one_to_one",
+        )
+        .merge(
             total_kills_by_kit[["kit_id", "kills"]],
             on="kit_id",
             how="left",
@@ -769,6 +842,10 @@ def _build_kit_metrics(
     )
     metrics["ability_uses_per_completed_life"] = _safe_divide(
         metrics["ability_use"], metrics["completed_lives"]
+    )
+    metrics["cooldown_normalized_use_rate"] = _safe_divide(
+        metrics["ability_uses_per_hour"],
+        metrics["theoretical_ability_uses_per_hour"],
     )
     metrics["kill_share_minus_time_share"] = (
         metrics["kill_share"] - metrics["time_share"]

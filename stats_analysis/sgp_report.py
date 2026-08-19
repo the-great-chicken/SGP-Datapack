@@ -191,7 +191,7 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
 
 
 def ability_uses_figure(report: ReportData) -> go.Figure:
-    """Build total and exposure-normalized ability-use modes."""
+    """Build volume, cooldown-normalized, and per-life ability-use modes."""
 
     return player_contribution_figure(
         all_kits=report.all_kits,
@@ -202,6 +202,13 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
         median_per_hour_col="median_player_ability_uses_per_hour",
         median_per_life_col=(
             "median_player_ability_uses_per_completed_life"
+        ),
+        aggregate_customdata_cols=(
+            "ability_cooldown_seconds",
+            "theoretical_ability_uses_per_hour",
+            "ability_uses_per_hour",
+            "cooldown_normalized_use_rate",
+            "median_player_cooldown_normalized_use_rate",
         ),
         metric_views=(
             AggregateMetricView(
@@ -214,21 +221,27 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                     "<b>%{x}</b><br>Ability uses: %{y:,.0f}<br>"
                     "Time played: %{customdata[1]:,.2f} h<br>"
                     "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Players with playtime: %{customdata[3]:,.0f}"
+                    "Players with playtime: %{customdata[3]:,.0f}<br>"
+                    "Cooldown: %{customdata[6]:.1f} s<br>"
+                    "Cooldown-normalized rate: %{customdata[9]:.1%}"
                     "<extra></extra>"
                 ),
             ),
             AggregateMetricView(
-                button_label="Uses / hour",
-                value_col="ability_uses_per_hour",
-                title="Ability uses per active hour by kit",
-                yaxis_title="Ability uses per hour",
-                tickformat=".2f",
+                button_label="Cooldown-normalized",
+                value_col="cooldown_normalized_use_rate",
+                title="Cooldown-normalized ability use by kit",
+                yaxis_title="Share of cooldown-only maximum use rate",
+                tickformat=".1%",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Ability uses per hour: %{y:.2f}<br>"
-                    "Median player rate: %{customdata[4]:.2f}<br>"
-                    "Total uses: %{customdata[0]:,.0f}<br>"
-                    "Time played: %{customdata[1]:,.2f} h"
+                    "<b>%{x}</b><br>Cooldown-normalized rate: "
+                    "%{y:.1%}<br>Median player rate: "
+                    "%{customdata[10]:.1%}<br>Observed uses per hour: "
+                    "%{customdata[8]:.2f}<br>Cooldown-only maximum: "
+                    "%{customdata[7]:.2f} uses / h<br>Cooldown: "
+                    "%{customdata[6]:.1f} s<br>Total uses: "
+                    "%{customdata[0]:,.0f}<br>Time played: "
+                    "%{customdata[1]:,.2f} h"
                     "<extra></extra>"
                 ),
             ),
@@ -243,7 +256,9 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                     "%{y:.2f}<br>Median player rate: "
                     "%{customdata[5]:.2f}<br>Total uses: "
                     "%{customdata[0]:,.0f}<br>"
-                    "Completed lives: %{customdata[2]:,.0f}"
+                    "Completed lives: %{customdata[2]:,.0f}<br>"
+                    "Cooldown: %{customdata[6]:.1f} s<br>"
+                    "Cooldown-normalized rate: %{customdata[9]:.1%}"
                     "<extra></extra>"
                 ),
             ),
@@ -886,10 +901,19 @@ def matchup_figure(
 
 
 def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
-    """Compare kills and ability uses as totals, hourly rates, or life rates."""
+    """Compare kills with ability volume and cooldown-adjusted use."""
 
     return _quadrant_modes_figure(
         combined_totals,
+        customdata_cols=(
+            "ability_use",
+            "kills",
+            "total_hours",
+            "completed_lives",
+            "ability_cooldown_seconds",
+            "ability_uses_per_hour",
+            "cooldown_normalized_use_rate",
+        ),
         modes=(
             QuadrantMode(
                 button_label="Totals",
@@ -910,28 +934,32 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "<b>%{fullData.name}</b><br>Ability uses: %{x:,.0f}<br>"
                     "Kills: %{y:,.0f}<br>Time played: "
                     "%{customdata[2]:,.2f} h<br>Completed lives: "
-                    "%{customdata[3]:,.0f}<extra></extra>"
+                    "%{customdata[3]:,.0f}<br>Cooldown: "
+                    "%{customdata[4]:.1f} s<extra></extra>"
                 ),
             ),
             QuadrantMode(
-                button_label="Per hour",
-                x_col="ability_uses_per_hour",
+                button_label="Cooldown-normalized",
+                x_col="cooldown_normalized_use_rate",
                 y_col="kills_per_hour",
-                title="Kills vs. ability uses per active hour",
-                xaxis_title="Ability uses per hour",
+                title="Kill rate vs. cooldown-normalized ability use",
+                xaxis_title="Cooldown-normalized ability-use rate",
                 yaxis_title="Kills per hour",
-                x_tickformat=".2f",
+                x_tickformat=".0%",
                 y_tickformat=".2f",
                 quadrant_labels=(
-                    "Low use rate<br>high kill rate",
-                    "High use rate<br>high kill rate",
-                    "Low use rate<br>low kill rate",
-                    "High use rate<br>low kill rate",
+                    "Low normalized use<br>high kill rate",
+                    "High normalized use<br>high kill rate",
+                    "Low normalized use<br>low kill rate",
+                    "High normalized use<br>low kill rate",
                 ),
                 hovertemplate=(
-                    "<b>%{fullData.name}</b><br>Ability uses per hour: "
-                    "%{x:.2f}<br>Kills per hour: %{y:.2f}<br>"
-                    "Total uses: %{customdata[0]:,.0f}<br>Total kills: "
+                    "<b>%{fullData.name}</b><br>Cooldown-normalized rate: "
+                    "%{x:.1%}<br>Kills per hour: %{y:.2f}<br>"
+                    "Observed ability uses per hour: "
+                    "%{customdata[5]:.2f}<br>Cooldown: "
+                    "%{customdata[4]:.1f} s<br>Total uses: "
+                    "%{customdata[0]:,.0f}<br>Total kills: "
                     "%{customdata[1]:,.0f}<br>Time played: "
                     "%{customdata[2]:,.2f} h<extra></extra>"
                 ),
@@ -956,7 +984,9 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "%{x:.2f}<br>Kills per life: %{y:.2f}<br>"
                     "Total uses: %{customdata[0]:,.0f}<br>Total kills: "
                     "%{customdata[1]:,.0f}<br>Completed lives: "
-                    "%{customdata[3]:,.0f}<extra></extra>"
+                    "%{customdata[3]:,.0f}<br>Cooldown: "
+                    "%{customdata[4]:.1f} s<br>Cooldown-normalized rate: "
+                    "%{customdata[6]:.1%}<extra></extra>"
                 ),
             ),
         ),
@@ -983,7 +1013,7 @@ def report_summary_figure(report: ReportData) -> go.Figure:
         column_widths=[0.22, 0.22, 0.30, 0.26],
         subplot_titles=(
             "Kill volume",
-            "Ability activity",
+            "Ability use intensity",
             "Player reach",
             "Kill concentration",
         ),
@@ -1045,15 +1075,19 @@ def report_summary_figure(report: ReportData) -> go.Figure:
     ability_hover = np.column_stack(
         [
             plot_data["players_using_ability"],
+            plot_data["ability_use"],
             plot_data["ability_uses_per_hour"],
             plot_data["ability_uses_per_completed_life"],
+            plot_data["ability_cooldown_seconds"],
+            plot_data["theoretical_ability_uses_per_hour"],
+            plot_data["median_player_cooldown_normalized_use_rate"],
             plot_data["total_hours"],
             plot_data["completed_lives"],
         ]
     )
     fig.add_trace(
         go.Bar(
-            x=plot_data["ability_use"],
+            x=plot_data["cooldown_normalized_use_rate"],
             y=kit_names,
             orientation="h",
             width=0.48,
@@ -1070,7 +1104,7 @@ def report_summary_figure(report: ReportData) -> go.Figure:
     )
     fig.add_trace(
         go.Scatter(
-            x=plot_data["ability_use"],
+            x=plot_data["cooldown_normalized_use_rate"],
             y=kit_names,
             mode="markers",
             marker=dict(
@@ -1081,11 +1115,15 @@ def report_summary_figure(report: ReportData) -> go.Figure:
             customdata=ability_hover,
             hovertemplate=(
                 "<b>%{y}</b><br>"
-                "Ability uses: %{x:,}<br>"
-                "Uses per hour: %{customdata[1]:.2f}<br>"
-                "Uses per completed life: %{customdata[2]:.2f}<br>"
-                "Time played: %{customdata[3]:,.2f} h<br>"
-                "Completed lives: %{customdata[4]:,.0f}<br>"
+                "Cooldown-normalized rate: %{x:.1%}<br>"
+                "Median player rate: %{customdata[6]:.1%}<br>"
+                "Cooldown: %{customdata[4]:.1f} s<br>"
+                "Observed uses per hour: %{customdata[2]:.2f}<br>"
+                "Cooldown-only maximum: %{customdata[5]:.2f} uses / h<br>"
+                "Uses per completed life: %{customdata[3]:.2f}<br>"
+                "Total uses: %{customdata[1]:,.0f}<br>"
+                "Time played: %{customdata[7]:,.2f} h<br>"
+                "Completed lives: %{customdata[8]:,.0f}<br>"
                 "Players using ability: %{customdata[0]:.0f}"
                 "<extra></extra>"
             ),
@@ -1246,9 +1284,12 @@ def report_summary_figure(report: ReportData) -> go.Figure:
         col=4,
     )
 
+    ability_intensity_values = plot_data[
+        "cooldown_normalized_use_rate"
+    ].dropna()
     median_specs = (
         (1, plot_data["kills"]),
-        (2, plot_data["ability_use"]),
+        (2, ability_intensity_values),
         (4, concentration_values),
     )
     for column, values in median_specs:
@@ -1282,7 +1323,8 @@ def report_summary_figure(report: ReportData) -> go.Figure:
 
     fig.update_xaxes(title_text="Kills", rangemode="tozero", row=1, col=1)
     fig.update_xaxes(
-        title_text="Ability uses",
+        title_text="Cooldown-normalized use rate",
+        tickformat=".0%",
         rangemode="tozero",
         row=1,
         col=2,

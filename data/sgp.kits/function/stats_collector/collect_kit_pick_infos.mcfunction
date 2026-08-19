@@ -10,3 +10,4 @@ execute store result storage sgp:macro stats.current_kit_pick_info.pick_time int
     run time query gametime
 
 function sgp.kits:stats_collector/save_pick_start with storage sgp:macro stats.current_kit_pick_info
+function sgp.kits:stats_collector/maybe_save_ability_cooldown with storage sgp:macro stats.current_kit_pick_info
