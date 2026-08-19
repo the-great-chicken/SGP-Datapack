@@ -3,6 +3,8 @@
 
 execute if score @s sgp.anim_timer matches 1.. run return fail
 
+function sgp.kits:stats_collector/collect_kit_pick_infos
+
 $execute unless score #diorama_enabled sgp.dummy matches 1 run return run tp @s $(x) $(y) $(z) $(yaw) $(pitch)
 
 $data modify storage sgp:macro diorama.scale_down_anim.yaw set value $(yaw)

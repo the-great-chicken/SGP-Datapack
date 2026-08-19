@@ -49,8 +49,8 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
                 rows.append(
                     {
                         "id_killer": str(id_killer),
-                        "kit_id_killer": str(kit_id_killer),
-                        "kit_id_victim": str(kit_id_victim),
+                        "kit_id_killer": int(kit_id_killer),
+                        "kit_id_victim": int(kit_id_victim),
                         "kills": int(kill_count),
                     }
                 )
@@ -85,7 +85,7 @@ def extract_ability_usage(kits_dict: Any) -> pd.DataFrame:
             rows.append(
                 {
                     "id": str(player_id),
-                    "kit_id": str(kit_id),
+                    "kit_id": int(kit_id),
                     "ability_use": int(kit_data["ability_use"]),
                 }
             )
@@ -100,6 +100,47 @@ def extract_ability_usage(kits_dict: Any) -> pd.DataFrame:
     )
 
 
+def extract_picks(kits_dict: Any) -> pd.DataFrame:
+    """
+    Extract kit pick statistics.
+
+    Columns:
+        id
+        kit_id
+        total_time
+        nbr_picks
+
+    Player IDs are kept as strings. Kit IDs are integers, including the ``-1``
+    sentinel used for no kit.
+    """
+    rows: list[dict[str, Any]] = []
+
+    for player_id, player_data in kits_dict.items():
+        for kit_id, kit_data in player_data.items():
+            if "pick" not in kit_data:
+                continue
+
+            pick_data = kit_data["pick"]
+            rows.append(
+                {
+                    "id": str(player_id),
+                    "kit_id": int(kit_id),
+                    "total_time": int(pick_data["total_time"]),
+                    "nbr_picks": int(pick_data["nbr_picks"]),
+                }
+            )
+
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "id",
+            "kit_id",
+            "total_time",
+            "nbr_picks",
+        ],
+    )
+
+
 def extract(input_path: Path, output_dir: Path) -> None:
     """Extract statistics from command_storage.dat into Parquet files."""
     print(f"Reading {input_path}")
@@ -109,17 +150,21 @@ def extract(input_path: Path, output_dir: Path) -> None:
 
     kills = extract_kills(kits_dict)
     abilities = extract_ability_usage(kits_dict)
+    picks = extract_picks(kits_dict)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
     kills_path = output_dir / "kills.parquet"
     abilities_path = output_dir / "abilities.parquet"
+    picks_path = output_dir / "picks.parquet"
 
     kills.to_parquet(kills_path, index=False)
     abilities.to_parquet(abilities_path, index=False)
+    picks.to_parquet(picks_path, index=False)
 
     print(f"Kills:     {len(kills):,} rows -> {kills_path}")
     print(f"Abilities: {len(abilities):,} rows -> {abilities_path}")
+    print(f"Picks:     {len(picks):,} rows -> {picks_path}")
 
 
 def main() -> None:

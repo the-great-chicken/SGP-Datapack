@@ -1,4 +1,5 @@
 #> sgp.kits:stats_collector/save_kill_stat
+# `{id_killer, kit_id_killer, kit_id_victim}`
 #
 # Add 1 to the number of kills of this player with this kit against the other specific kit
 
