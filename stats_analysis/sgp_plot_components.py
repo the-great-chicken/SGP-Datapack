@@ -91,47 +91,67 @@ class QuadrantMode:
     y_tickformat: str | None = None
 
 
-PLAYER_DIM_OPACITY = 0.15
-PLAYER_HIGHLIGHT_POST_SCRIPT = f"""
+TRACE_DIM_OPACITY = 0.15
+TRACE_HIGHLIGHT_POST_SCRIPT = f"""
 (() => {{
     const plot = document.getElementById("{{plot_id}}");
-    const dimOpacity = {PLAYER_DIM_OPACITY};
-    let selectedPlayerId = null;
+    const dimOpacity = {TRACE_DIM_OPACITY};
+    let selectedGroup = null;
+    let selectedValue = null;
 
     plot.on("plotly_click", (event) => {{
         const point = event.points && event.points[0];
         const traceMeta = point && point.data && point.data.meta;
-        if (!point || !traceMeta || traceMeta.role !== "player") {{
+        const clickedGroup = traceMeta &&
+            (traceMeta.highlightGroup ?? traceMeta.role);
+        const clickedValue = traceMeta &&
+            (
+                traceMeta.highlightValue ??
+                traceMeta.playerId ??
+                traceMeta.causeId
+            );
+        if (
+            !point ||
+            clickedGroup == null ||
+            clickedValue == null
+        ) {{
             return;
         }}
 
-        const clickedPlayerId = traceMeta.playerId;
-        selectedPlayerId =
-            selectedPlayerId === clickedPlayerId
-                ? null
-                : clickedPlayerId;
+        const sameSelection =
+            selectedGroup === clickedGroup &&
+            selectedValue === clickedValue;
+        selectedGroup = sameSelection ? null : clickedGroup;
+        selectedValue = sameSelection ? null : clickedValue;
 
-        const playerTraceIndices = plot.data
+        const highlightTraceIndices = plot.data
             .map((_, traceIndex) => traceIndex)
-            .filter((traceIndex) =>
-                plot.data[traceIndex].meta &&
-                plot.data[traceIndex].meta.role === "player"
-            );
-        const opacities = playerTraceIndices.map((traceIndex) =>
-            selectedPlayerId === null ||
-            plot.data[traceIndex].meta.playerId === selectedPlayerId
+            .filter((traceIndex) => {{
+                const meta = plot.data[traceIndex].meta;
+                return meta &&
+                    (meta.highlightGroup ?? meta.role) === clickedGroup;
+            }});
+        const opacities = highlightTraceIndices.map((traceIndex) => {{
+            const meta = plot.data[traceIndex].meta;
+            const traceValue =
+                meta.highlightValue ?? meta.playerId ?? meta.causeId;
+            return selectedValue === null || traceValue === selectedValue
                 ? 1
-                : dimOpacity
-        );
+                : dimOpacity;
+        }});
 
         Plotly.restyle(
             plot,
             {{ opacity: opacities }},
-            playerTraceIndices
+            highlightTraceIndices
         );
     }});
 }})();
 """
+# Backward-compatible public name for notebooks or callers that imported it.
+PLAYER_DIM_OPACITY = TRACE_DIM_OPACITY
+PLAYER_HIGHLIGHT_POST_SCRIPT = TRACE_HIGHLIGHT_POST_SCRIPT
+
 
 def player_contribution_figure(
     *,
@@ -144,6 +164,7 @@ def player_contribution_figure(
     median_per_life_col: str,
     metric_views: Sequence[AggregateMetricView],
     aggregate_customdata_cols: Sequence[str] = (),
+    player_value_format: str = ",.0f",
 ) -> go.Figure:
     """Build aggregate-rate modes plus the player-contribution interaction.
 
@@ -204,7 +225,12 @@ def player_contribution_figure(
                 x=complete_player_data["kit_name"],
                 y=complete_player_data[player_value_col],
                 name=str(player_id),
-                meta={"role": "player", "playerId": str(player_id)},
+                meta={
+                    "role": "player",
+                    "playerId": str(player_id),
+                    "highlightGroup": "player",
+                    "highlightValue": str(player_id),
+                },
                 customdata=np.full(
                     (len(complete_player_data), 1),
                     str(player_id),
@@ -214,7 +240,8 @@ def player_contribution_figure(
                 hovertemplate=(
                     "<b>%{x}</b><br>"
                     "Player ID: %{customdata[0]}<br>"
-                    f"{metric_views[0].yaxis_title}: %{{y:,.0f}}"
+                    f"{metric_views[0].yaxis_title}: "
+                    f"%{{y:{player_value_format}}}"
                     "<extra></extra>"
                 ),
             )
@@ -295,29 +322,32 @@ def player_contribution_figure(
                 ],
             }
         )
-    mode_buttons.insert(
-        1,
-        {
-            "label": "By player",
-            "method": "update",
-            "args": [
-                {"visible": players_visible},
-                {
-                    "barmode": "stack",
-                    "title": f"{first_mode.title} — player contribution",
-                    "yaxis": {
-                        "title": first_mode.yaxis_title,
-                        "tickformat": first_mode.tickformat,
-                        "rangemode": "tozero",
-                        "range": None,
-                        "autorange": True,
+    if player_count:
+        mode_buttons.insert(
+            1,
+            {
+                "label": "By player",
+                "method": "update",
+                "args": [
+                    {"visible": players_visible},
+                    {
+                        "barmode": "stack",
+                        "title": (
+                            f"{first_mode.title} — player contribution"
+                        ),
+                        "yaxis": {
+                            "title": first_mode.yaxis_title,
+                            "tickformat": first_mode.tickformat,
+                            "rangemode": "tozero",
+                            "range": None,
+                            "autorange": True,
+                        },
+                        "shapes": [],
+                        "annotations": [],
                     },
-                    "shapes": [],
-                    "annotations": [],
-                },
-            ],
-        },
-    )
+                ],
+            },
+        )
 
     fig.update_layout(
         title=first_mode.title,
@@ -350,17 +380,29 @@ def player_contribution_figure(
 
     return fig
 
-def show_player_contribution_figure(fig: go.Figure) -> None:
-    """Display a contribution chart with a browser-side player click handler."""
+def _show_click_highlight_figure(fig: go.Figure) -> None:
+    """Display a figure with browser-side trace-group highlighting."""
 
     from IPython.display import HTML, display
 
     html = fig.to_html(
         full_html=False,
         include_plotlyjs=True,
-        post_script=PLAYER_HIGHLIGHT_POST_SCRIPT,
+        post_script=TRACE_HIGHLIGHT_POST_SCRIPT,
     )
     display(HTML(html))
+
+
+def show_player_contribution_figure(fig: go.Figure) -> None:
+    """Display a contribution chart with click-to-focus player traces."""
+
+    _show_click_highlight_figure(fig)
+
+
+def show_cause_profile_figure(fig: go.Figure) -> None:
+    """Display a cause-profile chart with click-to-focus cause traces."""
+
+    _show_click_highlight_figure(fig)
 
 def concentration_figure(
     stats: pd.DataFrame,

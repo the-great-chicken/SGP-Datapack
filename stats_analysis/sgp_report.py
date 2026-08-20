@@ -31,6 +31,7 @@ from sgp_plot_components import (
     concentration_figure,
     player_contribution_figure,
     relative_metric_heatmap,
+    show_cause_profile_figure,
     show_player_contribution_figure,
 )
 
@@ -47,6 +48,134 @@ CAUSE_COLOR_SEQUENCE = (
     "#9C755F",
     "#BAB0AC",
 )
+
+
+def _cause_color_map(report: ReportData) -> dict[int, str]:
+    """Keep shared damage-cause colors stable across cause figures."""
+
+    cause_ids = sorted(
+        set(report.kill_causes["cause_id"])
+        | set(report.damage_causes["cause_id"])
+    )
+    return {
+        cause_id: CAUSE_COLOR_SEQUENCE[
+            index % len(CAUSE_COLOR_SEQUENCE)
+        ]
+        for index, cause_id in enumerate(cause_ids)
+    }
+
+
+def _stacked_cause_modes_figure(
+    *,
+    causes: pd.DataFrame,
+    modes: tuple[dict[str, object], ...],
+    cause_colors: dict[int, str],
+    legend_title: str,
+) -> go.Figure:
+    """Render switchable stacked cause profiles in one single-axis figure."""
+
+    cause_rows = list(causes.sort_values("cause_id").itertuples(index=False))
+    fig = go.Figure()
+    traces_per_mode = len(cause_rows)
+    for mode_index, mode in enumerate(modes):
+        frame = mode["data"]
+        order = mode["order"]
+        for cause in cause_rows:
+            cause_data = (
+                frame.loc[frame["cause_id"] == cause.cause_id]
+                .set_index("kit_name")
+                .reindex(order)
+            )
+            fig.add_trace(
+                go.Bar(
+                    x=order,
+                    y=cause_data[mode["value_col"]],
+                    name=cause.cause_name,
+                    legendgroup=cause.cause_name,
+                    legendrank=cause.cause_id,
+                    meta={
+                        "role": "cause",
+                        "causeId": str(cause.cause_id),
+                        "highlightGroup": "cause",
+                        "highlightValue": str(cause.cause_id),
+                    },
+                    marker=dict(
+                        color=cause_colors[cause.cause_id],
+                        line=dict(
+                            color="rgba(255,255,255,0.75)",
+                            width=0.5,
+                        ),
+                    ),
+                    customdata=cause_data[mode["custom_cols"]].to_numpy(),
+                    hovertemplate=mode["hovertemplate"],
+                    visible=mode_index == 0,
+                    showlegend=True,
+                )
+            )
+
+    def visibility(mode_index: int) -> list[bool]:
+        return [
+            trace_index // traces_per_mode == mode_index
+            for trace_index in range(len(fig.data))
+        ]
+
+    first_mode = modes[0]
+    fig.update_layout(
+        title=first_mode["title"],
+        barmode="stack",
+        clickmode="event",
+        hovermode="closest",
+        legend_title_text=legend_title,
+        margin=dict(l=70, r=40, t=125, b=70),
+        updatemenus=[
+            {
+                "type": "buttons",
+                "direction": "right",
+                "x": 0.5,
+                "xanchor": "center",
+                "y": 1.18,
+                "yanchor": "top",
+                "showactive": True,
+                "buttons": [
+                    {
+                        "label": mode["button_label"],
+                        "method": "update",
+                        "args": [
+                            {"visible": visibility(mode_index)},
+                            {
+                                "title": mode["title"],
+                                "xaxis": {
+                                    "title": mode["xaxis_title"],
+                                    "categoryorder": "array",
+                                    "categoryarray": mode["order"],
+                                },
+                                "yaxis": {
+                                    "title": mode["yaxis_title"],
+                                    "tickformat": mode["tickformat"],
+                                    "range": mode["range"],
+                                    "autorange": mode["range"] is None,
+                                    "rangemode": "tozero",
+                                },
+                            },
+                        ],
+                    }
+                    for mode_index, mode in enumerate(modes)
+                ],
+            }
+        ],
+    )
+    fig.update_xaxes(
+        title=first_mode["xaxis_title"],
+        categoryorder="array",
+        categoryarray=first_mode["order"],
+    )
+    fig.update_yaxes(
+        title=first_mode["yaxis_title"],
+        tickformat=first_mode["tickformat"],
+        range=first_mode["range"],
+        rangemode="tozero",
+    )
+    return fig
 
 
 def total_kills_figure(report: ReportData) -> go.Figure:
@@ -176,6 +305,123 @@ def total_kills_figure(report: ReportData) -> go.Figure:
     )
 
 
+def damage_figure(report: ReportData) -> go.Figure:
+    """Compare damage output, intake, exchange, and source players."""
+
+    exchange_rates = report.kit_metrics["damage_exchange_ratio"].dropna()
+    exchange_axis_max = max(
+        1.0,
+        float(exchange_rates.max()) if not exchange_rates.empty else 0.0,
+    ) * 1.12
+
+    return player_contribution_figure(
+        all_kits=report.all_kits,
+        totals=report.summary,
+        by_player=report.player_kit_damage_dealt,
+        player_col="id_source",
+        player_value_col="damage_dealt",
+        median_per_hour_col="median_player_damage_dealt_per_hour",
+        median_per_life_col=(
+            "median_player_damage_dealt_per_completed_life"
+        ),
+        aggregate_customdata_cols=(
+            "damage_received",
+            "player_damage_received",
+            "non_player_damage_received",
+            "damage_received_per_hour",
+            "player_damage_received_per_hour",
+            "non_player_damage_received_per_hour",
+            "non_player_damage_received_share",
+            "damage_dealt_per_kill",
+            "kills",
+            "players_receiving_damage",
+            "top_player_received_damage_share",
+            "top_3_received_damage_share",
+        ),
+        player_value_format=",.1f",
+        metric_views=(
+            AggregateMetricView(
+                button_label="Total dealt",
+                value_col="damage_dealt",
+                title="Attributed player damage dealt by kit",
+                yaxis_title="Damage dealt (health points)",
+                tickformat=",.0f",
+                hovertemplate=(
+                    "<b>%{x}</b><br>Damage dealt: %{y:,.1f} HP<br>"
+                    "Damage received: %{customdata[6]:,.1f} HP<br>"
+                    "Player damage received: %{customdata[7]:,.1f} HP<br>"
+                    "Time played: %{customdata[1]:,.2f} h<br>"
+                    "Completed lives: %{customdata[2]:,.0f}<br>"
+                    "Players with playtime: %{customdata[3]:,.0f}<br>"
+                    "Attributed kills: %{customdata[14]:,.0f}<br>"
+                    "Damage dealt per kill: %{customdata[13]:,.1f} HP"
+                    "<extra></extra>"
+                ),
+            ),
+            AggregateMetricView(
+                button_label="Dealt / hour",
+                value_col="damage_dealt_per_hour",
+                title="Attributed player damage dealt per active hour",
+                yaxis_title="Damage dealt per hour",
+                tickformat=",.1f",
+                hovertemplate=(
+                    "<b>%{x}</b><br>Damage dealt per hour: %{y:,.1f}<br>"
+                    "Median player rate: %{customdata[4]:,.1f}<br>"
+                    "Damage received per hour: %{customdata[9]:,.1f}<br>"
+                    "Total damage dealt: %{customdata[0]:,.1f} HP<br>"
+                    "Time played: %{customdata[1]:,.2f} h<br>"
+                    "Attributed kills: %{customdata[14]:,.0f}"
+                    "<extra></extra>"
+                ),
+            ),
+            AggregateMetricView(
+                button_label="Received / hour",
+                value_col="damage_received_per_hour",
+                title="Damage received per active hour by kit",
+                yaxis_title="Damage received per hour",
+                tickformat=",.1f",
+                hovertemplate=(
+                    "<b>%{x}</b><br>All damage received per hour: "
+                    "%{y:,.1f}<br>Player damage received per hour: "
+                    "%{customdata[10]:,.1f}<br>Non-player damage per hour: "
+                    "%{customdata[11]:,.1f}<br>Non-player damage share: "
+                    "%{customdata[12]:.1%}<br>Total damage received: "
+                    "%{customdata[6]:,.1f} HP<br>Time played: "
+                    "%{customdata[1]:,.2f} h<br>Targets taking damage: "
+                    "%{customdata[15]:,.0f}<br>Top target's share: "
+                    "%{customdata[16]:.1%}<br>Top 3 targets' share: "
+                    "%{customdata[17]:.1%}<extra></extra>"
+                ),
+            ),
+            AggregateMetricView(
+                button_label="PvP exchange",
+                value_col="damage_exchange_ratio",
+                title="Player damage dealt per player damage received",
+                yaxis_title="Damage exchange ratio",
+                tickformat=".2f",
+                reference_lines=(
+                    HorizontalReferenceLine(
+                        value=1.0,
+                        label="1.0 dealt per received",
+                        color="#111111",
+                        width=4,
+                    ),
+                ),
+                yaxis_range=(0, exchange_axis_max),
+                hovertemplate=(
+                    "<b>%{x}</b><br>Damage exchange ratio: %{y:.2f}<br>"
+                    "Player damage dealt: %{customdata[0]:,.1f} HP<br>"
+                    "Player damage received: %{customdata[7]:,.1f} HP<br>"
+                    "All damage received: %{customdata[6]:,.1f} HP<br>"
+                    "Non-player damage: %{customdata[8]:,.1f} HP "
+                    "(%{customdata[12]:.1%})<br>Attributed kills: "
+                    "%{customdata[14]:,.0f}<extra></extra>"
+                ),
+            ),
+        ),
+    )
+
+
 def kill_causes_figure(report: ReportData) -> go.Figure:
     """Compare offensive kill identity with defensive cause vulnerability."""
 
@@ -189,13 +435,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
         )
         return fig
 
-    cause_rows = list(causes.itertuples(index=False))
-    cause_colors = {
-        row.cause_id: CAUSE_COLOR_SEQUENCE[
-            index % len(CAUSE_COLOR_SEQUENCE)
-        ]
-        for index, row in enumerate(cause_rows)
-    }
+    cause_colors = _cause_color_map(report)
     outgoing_order = (
         report.kit_metrics.sort_values(
             ["kills", "kit_id"],
@@ -313,94 +553,170 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
         },
     )
 
-    fig = go.Figure()
-    traces_per_mode = len(cause_rows)
-    for mode_index, mode in enumerate(modes):
-        frame = mode["data"]
-        for cause in cause_rows:
-            cause_data = (
-                frame.loc[frame["cause_id"] == cause.cause_id]
-                .set_index("kit_name")
-                .reindex(mode["order"])
-            )
-            fig.add_trace(
-                go.Bar(
-                    x=mode["order"],
-                    y=cause_data[mode["value_col"]],
-                    name=cause.cause_name,
-                    legendgroup=cause.cause_name,
-                    legendrank=cause.cause_id,
-                    marker=dict(
-                        color=cause_colors[cause.cause_id],
-                        line=dict(color="rgba(255,255,255,0.75)", width=0.5),
-                    ),
-                    customdata=cause_data[mode["custom_cols"]].to_numpy(),
-                    hovertemplate=mode["hovertemplate"],
-                    visible=mode_index == 0,
-                    showlegend=True,
-                )
-            )
+    return _stacked_cause_modes_figure(
+        causes=causes,
+        modes=modes,
+        cause_colors=cause_colors,
+        legend_title="Kill cause",
+    )
 
-    def visibility(mode_index: int) -> list[bool]:
-        return [
-            trace_index // traces_per_mode == mode_index
-            for trace_index in range(len(fig.data))
-        ]
 
-    first_mode = modes[0]
-    fig.update_layout(
-        title=first_mode["title"],
-        barmode="stack",
-        legend_title_text="Kill cause",
-        margin=dict(l=70, r=40, t=125, b=70),
-        updatemenus=[
-            {
-                "type": "buttons",
-                "direction": "right",
-                "x": 0.5,
-                "xanchor": "center",
-                "y": 1.18,
-                "yanchor": "top",
-                "showactive": True,
-                "buttons": [
-                    {
-                        "label": mode["button_label"],
-                        "method": "update",
-                        "args": [
-                            {"visible": visibility(mode_index)},
-                            {
-                                "title": mode["title"],
-                                "xaxis": {
-                                    "title": mode["xaxis_title"],
-                                    "categoryorder": "array",
-                                    "categoryarray": mode["order"],
-                                },
-                                "yaxis": {
-                                    "title": mode["yaxis_title"],
-                                    "tickformat": mode["tickformat"],
-                                    "range": mode["range"],
-                                    "autorange": mode["range"] is None,
-                                    "rangemode": "tozero",
-                                },
-                            },
-                        ],
-                    }
-                    for mode_index, mode in enumerate(modes)
-                ],
-            }
-        ],
+def damage_causes_figure(report: ReportData) -> go.Figure:
+    """Compare offensive damage identity with defensive vulnerability."""
+
+    causes = report.damage_causes.sort_values("cause_id")
+    if causes.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            title="Damage-cause profiles by kit",
+            xaxis_title="Kit",
+            yaxis_title="Damage",
+        )
+        return fig
+
+    cause_colors = _cause_color_map(report)
+    dealt_rate_order = (
+        report.damage_metrics.sort_values(
+            ["damage_dealt_per_hour", "damage_dealt", "kit_id"],
+            ascending=[False, False, True],
+            na_position="last",
+        )["kit_name"].tolist()
     )
-    fig.update_xaxes(
-        title=first_mode["xaxis_title"],
-        categoryorder="array",
-        categoryarray=first_mode["order"],
+    dealt_share_order = (
+        report.damage_metrics.sort_values(
+            ["damage_dealt", "kit_id"],
+            ascending=[False, True],
+        )["kit_name"].tolist()
     )
-    fig.update_yaxes(
-        title=first_mode["yaxis_title"],
-        tickformat=first_mode["tickformat"],
-        range=first_mode["range"],
+    received_rate_order = (
+        report.damage_metrics.sort_values(
+            ["damage_received_per_hour", "damage_received", "kit_id"],
+            ascending=[False, False, True],
+            na_position="last",
+        )["kit_name"].tolist()
     )
-    return fig
+    received_share_order = (
+        report.damage_metrics.sort_values(
+            ["damage_received", "kit_id"],
+            ascending=[False, True],
+        )["kit_name"].tolist()
+    )
+
+    outgoing_custom_cols = [
+        "damage_dealt",
+        "cause_share_of_kit_damage_dealt",
+        "cause_damage_dealt_per_hour",
+        "kit_total_damage_dealt",
+        "kit_damage_dealt_per_hour",
+        "total_hours",
+    ]
+    incoming_custom_cols = [
+        "damage_received",
+        "cause_share_of_kit_damage_received",
+        "cause_damage_received_per_hour",
+        "kit_total_damage_received",
+        "kit_damage_received_per_hour",
+        "player_damage_received",
+        "non_player_damage_received",
+        "non_player_damage_received_share",
+        "total_hours",
+    ]
+    modes = (
+        {
+            "button_label": "Dealt / hour",
+            "data": report.outgoing_damage_by_cause,
+            "value_col": "cause_damage_dealt_per_hour",
+            "order": dealt_rate_order,
+            "title": "How each attacking kit deals damage per active hour",
+            "xaxis_title": "Attacking kit",
+            "yaxis_title": "Attributed damage dealt per hour",
+            "tickformat": ",.1f",
+            "range": None,
+            "custom_cols": outgoing_custom_cols,
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Cause damage per hour: %{y:,.1f}<br>"
+                "Cause damage: %{customdata[0]:,.1f} HP<br>"
+                "Share of kit damage: %{customdata[1]:.1%}<br>"
+                "All kit damage per hour: %{customdata[4]:,.1f}<br>"
+                "All attributed kit damage: %{customdata[3]:,.1f} HP<br>"
+                "Kit playtime: %{customdata[5]:,.2f} h"
+                "<extra></extra>"
+            ),
+        },
+        {
+            "button_label": "Dealt share",
+            "data": report.outgoing_damage_by_cause,
+            "value_col": "cause_share_of_kit_damage_dealt",
+            "order": dealt_share_order,
+            "title": "Cause profile of attributed damage dealt by each kit",
+            "xaxis_title": "Attacking kit",
+            "yaxis_title": "Share of attributed damage dealt",
+            "tickformat": ".0%",
+            "range": [0, 1],
+            "custom_cols": outgoing_custom_cols,
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Share of kit damage: %{y:.1%}<br>"
+                "Cause damage: %{customdata[0]:,.1f} HP<br>"
+                "Cause damage per hour: %{customdata[2]:,.1f}<br>"
+                "All attributed kit damage: %{customdata[3]:,.1f} HP<br>"
+                "All kit damage per hour: %{customdata[4]:,.1f}"
+                "<extra></extra>"
+            ),
+        },
+        {
+            "button_label": "Received / hour",
+            "data": report.incoming_damage_by_cause,
+            "value_col": "cause_damage_received_per_hour",
+            "order": received_rate_order,
+            "title": "Why each target kit receives damage per active hour",
+            "xaxis_title": "Target kit",
+            "yaxis_title": "Damage received per hour",
+            "tickformat": ",.1f",
+            "range": None,
+            "custom_cols": incoming_custom_cols,
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Cause damage per hour: %{y:,.1f}<br>"
+                "Cause damage received: %{customdata[0]:,.1f} HP<br>"
+                "Share of received damage: %{customdata[1]:.1%}<br>"
+                "All received damage per hour: %{customdata[4]:,.1f}<br>"
+                "Player damage received: %{customdata[5]:,.1f} HP<br>"
+                "Non-player damage: %{customdata[6]:,.1f} HP "
+                "(%{customdata[7]:.1%})<br>Kit playtime: "
+                "%{customdata[8]:,.2f} h<extra></extra>"
+            ),
+        },
+        {
+            "button_label": "Received share",
+            "data": report.incoming_damage_by_cause,
+            "value_col": "cause_share_of_kit_damage_received",
+            "order": received_share_order,
+            "title": "Cause profile of all damage received by each kit",
+            "xaxis_title": "Target kit",
+            "yaxis_title": "Share of damage received",
+            "tickformat": ".0%",
+            "range": [0, 1],
+            "custom_cols": incoming_custom_cols,
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Share of received damage: %{y:.1%}<br>"
+                "Cause damage received: %{customdata[0]:,.1f} HP<br>"
+                "Cause damage per hour: %{customdata[2]:,.1f}<br>"
+                "All damage received: %{customdata[3]:,.1f} HP<br>"
+                "All received damage per hour: %{customdata[4]:,.1f}<br>"
+                "Non-player damage share: %{customdata[7]:.1%}"
+                "<extra></extra>"
+            ),
+        },
+    )
+    return _stacked_cause_modes_figure(
+        causes=causes,
+        modes=modes,
+        cause_colors=cause_colors,
+        legend_title="Damage cause",
+    )
 
 
 def popularity_efficiency_figure(report: ReportData) -> go.Figure:
@@ -831,7 +1147,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
 
 
 def kill_concentration_figure(report: ReportData) -> go.Figure:
-    """Compare kill, time, and completed-life concentration."""
+    """Compare output and exposure concentration across players."""
 
     return concentration_figure(
         report.summary,
@@ -844,6 +1160,24 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 players_col="players_with_kills",
                 title="Kill concentration by kit",
                 yaxis_title="Share of kit kills",
+            ),
+            ConcentrationView(
+                button_label="Damage dealt",
+                total_col="damage_dealt",
+                top_player_col="top_player_damage_share",
+                top_three_col="top_3_damage_share",
+                players_col="players_dealing_damage",
+                title="Attributed damage concentration by kit",
+                yaxis_title="Share of attributed damage dealt",
+            ),
+            ConcentrationView(
+                button_label="Damage received",
+                total_col="damage_received",
+                top_player_col="top_player_received_damage_share",
+                top_three_col="top_3_received_damage_share",
+                players_col="players_receiving_damage",
+                title="Received-damage concentration by kit",
+                yaxis_title="Share of all damage received",
             ),
             ConcentrationView(
                 button_label="Playtime",
@@ -1064,20 +1398,27 @@ def matchup_figure(
     directional_share: np.ndarray,
     pair_totals: np.ndarray,
     matchup_kills_by_cause: pd.DataFrame,
+    *,
+    damage_matchup_matrix: pd.DataFrame | None = None,
+    damage_directional_share: np.ndarray | None = None,
+    damage_pair_totals: np.ndarray | None = None,
+    matchup_damage_by_cause: pd.DataFrame | None = None,
 ) -> go.Figure:
-    """Toggle matchup shares and counts, with causes available on hover."""
+    """Toggle kill and damage evidence between kit pairs."""
 
-    share_display = directional_share.copy()
-    share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
-    share_hover = np.full_like(directional_share, "", dtype=object)
-    raw_hover = np.full_like(directional_share, "", dtype=object)
-    cause_lookup: dict[tuple[int, int], str] = {}
+    kill_share_display = directional_share.copy()
+    kill_share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
+    kill_share_hover = np.full_like(directional_share, "", dtype=object)
+    raw_kill_hover = np.full_like(directional_share, "", dtype=object)
+    kill_cause_lookup: dict[tuple[int, int], str] = {}
     for pair, group in matchup_kills_by_cause.groupby(
         ["kit_id_killer", "kit_id_victim"]
     ):
         group = group.sort_values("cause_id")
         pair_total = int(group["kills"].sum())
-        cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
+        if pair_total <= 0:
+            continue
+        kill_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
             f"{row.cause_name}: {row.kills:,} "
             f"({row.kills / pair_total:.1%})"
             for row in group.itertuples(index=False)
@@ -1087,16 +1428,16 @@ def matchup_figure(
         for victim_id, victim_name in enumerate(KIT_NAMES):
             kill_count = int(matchup_matrix.iloc[killer_id, victim_id])
             if not kill_count:
-                raw_hover[killer_id, victim_id] = (
+                raw_kill_hover[killer_id, victim_id] = (
                     f"<b>{killer_name} → {victim_name}</b><br>"
                     "No attributed kills observed"
                 )
                 continue
-            raw_hover[killer_id, victim_id] = (
+            raw_kill_hover[killer_id, victim_id] = (
                 f"<b>{killer_name} → {victim_name}</b><br>"
                 f"Kills: {kill_count:,}<br><br>"
                 "<b>Cause breakdown</b><br>"
-                f"{cause_lookup.get((killer_id, victim_id), 'Unavailable')}"
+                f"{kill_cause_lookup.get((killer_id, victim_id), 'Unavailable')}"
             )
 
     for i, row_kit in enumerate(KIT_NAMES):
@@ -1105,29 +1446,31 @@ def matchup_figure(
                 continue
 
             if np.isnan(directional_share[i, j]):
-                share_hover[i, j] = (
+                kill_share_hover[i, j] = (
                     f"{row_kit} vs {column_kit}<br>"
                     "No kills observed in either direction"
                 )
                 continue
 
-            share_hover[i, j] = (
+            kill_share_hover[i, j] = (
                 f"<b>{row_kit} vs {column_kit}</b><br>"
-                f"{row_kit} kills: {matchup_matrix.iloc[i, j]}<br>"
-                f"{column_kit} kills: {matchup_matrix.iloc[j, i]}<br>"
+                f"{row_kit} kills: {int(matchup_matrix.iloc[i, j]):,}<br>"
+                f"{column_kit} kills: "
+                f"{int(matchup_matrix.iloc[j, i]):,}<br>"
                 f"{row_kit} directional share: "
                 f"{directional_share[i, j]:.1%}<br>"
-                f"Pair kills observed: {pair_totals[i, j]}<br><br>"
+                f"Pair kills observed: {int(pair_totals[i, j]):,}<br><br>"
                 f"<b>{row_kit} → {column_kit} causes</b><br>"
-                f"{cause_lookup.get((i, j), 'No attributed kills')}<br><br>"
+                f"{kill_cause_lookup.get((i, j), 'No attributed kills')}"
+                "<br><br>"
                 f"<b>{column_kit} → {row_kit} causes</b><br>"
-                f"{cause_lookup.get((j, i), 'No attributed kills')}"
+                f"{kill_cause_lookup.get((j, i), 'No attributed kills')}"
             )
 
     fig = go.Figure()
     fig.add_trace(
         go.Heatmap(
-            z=share_display,
+            z=kill_share_display,
             x=KIT_ORDER,
             y=KIT_ORDER,
             zmin=0,
@@ -1138,7 +1481,7 @@ def matchup_figure(
                 [0.5, "#F4F1EA"],
                 [1, "#2A7F7A"],
             ],
-            customdata=share_hover,
+            customdata=kill_share_hover,
             hovertemplate="%{customdata}<extra></extra>",
             hoverongaps=False,
             colorbar=dict(
@@ -1157,12 +1500,196 @@ def matchup_figure(
             text=matchup_matrix.values,
             texttemplate="%{text}",
             textfont=dict(size=10),
-            customdata=raw_hover,
+            customdata=raw_kill_hover,
             hovertemplate="%{customdata}<extra></extra>",
             colorbar=dict(title="Kills"),
             visible=False,
         )
     )
+
+    has_damage = (
+        damage_matchup_matrix is not None
+        and damage_directional_share is not None
+        and damage_pair_totals is not None
+        and matchup_damage_by_cause is not None
+        and float(damage_matchup_matrix.to_numpy().sum()) > 0
+    )
+    if has_damage:
+        damage_share_display = damage_directional_share.copy()
+        damage_share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
+        damage_share_hover = np.full_like(
+            damage_directional_share,
+            "",
+            dtype=object,
+        )
+        raw_damage_hover = np.full_like(
+            damage_directional_share,
+            "",
+            dtype=object,
+        )
+        damage_cause_lookup: dict[tuple[int, int], str] = {}
+        for pair, group in matchup_damage_by_cause.groupby(
+            ["kit_id_source", "kit_id_target"]
+        ):
+            group = group.sort_values("cause_id")
+            pair_total = float(group["damage_received"].sum())
+            if pair_total <= 0:
+                continue
+            damage_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
+                f"{row.cause_name}: {row.damage_received:,.1f} HP "
+                f"({row.damage_received / pair_total:.1%})"
+                for row in group.itertuples(index=False)
+            )
+
+        for source_id, source_name in enumerate(KIT_NAMES):
+            for target_id, target_name in enumerate(KIT_NAMES):
+                damage_value = float(
+                    damage_matchup_matrix.iloc[source_id, target_id]
+                )
+                if damage_value <= 0:
+                    raw_damage_hover[source_id, target_id] = (
+                        f"<b>{source_name} → {target_name}</b><br>"
+                        "No attributed damage observed"
+                    )
+                    continue
+                raw_damage_hover[source_id, target_id] = (
+                    f"<b>{source_name} → {target_name}</b><br>"
+                    f"Damage: {damage_value:,.1f} HP<br><br>"
+                    "<b>Cause breakdown</b><br>"
+                    f"{damage_cause_lookup.get((source_id, target_id), 'Unavailable')}"
+                )
+
+        for i, row_kit in enumerate(KIT_NAMES):
+            for j, column_kit in enumerate(KIT_NAMES):
+                if i >= j:
+                    continue
+                if np.isnan(damage_directional_share[i, j]):
+                    damage_share_hover[i, j] = (
+                        f"{row_kit} vs {column_kit}<br>"
+                        "No attributed damage observed in either direction"
+                    )
+                    continue
+                damage_share_hover[i, j] = (
+                    f"<b>{row_kit} vs {column_kit}</b><br>"
+                    f"{row_kit} damage: "
+                    f"{damage_matchup_matrix.iloc[i, j]:,.1f} HP<br>"
+                    f"{column_kit} damage: "
+                    f"{damage_matchup_matrix.iloc[j, i]:,.1f} HP<br>"
+                    f"{row_kit} directional damage share: "
+                    f"{damage_directional_share[i, j]:.1%}<br>"
+                    f"Pair damage observed: "
+                    f"{damage_pair_totals[i, j]:,.1f} HP<br><br>"
+                    f"<b>{row_kit} → {column_kit} causes</b><br>"
+                    f"{damage_cause_lookup.get((i, j), 'No attributed damage')}"
+                    "<br><br>"
+                    f"<b>{column_kit} → {row_kit} causes</b><br>"
+                    f"{damage_cause_lookup.get((j, i), 'No attributed damage')}"
+                )
+
+        fig.add_trace(
+            go.Heatmap(
+                z=damage_share_display,
+                x=KIT_ORDER,
+                y=KIT_ORDER,
+                zmin=0,
+                zmax=1,
+                zmid=0.5,
+                colorscale=[
+                    [0, "#D08B37"],
+                    [0.5, "#F4F1EA"],
+                    [1, "#2A7F7A"],
+                ],
+                customdata=damage_share_hover,
+                hovertemplate="%{customdata}<extra></extra>",
+                hoverongaps=False,
+                colorbar=dict(
+                    title="Row kit share",
+                    tickformat=".0%",
+                    tickvals=[0, 0.5, 1],
+                ),
+                visible=False,
+            )
+        )
+        fig.add_trace(
+            go.Heatmap(
+                z=damage_matchup_matrix.values,
+                x=KIT_ORDER,
+                y=KIT_ORDER,
+                customdata=raw_damage_hover,
+                hovertemplate="%{customdata}<extra></extra>",
+                colorbar=dict(title="Damage (HP)"),
+                visible=False,
+            )
+        )
+
+    def trace_visibility(trace_index: int) -> list[bool]:
+        return [
+            index == trace_index for index in range(len(fig.data))
+        ]
+
+    buttons = [
+        {
+            "label": "Kill share",
+            "method": "update",
+            "args": [
+                {"visible": trace_visibility(0)},
+                {
+                    "title": (
+                        "Directional share of observed kills "
+                        "between kit pairs"
+                    ),
+                    "xaxis": {"title": "Other kit"},
+                    "yaxis": {"title": "Row kit"},
+                },
+            ],
+        },
+        {
+            "label": "Raw kills",
+            "method": "update",
+            "args": [
+                {"visible": trace_visibility(1)},
+                {
+                    "title": "Kills by killer kit and victim kit",
+                    "xaxis": {"title": "Victim kit"},
+                    "yaxis": {"title": "Killer kit"},
+                },
+            ],
+        },
+    ]
+    if has_damage:
+        buttons.extend(
+            [
+                {
+                    "label": "Damage share",
+                    "method": "update",
+                    "args": [
+                        {"visible": trace_visibility(2)},
+                        {
+                            "title": (
+                                "Directional share of attributed damage "
+                                "between kit pairs"
+                            ),
+                            "xaxis": {"title": "Other kit"},
+                            "yaxis": {"title": "Row kit"},
+                        },
+                    ],
+                },
+                {
+                    "label": "Raw damage",
+                    "method": "update",
+                    "args": [
+                        {"visible": trace_visibility(3)},
+                        {
+                            "title": (
+                                "Attributed damage by source kit and target kit"
+                            ),
+                            "xaxis": {"title": "Target kit"},
+                            "yaxis": {"title": "Source kit"},
+                        },
+                    ],
+                },
+            ]
+        )
 
     fig.update_layout(
         title="Directional share of observed kills between kit pairs",
@@ -1178,37 +1705,7 @@ def matchup_figure(
                 "y": 1.16,
                 "yanchor": "top",
                 "showactive": True,
-                "buttons": [
-                    {
-                        "label": "Directional share",
-                        "method": "update",
-                        "args": [
-                            {"visible": [True, False]},
-                            {
-                                "title": (
-                                    "Directional share of observed kills "
-                                    "between kit pairs"
-                                ),
-                                "xaxis": {"title": "Other kit"},
-                                "yaxis": {"title": "Row kit"},
-                            },
-                        ],
-                    },
-                    {
-                        "label": "Raw kills",
-                        "method": "update",
-                        "args": [
-                            {"visible": [False, True]},
-                            {
-                                "title": (
-                                    "Kills by killer kit and victim kit"
-                                ),
-                                "xaxis": {"title": "Victim kit"},
-                                "yaxis": {"title": "Killer kit"},
-                            },
-                        ],
-                    },
-                ],
+                "buttons": buttons,
             }
         ],
     )
