@@ -8,6 +8,10 @@ execute store result storage sgp:macro stats.current_kill_info.kit_id_victim int
 execute store result storage sgp:macro stats.current_kill_info.id_victim int 1 \
     run scoreboard players get @s sgp.id
 
+data modify storage sgp:macro stats.current_kill_info.cause_id set value 0
+execute store result storage sgp:macro stats.current_kill_info.cause_id int 1 \
+    run scoreboard players get @s sgp.death_cause
+
 
 data modify storage sgp:macro stats.current_kill_info.id_killer set value -1
 data modify storage sgp:macro stats.current_kill_info.kit_id_killer set value -1
@@ -22,5 +26,8 @@ execute on attacker \
         run scoreboard players get @s sgp.id
 
 
-function sgp.kits:stats_collector/save_kill_stat with storage sgp:macro stats.current_kill_info
+function sgp.kits:stats_collector/save_kill_cause_stat with storage sgp:macro stats.current_kill_info
 function sgp.kits:stats_collector/save_pick_infos with storage sgp:macro stats.current_kill_info
+
+# Never let a non-damage death inherit the previous life's last damage mechanism.
+scoreboard players set @s sgp.death_cause 0

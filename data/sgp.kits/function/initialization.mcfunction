@@ -42,6 +42,9 @@ scoreboard objectives add sgp.reset_tags dummy
 
 scoreboard objectives add sgp.last_kill_count playerKillCount
 
+scoreboard objectives add sgp.death_cause dummy
+scoreboard objectives add sgp.damage_owner dummy
+
 
 
 # ---------- Create Teams ----------
@@ -66,6 +69,9 @@ function sgp.kits:kit_tags/prefixes_check
 # ---------- Initialize Storages ----------
 
 data merge storage sgp.kits:stats {kits_dict:{}, kit_settings:{}}
+
+# Stable ids used by kits_dict.<killer>.<killer_kit>.kills.<victim_kit>.<cause_id>
+data merge storage sgp.kits:stats {kill_cause_names:{"0":"unknown", "1":"player_attack", "2":"mace_smash", "3":"spear", "4":"arrow", "5":"trident", "6":"mob_projectile", "7":"fireball", "8":"wind_charge", "9":"sonic_boom", "10":"fireworks", "11":"fire_tick", "12":"fire_contact", "13":"lava", "14":"explosion", "15":"indirect_magic", "16":"magic_effect", "17":"thorns", "18":"fall", "19":"impact", "20":"drowning", "21":"suffocation", "22":"starvation", "23":"freezing", "24":"lightning", "25":"void_border", "26":"environmental_contact", "27":"mob_attack", "28":"generic", "100":"giant_sweep", "101":"pecking", "102":"ray"}}
 
 execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 

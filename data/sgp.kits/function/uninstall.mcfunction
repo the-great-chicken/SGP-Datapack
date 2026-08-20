@@ -38,6 +38,8 @@ scoreboard objectives remove sgp.kit_prefix_set
 scoreboard objectives remove sgp.reset_tags
 
 scoreboard objectives remove sgp.last_kill_count
+scoreboard objectives remove sgp.death_cause
+scoreboard objectives remove sgp.damage_owner
 
 
 
@@ -57,3 +59,4 @@ schedule clear sgp.kits:kit_tags/prefixes_check
 
 data remove storage sgp.kits:stats kits_dict
 data remove storage sgp.kits:stats kit_settings
+data remove storage sgp.kits:stats kill_cause_names

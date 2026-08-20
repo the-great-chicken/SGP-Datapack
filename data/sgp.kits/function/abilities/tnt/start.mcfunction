@@ -2,7 +2,14 @@
 
 execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.tnt.cooldown
 
-summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt"]}
+summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt", "sgp.new"]}
+
+# Native TNT ownership makes the explosion's causing entity the caster.
+data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
+
+# The TNT is gone by the time its lingering fire deals damage, so also carry the stable player id.
+scoreboard players operation @n[tag=sgp.new,distance=..2,limit=1,type=tnt] sgp.damage_owner = @s sgp.id
+tag @e[tag=sgp.new,distance=..2,type=tnt] remove sgp.new
 
 # Summon an interaction with a link to the TNT. We can't use Passengers as it would be sitting *above* the TNT.
 summon interaction ~ ~0.5 ~ {width:1.1f, height:1.1f, Tags:["sgp.tnt_interaction", "sgp.new"]}
