@@ -5,7 +5,9 @@ execute store result score @s sgp.cooldown_ability run data get storage sgp:data
 summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt", "sgp.new"]}
 
 # Native TNT ownership makes the explosion's causing entity the caster.
-data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
+# The checks are just to avoid accidents in dev env.
+execute unless entity @s[gamemode=creative] unless entity @s[tag=admin] run \
+    data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
 
 # The TNT is gone by the time its lingering fire deals damage, so also carry the stable player id.
 scoreboard players operation @n[tag=sgp.new,distance=..2,limit=1,type=tnt] sgp.damage_owner = @s sgp.id
