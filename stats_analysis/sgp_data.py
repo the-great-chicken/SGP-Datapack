@@ -1,6 +1,6 @@
 """Loading, validation, and derived datasets for the SGP kit report.
 
-This module deliberately contains no visualization code.  It turns the four
+This module deliberately contains no visualization code.  It turns the five
 normalized extracts into analysis-ready kit and player-kit tables that can be
 consumed by the notebook, charts, or future exports.
 """
@@ -34,10 +34,17 @@ KIT_ORDER = KIT_NAMES
 NO_KIT_ID = -1
 NO_PLAYER_ID = "-1"
 
-KILL_COLUMNS = ("id_killer", "kit_id_killer", "kit_id_victim", "kills")
+KILL_COLUMNS = (
+    "id_killer",
+    "kit_id_killer",
+    "kit_id_victim",
+    "cause_id",
+    "kills",
+)
 ABILITY_COLUMNS = ("id", "kit_id", "ability_use")
 PICK_COLUMNS = ("id", "kit_id", "total_time", "nbr_picks")
 KIT_SETTING_COLUMNS = ("kit_id", "ability_cooldown")
+KILL_CAUSE_COLUMNS = ("cause_id", "cause_name")
 
 # The default assumes ``total_time`` is logged in Minecraft game ticks.  Keep
 # the conversion configurable at the public entry points in case the datapack
@@ -64,6 +71,11 @@ class ReportData:
     player_kit_kills: pd.DataFrame
     total_kills_by_kit: pd.DataFrame
     kit_kill_stats: pd.DataFrame
+    kill_causes: pd.DataFrame
+    outgoing_kills_by_cause: pd.DataFrame
+    incoming_deaths_by_cause: pd.DataFrame
+    matchup_kills_by_cause: pd.DataFrame
+    death_metrics: pd.DataFrame
     matchup_matrix: pd.DataFrame
     directional_share: np.ndarray
     pair_totals: np.ndarray
@@ -88,7 +100,7 @@ def load_report_data(
     *,
     time_units_per_hour: float = DEFAULT_TIME_UNITS_PER_HOUR,
 ) -> ReportData:
-    """Load the four normalized extracts and prepare shared report tables.
+    """Load the five normalized extracts and prepare shared report tables.
 
     ``time_units_per_hour`` defaults to 72,000, assuming ``total_time`` is
     measured in Minecraft ticks.  Override it if the datapack records a
@@ -100,11 +112,13 @@ def load_report_data(
     abilities = pd.read_parquet(data_dir / "abilities.parquet")
     picks = pd.read_parquet(data_dir / "picks.parquet")
     kit_settings = pd.read_parquet(data_dir / "kit_settings.parquet")
+    kill_causes = pd.read_parquet(data_dir / "kill_causes.parquet")
     return prepare_report_data(
         kills,
         abilities,
         picks,
         kit_settings,
+        kill_causes,
         time_units_per_hour=time_units_per_hour,
     )
 
@@ -114,6 +128,7 @@ def prepare_report_data(
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
     kit_settings: pd.DataFrame,
+    kill_causes: pd.DataFrame,
     *,
     time_units_per_hour: float = DEFAULT_TIME_UNITS_PER_HOUR,
 ) -> ReportData:
@@ -122,11 +137,14 @@ def prepare_report_data(
     if not np.isfinite(time_units_per_hour) or time_units_per_hour <= 0:
         raise ValueError("time_units_per_hour must be a positive finite value")
 
-    kills, abilities, picks, kit_settings = _validate_and_normalize(
-        kills,
-        abilities,
-        picks,
-        kit_settings,
+    kills, abilities, picks, kit_settings, kill_causes = (
+        _validate_and_normalize(
+            kills,
+            abilities,
+            picks,
+            kit_settings,
+            kill_causes,
+        )
     )
     all_kits = pd.DataFrame(
         {
@@ -134,6 +152,12 @@ def prepare_report_data(
             "kit_name": list(KIT_ID_TO_NAME.values()),
         }
     )
+    # Preserve sentinel rows in the validated extract, but keep established
+    # player-kill metrics restricted to deaths where both kits are known.
+    attributed_kills = kills.loc[
+        kills["kit_id_killer"].isin(KIT_ID_TO_NAME)
+        & kills["kit_id_victim"].isin(KIT_ID_TO_NAME)
+    ].copy()
     kit_settings = all_kits.merge(
         kit_settings[list(KIT_SETTING_COLUMNS)],
         on="kit_id",
@@ -148,9 +172,9 @@ def prepare_report_data(
     )
 
     player_kit_kills = (
-        kills.groupby(["id_killer", "kit_id_killer"], as_index=False)[
-            "kills"
-        ]
+        attributed_kills.groupby(
+            ["id_killer", "kit_id_killer"], as_index=False
+        )["kills"]
         .sum()
         .rename(columns={"kit_id_killer": "kit_id"})
     )
@@ -176,7 +200,7 @@ def prepare_report_data(
         kit_kill_stats["players"], errors="coerce"
     ).fillna(0).astype(int)
 
-    matchup_counts = kills.groupby(
+    matchup_counts = attributed_kills.groupby(
         ["kit_id_killer", "kit_id_victim"], as_index=False
     )["kills"].sum()
     matchup_matrix = (
@@ -242,6 +266,19 @@ def prepare_report_data(
         all_kits,
         n_players=n_players,
     )
+    (
+        kill_causes,
+        outgoing_kills_by_cause,
+        incoming_deaths_by_cause,
+        matchup_kills_by_cause,
+        death_metrics,
+    ) = _build_kill_cause_tables(
+        kills,
+        attributed_kills,
+        all_kits,
+        kit_exposure,
+        kill_causes,
+    )
     player_kit_metrics = _build_player_kit_metrics(
         player_kit_exposure,
         player_kit_kills,
@@ -259,6 +296,7 @@ def prepare_report_data(
         kit_exposure,
         player_rate_stats,
         kit_settings,
+        death_metrics,
     )
     top_killer_exposure = _build_top_killer_exposure(
         player_kit_metrics,
@@ -322,6 +360,11 @@ def prepare_report_data(
         player_kit_kills=player_kit_kills,
         total_kills_by_kit=total_kills_by_kit,
         kit_kill_stats=kit_kill_stats,
+        kill_causes=kill_causes,
+        outgoing_kills_by_cause=outgoing_kills_by_cause,
+        incoming_deaths_by_cause=incoming_deaths_by_cause,
+        matchup_kills_by_cause=matchup_kills_by_cause,
+        death_metrics=death_metrics,
         matchup_matrix=matchup_matrix,
         directional_share=directional_share,
         pair_totals=pair_totals,
@@ -347,27 +390,37 @@ def _validate_and_normalize(
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
     kit_settings: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    kill_causes: pd.DataFrame,
+) -> tuple[
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+]:
     _require_columns(kills, KILL_COLUMNS, "kills")
     _require_columns(abilities, ABILITY_COLUMNS, "abilities")
     _require_columns(picks, PICK_COLUMNS, "picks")
     _require_columns(kit_settings, KIT_SETTING_COLUMNS, "kit_settings")
+    _require_columns(kill_causes, KILL_CAUSE_COLUMNS, "kill_causes")
 
     kills = kills.copy()
     abilities = abilities.copy()
     picks = picks.copy()
     kit_settings = kit_settings.copy()
+    kill_causes = kill_causes.copy()
     for frame, columns, name in (
         (kills, KILL_COLUMNS, "kills"),
         (abilities, ABILITY_COLUMNS, "abilities"),
         (picks, PICK_COLUMNS, "picks"),
         (kit_settings, KIT_SETTING_COLUMNS, "kit_settings"),
+        (kill_causes, KILL_CAUSE_COLUMNS, "kill_causes"),
     ):
         if frame[list(columns)].isna().any().any():
             raise ValueError(f"{name} contains missing values")
 
     kills["id_killer"] = kills["id_killer"].astype(str)
-    for column in ("kit_id_killer", "kit_id_victim", "kills"):
+    for column in ("kit_id_killer", "kit_id_victim", "cause_id", "kills"):
         kills[column] = pd.to_numeric(kills[column], errors="raise").astype(int)
 
     abilities["id"] = abilities["id"].astype(str)
@@ -385,8 +438,19 @@ def _validate_and_normalize(
             kit_settings[column], errors="raise"
         ).astype(int)
 
+    kill_causes["cause_id"] = pd.to_numeric(
+        kill_causes["cause_id"], errors="raise"
+    ).astype(int)
+    kill_causes["cause_name"] = kill_causes["cause_name"].astype(str)
+
     if (kills["kills"] < 0).any():
         raise ValueError("Negative kill count found")
+    if (kills["cause_id"] < 0).any():
+        raise ValueError("Negative kill-cause ID found")
+    if (kill_causes["cause_id"] < 0).any():
+        raise ValueError("Negative kill-cause metadata ID found")
+    if kill_causes["cause_name"].str.strip().eq("").any():
+        raise ValueError("Blank kill-cause name found")
     if (abilities["ability_use"] < 0).any():
         raise ValueError("Negative ability-use count found")
     if (picks["total_time"] < 0).any():
@@ -395,9 +459,10 @@ def _validate_and_normalize(
         raise ValueError("Negative nbr_picks found")
     if (kit_settings["ability_cooldown"] <= 0).any():
         raise ValueError("Ability cooldowns must be positive")
-    if not kills["kit_id_killer"].isin(KIT_ID_TO_NAME).all():
+    valid_kill_kit_ids = set(KIT_ID_TO_NAME) | {NO_KIT_ID}
+    if not kills["kit_id_killer"].isin(valid_kill_kit_ids).all():
         raise ValueError("Unknown killer kit ID found")
-    if not kills["kit_id_victim"].isin(KIT_ID_TO_NAME).all():
+    if not kills["kit_id_victim"].isin(valid_kill_kit_ids).all():
         raise ValueError("Unknown victim kit ID found")
     if not abilities["kit_id"].isin(KIT_ID_TO_NAME).all():
         raise ValueError("Unknown ability kit ID found")
@@ -407,7 +472,7 @@ def _validate_and_normalize(
     if not kit_settings["kit_id"].isin(KIT_ID_TO_NAME).all():
         raise ValueError("Unknown kit-settings kit ID found")
     if kills.duplicated(
-        ["id_killer", "kit_id_killer", "kit_id_victim"]
+        ["id_killer", "kit_id_killer", "kit_id_victim", "cause_id"]
     ).any():
         raise ValueError("Duplicate kill-stat rows found")
     if abilities.duplicated(["id", "kit_id"]).any():
@@ -416,6 +481,8 @@ def _validate_and_normalize(
         raise ValueError("Duplicate pick-stat rows found")
     if kit_settings.duplicated(["kit_id"]).any():
         raise ValueError("Duplicate kit-settings rows found")
+    if kill_causes.duplicated(["cause_id"]).any():
+        raise ValueError("Duplicate kill-cause metadata rows found")
 
     missing_settings = set(KIT_ID_TO_NAME) - set(kit_settings["kit_id"])
     if missing_settings:
@@ -424,7 +491,16 @@ def _validate_and_normalize(
             f"{sorted(missing_settings)}"
         )
 
-    return kills, abilities, picks, kit_settings
+    missing_cause_names = set(kills["cause_id"]) - set(
+        kill_causes["cause_id"]
+    )
+    if missing_cause_names:
+        raise ValueError(
+            "Missing names for kill-cause IDs: "
+            f"{sorted(missing_cause_names)}"
+        )
+
+    return kills, abilities, picks, kit_settings, kill_causes
 
 
 def _require_columns(
@@ -640,6 +716,187 @@ def _build_kit_exposure(
     return exposure.sort_values("kit_id").reset_index(drop=True)
 
 
+def _build_kill_cause_tables(
+    kills: pd.DataFrame,
+    attributed_kills: pd.DataFrame,
+    all_kits: pd.DataFrame,
+    kit_exposure: pd.DataFrame,
+    kill_cause_names: pd.DataFrame,
+) -> tuple[
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+]:
+    """Build balance-oriented outgoing and incoming kill-cause tables."""
+
+    deaths_with_kit = kills.loc[
+        kills["kit_id_victim"].isin(KIT_ID_TO_NAME)
+    ].copy()
+    cause_ids = sorted(
+        set(attributed_kills["cause_id"])
+        | set(deaths_with_kit["cause_id"])
+    )
+    kill_causes = kill_cause_names.loc[
+        kill_cause_names["cause_id"].isin(cause_ids),
+        list(KILL_CAUSE_COLUMNS),
+    ].copy()
+    cause_grid = all_kits.merge(kill_causes, how="cross")
+    exposure_context = kit_exposure[
+        ["kit_id", "total_hours", "completed_lives"]
+    ]
+
+    outgoing_counts = (
+        attributed_kills.groupby(
+            ["kit_id_killer", "cause_id"], as_index=False
+        )["kills"]
+        .sum()
+        .rename(columns={"kit_id_killer": "kit_id"})
+    )
+    outgoing = (
+        cause_grid.merge(
+            outgoing_counts,
+            on=["kit_id", "cause_id"],
+            how="left",
+        )
+        .merge(exposure_context, on="kit_id", how="left")
+        .fillna({"kills": 0})
+    )
+    outgoing["kills"] = outgoing["kills"].astype(int)
+    outgoing["kit_total_kills"] = outgoing.groupby("kit_id")[
+        "kills"
+    ].transform("sum")
+    outgoing["cause_share_of_kit_kills"] = _safe_divide(
+        outgoing["kills"], outgoing["kit_total_kills"]
+    )
+    outgoing["cause_kills_per_hour"] = _safe_divide(
+        outgoing["kills"], outgoing["total_hours"]
+    )
+    outgoing["cause_kills_per_completed_life"] = _safe_divide(
+        outgoing["kills"], outgoing["completed_lives"]
+    )
+
+    incoming_counts = (
+        deaths_with_kit.groupby(
+            ["kit_id_victim", "cause_id"], as_index=False
+        )["kills"]
+        .sum()
+        .rename(
+            columns={
+                "kit_id_victim": "kit_id",
+                "kills": "deaths",
+            }
+        )
+    )
+    incoming = (
+        cause_grid.merge(
+            incoming_counts,
+            on=["kit_id", "cause_id"],
+            how="left",
+        )
+        .merge(exposure_context, on="kit_id", how="left")
+        .fillna({"deaths": 0})
+    )
+    incoming["deaths"] = incoming["deaths"].astype(int)
+    incoming["kit_total_deaths"] = incoming.groupby("kit_id")[
+        "deaths"
+    ].transform("sum")
+    incoming["cause_share_of_kit_deaths"] = _safe_divide(
+        incoming["deaths"], incoming["kit_total_deaths"]
+    )
+    incoming["cause_deaths_per_hour"] = _safe_divide(
+        incoming["deaths"], incoming["total_hours"]
+    )
+    incoming["cause_deaths_per_completed_life"] = _safe_divide(
+        incoming["deaths"], incoming["completed_lives"]
+    )
+
+    total_deaths = (
+        deaths_with_kit.groupby("kit_id_victim", as_index=False)["kills"]
+        .sum()
+        .rename(
+            columns={"kit_id_victim": "kit_id", "kills": "deaths"}
+        )
+    )
+    player_deaths = (
+        deaths_with_kit.loc[
+            deaths_with_kit["kit_id_killer"].isin(KIT_ID_TO_NAME)
+        ]
+        .groupby("kit_id_victim", as_index=False)["kills"]
+        .sum()
+        .rename(
+            columns={
+                "kit_id_victim": "kit_id",
+                "kills": "player_caused_deaths",
+            }
+        )
+    )
+    death_metrics = (
+        all_kits.merge(total_deaths, on="kit_id", how="left")
+        .merge(player_deaths, on="kit_id", how="left")
+        .merge(exposure_context, on="kit_id", how="left")
+        .fillna({"deaths": 0, "player_caused_deaths": 0})
+    )
+    death_metrics[["deaths", "player_caused_deaths"]] = death_metrics[
+        ["deaths", "player_caused_deaths"]
+    ].astype(int)
+    death_metrics["non_player_deaths"] = (
+        death_metrics["deaths"] - death_metrics["player_caused_deaths"]
+    )
+    death_metrics["deaths_per_hour"] = _safe_divide(
+        death_metrics["deaths"], death_metrics["total_hours"]
+    )
+    death_metrics["deaths_per_completed_life"] = _safe_divide(
+        death_metrics["deaths"], death_metrics["completed_lives"]
+    )
+    death_metrics["player_caused_death_share"] = _safe_divide(
+        death_metrics["player_caused_deaths"], death_metrics["deaths"]
+    )
+    death_metrics["non_player_death_share"] = _safe_divide(
+        death_metrics["non_player_deaths"], death_metrics["deaths"]
+    )
+
+    incoming = incoming.merge(
+        death_metrics[
+            [
+                "kit_id",
+                "deaths_per_hour",
+                "player_caused_deaths",
+                "non_player_deaths",
+                "non_player_death_share",
+            ]
+        ].rename(columns={"deaths_per_hour": "kit_deaths_per_hour"}),
+        on="kit_id",
+        how="left",
+    )
+
+    matchup = (
+        attributed_kills.groupby(
+            ["kit_id_killer", "kit_id_victim", "cause_id"],
+            as_index=False,
+        )["kills"]
+        .sum()
+        .merge(kill_causes, on="cause_id", how="left")
+    )
+    matchup["killer_kit_name"] = matchup["kit_id_killer"].map(
+        KIT_ID_TO_NAME
+    )
+    matchup["victim_kit_name"] = matchup["kit_id_victim"].map(
+        KIT_ID_TO_NAME
+    )
+
+    return (
+        kill_causes.sort_values("cause_id").reset_index(drop=True),
+        outgoing.sort_values(["kit_id", "cause_id"]).reset_index(drop=True),
+        incoming.sort_values(["kit_id", "cause_id"]).reset_index(drop=True),
+        matchup.sort_values(
+            ["kit_id_killer", "kit_id_victim", "cause_id"]
+        ).reset_index(drop=True),
+        death_metrics.sort_values("kit_id").reset_index(drop=True),
+    )
+
+
 def _build_player_kit_metrics(
     player_kit_exposure: pd.DataFrame,
     player_kit_kills: pd.DataFrame,
@@ -791,6 +1048,7 @@ def _build_kit_metrics(
     kit_exposure: pd.DataFrame,
     player_rate_stats: pd.DataFrame,
     kit_settings: pd.DataFrame,
+    death_metrics: pd.DataFrame,
 ) -> pd.DataFrame:
     metrics = (
         all_kits.merge(
@@ -815,14 +1073,35 @@ def _build_kit_metrics(
             how="left",
         )
         .merge(
+            death_metrics[
+                [
+                    "kit_id",
+                    "deaths",
+                    "player_caused_deaths",
+                    "non_player_deaths",
+                    "deaths_per_hour",
+                    "deaths_per_completed_life",
+                    "player_caused_death_share",
+                    "non_player_death_share",
+                ]
+            ],
+            on="kit_id",
+            how="left",
+        )
+        .merge(
             player_rate_stats.drop(columns="kit_name"),
             on="kit_id",
             how="left",
         )
     )
-    metrics[["kills", "ability_use"]] = metrics[
-        ["kills", "ability_use"]
-    ].fillna(0).astype(int)
+    count_columns = [
+        "kills",
+        "ability_use",
+        "deaths",
+        "player_caused_deaths",
+        "non_player_deaths",
+    ]
+    metrics[count_columns] = metrics[count_columns].fillna(0).astype(int)
     metrics["kill_share"] = _safe_divide(
         metrics["kills"],
         pd.Series(metrics["kills"].sum(), index=metrics.index),
@@ -836,6 +1115,12 @@ def _build_kit_metrics(
     )
     metrics["kills_per_completed_life"] = _safe_divide(
         metrics["kills"], metrics["completed_lives"]
+    )
+    metrics["kill_death_ratio"] = _safe_divide(
+        metrics["kills"], metrics["deaths"]
+    )
+    metrics["kills_per_player_caused_death"] = _safe_divide(
+        metrics["kills"], metrics["player_caused_deaths"]
     )
     metrics["ability_uses_per_hour"] = _safe_divide(
         metrics["ability_use"], metrics["total_hours"]

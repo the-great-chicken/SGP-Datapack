@@ -11,6 +11,7 @@ import pandas as pd
 STATS_PATH = ("data", "contents", "stats")
 KITS_PATH = (*STATS_PATH, "kits_dict")
 KIT_SETTINGS_PATH = (*STATS_PATH, "kit_settings")
+KILL_CAUSE_NAMES_PATH = (*STATS_PATH, "kill_cause_names")
 
 
 def get_nbt_path(nbt_file: nbtlib.File, path: tuple[str, ...]) -> Any:
@@ -41,6 +42,11 @@ def get_kit_settings(nbt_file: nbtlib.File) -> Any:
     return get_nbt_path(nbt_file, KIT_SETTINGS_PATH)
 
 
+def get_kill_cause_names(nbt_file: nbtlib.File) -> Any:
+    """Return the kill-cause names from command_storage.dat."""
+    return get_nbt_path(nbt_file, KILL_CAUSE_NAMES_PATH)
+
+
 def extract_kills(kits_dict: Any) -> pd.DataFrame:
     """
     Extract kill statistics.
@@ -49,6 +55,7 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
         id_killer
         kit_id_killer
         kit_id_victim
+        cause_id
         kills
     """
     rows: list[dict[str, Any]] = []
@@ -57,15 +64,24 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
         for kit_id_killer, kit_data in player_data.items():
             kills_data = kit_data.get("kills", {})
 
-            for kit_id_victim, kill_count in kills_data.items():
-                rows.append(
-                    {
-                        "id_killer": str(id_killer),
-                        "kit_id_killer": int(kit_id_killer),
-                        "kit_id_victim": int(kit_id_victim),
-                        "kills": int(kill_count),
-                    }
-                )
+            for kit_id_victim, causes_data in kills_data.items():
+                if not hasattr(causes_data, "items"):
+                    raise ValueError(
+                        "Expected nested kill causes at "
+                        f"kits_dict.{id_killer}.{kit_id_killer}.kills."
+                        f"{kit_id_victim}"
+                    )
+
+                for cause_id, kill_count in causes_data.items():
+                    rows.append(
+                        {
+                            "id_killer": str(id_killer),
+                            "kit_id_killer": int(kit_id_killer),
+                            "kit_id_victim": int(kit_id_victim),
+                            "cause_id": int(cause_id),
+                            "kills": int(kill_count),
+                        }
+                    )
 
     return pd.DataFrame(
         rows,
@@ -73,6 +89,7 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
             "id_killer",
             "kit_id_killer",
             "kit_id_victim",
+            "cause_id",
             "kills",
         ],
     )
@@ -189,6 +206,35 @@ def extract_kit_settings(kit_settings: Any) -> pd.DataFrame:
     )
 
 
+def extract_kill_causes(kill_cause_names: Any) -> pd.DataFrame:
+    """
+    Extract the kill-cause metadata.
+
+    Columns:
+        cause_id
+        cause_name
+    """
+    rows = [
+        {
+            "cause_id": int(cause_id),
+            "cause_name": str(cause_name),
+        }
+        for cause_id, cause_name in kill_cause_names.items()
+    ]
+
+    return (
+        pd.DataFrame(
+            rows,
+            columns=[
+                "cause_id",
+                "cause_name",
+            ],
+        )
+        .sort_values("cause_id")
+        .reset_index(drop=True)
+    )
+
+
 def extract(input_path: Path, output_dir: Path) -> None:
     """Extract statistics from command_storage.dat into Parquet files."""
     print(f"Reading {input_path}")
@@ -196,11 +242,13 @@ def extract(input_path: Path, output_dir: Path) -> None:
     nbt_file = nbtlib.load(input_path)
     kits_dict = get_kits_dict(nbt_file)
     kit_settings = get_kit_settings(nbt_file)
+    kill_cause_names = get_kill_cause_names(nbt_file)
 
     kills = extract_kills(kits_dict)
     abilities = extract_ability_usage(kits_dict)
     picks = extract_picks(kits_dict)
     settings = extract_kit_settings(kit_settings)
+    kill_causes = extract_kill_causes(kill_cause_names)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -208,16 +256,19 @@ def extract(input_path: Path, output_dir: Path) -> None:
     abilities_path = output_dir / "abilities.parquet"
     picks_path = output_dir / "picks.parquet"
     settings_path = output_dir / "kit_settings.parquet"
+    kill_causes_path = output_dir / "kill_causes.parquet"
 
     kills.to_parquet(kills_path, index=False)
     abilities.to_parquet(abilities_path, index=False)
     picks.to_parquet(picks_path, index=False)
     settings.to_parquet(settings_path, index=False)
+    kill_causes.to_parquet(kill_causes_path, index=False)
 
     print(f"Kills:     {len(kills):,} rows -> {kills_path}")
     print(f"Abilities: {len(abilities):,} rows -> {abilities_path}")
     print(f"Picks:     {len(picks):,} rows -> {picks_path}")
     print(f"Settings:  {len(settings):,} rows -> {settings_path}")
+    print(f"Causes:    {len(kill_causes):,} rows -> {kill_causes_path}")
 
 
 def main() -> None:

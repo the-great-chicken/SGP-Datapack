@@ -34,8 +34,23 @@ from sgp_plot_components import (
     show_player_contribution_figure,
 )
 
+
+CAUSE_COLOR_SEQUENCE = (
+    "#4E79A7",
+    "#F28E2B",
+    "#E15759",
+    "#76B7B2",
+    "#59A14F",
+    "#EDC948",
+    "#B07AA1",
+    "#FF9DA7",
+    "#9C755F",
+    "#BAB0AC",
+)
+
+
 def total_kills_figure(report: ReportData) -> go.Figure:
-    """Build total and exposure-normalized kill modes."""
+    """Build total, exposure-normalized, and PvP-exchange modes."""
 
     life_rates = report.kit_metrics["kills_per_completed_life"].dropna()
     life_references = [
@@ -61,6 +76,13 @@ def total_kills_figure(report: ReportData) -> go.Figure:
         1.0,
         float(life_rates.max()) if not life_rates.empty else 0.0,
     ) * 1.12
+    pvp_death_rates = report.kit_metrics[
+        "kills_per_player_caused_death"
+    ].dropna()
+    pvp_death_axis_max = max(
+        1.0,
+        float(pvp_death_rates.max()) if not pvp_death_rates.empty else 0.0,
+    ) * 1.12
 
     return player_contribution_figure(
         all_kits=report.all_kits,
@@ -70,6 +92,14 @@ def total_kills_figure(report: ReportData) -> go.Figure:
         player_value_col="kills",
         median_per_hour_col="median_player_kills_per_hour",
         median_per_life_col="median_player_kills_per_completed_life",
+        aggregate_customdata_cols=(
+            "deaths",
+            "deaths_per_hour",
+            "player_caused_deaths",
+            "non_player_deaths",
+            "non_player_death_share",
+            "kill_death_ratio",
+        ),
         metric_views=(
             AggregateMetricView(
                 button_label="Total kills",
@@ -81,7 +111,8 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                     "<b>%{x}</b><br>Total kills: %{y:,.0f}<br>"
                     "Time played: %{customdata[1]:,.2f} h<br>"
                     "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Players with playtime: %{customdata[3]:,.0f}"
+                    "Players with playtime: %{customdata[3]:,.0f}<br>"
+                    "Deaths while using kit: %{customdata[6]:,.0f}"
                     "<extra></extra>"
                 ),
             ),
@@ -115,8 +146,261 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                     "<extra></extra>"
                 ),
             ),
+            AggregateMetricView(
+                button_label="Kills / PvP death",
+                value_col="kills_per_player_caused_death",
+                title="Kills made per player-caused death by kit",
+                yaxis_title="Kills per player-caused death",
+                tickformat=".2f",
+                reference_lines=(
+                    HorizontalReferenceLine(
+                        value=1.0,
+                        label="1.0 kill per player-caused death",
+                        color="#111111",
+                        width=4,
+                    ),
+                ),
+                yaxis_range=(0, pvp_death_axis_max),
+                hovertemplate=(
+                    "<b>%{x}</b><br>Kills per player-caused death: "
+                    "%{y:.2f}<br>"
+                    "Kills made: %{customdata[0]:,.0f}<br>"
+                    "Player-caused deaths: %{customdata[8]:,.0f}<br>"
+                    "All deaths: %{customdata[6]:,.0f}<br>"
+                    "Non-player deaths: %{customdata[9]:,.0f} "
+                    "(%{customdata[10]:.1%})"
+                    "<extra></extra>"
+                ),
+            ),
         ),
     )
+
+
+def kill_causes_figure(report: ReportData) -> go.Figure:
+    """Compare offensive kill identity with defensive cause vulnerability."""
+
+    causes = report.kill_causes.sort_values("cause_id")
+    if causes.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            title="Kill-cause profiles by kit",
+            xaxis_title="Kit",
+            yaxis_title="Share",
+        )
+        return fig
+
+    cause_rows = list(causes.itertuples(index=False))
+    cause_colors = {
+        row.cause_id: CAUSE_COLOR_SEQUENCE[
+            index % len(CAUSE_COLOR_SEQUENCE)
+        ]
+        for index, row in enumerate(cause_rows)
+    }
+    outgoing_order = (
+        report.kit_metrics.sort_values(
+            ["kills", "kit_id"],
+            ascending=[False, True],
+        )["kit_name"].tolist()
+    )
+    incoming_rate_order = (
+        report.death_metrics.sort_values(
+            ["deaths_per_hour", "deaths", "kit_id"],
+            ascending=[False, False, True],
+            na_position="last",
+        )["kit_name"].tolist()
+    )
+    incoming_share_order = (
+        report.death_metrics.sort_values(
+            ["deaths", "kit_id"],
+            ascending=[False, True],
+        )["kit_name"].tolist()
+    )
+
+    modes = (
+        {
+            "button_label": "Outgoing share",
+            "data": report.outgoing_kills_by_cause,
+            "value_col": "cause_share_of_kit_kills",
+            "order": outgoing_order,
+            "title": "How each attacking kit delivers its attributed kills",
+            "xaxis_title": "Attacking kit",
+            "yaxis_title": "Share of attributed kills",
+            "tickformat": ".0%",
+            "range": [0, 1],
+            "custom_cols": [
+                "kills",
+                "cause_share_of_kit_kills",
+                "cause_kills_per_hour",
+                "kit_total_kills",
+                "total_hours",
+            ],
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Share of kit kills: %{y:.1%}<br>"
+                "Kills from cause: %{customdata[0]:,.0f}<br>"
+                "Cause-specific kills per hour: %{customdata[2]:.2f}<br>"
+                "All attributed kit kills: %{customdata[3]:,.0f}<br>"
+                "Kit playtime: %{customdata[4]:,.2f} h"
+                "<extra></extra>"
+            ),
+        },
+        {
+            "button_label": "Incoming deaths / hour",
+            "data": report.incoming_deaths_by_cause,
+            "value_col": "cause_deaths_per_hour",
+            "order": incoming_rate_order,
+            "title": "Why each victim kit dies per active hour",
+            "xaxis_title": "Victim kit",
+            "yaxis_title": "Deaths per active hour",
+            "tickformat": ".2f",
+            "range": None,
+            "custom_cols": [
+                "deaths",
+                "cause_share_of_kit_deaths",
+                "cause_deaths_per_hour",
+                "kit_total_deaths",
+                "kit_deaths_per_hour",
+                "player_caused_deaths",
+                "non_player_deaths",
+                "non_player_death_share",
+                "total_hours",
+            ],
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Deaths per hour from cause: %{y:.2f}<br>"
+                "Deaths from cause: %{customdata[0]:,.0f}<br>"
+                "Share of kit deaths: %{customdata[1]:.1%}<br>"
+                "All deaths per hour: %{customdata[4]:.2f}<br>"
+                "Player-caused deaths: %{customdata[5]:,.0f}<br>"
+                "Non-player deaths: %{customdata[6]:,.0f} "
+                "(%{customdata[7]:.1%})<br>"
+                "Kit playtime: %{customdata[8]:,.2f} h"
+                "<extra></extra>"
+            ),
+        },
+        {
+            "button_label": "Incoming share",
+            "data": report.incoming_deaths_by_cause,
+            "value_col": "cause_share_of_kit_deaths",
+            "order": incoming_share_order,
+            "title": "Death-cause profile of each victim kit",
+            "xaxis_title": "Victim kit",
+            "yaxis_title": "Share of all deaths while using kit",
+            "tickformat": ".0%",
+            "range": [0, 1],
+            "custom_cols": [
+                "deaths",
+                "cause_share_of_kit_deaths",
+                "cause_deaths_per_hour",
+                "kit_total_deaths",
+                "kit_deaths_per_hour",
+                "player_caused_deaths",
+                "non_player_deaths",
+                "non_player_death_share",
+                "total_hours",
+            ],
+            "hovertemplate": (
+                "<b>%{x}</b><br>%{fullData.name}<br>"
+                "Share of kit deaths: %{y:.1%}<br>"
+                "Deaths from cause: %{customdata[0]:,.0f}<br>"
+                "Cause-specific deaths per hour: "
+                "%{customdata[2]:.2f}<br>"
+                "All kit deaths: %{customdata[3]:,.0f}<br>"
+                "All deaths per hour: %{customdata[4]:.2f}<br>"
+                "Non-player death share: %{customdata[7]:.1%}"
+                "<extra></extra>"
+            ),
+        },
+    )
+
+    fig = go.Figure()
+    traces_per_mode = len(cause_rows)
+    for mode_index, mode in enumerate(modes):
+        frame = mode["data"]
+        for cause in cause_rows:
+            cause_data = (
+                frame.loc[frame["cause_id"] == cause.cause_id]
+                .set_index("kit_name")
+                .reindex(mode["order"])
+            )
+            fig.add_trace(
+                go.Bar(
+                    x=mode["order"],
+                    y=cause_data[mode["value_col"]],
+                    name=cause.cause_name,
+                    legendgroup=cause.cause_name,
+                    legendrank=cause.cause_id,
+                    marker=dict(
+                        color=cause_colors[cause.cause_id],
+                        line=dict(color="rgba(255,255,255,0.75)", width=0.5),
+                    ),
+                    customdata=cause_data[mode["custom_cols"]].to_numpy(),
+                    hovertemplate=mode["hovertemplate"],
+                    visible=mode_index == 0,
+                    showlegend=True,
+                )
+            )
+
+    def visibility(mode_index: int) -> list[bool]:
+        return [
+            trace_index // traces_per_mode == mode_index
+            for trace_index in range(len(fig.data))
+        ]
+
+    first_mode = modes[0]
+    fig.update_layout(
+        title=first_mode["title"],
+        barmode="stack",
+        legend_title_text="Kill cause",
+        margin=dict(l=70, r=40, t=125, b=70),
+        updatemenus=[
+            {
+                "type": "buttons",
+                "direction": "right",
+                "x": 0.5,
+                "xanchor": "center",
+                "y": 1.18,
+                "yanchor": "top",
+                "showactive": True,
+                "buttons": [
+                    {
+                        "label": mode["button_label"],
+                        "method": "update",
+                        "args": [
+                            {"visible": visibility(mode_index)},
+                            {
+                                "title": mode["title"],
+                                "xaxis": {
+                                    "title": mode["xaxis_title"],
+                                    "categoryorder": "array",
+                                    "categoryarray": mode["order"],
+                                },
+                                "yaxis": {
+                                    "title": mode["yaxis_title"],
+                                    "tickformat": mode["tickformat"],
+                                    "range": mode["range"],
+                                    "autorange": mode["range"] is None,
+                                    "rangemode": "tozero",
+                                },
+                            },
+                        ],
+                    }
+                    for mode_index, mode in enumerate(modes)
+                ],
+            }
+        ],
+    )
+    fig.update_xaxes(
+        title=first_mode["xaxis_title"],
+        categoryorder="array",
+        categoryarray=first_mode["order"],
+    )
+    fig.update_yaxes(
+        title=first_mode["yaxis_title"],
+        tickformat=first_mode["tickformat"],
+        range=first_mode["range"],
+    )
+    return fig
 
 
 def popularity_efficiency_figure(report: ReportData) -> go.Figure:
@@ -779,12 +1063,41 @@ def matchup_figure(
     matchup_matrix: pd.DataFrame,
     directional_share: np.ndarray,
     pair_totals: np.ndarray,
+    matchup_kills_by_cause: pd.DataFrame,
 ) -> go.Figure:
-    """Toggle between directional matchup share and the raw kill matrix."""
+    """Toggle matchup shares and counts, with causes available on hover."""
 
     share_display = directional_share.copy()
     share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
     share_hover = np.full_like(directional_share, "", dtype=object)
+    raw_hover = np.full_like(directional_share, "", dtype=object)
+    cause_lookup: dict[tuple[int, int], str] = {}
+    for pair, group in matchup_kills_by_cause.groupby(
+        ["kit_id_killer", "kit_id_victim"]
+    ):
+        group = group.sort_values("cause_id")
+        pair_total = int(group["kills"].sum())
+        cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
+            f"{row.cause_name}: {row.kills:,} "
+            f"({row.kills / pair_total:.1%})"
+            for row in group.itertuples(index=False)
+        )
+
+    for killer_id, killer_name in enumerate(KIT_NAMES):
+        for victim_id, victim_name in enumerate(KIT_NAMES):
+            kill_count = int(matchup_matrix.iloc[killer_id, victim_id])
+            if not kill_count:
+                raw_hover[killer_id, victim_id] = (
+                    f"<b>{killer_name} → {victim_name}</b><br>"
+                    "No attributed kills observed"
+                )
+                continue
+            raw_hover[killer_id, victim_id] = (
+                f"<b>{killer_name} → {victim_name}</b><br>"
+                f"Kills: {kill_count:,}<br><br>"
+                "<b>Cause breakdown</b><br>"
+                f"{cause_lookup.get((killer_id, victim_id), 'Unavailable')}"
+            )
 
     for i, row_kit in enumerate(KIT_NAMES):
         for j, column_kit in enumerate(KIT_NAMES):
@@ -804,7 +1117,11 @@ def matchup_figure(
                 f"{column_kit} kills: {matchup_matrix.iloc[j, i]}<br>"
                 f"{row_kit} directional share: "
                 f"{directional_share[i, j]:.1%}<br>"
-                f"Pair kills observed: {pair_totals[i, j]}"
+                f"Pair kills observed: {pair_totals[i, j]}<br><br>"
+                f"<b>{row_kit} → {column_kit} causes</b><br>"
+                f"{cause_lookup.get((i, j), 'No attributed kills')}<br><br>"
+                f"<b>{column_kit} → {row_kit} causes</b><br>"
+                f"{cause_lookup.get((j, i), 'No attributed kills')}"
             )
 
     fig = go.Figure()
@@ -840,10 +1157,8 @@ def matchup_figure(
             text=matchup_matrix.values,
             texttemplate="%{text}",
             textfont=dict(size=10),
-            hovertemplate=(
-                "<b>%{y} → %{x}</b><br>"
-                "Kills: %{z}<extra></extra>"
-            ),
+            customdata=raw_hover,
+            hovertemplate="%{customdata}<extra></extra>",
             colorbar=dict(title="Kills"),
             visible=False,
         )
@@ -1026,6 +1341,10 @@ def report_summary_figure(report: ReportData) -> go.Figure:
             plot_data["kills_per_completed_life"],
             plot_data["total_hours"],
             plot_data["completed_lives"],
+            plot_data["deaths"],
+            plot_data["deaths_per_hour"],
+            plot_data["kill_death_ratio"],
+            plot_data["non_player_death_share"],
         ]
     )
     fig.add_trace(
@@ -1063,6 +1382,10 @@ def report_summary_figure(report: ReportData) -> go.Figure:
                 "Kills per completed life: %{customdata[2]:.2f}<br>"
                 "Time played: %{customdata[3]:,.2f} h<br>"
                 "Completed lives: %{customdata[4]:,.0f}<br>"
+                "Deaths experienced: %{customdata[5]:,.0f}<br>"
+                "Deaths per hour: %{customdata[6]:.2f}<br>"
+                "Kills per death: %{customdata[7]:.2f}<br>"
+                "Non-player death share: %{customdata[8]:.1%}<br>"
                 "Players with ≥1 kill: %{customdata[0]:.0f}"
                 "<extra></extra>"
             ),
