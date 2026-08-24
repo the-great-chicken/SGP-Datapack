@@ -163,6 +163,7 @@ def player_contribution_figure(
     median_per_hour_col: str,
     median_per_life_col: str,
     metric_views: Sequence[AggregateMetricView],
+    player_title: str | None = None,
     aggregate_customdata_cols: Sequence[str] = (),
     player_value_format: str = ",.0f",
 ) -> go.Figure:
@@ -257,6 +258,9 @@ def player_contribution_figure(
 
     players_visible = [False] * aggregate_count + [True] * player_count
     first_mode = metric_views[0]
+    resolved_player_title = player_title or (
+        f"{first_mode.title} — player contribution"
+    )
 
     def reference_shapes(mode: AggregateMetricView) -> list[dict[str, object]]:
         return [
@@ -333,9 +337,7 @@ def player_contribution_figure(
                     {
                         "barmode": "stack",
                         "title": {
-                            "text": (
-                                f"{first_mode.title} — player contribution"
-                            )
+                            "text": resolved_player_title
                         },
                         "yaxis": {
                             "title": {"text": first_mode.yaxis_title},

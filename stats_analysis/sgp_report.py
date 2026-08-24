@@ -248,6 +248,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
         player_value_col="kills",
         median_per_hour_col="median_player_kills_per_hour",
         median_per_life_col="median_player_kills_per_completed_life",
+        player_title="Which players account for each kit's attributed kills?",
         aggregate_customdata_cols=(
             "deaths",
             "deaths_per_hour",
@@ -260,7 +261,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Total kills",
                 value_col="kills",
-                title="Total kills by kit",
+                title="Which kits recorded the most attributed player kills?",
                 yaxis_title="Kills",
                 tickformat=",.0f",
                 hovertemplate=(
@@ -275,7 +276,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Kills / hour",
                 value_col="kills_per_hour",
-                title="Kills per active hour by kit",
+                title="Which kits recorded the highest kill rate per active hour?",
                 yaxis_title="Kills per hour",
                 tickformat=".2f",
                 hovertemplate=(
@@ -289,7 +290,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Kills / life",
                 value_col="kills_per_completed_life",
-                title="Kills per completed life by kit",
+                title="Which kits recorded the most kills per completed life?",
                 yaxis_title="Kills per completed life",
                 tickformat=".2f",
                 reference_lines=tuple(life_references),
@@ -305,7 +306,10 @@ def total_kills_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Kills / PvP death",
                 value_col="kills_per_player_caused_death",
-                title="Kills made per player-caused death by kit",
+                title=(
+                    "Which kits recorded the most kills per "
+                    "player-caused death?"
+                ),
                 yaxis_title="Kills per player-caused death",
                 tickformat=".2f",
                 reference_lines=(
@@ -351,6 +355,9 @@ def damage_figure(report: ReportData) -> go.Figure:
         median_per_life_col=(
             "median_player_damage_dealt_per_completed_life"
         ),
+        player_title=(
+            "Which players account for each kit's attributed damage?"
+        ),
         aggregate_customdata_cols=(
             "damage_received",
             "player_damage_received",
@@ -370,7 +377,7 @@ def damage_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Total dealt",
                 value_col="damage_dealt",
-                title="Attributed player damage dealt by kit",
+                title="Which kits dealt the most attributed player damage?",
                 yaxis_title="Damage dealt (hearts)",
                 tickformat=",.0f",
                 hovertemplate=(
@@ -388,7 +395,10 @@ def damage_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Dealt / hour",
                 value_col="damage_dealt_per_hour",
-                title="Attributed player damage dealt per active hour",
+                title=(
+                    "Which kits dealt the most attributed player damage "
+                    "per active hour?"
+                ),
                 yaxis_title="Damage dealt per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
@@ -404,7 +414,7 @@ def damage_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Received / hour",
                 value_col="damage_received_per_hour",
-                title="Damage received per active hour by kit",
+                title="Which kits received the most damage per active hour?",
                 yaxis_title="Damage received per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
@@ -423,7 +433,9 @@ def damage_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="PvP exchange",
                 value_col="damage_exchange_ratio",
-                title="Player damage dealt per player damage received",
+                title=(
+                    "Which kits dealt more player damage than they received?"
+                ),
                 yaxis_title="Damage exchange ratio",
                 tickformat=".2f",
                 reference_lines=(
@@ -456,7 +468,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
     if causes.empty:
         fig = go.Figure()
         fig.update_layout(
-            title="Kill-cause profiles by kit",
+            title="How do kill causes differ across kits?",
             xaxis_title="Kit",
             yaxis_title="Share",
         )
@@ -489,7 +501,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "data": report.outgoing_kills_by_cause,
             "value_col": "cause_share_of_kit_kills",
             "order": outgoing_order,
-            "title": "How each attacking kit delivers its attributed kills",
+            "title": "How does each kit secure its attributed player kills?",
             "xaxis_title": "Attacking kit",
             "yaxis_title": "Share of attributed kills",
             "tickformat": ".0%",
@@ -516,7 +528,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "data": report.incoming_deaths_by_cause,
             "value_col": "cause_deaths_per_hour",
             "order": incoming_rate_order,
-            "title": "Why each victim kit dies per active hour",
+            "title": "What kills each kit most often per active hour?",
             "xaxis_title": "Victim kit",
             "yaxis_title": "Deaths per active hour",
             "tickformat": ".2f",
@@ -550,7 +562,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "data": report.incoming_deaths_by_cause,
             "value_col": "cause_share_of_kit_deaths",
             "order": incoming_share_order,
-            "title": "Death-cause profile of each victim kit",
+            "title": "What accounts for each kit's observed deaths?",
             "xaxis_title": "Victim kit",
             "yaxis_title": "Share of all deaths while using kit",
             "tickformat": ".0%",
@@ -595,7 +607,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
     if causes.empty:
         fig = go.Figure()
         fig.update_layout(
-            title="Damage-cause profiles by kit",
+            title="How do damage causes differ across kits?",
             xaxis_title="Kit",
             yaxis_title="Damage",
         )
@@ -646,7 +658,10 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "data": report.outgoing_damage_by_cause,
             "value_col": "cause_damage_dealt_per_hour",
             "order": dealt_rate_order,
-            "title": "How each attacking kit deals damage per active hour",
+            "title": (
+                "Which causes drive each kit's attributed damage "
+                "per active hour?"
+            ),
             "xaxis_title": "Attacking kit",
             "yaxis_title": "Attributed damage dealt per hour (hearts)",
             "tickformat": ",.1f",
@@ -668,7 +683,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "data": report.outgoing_damage_by_cause,
             "value_col": "cause_share_of_kit_damage_dealt",
             "order": dealt_share_order,
-            "title": "Cause profile of attributed damage dealt by each kit",
+            "title": "How does each kit deal its attributed player damage?",
             "xaxis_title": "Attacking kit",
             "yaxis_title": "Share of attributed damage dealt",
             "tickformat": ".0%",
@@ -689,7 +704,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "data": report.incoming_damage_by_cause,
             "value_col": "cause_damage_received_per_hour",
             "order": received_rate_order,
-            "title": "Why each target kit receives damage per active hour",
+            "title": "What causes the most damage to each kit per active hour?",
             "xaxis_title": "Target kit",
             "yaxis_title": "Damage received per hour (hearts)",
             "tickformat": ",.1f",
@@ -712,7 +727,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "data": report.incoming_damage_by_cause,
             "value_col": "cause_share_of_kit_damage_received",
             "order": received_share_order,
-            "title": "Cause profile of all damage received by each kit",
+            "title": "What makes up each kit's received damage?",
             "xaxis_title": "Target kit",
             "yaxis_title": "Share of damage received",
             "tickformat": ".0%",
@@ -769,7 +784,7 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
         plot_data,
         x_col="time_share",
         y_col="kills_per_hour",
-        title="Playtime share vs. kill efficiency",
+        title="Are the most-played kits also the most kill-efficient?",
         labels={
             "time_share": "Share of kit playtime",
             "kills_per_hour": "Kills per active hour",
@@ -826,6 +841,9 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
         median_per_life_col=(
             "median_player_ability_uses_per_completed_life"
         ),
+        player_title=(
+            "Which players account for each kit's ability activations?"
+        ),
         aggregate_customdata_cols=(
             "ability_cooldown_seconds",
             "theoretical_ability_uses_per_hour",
@@ -847,7 +865,7 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Total uses",
                 value_col="ability_use",
-                title="Ability uses by kit",
+                title="Which abilities were activated most often?",
                 yaxis_title="Ability uses",
                 tickformat=",.0f",
                 hovertemplate=(
@@ -863,7 +881,10 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Cooldown-normalized",
                 value_col="cooldown_normalized_use_rate",
-                title="Cooldown-normalized ability use by kit",
+                title=(
+                    "Which abilities were activated most often relative "
+                    "to their cooldown?"
+                ),
                 yaxis_title="Share of cooldown-only maximum use rate",
                 tickformat=".1%",
                 hovertemplate=(
@@ -881,7 +902,10 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Success rate",
                 value_col="ability_success_rate",
-                title="Ability success rate by kit",
+                title=(
+                    "Which abilities met their logged success condition "
+                    "most consistently?"
+                ),
                 yaxis_title="Share of uses meeting the ability's success condition",
                 tickformat=".1%",
                 yaxis_range=(0, 1.05),
@@ -900,7 +924,10 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             AggregateMetricView(
                 button_label="Uses / life",
                 value_col="ability_uses_per_completed_life",
-                title="Ability uses per completed life by kit",
+                title=(
+                    "Which abilities were activated most often per "
+                    "completed life?"
+                ),
                 yaxis_title="Ability uses per completed life",
                 tickformat=".2f",
                 hovertemplate=(
@@ -951,7 +978,10 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 button_label="Success rate",
                 x_col="cooldown_normalized_use_rate",
                 y_col="ability_success_rate",
-                title="Ability engagement vs. successful-use rate",
+                title=(
+                    "Which abilities combine high cooldown-adjusted use "
+                    "with high success rates?"
+                ),
                 xaxis_title="Cooldown-normalized activation rate",
                 yaxis_title="Successful uses / uses",
                 x_tickformat=".0%",
@@ -979,7 +1009,10 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 button_label="Players / success",
                 x_col="cooldown_normalized_use_rate",
                 y_col="ability_effect_per_successful_use_players",
-                title="Ability engagement vs. players affected per success",
+                title=(
+                    "How does cooldown-adjusted ability use relate to "
+                    "players affected per successful cast?"
+                ),
                 xaxis_title="Cooldown-normalized activation rate",
                 yaxis_title="Players affected per successful use",
                 x_tickformat=".0%",
@@ -1007,7 +1040,10 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 button_label="Hearts / success",
                 x_col="cooldown_normalized_use_rate",
                 y_col="ability_effect_per_successful_use_hearts",
-                title="Ability engagement vs. health impact per success",
+                title=(
+                    "How does cooldown-adjusted ability use relate to "
+                    "health impact per successful use?"
+                ),
                 xaxis_title="Cooldown-normalized activation rate",
                 yaxis_title="Health impact per successful use (hearts)",
                 x_tickformat=".0%",
@@ -1182,7 +1218,9 @@ def player_reach_figure(report: ReportData) -> go.Figure:
 
     player_layout = {
         "title": {
-            "text": "Proportion of observed players who tried each kit"
+            "text": (
+                "Which kits reached the largest share of observed players?"
+            )
         },
         "barmode": "overlay",
         "height": 520,
@@ -1214,8 +1252,8 @@ def player_reach_figure(report: ReportData) -> go.Figure:
     exposure_layout = {
         "title": {
             "text": (
-                "Share of playtime and completed lives "
-                "— ordered by playtime share"
+                "How is observed playtime and completed-life exposure "
+                "distributed across kits?"
             )
         },
         "barmode": "stack",
@@ -1246,7 +1284,10 @@ def player_reach_figure(report: ReportData) -> go.Figure:
     }
     life_layout = {
         "title": {
-            "text": "Average observed time per completed life by kit"
+            "text": (
+                "Which kits accumulated the most observed playtime per "
+                "completed life?"
+            )
         },
         "barmode": "group",
         "height": 520,
@@ -1333,7 +1374,7 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 top_player_col="top_player_share",
                 top_three_col="top_3_share",
                 players_col="players_with_kills",
-                title="Kill concentration by kit",
+                title="How concentrated is each kit's kill output among players?",
                 yaxis_title="Share of kit kills",
             ),
             ConcentrationView(
@@ -1342,7 +1383,10 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 top_player_col="top_player_damage_share",
                 top_three_col="top_3_damage_share",
                 players_col="players_dealing_damage",
-                title="Attributed damage concentration by kit",
+                title=(
+                    "How concentrated is each kit's attributed damage "
+                    "among players?"
+                ),
                 yaxis_title="Share of attributed damage dealt",
             ),
             ConcentrationView(
@@ -1351,7 +1395,10 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 top_player_col="top_player_received_damage_share",
                 top_three_col="top_3_received_damage_share",
                 players_col="players_receiving_damage",
-                title="Received-damage concentration by kit",
+                title=(
+                    "How concentrated is each kit's received damage "
+                    "among players?"
+                ),
                 yaxis_title="Share of all damage received",
             ),
             ConcentrationView(
@@ -1360,7 +1407,7 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 top_player_col="top_player_time_share",
                 top_three_col="top_3_time_share",
                 players_col="players_contributing_time",
-                title="Playtime concentration by kit",
+                title="How concentrated is each kit's playtime among players?",
                 yaxis_title="Share of kit playtime",
             ),
             ConcentrationView(
@@ -1369,7 +1416,10 @@ def kill_concentration_figure(report: ReportData) -> go.Figure:
                 top_player_col="top_player_completed_life_share",
                 top_three_col="top_3_completed_life_share",
                 players_col="players_contributing_completed_lives",
-                title="Completed-life concentration by kit",
+                title=(
+                    "How concentrated are each kit's completed lives "
+                    "among its players?"
+                ),
                 yaxis_title="Share of completed lives",
             ),
         ),
@@ -1399,7 +1449,7 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
         plot_data,
         x_col="kills",
         y_col="top_player_share",
-        title="Total kills vs. player concentration",
+        title="How does kill volume relate to dependence on the top player?",
         labels={
             "kills": "Total kills",
             "kills_per_hour": "Kills per hour",
@@ -1443,7 +1493,10 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     views = (
         {
             "button_label": "Top killer",
-            "title": "Top killer's kill share vs. their playtime share",
+            "title": (
+                "Does each kit's top killer contribute more kills than "
+                "their playtime share suggests?"
+            ),
             "player_label": "Top killer",
             "counterpart_label": "Top playtime player",
             "prefix": "top_killer",
@@ -1453,7 +1506,8 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
         {
             "button_label": "Top playtime",
             "title": (
-                "Top playtime player's kill share vs. their playtime share"
+                "Does each kit's most-played player contribute kills in "
+                "proportion to their playtime?"
             ),
             "player_label": "Top playtime player",
             "counterpart_label": "Top killer",
@@ -1917,8 +1971,8 @@ def matchup_figure(
                 {
                     "title": {
                         "text": (
-                            "Directional share of observed kills "
-                            "between kit pairs"
+                            "Which kit leads each observed head-to-head "
+                            "kill exchange?"
                         )
                     },
                     "xaxis": {"title": {"text": "Other kit"}},
@@ -1933,7 +1987,10 @@ def matchup_figure(
                 {"visible": trace_visibility(1)},
                 {
                     "title": {
-                        "text": "Kills by killer kit and victim kit"
+                        "text": (
+                            "How many attributed kills did each kit record "
+                            "against every other kit?"
+                        )
                     },
                     "xaxis": {"title": {"text": "Victim kit"}},
                     "yaxis": {"title": {"text": "Killer kit"}},
@@ -1952,8 +2009,8 @@ def matchup_figure(
                         {
                             "title": {
                                 "text": (
-                                    "Directional share of attributed damage "
-                                    "between kit pairs"
+                                    "Which kit leads each observed "
+                                    "head-to-head damage exchange?"
                                 )
                             },
                             "xaxis": {
@@ -1973,8 +2030,8 @@ def matchup_figure(
                         {
                             "title": {
                                 "text": (
-                                    "Attributed damage by source kit and "
-                                    "target kit"
+                                    "How much attributed damage did each kit "
+                                    "deal to every other kit?"
                                 )
                             },
                             "xaxis": {
@@ -1990,7 +2047,9 @@ def matchup_figure(
         )
 
     fig.update_layout(
-        title="Directional share of observed kills between kit pairs",
+        title=(
+            "Which kit leads each observed head-to-head kill exchange?"
+        ),
         xaxis_title="Other kit",
         yaxis_title="Row kit",
         margin=dict(l=70, r=40, t=125, b=70),
@@ -2039,7 +2098,10 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                 button_label="Totals",
                 x_col="ability_use",
                 y_col="kills",
-                title="Kills vs. ability uses by kit",
+                title=(
+                    "Are kits with more ability activations also recording "
+                    "more kills?"
+                ),
                 xaxis_title="Ability uses",
                 yaxis_title="Kills",
                 x_tickformat=",.0f",
@@ -2062,7 +2124,10 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                 button_label="Cooldown-normalized",
                 x_col="cooldown_normalized_use_rate",
                 y_col="kills_per_hour",
-                title="Kill rate vs. cooldown-normalized ability use",
+                title=(
+                    "Is cooldown-adjusted ability engagement associated "
+                    "with kill rate?"
+                ),
                 xaxis_title="Cooldown-normalized ability-use rate",
                 yaxis_title="Kills per hour",
                 x_tickformat=".0%",
@@ -2088,7 +2153,7 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                 button_label="Success rate",
                 x_col="ability_success_rate",
                 y_col="kills_per_hour",
-                title="Kill rate vs. ability successful-use rate",
+                title="Is ability success rate associated with kill rate?",
                 xaxis_title="Successful uses / uses",
                 yaxis_title="Kills per hour",
                 x_tickformat=".0%",
@@ -2114,7 +2179,10 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                 button_label="Per life",
                 x_col="ability_uses_per_completed_life",
                 y_col="kills_per_completed_life",
-                title="Kills vs. ability uses per completed life",
+                title=(
+                    "Are more ability activations per life associated with "
+                    "more kills per life?"
+                ),
                 xaxis_title="Ability uses per completed life",
                 yaxis_title="Kills per completed life",
                 x_tickformat=".2f",
@@ -2522,7 +2590,7 @@ def report_summary_figure(report: ReportData) -> go.Figure:
         fig.update_yaxes(showticklabels=False, row=1, col=column)
 
     fig.update_layout(
-        title="Kit profile across the main report metrics",
+        title="How do kits compare across the report's main balance signals?",
         height=max(540, 34 * len(plot_data) + 175),
         barmode="overlay",
         hovermode="closest",
