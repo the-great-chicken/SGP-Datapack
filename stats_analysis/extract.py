@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -10,9 +12,11 @@ import pandas as pd
 
 STATS_PATH = ("data", "contents", "stats")
 KITS_PATH = (*STATS_PATH, "kits_dict")
-KIT_SETTINGS_PATH = (*STATS_PATH, "kit_settings")
+SCHEMA_VERSION_PATH = (*STATS_PATH, "schema_version")
+ABILITY_METADATA_PATH = (*STATS_PATH, "ability_metadata")
 DAMAGE_CAUSE_NAMES_PATH = (*STATS_PATH, "damage_cause_names")
-DAMAGE_TENTHS_PER_HEALTH_POINT = 10
+SUPPORTED_SCHEMA_VERSION = 2
+DAMAGE_TENTHS_PER_HEART = 10
 
 
 def get_nbt_path(nbt_file: nbtlib.File, path: tuple[str, ...]) -> Any:
@@ -38,9 +42,22 @@ def get_kits_dict(nbt_file: nbtlib.File) -> Any:
     return get_nbt_path(nbt_file, KITS_PATH)
 
 
-def get_kit_settings(nbt_file: nbtlib.File) -> Any:
-    """Return the kit settings snapshot from command_storage.dat."""
-    return get_nbt_path(nbt_file, KIT_SETTINGS_PATH)
+def get_schema_version(nbt_file: nbtlib.File) -> int:
+    """Return and validate the statistics schema version."""
+    schema_version = int(get_nbt_path(nbt_file, SCHEMA_VERSION_PATH))
+
+    if schema_version != SUPPORTED_SCHEMA_VERSION:
+        raise RuntimeError(
+            f"Unsupported stats schema version {schema_version}; "
+            f"this extractor supports version {SUPPORTED_SCHEMA_VERSION}."
+        )
+
+    return schema_version
+
+
+def get_ability_metadata(nbt_file: nbtlib.File) -> Any:
+    """Return the authoritative ability and metric metadata."""
+    return get_nbt_path(nbt_file, ABILITY_METADATA_PATH)
 
 
 def get_damage_cause_names(nbt_file: nbtlib.File) -> Any:
@@ -96,23 +113,8 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
     )
 
 
-def extract_damage_received(kits_dict: Any) -> pd.DataFrame:
-    """
-    Extract cumulative damage received statistics.
-
-    Columns:
-        id_target
-        kit_id_target
-        id_source
-        kit_id_source
-        cause_id
-        damage_received
-
-    The stored values are integer tenths of a health point. They are converted
-    to health points here, where 2 health points equal one full heart.
-    """
-    rows: list[dict[str, Any]] = []
-
+def iter_damage_received(kits_dict: Any) -> Iterator[dict[str, Any]]:
+    """Yield raw cumulative damage rows, retaining tenths-of-a-heart values."""
     for id_target, player_data in kits_dict.items():
         for kit_id_target, kit_data in player_data.items():
             damage_data = kit_data.get("damage_received", {})
@@ -140,19 +142,46 @@ def extract_damage_received(kits_dict: Any) -> pd.DataFrame:
                         )
 
                     for cause_id, damage_tenths in causes_data.items():
-                        rows.append(
-                            {
-                                "id_target": str(id_target),
-                                "kit_id_target": int(kit_id_target),
-                                "id_source": str(id_source),
-                                "kit_id_source": int(kit_id_source),
-                                "cause_id": int(cause_id),
-                                "damage_received": (
-                                    int(damage_tenths)
-                                    / DAMAGE_TENTHS_PER_HEALTH_POINT
-                                ),
-                            }
-                        )
+                        yield {
+                            "id_target": str(id_target),
+                            "kit_id_target": int(kit_id_target),
+                            "id_source": str(id_source),
+                            "kit_id_source": int(kit_id_source),
+                            "cause_id": int(cause_id),
+                            "damage_tenths": int(damage_tenths),
+                        }
+
+
+def extract_damage_received(
+    damage_rows: list[dict[str, Any]],
+) -> pd.DataFrame:
+    """
+    Extract cumulative damage received statistics.
+
+    Columns:
+        id_target
+        kit_id_target
+        id_source
+        kit_id_source
+        cause_id
+        damage_received
+
+    The stored values are integer tenths of a heart. They are converted to
+    hearts here.
+    """
+    rows = [
+        {
+            "id_target": row["id_target"],
+            "kit_id_target": row["kit_id_target"],
+            "id_source": row["id_source"],
+            "kit_id_source": row["kit_id_source"],
+            "cause_id": row["cause_id"],
+            "damage_received": (
+                row["damage_tenths"] / DAMAGE_TENTHS_PER_HEART
+            ),
+        }
+        for row in damage_rows
+    ]
 
     return pd.DataFrame(
         rows,
@@ -167,27 +196,207 @@ def extract_damage_received(kits_dict: Any) -> pd.DataFrame:
     )
 
 
-def extract_ability_usage(kits_dict: Any) -> pd.DataFrame:
+def iter_metric_metadata(
+    ability_metadata: Any,
+) -> Iterator[tuple[int, str, str, Any, Any]]:
+    """Yield kit, ability, metric, ability metadata, and metric metadata."""
+    if not hasattr(ability_metadata, "items"):
+        raise ValueError("Expected ability_metadata to be a compound")
+
+    for kit_id, kit_metadata in ability_metadata.items():
+        if not hasattr(kit_metadata, "items"):
+            raise ValueError(f"Expected abilities at ability_metadata.{kit_id}")
+
+        for ability_path, ability_data in kit_metadata.items():
+            if not hasattr(ability_data, "items"):
+                raise ValueError(
+                    "Expected an ability compound at "
+                    f"ability_metadata.{kit_id}.{ability_path}"
+                )
+
+            metrics = ability_data.get("metrics")
+            if not hasattr(metrics, "items"):
+                raise ValueError(
+                    "Expected metric definitions at "
+                    f"ability_metadata.{kit_id}.{ability_path}.metrics"
+                )
+
+            for metric_id, metric_data in metrics.items():
+                if not hasattr(metric_data, "items"):
+                    raise ValueError(
+                        "Expected a metric compound at "
+                        f"ability_metadata.{kit_id}.{ability_path}.metrics."
+                        f"{metric_id}"
+                    )
+
+                yield (
+                    int(kit_id),
+                    str(ability_path),
+                    str(metric_id),
+                    ability_data,
+                    metric_data,
+                )
+
+
+def metric_display_scale(metric_data: Any, metric_path: str) -> float:
+    """Return a metric's raw-to-display multiplier."""
+    if "display_scale" not in metric_data:
+        raise ValueError(f"Missing display_scale at {metric_path}")
+
+    return float(metric_data["display_scale"])
+
+
+def extract_abilities(
+    kits_dict: Any,
+    ability_metadata: Any,
+    damage_rows: list[dict[str, Any]],
+) -> pd.DataFrame:
     """
-    Extract ability usage statistics.
+    Extract stored and metadata-defined derived ability metrics.
 
     Columns:
         id
         kit_id
-        ability_use
+        ability_path
+        metric_id
+        value
+
+    ``value`` is multiplied by the metric's ``display_scale`` and is therefore
+    expressed in its ``display_unit`` (for example uses, seconds, blocks, or
+    hearts). Missing lazy fields remain absent rather than becoming zero rows.
     """
     rows: list[dict[str, Any]] = []
+    stored_metrics: dict[tuple[int, str, str], tuple[str, float]] = {}
+    derived_metrics: list[tuple[int, str, str, Any, float]] = []
+
+    for (
+        kit_id,
+        ability_path,
+        metric_id,
+        _ability_data,
+        metric_data,
+    ) in iter_metric_metadata(ability_metadata):
+        metric_path = (
+            f"ability_metadata.{kit_id}.{ability_path}.metrics.{metric_id}"
+        )
+        source = metric_data.get("source")
+
+        if not hasattr(source, "items") or "type" not in source:
+            raise ValueError(f"Missing metric source at {metric_path}.source")
+
+        source_type = str(source["type"])
+        display_scale = metric_display_scale(metric_data, metric_path)
+
+        if source_type == "ability_field":
+            if "field" not in source:
+                raise ValueError(f"Missing field at {metric_path}.source")
+
+            field = str(source["field"])
+            lookup_key = (kit_id, ability_path, field)
+
+            if lookup_key in stored_metrics:
+                other_metric_id, _ = stored_metrics[lookup_key]
+                raise ValueError(
+                    f"Metrics {other_metric_id!r} and {metric_id!r} both "
+                    f"reference {kit_id}.{ability_path}.{field}"
+                )
+
+            stored_metrics[lookup_key] = (metric_id, display_scale)
+
+        elif source_type == "damage_received":
+            derived_metrics.append(
+                (kit_id, ability_path, metric_id, source, display_scale)
+            )
+
+        else:
+            raise ValueError(
+                f"Unsupported metric source type {source_type!r} at "
+                f"{metric_path}.source.type"
+            )
 
     for player_id, player_data in kits_dict.items():
         for kit_id, kit_data in player_data.items():
-            if "ability_use" not in kit_data:
+            abilities_data = kit_data.get("abilities", {})
+
+            if not hasattr(abilities_data, "items"):
+                raise ValueError(
+                    f"Expected abilities at kits_dict.{player_id}.{kit_id}.abilities"
+                )
+
+            for ability_path, metric_values in abilities_data.items():
+                if not hasattr(metric_values, "items"):
+                    raise ValueError(
+                        "Expected ability metrics at "
+                        f"kits_dict.{player_id}.{kit_id}.abilities.{ability_path}"
+                    )
+
+                for field, stored_value in metric_values.items():
+                    lookup_key = (int(kit_id), str(ability_path), str(field))
+
+                    if lookup_key not in stored_metrics:
+                        raise ValueError(
+                            "No ability_field metadata describes "
+                            f"kits_dict.{player_id}.{kit_id}.abilities."
+                            f"{ability_path}.{field}"
+                        )
+
+                    metric_id, display_scale = stored_metrics[lookup_key]
+                    rows.append(
+                        {
+                            "id": str(player_id),
+                            "kit_id": int(kit_id),
+                            "ability_path": str(ability_path),
+                            "metric_id": metric_id,
+                            "value": int(stored_value) * display_scale,
+                        }
+                    )
+
+    for (
+        kit_id,
+        ability_path,
+        metric_id,
+        source,
+        display_scale,
+    ) in derived_metrics:
+        metric_path = (
+            f"ability_metadata.{kit_id}.{ability_path}.metrics.{metric_id}.source"
+        )
+
+        if "source_kit_id" not in source or "cause_ids" not in source:
+            raise ValueError(
+                f"Missing source_kit_id or cause_ids at {metric_path}"
+            )
+
+        source_kit_id = int(source["source_kit_id"])
+        cause_ids = {int(cause_id) for cause_id in source["cause_ids"]}
+        exclude_self = bool(int(source.get("exclude_self", 0)))
+        totals_by_source: dict[str, int] = {}
+
+        for damage_row in damage_rows:
+            if damage_row["kit_id_source"] != source_kit_id:
+                continue
+            if damage_row["cause_id"] not in cause_ids:
+                continue
+            if (
+                exclude_self
+                and damage_row["id_source"] == damage_row["id_target"]
+            ):
                 continue
 
+            source_id = damage_row["id_source"]
+            totals_by_source[source_id] = (
+                totals_by_source.get(source_id, 0)
+                + damage_row["damage_tenths"]
+            )
+
+        for source_id, stored_value in totals_by_source.items():
             rows.append(
                 {
-                    "id": str(player_id),
-                    "kit_id": int(kit_id),
-                    "ability_use": int(kit_data["ability_use"]),
+                    "id": source_id,
+                    "kit_id": kit_id,
+                    "ability_path": ability_path,
+                    "metric_id": metric_id,
+                    "value": stored_value * display_scale,
                 }
             )
 
@@ -196,7 +405,9 @@ def extract_ability_usage(kits_dict: Any) -> pd.DataFrame:
         columns=[
             "id",
             "kit_id",
-            "ability_use",
+            "ability_path",
+            "metric_id",
+            "value",
         ],
     )
 
@@ -242,40 +453,140 @@ def extract_picks(kits_dict: Any) -> pd.DataFrame:
     )
 
 
-def extract_kit_settings(kit_settings: Any) -> pd.DataFrame:
+def nbt_to_python(value: Any) -> Any:
+    """Recursively convert an NBT value into JSON-compatible Python values."""
+    unpack = getattr(value, "unpack", None)
+    return unpack() if callable(unpack) else value
+
+
+def extract_ability_metadata(ability_metadata: Any) -> pd.DataFrame:
     """
-    Extract the kit settings snapshot.
+    Extract one metadata row per ability metric.
 
     Columns:
         kit_id
-        ability_cooldown
-
-    Ability cooldowns are expressed in ticks.
+        ability_path
+        metric_id
+        metric_name
+        description
+        cooldown_ticks
+        duration_ticks
+        settings_json
+        stored_unit
+        display_unit
+        display_scale
+        source_type
+        source_field
+        source_kit_id
+        source_cause_ids
+        source_exclude_self
     """
     rows: list[dict[str, Any]] = []
 
-    for kit_id, settings in kit_settings.items():
-        if "ability_cooldown" not in settings:
-            continue
+    for (
+        kit_id,
+        ability_path,
+        metric_id,
+        ability_data,
+        metric_data,
+    ) in iter_metric_metadata(ability_metadata):
+        metric_path = (
+            f"ability_metadata.{kit_id}.{ability_path}.metrics.{metric_id}"
+        )
+        source = metric_data.get("source")
 
+        if not hasattr(source, "items") or "type" not in source:
+            raise ValueError(f"Missing metric source at {metric_path}.source")
+
+        settings = ability_data.get("settings")
         rows.append(
             {
-                "kit_id": int(kit_id),
-                "ability_cooldown": int(settings["ability_cooldown"]),
+                "kit_id": kit_id,
+                "ability_path": ability_path,
+                "metric_id": metric_id,
+                "metric_name": str(metric_data.get("name", metric_id)),
+                "description": str(metric_data.get("description", "")),
+                "cooldown_ticks": (
+                    int(ability_data["cooldown"])
+                    if "cooldown" in ability_data
+                    else None
+                ),
+                "duration_ticks": (
+                    int(ability_data["duration"])
+                    if "duration" in ability_data
+                    else None
+                ),
+                "settings_json": (
+                    json.dumps(
+                        nbt_to_python(settings),
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    if settings is not None
+                    else None
+                ),
+                "stored_unit": str(metric_data.get("stored_unit", "")),
+                "display_unit": str(metric_data.get("display_unit", "")),
+                "display_scale": metric_display_scale(
+                    metric_data,
+                    metric_path,
+                ),
+                "source_type": str(source["type"]),
+                "source_field": (
+                    str(source["field"]) if "field" in source else None
+                ),
+                "source_kit_id": (
+                    int(source["source_kit_id"])
+                    if "source_kit_id" in source
+                    else None
+                ),
+                "source_cause_ids": (
+                    [int(cause_id) for cause_id in source["cause_ids"]]
+                    if "cause_ids" in source
+                    else None
+                ),
+                "source_exclude_self": (
+                    bool(int(source["exclude_self"]))
+                    if "exclude_self" in source
+                    else None
+                ),
             }
         )
 
-    return (
-        pd.DataFrame(
-            rows,
-            columns=[
-                "kit_id",
-                "ability_cooldown",
-            ],
-        )
-        .sort_values("kit_id")
-        .reset_index(drop=True)
+    result = pd.DataFrame(
+        rows,
+        columns=[
+            "kit_id",
+            "ability_path",
+            "metric_id",
+            "metric_name",
+            "description",
+            "cooldown_ticks",
+            "duration_ticks",
+            "settings_json",
+            "stored_unit",
+            "display_unit",
+            "display_scale",
+            "source_type",
+            "source_field",
+            "source_kit_id",
+            "source_cause_ids",
+            "source_exclude_self",
+        ],
     )
+
+    if not result.empty:
+        result["cooldown_ticks"] = result["cooldown_ticks"].astype("Int64")
+        result["duration_ticks"] = result["duration_ticks"].astype("Int64")
+        result["source_kit_id"] = result["source_kit_id"].astype("Int64")
+        result["source_exclude_self"] = result[
+            "source_exclude_self"
+        ].astype("boolean")
+
+    return result.sort_values(
+        ["kit_id", "ability_path", "metric_id"]
+    ).reset_index(drop=True)
 
 
 def extract_damage_causes(damage_cause_names: Any) -> pd.DataFrame:
@@ -312,15 +623,21 @@ def extract(input_path: Path, output_dir: Path) -> None:
     print(f"Reading {input_path}")
 
     nbt_file = nbtlib.load(input_path)
+    schema_version = get_schema_version(nbt_file)
     kits_dict = get_kits_dict(nbt_file)
-    kit_settings = get_kit_settings(nbt_file)
+    ability_metadata = get_ability_metadata(nbt_file)
     damage_cause_names = get_damage_cause_names(nbt_file)
+    damage_rows = list(iter_damage_received(kits_dict))
 
     kills = extract_kills(kits_dict)
-    damage_received = extract_damage_received(kits_dict)
-    abilities = extract_ability_usage(kits_dict)
+    damage_received = extract_damage_received(damage_rows)
+    abilities = extract_abilities(
+        kits_dict,
+        ability_metadata,
+        damage_rows,
+    )
     picks = extract_picks(kits_dict)
-    settings = extract_kit_settings(kit_settings)
+    extracted_ability_metadata = extract_ability_metadata(ability_metadata)
     damage_causes = extract_damage_causes(damage_cause_names)
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -329,23 +646,27 @@ def extract(input_path: Path, output_dir: Path) -> None:
     damage_received_path = output_dir / "damage_received.parquet"
     abilities_path = output_dir / "abilities.parquet"
     picks_path = output_dir / "picks.parquet"
-    settings_path = output_dir / "kit_settings.parquet"
+    ability_metadata_path = output_dir / "ability_metadata.parquet"
     damage_causes_path = output_dir / "damage_causes.parquet"
 
     kills.to_parquet(kills_path, index=False)
     damage_received.to_parquet(damage_received_path, index=False)
     abilities.to_parquet(abilities_path, index=False)
     picks.to_parquet(picks_path, index=False)
-    settings.to_parquet(settings_path, index=False)
+    extracted_ability_metadata.to_parquet(ability_metadata_path, index=False)
     damage_causes.to_parquet(damage_causes_path, index=False)
 
+    print(f"Schema:     {schema_version}")
     print(f"Kills:      {len(kills):,} rows -> {kills_path}")
     print(
         f"Damage:     {len(damage_received):,} rows -> {damage_received_path}"
     )
     print(f"Abilities:  {len(abilities):,} rows -> {abilities_path}")
     print(f"Picks:      {len(picks):,} rows -> {picks_path}")
-    print(f"Settings:   {len(settings):,} rows -> {settings_path}")
+    print(
+        "Ability metadata: "
+        f"{len(extracted_ability_metadata):,} rows -> {ability_metadata_path}"
+    )
     print(f"Causes:     {len(damage_causes):,} rows -> {damage_causes_path}")
 
 

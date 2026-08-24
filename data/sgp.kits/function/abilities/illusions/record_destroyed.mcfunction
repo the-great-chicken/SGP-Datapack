@@ -1,6 +1,7 @@
 #> sgp.kits:abilities/illusions/record_destroyed
 
-function sgp.kits:stats_collector/ability/mark_success {kit_id:8,ability_path:"illusions"}
+execute unless score #nbr_illusions_left sgp.dummy matches 3.. \
+    run function sgp.kits:stats_collector/ability/mark_success {kit_id:8,ability_path:"illusions"}
 
 execute if score #nbr_illusions_left sgp.dummy matches 2 \
     run function sgp.kits:stats_collector/ability/increment {kit_id:8,ability_path:"illusions",metric:"destroyed_decoys",amount:1}

@@ -549,6 +549,14 @@ def _quadrant_modes_figure(
     plot_data = data.sort_values("kit_id").reset_index(drop=True)
     customdata = plot_data[list(customdata_cols)].to_numpy()
     first_mode = modes[0]
+    mode_visibility = [
+        plot_data[[mode.x_col, mode.y_col]]
+        .replace([np.inf, -np.inf], np.nan)
+        .notna()
+        .all(axis=1)
+        .tolist()
+        for mode in modes
+    ]
     fig = go.Figure()
     for row_index, row in plot_data.iterrows():
         kit_name = row["kit_name"]
@@ -566,6 +574,7 @@ def _quadrant_modes_figure(
                 ),
                 customdata=[customdata[row_index]],
                 hovertemplate=first_mode.hovertemplate,
+                visible=mode_visibility[0][row_index],
             )
         )
 
@@ -603,6 +612,7 @@ def _quadrant_modes_figure(
                                 "hovertemplate": [
                                     mode.hovertemplate
                                 ] * len(plot_data),
+                                "visible": visibility,
                             },
                             {
                                 "title": {"text": mode.title},
@@ -613,7 +623,11 @@ def _quadrant_modes_figure(
                             },
                         ],
                     }
-                    for mode, layout in zip(modes, layouts)
+                    for mode, layout, visibility in zip(
+                        modes,
+                        layouts,
+                        mode_visibility,
+                    )
                 ],
             }
         ],

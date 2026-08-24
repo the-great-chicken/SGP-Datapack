@@ -65,6 +65,29 @@ def _cause_color_map(report: ReportData) -> dict[int, str]:
     }
 
 
+def _ability_effect_per_success_text(data: pd.DataFrame) -> pd.Series:
+    """Format heterogeneous ability effects without exposing NaN in hover."""
+
+    values: list[str] = []
+    for row in data.itertuples(index=False):
+        metric_name = getattr(row, "ability_effect_metric_name")
+        successful_uses = getattr(row, "successful_uses")
+        effect_value = getattr(row, "ability_effect_per_successful_use")
+        effect_unit = getattr(row, "ability_effect_unit")
+        if pd.isna(metric_name):
+            values.append("Not logged")
+        elif pd.isna(successful_uses) or successful_uses <= 0:
+            values.append(f"{metric_name}: no successful uses")
+        elif pd.isna(effect_value):
+            values.append(f"{metric_name}: unavailable")
+        else:
+            values.append(
+                f"{metric_name}: {effect_value:,.2f} "
+                f"{effect_unit} / successful use"
+            )
+    return pd.Series(values, index=data.index, dtype=object)
+
+
 def _stacked_cause_modes_figure(
     *,
     causes: pd.DataFrame,
@@ -348,17 +371,17 @@ def damage_figure(report: ReportData) -> go.Figure:
                 button_label="Total dealt",
                 value_col="damage_dealt",
                 title="Attributed player damage dealt by kit",
-                yaxis_title="Damage dealt (health points)",
+                yaxis_title="Damage dealt (hearts)",
                 tickformat=",.0f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Damage dealt: %{y:,.1f} HP<br>"
-                    "Damage received: %{customdata[6]:,.1f} HP<br>"
-                    "Player damage received: %{customdata[7]:,.1f} HP<br>"
+                    "<b>%{x}</b><br>Damage dealt: %{y:,.1f} hearts<br>"
+                    "Damage received: %{customdata[6]:,.1f} hearts<br>"
+                    "Player damage received: %{customdata[7]:,.1f} hearts<br>"
                     "Time played: %{customdata[1]:,.2f} h<br>"
                     "Completed lives: %{customdata[2]:,.0f}<br>"
                     "Players with playtime: %{customdata[3]:,.0f}<br>"
                     "Attributed kills: %{customdata[14]:,.0f}<br>"
-                    "Damage dealt per kill: %{customdata[13]:,.1f} HP"
+                    "Damage dealt per kill: %{customdata[13]:,.1f} hearts"
                     "<extra></extra>"
                 ),
             ),
@@ -366,13 +389,13 @@ def damage_figure(report: ReportData) -> go.Figure:
                 button_label="Dealt / hour",
                 value_col="damage_dealt_per_hour",
                 title="Attributed player damage dealt per active hour",
-                yaxis_title="Damage dealt per hour",
+                yaxis_title="Damage dealt per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Damage dealt per hour: %{y:,.1f}<br>"
-                    "Median player rate: %{customdata[4]:,.1f}<br>"
-                    "Damage received per hour: %{customdata[9]:,.1f}<br>"
-                    "Total damage dealt: %{customdata[0]:,.1f} HP<br>"
+                    "<b>%{x}</b><br>Damage dealt per hour: %{y:,.1f} hearts<br>"
+                    "Median player rate: %{customdata[4]:,.1f} hearts / h<br>"
+                    "Damage received per hour: %{customdata[9]:,.1f} hearts<br>"
+                    "Total damage dealt: %{customdata[0]:,.1f} hearts<br>"
                     "Time played: %{customdata[1]:,.2f} h<br>"
                     "Attributed kills: %{customdata[14]:,.0f}"
                     "<extra></extra>"
@@ -382,15 +405,15 @@ def damage_figure(report: ReportData) -> go.Figure:
                 button_label="Received / hour",
                 value_col="damage_received_per_hour",
                 title="Damage received per active hour by kit",
-                yaxis_title="Damage received per hour",
+                yaxis_title="Damage received per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
                     "<b>%{x}</b><br>All damage received per hour: "
-                    "%{y:,.1f}<br>Player damage received per hour: "
-                    "%{customdata[10]:,.1f}<br>Non-player damage per hour: "
-                    "%{customdata[11]:,.1f}<br>Non-player damage share: "
+                    "%{y:,.1f} hearts<br>Player damage received per hour: "
+                    "%{customdata[10]:,.1f} hearts<br>Non-player damage per hour: "
+                    "%{customdata[11]:,.1f} hearts<br>Non-player damage share: "
                     "%{customdata[12]:.1%}<br>Total damage received: "
-                    "%{customdata[6]:,.1f} HP<br>Time played: "
+                    "%{customdata[6]:,.1f} hearts<br>Time played: "
                     "%{customdata[1]:,.2f} h<br>Targets taking damage: "
                     "%{customdata[15]:,.0f}<br>Top target's share: "
                     "%{customdata[16]:.1%}<br>Top 3 targets' share: "
@@ -414,10 +437,10 @@ def damage_figure(report: ReportData) -> go.Figure:
                 yaxis_range=(0, exchange_axis_max),
                 hovertemplate=(
                     "<b>%{x}</b><br>Damage exchange ratio: %{y:.2f}<br>"
-                    "Player damage dealt: %{customdata[0]:,.1f} HP<br>"
-                    "Player damage received: %{customdata[7]:,.1f} HP<br>"
-                    "All damage received: %{customdata[6]:,.1f} HP<br>"
-                    "Non-player damage: %{customdata[8]:,.1f} HP "
+                    "Player damage dealt: %{customdata[0]:,.1f} hearts<br>"
+                    "Player damage received: %{customdata[7]:,.1f} hearts<br>"
+                    "All damage received: %{customdata[6]:,.1f} hearts<br>"
+                    "Non-player damage: %{customdata[8]:,.1f} hearts "
                     "(%{customdata[12]:.1%})<br>Attributed kills: "
                     "%{customdata[14]:,.0f}<extra></extra>"
                 ),
@@ -625,17 +648,17 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "order": dealt_rate_order,
             "title": "How each attacking kit deals damage per active hour",
             "xaxis_title": "Attacking kit",
-            "yaxis_title": "Attributed damage dealt per hour",
+            "yaxis_title": "Attributed damage dealt per hour (hearts)",
             "tickformat": ",.1f",
             "range": None,
             "custom_cols": outgoing_custom_cols,
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
-                "Cause damage per hour: %{y:,.1f}<br>"
-                "Cause damage: %{customdata[0]:,.1f} HP<br>"
+                "Cause damage per hour: %{y:,.1f} hearts<br>"
+                "Cause damage: %{customdata[0]:,.1f} hearts<br>"
                 "Share of kit damage: %{customdata[1]:.1%}<br>"
-                "All kit damage per hour: %{customdata[4]:,.1f}<br>"
-                "All attributed kit damage: %{customdata[3]:,.1f} HP<br>"
+                "All kit damage per hour: %{customdata[4]:,.1f} hearts<br>"
+                "All attributed kit damage: %{customdata[3]:,.1f} hearts<br>"
                 "Kit playtime: %{customdata[5]:,.2f} h"
                 "<extra></extra>"
             ),
@@ -654,10 +677,10 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of kit damage: %{y:.1%}<br>"
-                "Cause damage: %{customdata[0]:,.1f} HP<br>"
-                "Cause damage per hour: %{customdata[2]:,.1f}<br>"
-                "All attributed kit damage: %{customdata[3]:,.1f} HP<br>"
-                "All kit damage per hour: %{customdata[4]:,.1f}"
+                "Cause damage: %{customdata[0]:,.1f} hearts<br>"
+                "Cause damage per hour: %{customdata[2]:,.1f} hearts<br>"
+                "All attributed kit damage: %{customdata[3]:,.1f} hearts<br>"
+                "All kit damage per hour: %{customdata[4]:,.1f} hearts"
                 "<extra></extra>"
             ),
         },
@@ -668,18 +691,18 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "order": received_rate_order,
             "title": "Why each target kit receives damage per active hour",
             "xaxis_title": "Target kit",
-            "yaxis_title": "Damage received per hour",
+            "yaxis_title": "Damage received per hour (hearts)",
             "tickformat": ",.1f",
             "range": None,
             "custom_cols": incoming_custom_cols,
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
-                "Cause damage per hour: %{y:,.1f}<br>"
-                "Cause damage received: %{customdata[0]:,.1f} HP<br>"
+                "Cause damage per hour: %{y:,.1f} hearts<br>"
+                "Cause damage received: %{customdata[0]:,.1f} hearts<br>"
                 "Share of received damage: %{customdata[1]:.1%}<br>"
-                "All received damage per hour: %{customdata[4]:,.1f}<br>"
-                "Player damage received: %{customdata[5]:,.1f} HP<br>"
-                "Non-player damage: %{customdata[6]:,.1f} HP "
+                "All received damage per hour: %{customdata[4]:,.1f} hearts<br>"
+                "Player damage received: %{customdata[5]:,.1f} hearts<br>"
+                "Non-player damage: %{customdata[6]:,.1f} hearts "
                 "(%{customdata[7]:.1%})<br>Kit playtime: "
                 "%{customdata[8]:,.2f} h<extra></extra>"
             ),
@@ -698,10 +721,10 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of received damage: %{y:.1%}<br>"
-                "Cause damage received: %{customdata[0]:,.1f} HP<br>"
-                "Cause damage per hour: %{customdata[2]:,.1f}<br>"
-                "All damage received: %{customdata[3]:,.1f} HP<br>"
-                "All received damage per hour: %{customdata[4]:,.1f}<br>"
+                "Cause damage received: %{customdata[0]:,.1f} hearts<br>"
+                "Cause damage per hour: %{customdata[2]:,.1f} hearts<br>"
+                "All damage received: %{customdata[3]:,.1f} hearts<br>"
+                "All received damage per hour: %{customdata[4]:,.1f} hearts<br>"
                 "Non-player damage share: %{customdata[7]:.1%}"
                 "<extra></extra>"
             ),
@@ -787,11 +810,15 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
 
 
 def ability_uses_figure(report: ReportData) -> go.Figure:
-    """Build volume, cooldown-normalized, and per-life ability-use modes."""
+    """Build activation, player-contribution, and success-rate modes."""
 
+    totals = report.kit_metrics.copy()
+    totals["ability_effect_per_success_text"] = (
+        _ability_effect_per_success_text(totals)
+    )
     return player_contribution_figure(
         all_kits=report.all_kits,
-        totals=report.kit_metrics,
+        totals=totals,
         by_player=report.player_kit_abilities,
         player_col="id",
         player_value_col="ability_use",
@@ -805,6 +832,16 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             "ability_uses_per_hour",
             "cooldown_normalized_use_rate",
             "median_player_cooldown_normalized_use_rate",
+            "successful_uses",
+            "ability_success_rate",
+            "median_player_ability_success_rate",
+            "ability_effect_value",
+            "ability_effect_metric_name",
+            "ability_effect_per_successful_use",
+            "ability_effect_unit",
+            "ability_effect_description",
+            "ability_name",
+            "ability_effect_per_success_text",
         ),
         metric_views=(
             AggregateMetricView(
@@ -842,6 +879,25 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                 ),
             ),
             AggregateMetricView(
+                button_label="Success rate",
+                value_col="ability_success_rate",
+                title="Ability success rate by kit",
+                yaxis_title="Share of uses meeting the ability's success condition",
+                tickformat=".1%",
+                yaxis_range=(0, 1.05),
+                hovertemplate=(
+                    "<b>%{x} — %{customdata[19]}</b><br>Success rate: "
+                    "%{y:.1%}<br>Median eligible player: "
+                    "%{customdata[13]:.1%}<br>Successful uses: "
+                    "%{customdata[11]:,.0f} / %{customdata[0]:,.0f}<br>"
+                    "Cooldown-normalized activation: "
+                    "%{customdata[9]:.1%}<br>Effect metric: "
+                    "%{customdata[15]}<br>Effectiveness: "
+                    "%{customdata[20]}<br>"
+                    "%{customdata[18]}<extra></extra>"
+                ),
+            ),
+            AggregateMetricView(
                 button_label="Uses / life",
                 value_col="ability_uses_per_completed_life",
                 title="Ability uses per completed life by kit",
@@ -855,6 +911,123 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                     "Completed lives: %{customdata[2]:,.0f}<br>"
                     "Cooldown: %{customdata[6]:.1f} s<br>"
                     "Cooldown-normalized rate: %{customdata[9]:.1%}"
+                    "<extra></extra>"
+                ),
+            ),
+        ),
+    )
+
+
+def ability_effectiveness_figure(report: ReportData) -> go.Figure:
+    """Compare ability engagement with success and comparable effect sizes."""
+
+    plot_data = report.kit_metrics.copy()
+    plot_data["ability_effect_per_success_text"] = (
+        _ability_effect_per_success_text(plot_data)
+    )
+    return _quadrant_modes_figure(
+        plot_data,
+        customdata_cols=(
+            "ability_use",
+            "successful_uses",
+            "ability_success_rate",
+            "cooldown_normalized_use_rate",
+            "ability_uses_per_hour",
+            "ability_effect_value",
+            "ability_effect_per_successful_use",
+            "ability_effect_unit",
+            "ability_effect_metric_name",
+            "ability_effect_description",
+            "total_hours",
+            "ability_name",
+            "players_with_ability_success_rate",
+            "median_player_ability_success_rate",
+            "players_with_ability_effect_per_successful_use",
+            "median_player_ability_effect_per_successful_use",
+            "ability_effect_per_success_text",
+        ),
+        modes=(
+            QuadrantMode(
+                button_label="Success rate",
+                x_col="cooldown_normalized_use_rate",
+                y_col="ability_success_rate",
+                title="Ability engagement vs. successful-use rate",
+                xaxis_title="Cooldown-normalized activation rate",
+                yaxis_title="Successful uses / uses",
+                x_tickformat=".0%",
+                y_tickformat=".0%",
+                quadrant_labels=(
+                    "Lower engagement<br>higher success",
+                    "Higher engagement<br>higher success",
+                    "Lower engagement<br>lower success",
+                    "Higher engagement<br>lower success",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name} — %{customdata[11]}</b><br>"
+                    "Cooldown-normalized activation: %{x:.1%}<br>"
+                    "Successful-use rate: %{y:.1%}<br>Successful uses: "
+                    "%{customdata[1]:,.0f} / %{customdata[0]:,.0f}<br>"
+                    "Median eligible player: %{customdata[13]:.1%} "
+                    "(%{customdata[12]:,.0f} players)<br>"
+                    "Uses per hour: %{customdata[4]:.2f}<br>Effect metric: "
+                    "%{customdata[8]}<br>Effectiveness: "
+                    "%{customdata[16]}<br>"
+                    "%{customdata[9]}<extra></extra>"
+                ),
+            ),
+            QuadrantMode(
+                button_label="Players / success",
+                x_col="cooldown_normalized_use_rate",
+                y_col="ability_effect_per_successful_use_players",
+                title="Ability engagement vs. players affected per success",
+                xaxis_title="Cooldown-normalized activation rate",
+                yaxis_title="Players affected per successful use",
+                x_tickformat=".0%",
+                y_tickformat=".2f",
+                quadrant_labels=(
+                    "Lower engagement<br>broader successful casts",
+                    "Higher engagement<br>broader successful casts",
+                    "Lower engagement<br>narrower successful casts",
+                    "Higher engagement<br>narrower successful casts",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name} — %{customdata[11]}</b><br>"
+                    "Cooldown-normalized activation: %{x:.1%}<br>"
+                    "Players affected per successful use: %{y:.2f}<br>"
+                    "Successful-use rate: %{customdata[2]:.1%}<br>"
+                    "Successful uses: %{customdata[1]:,.0f} / "
+                    "%{customdata[0]:,.0f}<br>Total players affected: "
+                    "%{customdata[5]:,.0f}<br>Median eligible player: "
+                    "%{customdata[15]:.2f} players / success "
+                    "(%{customdata[14]:,.0f} players)<br>%{customdata[9]}"
+                    "<extra></extra>"
+                ),
+            ),
+            QuadrantMode(
+                button_label="Hearts / success",
+                x_col="cooldown_normalized_use_rate",
+                y_col="ability_effect_per_successful_use_hearts",
+                title="Ability engagement vs. health impact per success",
+                xaxis_title="Cooldown-normalized activation rate",
+                yaxis_title="Health impact per successful use (hearts)",
+                x_tickformat=".0%",
+                y_tickformat=".2f",
+                quadrant_labels=(
+                    "Lower engagement<br>larger health impact",
+                    "Higher engagement<br>larger health impact",
+                    "Lower engagement<br>smaller health impact",
+                    "Higher engagement<br>smaller health impact",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name} — %{customdata[11]}</b><br>"
+                    "Cooldown-normalized activation: %{x:.1%}<br>"
+                    "%{customdata[8]} per successful use: %{y:.2f} hearts<br>"
+                    "Successful-use rate: %{customdata[2]:.1%}<br>"
+                    "Successful uses: %{customdata[1]:,.0f} / "
+                    "%{customdata[0]:,.0f}<br>Total health impact: "
+                    "%{customdata[5]:,.1f} hearts<br>Median eligible player: "
+                    "%{customdata[15]:.2f} hearts / success "
+                    "(%{customdata[14]:,.0f} players)<br>%{customdata[9]}"
                     "<extra></extra>"
                 ),
             ),
@@ -1644,7 +1817,7 @@ def matchup_figure(
             if pair_total <= 0:
                 continue
             damage_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
-                f"{row.cause_name}: {row.damage_received:,.1f} HP "
+                f"{row.cause_name}: {row.damage_received:,.1f} hearts "
                 f"({row.damage_received / pair_total:.1%})"
                 for row in group.itertuples(index=False)
             )
@@ -1662,7 +1835,7 @@ def matchup_figure(
                     continue
                 raw_damage_hover[source_id, target_id] = (
                     f"<b>{source_name} → {target_name}</b><br>"
-                    f"Damage: {damage_value:,.1f} HP<br><br>"
+                    f"Damage: {damage_value:,.1f} hearts<br><br>"
                     "<b>Cause breakdown</b><br>"
                     f"{damage_cause_lookup.get((source_id, target_id), 'Unavailable')}"
                 )
@@ -1680,13 +1853,13 @@ def matchup_figure(
                 damage_share_hover[i, j] = (
                     f"<b>{row_kit} vs {column_kit}</b><br>"
                     f"{row_kit} damage: "
-                    f"{damage_matchup_matrix.iloc[i, j]:,.1f} HP<br>"
+                    f"{damage_matchup_matrix.iloc[i, j]:,.1f} hearts<br>"
                     f"{column_kit} damage: "
-                    f"{damage_matchup_matrix.iloc[j, i]:,.1f} HP<br>"
+                    f"{damage_matchup_matrix.iloc[j, i]:,.1f} hearts<br>"
                     f"{row_kit} directional damage share: "
                     f"{damage_directional_share[i, j]:.1%}<br>"
                     f"Pair damage observed: "
-                    f"{damage_pair_totals[i, j]:,.1f} HP<br><br>"
+                    f"{damage_pair_totals[i, j]:,.1f} hearts<br><br>"
                     f"<b>{row_kit} → {column_kit} causes</b><br>"
                     f"{damage_cause_lookup.get((i, j), 'No attributed damage')}"
                     "<br><br>"
@@ -1725,7 +1898,7 @@ def matchup_figure(
                 y=KIT_ORDER,
                 customdata=raw_damage_hover,
                 hovertemplate="%{customdata}<extra></extra>",
-                colorbar=dict(title="Damage (HP)"),
+                colorbar=dict(title="Damage (hearts)"),
                 visible=False,
             )
         )
@@ -1840,8 +2013,12 @@ def matchup_figure(
 def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
     """Compare kills with ability volume and cooldown-adjusted use."""
 
+    plot_data = combined_totals.copy()
+    plot_data["ability_effect_per_success_text"] = (
+        _ability_effect_per_success_text(plot_data)
+    )
     return _quadrant_modes_figure(
-        combined_totals,
+        plot_data,
         customdata_cols=(
             "ability_use",
             "kills",
@@ -1850,6 +2027,12 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
             "ability_cooldown_seconds",
             "ability_uses_per_hour",
             "cooldown_normalized_use_rate",
+            "successful_uses",
+            "ability_success_rate",
+            "ability_effect_metric_name",
+            "ability_effect_per_successful_use",
+            "ability_effect_unit",
+            "ability_effect_per_success_text",
         ),
         modes=(
             QuadrantMode(
@@ -1899,6 +2082,32 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "%{customdata[0]:,.0f}<br>Total kills: "
                     "%{customdata[1]:,.0f}<br>Time played: "
                     "%{customdata[2]:,.2f} h<extra></extra>"
+                ),
+            ),
+            QuadrantMode(
+                button_label="Success rate",
+                x_col="ability_success_rate",
+                y_col="kills_per_hour",
+                title="Kill rate vs. ability successful-use rate",
+                xaxis_title="Successful uses / uses",
+                yaxis_title="Kills per hour",
+                x_tickformat=".0%",
+                y_tickformat=".2f",
+                quadrant_labels=(
+                    "Lower success<br>higher kill rate",
+                    "Higher success<br>higher kill rate",
+                    "Lower success<br>lower kill rate",
+                    "Higher success<br>lower kill rate",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name}</b><br>Successful-use rate: "
+                    "%{x:.1%}<br>Kills per hour: %{y:.2f}<br>"
+                    "Successful uses: %{customdata[7]:,.0f} / "
+                    "%{customdata[0]:,.0f}<br>Cooldown-normalized "
+                    "activation: %{customdata[6]:.1%}<br>Effect metric: "
+                    "%{customdata[9]}<br>Effectiveness: "
+                    "%{customdata[12]}"
+                    "<extra></extra>"
                 ),
             ),
             QuadrantMode(
@@ -2017,6 +2226,18 @@ def report_summary_figure(report: ReportData) -> go.Figure:
         col=1,
     )
 
+    ability_success_text = [
+        (
+            f"{rate:.1%} ({successful:,.0f} successes)"
+            if pd.notna(rate)
+            else "Not logged"
+        )
+        for rate, successful in zip(
+            plot_data["ability_success_rate"],
+            plot_data["successful_uses"],
+        )
+    ]
+    ability_effect_text = _ability_effect_per_success_text(plot_data)
     ability_hover = np.column_stack(
         [
             plot_data["players_using_ability"],
@@ -2028,6 +2249,8 @@ def report_summary_figure(report: ReportData) -> go.Figure:
             plot_data["median_player_cooldown_normalized_use_rate"],
             plot_data["total_hours"],
             plot_data["completed_lives"],
+            ability_success_text,
+            ability_effect_text,
         ]
     )
     fig.add_trace(
@@ -2067,6 +2290,8 @@ def report_summary_figure(report: ReportData) -> go.Figure:
                 "Cooldown-only maximum: %{customdata[5]:.2f} uses / h<br>"
                 "Uses per completed life: %{customdata[3]:.2f}<br>"
                 "Total uses: %{customdata[1]:,.0f}<br>"
+                "Successful-use rate: %{customdata[9]}<br>"
+                "Effectiveness: %{customdata[10]}<br>"
                 "Time played: %{customdata[7]:,.2f} h<br>"
                 "Completed lives: %{customdata[8]:,.0f}<br>"
                 "Players using ability: %{customdata[0]:.0f}"

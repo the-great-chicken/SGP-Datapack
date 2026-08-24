@@ -49,9 +49,32 @@ DAMAGE_COLUMNS = (
     "cause_id",
     "damage_received",
 )
-ABILITY_COLUMNS = ("id", "kit_id", "ability_use")
+ABILITY_COLUMNS = (
+    "id",
+    "kit_id",
+    "ability_path",
+    "metric_id",
+    "value",
+)
 PICK_COLUMNS = ("id", "kit_id", "total_time", "nbr_picks")
-KIT_SETTING_COLUMNS = ("kit_id", "ability_cooldown")
+ABILITY_METADATA_COLUMNS = (
+    "kit_id",
+    "ability_path",
+    "metric_id",
+    "metric_name",
+    "description",
+    "cooldown_ticks",
+    "duration_ticks",
+    "settings_json",
+    "stored_unit",
+    "display_unit",
+    "display_scale",
+    "source_type",
+    "source_field",
+    "source_kit_id",
+    "source_cause_ids",
+    "source_exclude_self",
+)
 DAMAGE_CAUSE_COLUMNS = ("cause_id", "cause_name")
 
 # The default assumes ``total_time`` is logged in Minecraft game ticks.  Keep
@@ -74,7 +97,10 @@ class ReportData:
     kills: pd.DataFrame
     damage_received: pd.DataFrame
     abilities: pd.DataFrame
+    ability_metadata: pd.DataFrame
     picks: pd.DataFrame
+    # One derived row per kit. Kept as ``kit_settings`` so the established
+    # cooldown-based calculations and public ReportData attribute stay stable.
     kit_settings: pd.DataFrame
     all_kits: pd.DataFrame
     player_kit_kills: pd.DataFrame
@@ -139,7 +165,9 @@ def load_report_data(
     )
     abilities = pd.read_parquet(data_dir / "abilities.parquet")
     picks = pd.read_parquet(data_dir / "picks.parquet")
-    kit_settings = pd.read_parquet(data_dir / "kit_settings.parquet")
+    ability_metadata = pd.read_parquet(
+        data_dir / "ability_metadata.parquet"
+    )
     damage_causes_path = data_dir / "damage_causes.parquet"
     if not damage_causes_path.exists():
         damage_causes_path = data_dir / "kill_causes.parquet"
@@ -148,7 +176,7 @@ def load_report_data(
         kills,
         abilities,
         picks,
-        kit_settings,
+        ability_metadata,
         damage_causes,
         damage_received=damage_received,
         time_units_per_hour=time_units_per_hour,
@@ -159,7 +187,7 @@ def prepare_report_data(
     kills: pd.DataFrame,
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
-    kit_settings: pd.DataFrame,
+    ability_metadata: pd.DataFrame,
     kill_causes: pd.DataFrame,
     *,
     damage_received: pd.DataFrame | None = None,
@@ -167,6 +195,8 @@ def prepare_report_data(
 ) -> ReportData:
     """Validate normalized inputs and derive analysis-ready datasets.
 
+    ``ability_metadata`` supplies the canonical activation counter, success
+    condition, optional effect metric, and timing for one ability per kit.
     ``kill_causes`` keeps the established public parameter name.  The new
     extract writes the same shared cause metadata to ``damage_causes.parquet``
     because it now describes both kill and damage rows.
@@ -184,7 +214,7 @@ def prepare_report_data(
         damage_received,
         abilities,
         picks,
-        kit_settings,
+        ability_metadata,
         damage_causes,
     ) = (
         _validate_and_normalize(
@@ -192,7 +222,7 @@ def prepare_report_data(
             damage_received,
             abilities,
             picks,
-            kit_settings,
+            ability_metadata,
             damage_causes,
         )
     )
@@ -208,11 +238,9 @@ def prepare_report_data(
         kills["kit_id_killer"].isin(KIT_ID_TO_NAME)
         & kills["kit_id_victim"].isin(KIT_ID_TO_NAME)
     ].copy()
-    kit_settings = all_kits.merge(
-        kit_settings[list(KIT_SETTING_COLUMNS)],
-        on="kit_id",
-        how="left",
-        validate="one_to_one",
+    kit_settings = _build_kit_ability_settings(
+        ability_metadata,
+        all_kits,
     )
     kit_settings["ability_cooldown_seconds"] = (
         kit_settings["ability_cooldown"] / MINECRAFT_TICKS_PER_SECOND
@@ -382,42 +410,15 @@ def prepare_report_data(
         value_dtype=float,
     )
 
-    player_kit_abilities = (
-        abilities.loc[abilities["ability_use"] > 0]
-        .groupby(["id", "kit_id"], as_index=False)["ability_use"]
-        .sum()
-    )
-    player_kit_abilities["kit_name"] = player_kit_abilities["kit_id"].map(
-        KIT_ID_TO_NAME
-    )
-    total_abilities_by_kit = _complete_metric_totals(
+    (
         player_kit_abilities,
+        total_abilities_by_kit,
+        kit_ability_stats,
+    ) = _build_ability_tables(
+        abilities,
         all_kits,
-        "ability_use",
+        kit_settings,
     )
-    ability_concentration = _concentration_from_counts(
-        player_kit_abilities.rename(columns={"ability_use": "value"}),
-        group_col="kit_id",
-        value_col="value",
-    ).rename(
-        columns={
-            "players": "players_using_ability",
-            "top_player_share": "top_player_ability_share",
-            "top_3_share": "top_3_ability_share",
-        }
-    )
-    kit_ability_stats = (
-        total_abilities_by_kit.merge(
-            ability_concentration,
-            on="kit_id",
-            how="left",
-        )
-        .sort_values("kit_id")
-        .reset_index(drop=True)
-    )
-    kit_ability_stats["players_using_ability"] = pd.to_numeric(
-        kit_ability_stats["players_using_ability"], errors="coerce"
-    ).fillna(0).astype(int)
 
     damage_player_sources = damage_received.loc[
         damage_received["kit_id_source"].isin(KIT_ID_TO_NAME),
@@ -569,6 +570,7 @@ def prepare_report_data(
         kills=kills,
         damage_received=damage_received,
         abilities=abilities,
+        ability_metadata=ability_metadata,
         picks=picks,
         kit_settings=kit_settings,
         all_kits=all_kits,
@@ -618,7 +620,7 @@ def _validate_and_normalize(
     damage_received: pd.DataFrame,
     abilities: pd.DataFrame,
     picks: pd.DataFrame,
-    kit_settings: pd.DataFrame,
+    ability_metadata: pd.DataFrame,
     damage_causes: pd.DataFrame,
 ) -> tuple[
     pd.DataFrame,
@@ -632,7 +634,11 @@ def _validate_and_normalize(
     _require_columns(damage_received, DAMAGE_COLUMNS, "damage_received")
     _require_columns(abilities, ABILITY_COLUMNS, "abilities")
     _require_columns(picks, PICK_COLUMNS, "picks")
-    _require_columns(kit_settings, KIT_SETTING_COLUMNS, "kit_settings")
+    _require_columns(
+        ability_metadata,
+        ABILITY_METADATA_COLUMNS,
+        "ability_metadata",
+    )
     _require_columns(
         damage_causes,
         DAMAGE_CAUSE_COLUMNS,
@@ -643,14 +649,13 @@ def _validate_and_normalize(
     damage_received = damage_received.copy()
     abilities = abilities.copy()
     picks = picks.copy()
-    kit_settings = kit_settings.copy()
+    ability_metadata = ability_metadata.copy()
     damage_causes = damage_causes.copy()
     for frame, columns, name in (
         (kills, KILL_COLUMNS, "kills"),
         (damage_received, DAMAGE_COLUMNS, "damage_received"),
         (abilities, ABILITY_COLUMNS, "abilities"),
         (picks, PICK_COLUMNS, "picks"),
-        (kit_settings, KIT_SETTING_COLUMNS, "kit_settings"),
         (damage_causes, DAMAGE_CAUSE_COLUMNS, "damage_causes"),
     ):
         if frame[list(columns)].isna().any().any():
@@ -671,19 +676,42 @@ def _validate_and_normalize(
     ).astype(float)
 
     abilities["id"] = abilities["id"].astype(str)
-    for column in ("kit_id", "ability_use"):
-        abilities[column] = pd.to_numeric(
-            abilities[column], errors="raise"
-        ).astype(int)
+    abilities["kit_id"] = pd.to_numeric(
+        abilities["kit_id"], errors="raise"
+    ).astype(int)
+    abilities["ability_path"] = abilities["ability_path"].astype(str)
+    abilities["metric_id"] = abilities["metric_id"].astype(str)
+    abilities["value"] = pd.to_numeric(
+        abilities["value"], errors="raise"
+    ).astype(float)
 
     picks["id"] = picks["id"].astype(str)
     for column in ("kit_id", "total_time", "nbr_picks"):
         picks[column] = pd.to_numeric(picks[column], errors="raise").astype(int)
 
-    for column in KIT_SETTING_COLUMNS:
-        kit_settings[column] = pd.to_numeric(
-            kit_settings[column], errors="raise"
-        ).astype(int)
+    ability_metadata["kit_id"] = pd.to_numeric(
+        ability_metadata["kit_id"], errors="raise"
+    ).astype(int)
+    for column in (
+        "ability_path",
+        "metric_id",
+        "metric_name",
+        "description",
+        "stored_unit",
+        "display_unit",
+        "source_type",
+    ):
+        ability_metadata[column] = ability_metadata[column].astype(str)
+    for column in ("cooldown_ticks", "duration_ticks", "source_kit_id"):
+        ability_metadata[column] = pd.to_numeric(
+            ability_metadata[column], errors="coerce"
+        ).astype("Int64")
+    ability_metadata["display_scale"] = pd.to_numeric(
+        ability_metadata["display_scale"], errors="raise"
+    ).astype(float)
+    ability_metadata["source_exclude_self"] = ability_metadata[
+        "source_exclude_self"
+    ].astype("boolean")
 
     damage_causes["cause_id"] = pd.to_numeric(
         damage_causes["cause_id"], errors="raise"
@@ -704,14 +732,22 @@ def _validate_and_normalize(
         raise ValueError("Negative damage-cause metadata ID found")
     if damage_causes["cause_name"].str.strip().eq("").any():
         raise ValueError("Blank damage-cause name found")
-    if (abilities["ability_use"] < 0).any():
-        raise ValueError("Negative ability-use count found")
+    if not np.isfinite(abilities["value"]).all():
+        raise ValueError("Non-finite ability metric value found")
+    if (abilities["value"] < 0).any():
+        raise ValueError("Negative ability metric value found")
     if (picks["total_time"] < 0).any():
         raise ValueError("Negative total_time found")
     if (picks["nbr_picks"] < 0).any():
         raise ValueError("Negative nbr_picks found")
-    if (kit_settings["ability_cooldown"] <= 0).any():
-        raise ValueError("Ability cooldowns must be positive")
+    if not np.isfinite(ability_metadata["display_scale"]).all():
+        raise ValueError("Non-finite ability display scale found")
+    if (ability_metadata["display_scale"] <= 0).any():
+        raise ValueError("Ability display scales must be positive")
+    if ability_metadata["cooldown_ticks"].isna().any() or (
+        ability_metadata["cooldown_ticks"] <= 0
+    ).any():
+        raise ValueError("Ability cooldowns must be present and positive")
     valid_kill_kit_ids = set(KIT_ID_TO_NAME) | {NO_KIT_ID}
     if not kills["kit_id_killer"].isin(valid_kill_kit_ids).all():
         raise ValueError("Unknown killer kit ID found")
@@ -726,8 +762,8 @@ def _validate_and_normalize(
     valid_pick_ids = set(KIT_ID_TO_NAME) | {NO_KIT_ID}
     if not picks["kit_id"].isin(valid_pick_ids).all():
         raise ValueError("Unknown pick kit ID found")
-    if not kit_settings["kit_id"].isin(KIT_ID_TO_NAME).all():
-        raise ValueError("Unknown kit-settings kit ID found")
+    if not ability_metadata["kit_id"].isin(KIT_ID_TO_NAME).all():
+        raise ValueError("Unknown ability-metadata kit ID found")
     if kills.duplicated(
         ["id_killer", "kit_id_killer", "kit_id_victim", "cause_id"]
     ).any():
@@ -742,21 +778,77 @@ def _validate_and_normalize(
         ]
     ).any():
         raise ValueError("Duplicate damage-stat rows found")
-    if abilities.duplicated(["id", "kit_id"]).any():
-        raise ValueError("Duplicate ability-use rows found")
+    if abilities.duplicated(
+        ["id", "kit_id", "ability_path", "metric_id"]
+    ).any():
+        raise ValueError("Duplicate ability-metric rows found")
     if picks.duplicated(["id", "kit_id"]).any():
         raise ValueError("Duplicate pick-stat rows found")
-    if kit_settings.duplicated(["kit_id"]).any():
-        raise ValueError("Duplicate kit-settings rows found")
+    if ability_metadata.duplicated(
+        ["kit_id", "ability_path", "metric_id"]
+    ).any():
+        raise ValueError("Duplicate ability-metadata rows found")
     if damage_causes.duplicated(["cause_id"]).any():
         raise ValueError("Duplicate damage-cause metadata rows found")
 
-    missing_settings = set(KIT_ID_TO_NAME) - set(kit_settings["kit_id"])
-    if missing_settings:
+    missing_metadata = set(KIT_ID_TO_NAME) - set(ability_metadata["kit_id"])
+    if missing_metadata:
         raise ValueError(
-            "Missing ability cooldowns for kit IDs: "
-            f"{sorted(missing_settings)}"
+            "Missing ability metadata for kit IDs: "
+            f"{sorted(missing_metadata)}"
         )
+
+    abilities_per_kit = ability_metadata.groupby("kit_id")[
+        "ability_path"
+    ].nunique()
+    if (abilities_per_kit != 1).any():
+        invalid = abilities_per_kit.loc[abilities_per_kit != 1].index.tolist()
+        raise ValueError(
+            "Expected exactly one ability per kit; invalid kit IDs: "
+            f"{invalid}"
+        )
+
+    uses_rows = ability_metadata.loc[ability_metadata["metric_id"] == "uses"]
+    if set(uses_rows["kit_id"]) != set(KIT_ID_TO_NAME):
+        raise ValueError("Every kit must define one canonical 'uses' metric")
+    if uses_rows["display_unit"].ne("uses").any():
+        raise ValueError("Canonical 'uses' metrics must use display unit 'uses'")
+
+    reserved_metric_ids = {"uses", "successful_uses"}
+    effect_counts = (
+        ability_metadata.loc[
+            ~ability_metadata["metric_id"].isin(reserved_metric_ids)
+        ]
+        .groupby("kit_id")["metric_id"]
+        .nunique()
+    )
+    if (effect_counts > 1).any():
+        invalid = effect_counts.loc[effect_counts > 1].index.tolist()
+        raise ValueError(
+            "Expected at most one effectiveness metric per kit; invalid "
+            f"kit IDs: {invalid}"
+        )
+
+    metadata_keys = set(
+        ability_metadata[["kit_id", "ability_path", "metric_id"]]
+        .itertuples(index=False, name=None)
+    )
+    observed_keys = set(
+        abilities[["kit_id", "ability_path", "metric_id"]]
+        .itertuples(index=False, name=None)
+    )
+    unknown_metrics = observed_keys - metadata_keys
+    if unknown_metrics:
+        raise ValueError(
+            "Ability rows reference missing metadata: "
+            f"{sorted(unknown_metrics)}"
+        )
+
+    count_metric_values = abilities.loc[
+        abilities["metric_id"].isin(reserved_metric_ids), "value"
+    ]
+    if not np.allclose(count_metric_values, np.round(count_metric_values)):
+        raise ValueError("Ability use metrics must contain whole counts")
 
     observed_cause_ids = set(kills["cause_id"]) | set(
         damage_received["cause_id"]
@@ -773,7 +865,7 @@ def _validate_and_normalize(
         damage_received,
         abilities,
         picks,
-        kit_settings,
+        ability_metadata,
         damage_causes,
     )
 
@@ -786,6 +878,256 @@ def _require_columns(
     missing = set(required) - set(frame.columns)
     if missing:
         raise ValueError(f"{name} is missing columns: {sorted(missing)}")
+
+
+def _build_kit_ability_settings(
+    ability_metadata: pd.DataFrame,
+    all_kits: pd.DataFrame,
+) -> pd.DataFrame:
+    """Collapse metric metadata to the report's one-ability-per-kit model."""
+
+    timing_columns = [
+        "kit_id",
+        "ability_path",
+        "cooldown_ticks",
+        "duration_ticks",
+        "settings_json",
+    ]
+    timing = ability_metadata[timing_columns].drop_duplicates()
+    duplicate_timing = timing.duplicated("kit_id", keep=False)
+    if duplicate_timing.any():
+        invalid = sorted(timing.loc[duplicate_timing, "kit_id"].unique())
+        raise ValueError(
+            "Inconsistent ability timing/settings metadata for kit IDs: "
+            f"{invalid}"
+        )
+
+    success_support = (
+        ability_metadata.assign(
+            supports_success_metric=lambda frame: frame["metric_id"].eq(
+                "successful_uses"
+            )
+        )
+        .groupby("kit_id", as_index=False)["supports_success_metric"]
+        .any()
+    )
+    effect = ability_metadata.loc[
+        ~ability_metadata["metric_id"].isin({"uses", "successful_uses"}),
+        [
+            "kit_id",
+            "ability_path",
+            "metric_id",
+            "metric_name",
+            "description",
+            "display_unit",
+            "source_type",
+        ],
+    ].rename(
+        columns={
+            "metric_id": "ability_effect_metric_id",
+            "metric_name": "ability_effect_metric_name",
+            "description": "ability_effect_description",
+            "display_unit": "ability_effect_unit",
+            "source_type": "ability_effect_source_type",
+        }
+    )
+
+    settings = (
+        all_kits.merge(timing, on="kit_id", how="left", validate="one_to_one")
+        .merge(success_support, on="kit_id", how="left", validate="one_to_one")
+        .merge(
+            effect.drop(columns="ability_path"),
+            on="kit_id",
+            how="left",
+            validate="one_to_one",
+        )
+        .rename(
+            columns={
+                "cooldown_ticks": "ability_cooldown",
+                "duration_ticks": "ability_duration",
+            }
+        )
+    )
+    settings["ability_name"] = (
+        settings["ability_path"].str.replace("_", " ").str.title()
+    )
+    settings["supports_success_metric"] = settings[
+        "supports_success_metric"
+    ].fillna(False).astype(bool)
+    settings["supports_effect_metric"] = settings[
+        "ability_effect_metric_id"
+    ].notna()
+    return settings.sort_values("kit_id").reset_index(drop=True)
+
+
+def _build_ability_tables(
+    abilities: pd.DataFrame,
+    all_kits: pd.DataFrame,
+    kit_settings: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Build canonical use, success, and kit-specific effect tables."""
+
+    descriptor_columns = [
+        "kit_id",
+        "ability_path",
+        "ability_name",
+        "supports_success_metric",
+        "supports_effect_metric",
+        "ability_effect_metric_id",
+        "ability_effect_metric_name",
+        "ability_effect_description",
+        "ability_effect_unit",
+        "ability_effect_source_type",
+    ]
+    keys = abilities[["id", "kit_id"]].drop_duplicates()
+    player_metrics = keys.merge(
+        kit_settings[descriptor_columns],
+        on="kit_id",
+        how="left",
+        validate="many_to_one",
+    )
+
+    def metric_values(metric_id: str, value_name: str) -> pd.DataFrame:
+        return abilities.loc[
+            abilities["metric_id"].eq(metric_id),
+            ["id", "kit_id", "value"],
+        ].rename(columns={"value": value_name})
+
+    player_metrics = player_metrics.merge(
+        metric_values("uses", "ability_use"),
+        on=["id", "kit_id"],
+        how="left",
+        validate="one_to_one",
+    ).merge(
+        metric_values("successful_uses", "successful_uses"),
+        on=["id", "kit_id"],
+        how="left",
+        validate="one_to_one",
+    )
+
+    effect_rows = abilities.merge(
+        kit_settings[
+            ["kit_id", "ability_effect_metric_id"]
+        ],
+        left_on=["kit_id", "metric_id"],
+        right_on=["kit_id", "ability_effect_metric_id"],
+        how="inner",
+        validate="many_to_one",
+    )[["id", "kit_id", "value"]].rename(
+        columns={"value": "ability_effect_value"}
+    )
+    player_metrics = player_metrics.merge(
+        effect_rows,
+        on=["id", "kit_id"],
+        how="left",
+        validate="one_to_one",
+    )
+
+    player_metrics["ability_use"] = (
+        player_metrics["ability_use"].fillna(0).round().astype(int)
+    )
+    success_mask = player_metrics["supports_success_metric"]
+    player_metrics.loc[success_mask, "successful_uses"] = player_metrics.loc[
+        success_mask, "successful_uses"
+    ].fillna(0)
+    player_metrics.loc[~success_mask, "successful_uses"] = np.nan
+    effect_mask = player_metrics["supports_effect_metric"]
+    player_metrics.loc[effect_mask, "ability_effect_value"] = (
+        player_metrics.loc[effect_mask, "ability_effect_value"].fillna(0.0)
+    )
+    player_metrics.loc[~effect_mask, "ability_effect_value"] = np.nan
+    player_metrics["ability_success_rate"] = _safe_divide(
+        player_metrics["successful_uses"], player_metrics["ability_use"]
+    )
+    player_metrics["ability_effect_per_use"] = _safe_divide(
+        player_metrics["ability_effect_value"], player_metrics["ability_use"]
+    )
+    player_metrics["ability_effect_per_successful_use"] = _safe_divide(
+        player_metrics["ability_effect_value"],
+        player_metrics["successful_uses"],
+    )
+    player_metrics["kit_name"] = player_metrics["kit_id"].map(
+        KIT_ID_TO_NAME
+    )
+
+    aggregated = (
+        player_metrics.groupby("kit_id", as_index=False)
+        .agg(
+            ability_use=("ability_use", "sum"),
+            successful_uses=(
+                "successful_uses",
+                lambda values: values.sum(min_count=1),
+            ),
+            ability_effect_value=(
+                "ability_effect_value",
+                lambda values: values.sum(min_count=1),
+            ),
+            players_with_successful_use=(
+                "successful_uses",
+                lambda values: int((values.fillna(0) > 0).sum()),
+            ),
+            players_with_effect=(
+                "ability_effect_value",
+                lambda values: int((values.fillna(0) > 0).sum()),
+            ),
+        )
+    )
+    totals = (
+        all_kits.merge(
+            kit_settings[descriptor_columns],
+            on="kit_id",
+            how="left",
+            validate="one_to_one",
+        )
+        .merge(aggregated, on="kit_id", how="left", validate="one_to_one")
+    )
+    totals["ability_use"] = totals["ability_use"].fillna(0).astype(int)
+    for count_column in ("players_with_successful_use", "players_with_effect"):
+        totals[count_column] = totals[count_column].fillna(0).astype(int)
+    success_mask = totals["supports_success_metric"]
+    totals.loc[success_mask, "successful_uses"] = totals.loc[
+        success_mask, "successful_uses"
+    ].fillna(0)
+    totals.loc[~success_mask, "successful_uses"] = np.nan
+    effect_mask = totals["supports_effect_metric"]
+    totals.loc[effect_mask, "ability_effect_value"] = totals.loc[
+        effect_mask, "ability_effect_value"
+    ].fillna(0.0)
+    totals.loc[~effect_mask, "ability_effect_value"] = np.nan
+    totals["ability_success_rate"] = _safe_divide(
+        totals["successful_uses"], totals["ability_use"]
+    )
+    totals["ability_effect_per_use"] = _safe_divide(
+        totals["ability_effect_value"], totals["ability_use"]
+    )
+    totals["ability_effect_per_successful_use"] = _safe_divide(
+        totals["ability_effect_value"], totals["successful_uses"]
+    )
+
+    ability_concentration = _concentration_from_counts(
+        player_metrics,
+        group_col="kit_id",
+        value_col="ability_use",
+    ).rename(
+        columns={
+            "players": "players_using_ability",
+            "top_player_share": "top_player_ability_share",
+            "top_3_share": "top_3_ability_share",
+        }
+    )
+    stats = (
+        totals.merge(ability_concentration, on="kit_id", how="left")
+        .sort_values("kit_id")
+        .reset_index(drop=True)
+    )
+    stats["players_using_ability"] = pd.to_numeric(
+        stats["players_using_ability"], errors="coerce"
+    ).fillna(0).astype(int)
+    return (
+        player_metrics.sort_values(["kit_id", "id"]).reset_index(drop=True),
+        totals.sort_values("kit_id").reset_index(drop=True),
+        stats,
+    )
 
 
 def _complete_metric_totals(
@@ -1413,7 +1755,14 @@ def _build_player_kit_metrics(
     kills = player_kit_kills.rename(columns={"id_killer": "id"})[
         ["id", "kit_id", "kills"]
     ]
-    abilities = player_kit_abilities[["id", "kit_id", "ability_use"]]
+    ability_columns = [
+        "id",
+        "kit_id",
+        "ability_use",
+        "successful_uses",
+        "ability_effect_value",
+    ]
+    abilities = player_kit_abilities[ability_columns]
     damage = player_kit_damage_dealt.rename(columns={"id_source": "id"})[
         ["id", "kit_id", "damage_dealt"]
     ]
@@ -1456,6 +1805,16 @@ def _build_player_kit_metrics(
                     "ability_cooldown",
                     "ability_cooldown_seconds",
                     "theoretical_ability_uses_per_hour",
+                    "ability_path",
+                    "ability_name",
+                    "ability_duration",
+                    "supports_success_metric",
+                    "supports_effect_metric",
+                    "ability_effect_metric_id",
+                    "ability_effect_metric_name",
+                    "ability_effect_description",
+                    "ability_effect_unit",
+                    "ability_effect_source_type",
                 ]
             ],
             on="kit_id",
@@ -1479,6 +1838,16 @@ def _build_player_kit_metrics(
         metrics[["total_time", "completed_lives", "kills", "ability_use"]]
         .astype(int)
     )
+    success_mask = metrics["supports_success_metric"].fillna(False)
+    metrics.loc[success_mask, "successful_uses"] = metrics.loc[
+        success_mask, "successful_uses"
+    ].fillna(0)
+    metrics.loc[~success_mask, "successful_uses"] = np.nan
+    effect_mask = metrics["supports_effect_metric"].fillna(False)
+    metrics.loc[effect_mask, "ability_effect_value"] = metrics.loc[
+        effect_mask, "ability_effect_value"
+    ].fillna(0.0)
+    metrics.loc[~effect_mask, "ability_effect_value"] = np.nan
 
     metrics["kills_per_hour"] = _safe_divide(
         metrics["kills"], metrics["total_hours"]
@@ -1495,6 +1864,21 @@ def _build_player_kit_metrics(
     metrics["cooldown_normalized_use_rate"] = _safe_divide(
         metrics["ability_uses_per_hour"],
         metrics["theoretical_ability_uses_per_hour"],
+    )
+    metrics["ability_success_rate"] = _safe_divide(
+        metrics["successful_uses"], metrics["ability_use"]
+    )
+    metrics["ability_effect_per_use"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["ability_use"]
+    )
+    metrics["ability_effect_per_successful_use"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["successful_uses"]
+    )
+    metrics["ability_effect_per_hour"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["total_hours"]
+    )
+    metrics["ability_effect_per_completed_life"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["completed_lives"]
     )
     metrics["damage_dealt_per_hour"] = _safe_divide(
         metrics["damage_dealt"], metrics["total_hours"]
@@ -1552,6 +1936,12 @@ def _build_player_rate_stats(
         "ability_uses_per_completed_life": (
             "players_with_ability_rate_per_life"
         ),
+        "ability_success_rate": "players_with_ability_success_rate",
+        "ability_effect_per_use": "players_with_ability_effect_per_use",
+        "ability_effect_per_successful_use": (
+            "players_with_ability_effect_per_successful_use"
+        ),
+        "ability_effect_per_hour": "players_with_ability_effect_per_hour",
         "damage_dealt_per_hour": "players_with_damage_rate_per_hour",
         "damage_dealt_per_completed_life": (
             "players_with_damage_rate_per_life"
@@ -1599,7 +1989,16 @@ def _build_kit_metrics(
             how="left",
         )
         .merge(
-            total_abilities_by_kit[["kit_id", "ability_use"]],
+            total_abilities_by_kit[
+                [
+                    "kit_id",
+                    "ability_use",
+                    "successful_uses",
+                    "ability_effect_value",
+                    "players_with_successful_use",
+                    "players_with_effect",
+                ]
+            ],
             on="kit_id",
             how="left",
         )
@@ -1694,6 +2093,29 @@ def _build_kit_metrics(
         metrics["ability_uses_per_hour"],
         metrics["theoretical_ability_uses_per_hour"],
     )
+    metrics["successful_uses_per_hour"] = _safe_divide(
+        metrics["successful_uses"], metrics["total_hours"]
+    )
+    metrics["ability_success_rate"] = _safe_divide(
+        metrics["successful_uses"], metrics["ability_use"]
+    )
+    metrics["ability_effect_per_use"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["ability_use"]
+    )
+    metrics["ability_effect_per_successful_use"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["successful_uses"]
+    )
+    metrics["ability_effect_per_hour"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["total_hours"]
+    )
+    metrics["ability_effect_per_completed_life"] = _safe_divide(
+        metrics["ability_effect_value"], metrics["completed_lives"]
+    )
+    for unit, suffix in (("players", "players"), ("hearts", "hearts")):
+        unit_mask = metrics["ability_effect_unit"].eq(unit)
+        metrics[f"ability_effect_per_successful_use_{suffix}"] = metrics[
+            "ability_effect_per_successful_use"
+        ].where(unit_mask)
     metrics["damage_dealt_per_kill"] = _safe_divide(
         metrics["damage_dealt"], metrics["kills"]
     )
