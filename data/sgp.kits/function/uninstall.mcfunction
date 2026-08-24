@@ -41,6 +41,13 @@ scoreboard objectives remove sgp.last_kill_count
 scoreboard objectives remove sgp.death_cause
 scoreboard objectives remove sgp.damage_taken
 scoreboard objectives remove sgp.damage_owner
+scoreboard objectives remove sgp.damage_resisted
+scoreboard objectives remove sgp.ability_cast
+scoreboard objectives remove sgp.ability_kind
+scoreboard objectives remove sgp.ability_success
+scoreboard objectives remove sgp.last_ability_cast
+scoreboard objectives remove sgp.ability_result_window
+scoreboard objectives remove sgp.peck_lock_ticks
 
 
 
@@ -59,5 +66,6 @@ schedule clear sgp.kits:kit_tags/prefixes_check
 # ---------- Remove Storages ----------
 
 data remove storage sgp.kits:stats kits_dict
-data remove storage sgp.kits:stats kit_settings
 data remove storage sgp.kits:stats damage_cause_names
+data remove storage sgp.kits:stats ability_metadata
+data remove storage sgp.kits:stats schema_version

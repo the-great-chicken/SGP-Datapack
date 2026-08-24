@@ -1,12 +1,16 @@
 #> sgp.kits:abilities/tnt/start
 
 execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.tnt.cooldown
+function sgp.kits:stats_collector/ability/start {kit_id:4,ability_path:"tnt"}
+
+# Two seconds to the explosion plus five seconds of lingering fire.
+scoreboard players set @s sgp.ability_result_window 141
 
 summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt", "sgp.new"]}
 
 # Native TNT ownership makes the explosion's causing entity the caster.
 # The checks are just to avoid accidents in dev env.
-execute unless entity @s[gamemode=creative] unless entity @s[tag=admin] run \
+execute unless entity @s[gamemode=creative] run \
     data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
 
 # The TNT is gone by the time its lingering fire deals damage, so also carry the stable player id.
