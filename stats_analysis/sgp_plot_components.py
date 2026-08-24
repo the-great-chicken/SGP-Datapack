@@ -308,9 +308,9 @@ def player_contribution_figure(
                     {"visible": aggregate_visibility(mode_index)},
                     {
                         "barmode": "group",
-                        "title": mode.title,
+                        "title": {"text": mode.title},
                         "yaxis": {
-                            "title": mode.yaxis_title,
+                            "title": {"text": mode.yaxis_title},
                             "tickformat": mode.tickformat,
                             "rangemode": "tozero",
                             "range": mode.yaxis_range,
@@ -332,11 +332,13 @@ def player_contribution_figure(
                     {"visible": players_visible},
                     {
                         "barmode": "stack",
-                        "title": (
-                            f"{first_mode.title} — player contribution"
-                        ),
+                        "title": {
+                            "text": (
+                                f"{first_mode.title} — player contribution"
+                            )
+                        },
                         "yaxis": {
-                            "title": first_mode.yaxis_title,
+                            "title": {"text": first_mode.yaxis_title},
                             "tickformat": first_mode.tickformat,
                             "rangemode": "tozero",
                             "range": None,
@@ -502,14 +504,14 @@ def concentration_figure(
                                 ]
                             },
                             {
-                                "title": view.title,
+                                "title": {"text": view.title},
                                 "yaxis": {
-                                    "title": view.yaxis_title,
+                                    "title": {"text": view.yaxis_title},
                                     "tickformat": ".0%",
                                     "range": [0, 1.08],
                                 },
                                 "xaxis": {
-                                    "title": "Kit",
+                                    "title": {"text": "Kit"},
                                     "categoryorder": "array",
                                     "categoryarray": category_orders[view_index],
                                 },
@@ -603,7 +605,7 @@ def _quadrant_modes_figure(
                                 ] * len(plot_data),
                             },
                             {
-                                "title": mode.title,
+                                "title": {"text": mode.title},
                                 "xaxis": layout["xaxis"],
                                 "yaxis": layout["yaxis"],
                                 "shapes": layout["shapes"],
@@ -633,12 +635,12 @@ def _quadrant_mode_layout(
     if finite.empty:
         return {
             "xaxis": {
-                "title": mode.xaxis_title,
+                "title": {"text": mode.xaxis_title},
                 "range": [0, 1],
                 "tickformat": mode.x_tickformat,
             },
             "yaxis": {
-                "title": mode.yaxis_title,
+                "title": {"text": mode.yaxis_title},
                 "range": [0, 1],
                 "tickformat": mode.y_tickformat,
             },
@@ -662,12 +664,12 @@ def _quadrant_mode_layout(
     )
     return {
         "xaxis": {
-            "title": mode.xaxis_title,
+            "title": {"text": mode.xaxis_title},
             "range": x_range,
             "tickformat": mode.x_tickformat,
         },
         "yaxis": {
-            "title": mode.yaxis_title,
+            "title": {"text": mode.yaxis_title},
             "range": y_range,
             "tickformat": mode.y_tickformat,
         },

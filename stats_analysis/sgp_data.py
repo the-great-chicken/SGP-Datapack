@@ -1719,7 +1719,7 @@ def _build_top_killer_exposure(
     player_kit_metrics: pd.DataFrame,
     kit_metrics: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Pair each kit's top killer with that same player's exposure share."""
+    """Compare output and exposure for kill- and playtime-selected players."""
 
     output_columns = [
         "kit_id",
@@ -1734,6 +1734,17 @@ def _build_top_killer_exposure(
         "top_killer_time_share",
         "top_killer_kill_share_minus_time_share",
         "top_killer_kill_to_time_share_ratio",
+        "top_playtime_player_id",
+        "top_playtime_player_kills",
+        "top_playtime_player_hours",
+        "top_playtime_player_completed_lives",
+        "top_playtime_player_kills_per_hour",
+        "top_playtime_player_kills_per_completed_life",
+        "top_playtime_player_kill_share",
+        "top_playtime_player_time_share",
+        "top_playtime_player_kill_share_minus_time_share",
+        "top_playtime_player_kill_to_time_share_ratio",
+        "same_top_killer_and_playtime_player",
         "kit_kills",
         "kit_total_hours",
         "kit_completed_lives",
@@ -1791,6 +1802,59 @@ def _build_top_killer_exposure(
             }
         )
     )
+    # Exact playtime ties are resolved by kill count, then ID, because tied
+    # players have the same x-coordinate but may have different kill shares.
+    top_playtime_players = (
+        player_kit_metrics.loc[player_kit_metrics["total_time"] > 0]
+        .sort_values(
+            ["kit_id", "total_time", "kills", "id"],
+            ascending=[True, False, False, True],
+            kind="stable",
+        )
+        .drop_duplicates("kit_id", keep="first")
+        [
+            [
+                "kit_id",
+                "kit_name",
+                "id",
+                "kills",
+                "total_hours",
+                "completed_lives",
+                "kills_per_hour",
+                "kills_per_completed_life",
+                "player_kill_share_of_kit",
+                "player_time_share_of_kit",
+                "kill_share_minus_time_share",
+                "kill_to_time_share_ratio",
+            ]
+        ]
+        .rename(
+            columns={
+                "id": "top_playtime_player_id",
+                "kills": "top_playtime_player_kills",
+                "total_hours": "top_playtime_player_hours",
+                "completed_lives": (
+                    "top_playtime_player_completed_lives"
+                ),
+                "kills_per_hour": "top_playtime_player_kills_per_hour",
+                "kills_per_completed_life": (
+                    "top_playtime_player_kills_per_completed_life"
+                ),
+                "player_kill_share_of_kit": (
+                    "top_playtime_player_kill_share"
+                ),
+                "player_time_share_of_kit": (
+                    "top_playtime_player_time_share"
+                ),
+                "kill_share_minus_time_share": (
+                    "top_playtime_player_kill_share_minus_time_share"
+                ),
+                "kill_to_time_share_ratio": (
+                    "top_playtime_player_kill_to_time_share_ratio"
+                ),
+            }
+        )
+    )
     kit_context = kit_metrics[
         [
             "kit_id",
@@ -1807,7 +1871,14 @@ def _build_top_killer_exposure(
             "players_with_time": "kit_players_with_time",
         }
     )
-    result = top_killers.merge(kit_context, on="kit_id", how="left")
+    result = top_killers.merge(
+        top_playtime_players,
+        on=["kit_id", "kit_name"],
+        how="left",
+    ).merge(kit_context, on="kit_id", how="left")
+    result["same_top_killer_and_playtime_player"] = (
+        result["top_killer_id"] == result["top_playtime_player_id"]
+    )
     return result[output_columns].sort_values("kit_id").reset_index(drop=True)
 
 

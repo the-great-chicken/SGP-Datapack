@@ -143,14 +143,18 @@ def _stacked_cause_modes_figure(
                         "args": [
                             {"visible": visibility(mode_index)},
                             {
-                                "title": mode["title"],
+                                "title": {"text": mode["title"]},
                                 "xaxis": {
-                                    "title": mode["xaxis_title"],
+                                    "title": {
+                                        "text": mode["xaxis_title"]
+                                    },
                                     "categoryorder": "array",
                                     "categoryarray": mode["order"],
                                 },
                                 "yaxis": {
-                                    "title": mode["yaxis_title"],
+                                    "title": {
+                                        "text": mode["yaxis_title"]
+                                    },
                                     "tickformat": mode["tickformat"],
                                     "range": mode["range"],
                                     "autorange": mode["range"] is None,
@@ -582,12 +586,9 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             na_position="last",
         )["kit_name"].tolist()
     )
-    dealt_share_order = (
-        report.damage_metrics.sort_values(
-            ["damage_dealt", "kit_id"],
-            ascending=[False, True],
-        )["kit_name"].tolist()
-    )
+    # Normalized share bars all have the same height, so keep their kit order
+    # stable instead of sorting them by a total that is only visible on hover.
+    dealt_share_order = list(KIT_ORDER)
     received_rate_order = (
         report.damage_metrics.sort_values(
             ["damage_received_per_hour", "damage_received", "kit_id"],
@@ -595,12 +596,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             na_position="last",
         )["kit_name"].tolist()
     )
-    received_share_order = (
-        report.damage_metrics.sort_values(
-            ["damage_received", "kit_id"],
-            ascending=[False, True],
-        )["kit_name"].tolist()
-    )
+    received_share_order = list(KIT_ORDER)
 
     outgoing_custom_cols = [
         "damage_dealt",
@@ -1012,11 +1008,13 @@ def player_reach_figure(report: ReportData) -> go.Figure:
     life_visibility = [False] * life_trace_index + [True]
 
     player_layout = {
-        "title": "Proportion of observed players who tried each kit",
+        "title": {
+            "text": "Proportion of observed players who tried each kit"
+        },
         "barmode": "overlay",
         "height": 520,
         "xaxis": {
-            "title": "Kit",
+            "title": {"text": "Kit"},
             "type": "category",
             "categoryorder": "array",
             "categoryarray": list(KIT_ORDER),
@@ -1025,7 +1023,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             "tickformat": "",
         },
         "yaxis": {
-            "title": "Proportion of players",
+            "title": {"text": "Proportion of players"},
             "type": "linear",
             "tickformat": ".0%",
             "range": [0, 1],
@@ -1041,21 +1039,23 @@ def player_reach_figure(report: ReportData) -> go.Figure:
         },
     }
     exposure_layout = {
-        "title": (
-            "Share of playtime and completed lives "
-            "— ordered by playtime share"
-        ),
+        "title": {
+            "text": (
+                "Share of playtime and completed lives "
+                "— ordered by playtime share"
+            )
+        },
         "barmode": "stack",
         "height": 430,
         "xaxis": {
-            "title": "Share of observed total",
+            "title": {"text": "Share of observed total"},
             "type": "linear",
             "tickformat": ".0%",
             "range": [0, 1],
             "autorange": False,
         },
         "yaxis": {
-            "title": "",
+            "title": {"text": ""},
             "type": "category",
             "categoryorder": "array",
             "categoryarray": ["Completed lives", "Playtime"],
@@ -1072,11 +1072,13 @@ def player_reach_figure(report: ReportData) -> go.Figure:
         },
     }
     life_layout = {
-        "title": "Average observed time per completed life by kit",
+        "title": {
+            "text": "Average observed time per completed life by kit"
+        },
         "barmode": "group",
         "height": 520,
         "xaxis": {
-            "title": "Kit",
+            "title": {"text": "Kit"},
             "type": "category",
             "categoryorder": "array",
             "categoryarray": list(KIT_ORDER),
@@ -1085,7 +1087,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             "tickformat": "",
         },
         "yaxis": {
-            "title": "Minutes per completed life",
+            "title": {"text": "Minutes per completed life"},
             "type": "linear",
             "tickformat": ".1f",
             "range": None,
@@ -1263,26 +1265,55 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
 
 
 def top_killer_exposure_figure(report: ReportData) -> go.Figure:
-    """Compare each top killer's output share with their own exposure share."""
+    """Compare selected players' kill shares with their exposure shares."""
 
-    plot_data = (
-        report.top_killer_exposure.replace([np.inf, -np.inf], np.nan)
-        .dropna(
-            subset=["top_killer_kill_share", "top_killer_time_share"]
-        )
-        .copy()
+    views = (
+        {
+            "button_label": "Top killer",
+            "title": "Top killer's kill share vs. their playtime share",
+            "player_label": "Top killer",
+            "counterpart_label": "Top playtime player",
+            "prefix": "top_killer",
+            "xaxis_title": "Top killer's share of kit playtime",
+            "yaxis_title": "Top killer's share of kit kills",
+        },
+        {
+            "button_label": "Top playtime",
+            "title": (
+                "Top playtime player's kill share vs. their playtime share"
+            ),
+            "player_label": "Top playtime player",
+            "counterpart_label": "Top killer",
+            "prefix": "top_playtime_player",
+            "xaxis_title": (
+                "Top playtime player's share of kit playtime"
+            ),
+            "yaxis_title": "Top playtime player's share of kit kills",
+        },
     )
-    title = "Top killer's kill share vs. their playtime share"
-    if plot_data.empty:
+    source = report.top_killer_exposure.replace(
+        [np.inf, -np.inf], np.nan
+    )
+    available_views = []
+    for view in views:
+        prefix = view["prefix"]
+        plot_data = source.dropna(
+            subset=[f"{prefix}_kill_share", f"{prefix}_time_share"]
+        ).copy()
+        if not plot_data.empty:
+            available_views.append((view, plot_data))
+
+    first_view = available_views[0][0] if available_views else views[0]
+    if not available_views:
         fig = go.Figure()
-        fig.update_layout(title=title)
+        fig.update_layout(title=first_view["title"])
         fig.update_xaxes(
-            title="Top killer's share of kit playtime",
+            title=first_view["xaxis_title"],
             tickformat=".0%",
             range=[0, 1],
         )
         fig.update_yaxes(
-            title="Top killer's share of kit kills",
+            title=first_view["yaxis_title"],
             tickformat=".0%",
             range=[0, 1],
         )
@@ -1290,8 +1321,9 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
 
     share_values = pd.concat(
         [
-            plot_data["top_killer_time_share"],
-            plot_data["top_killer_kill_share"],
+            plot_data[f"{view['prefix']}_{share_kind}_share"]
+            for view, plot_data in available_views
+            for share_kind in ("time", "kill")
         ],
         ignore_index=True,
     )
@@ -1303,51 +1335,76 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     )
 
     fig = go.Figure()
-    for row in plot_data.itertuples(index=False):
-        customdata = [[
-            row.top_killer_id,
-            row.top_killer_kills,
-            row.top_killer_hours,
-            row.top_killer_completed_lives,
-            row.top_killer_kills_per_hour,
-            row.top_killer_kills_per_completed_life,
-            row.top_killer_kill_share_minus_time_share,
-            row.top_killer_kill_to_time_share_ratio,
-            row.kit_kills,
-            row.kit_total_hours,
-            row.kit_players_with_time,
-        ]]
-        fig.add_trace(
-            go.Scatter(
-                x=[row.top_killer_time_share],
-                y=[row.top_killer_kill_share],
-                mode="markers",
-                name=row.kit_name,
-                marker=dict(
-                    size=12,
-                    color=KIT_COLORS[row.kit_name],
-                    line=dict(color="#333333", width=1),
-                ),
-                customdata=customdata,
-                hovertemplate=(
-                    f"<b>{row.kit_name}</b><br>"
-                    "Top killer: %{customdata[0]}<br>"
-                    "Kill share: %{y:.1%}<br>"
-                    "Playtime share: %{x:.1%}<br>"
-                    "Kill-share advantage: %{customdata[6]:+.1%}<br>"
-                    "Kill / playtime share ratio: %{customdata[7]:.2f}<br>"
-                    "Top-killer kills: %{customdata[1]:,.0f}<br>"
-                    "Top-killer playtime: %{customdata[2]:,.2f} h<br>"
-                    "Top-killer completed lives: %{customdata[3]:,.0f}<br>"
-                    "Top-killer kills / hour: %{customdata[4]:.2f}<br>"
-                    "Top-killer kills / life: %{customdata[5]:.2f}<br>"
-                    "Kit kills: %{customdata[8]:,.0f}<br>"
-                    "Kit playtime: %{customdata[9]:,.2f} h<br>"
-                    "Kit players with playtime: %{customdata[10]:,.0f}"
-                    "<extra></extra>"
-                ),
-            )
+    trace_view_indices = []
+    for view_index, (view, plot_data) in enumerate(available_views):
+        prefix = view["prefix"]
+        counterpart_prefix = (
+            "top_playtime_player"
+            if prefix == "top_killer"
+            else "top_killer"
         )
+        for row in plot_data.itertuples(index=False):
+            customdata = [[
+                getattr(row, f"{prefix}_id"),
+                getattr(row, f"{prefix}_kills"),
+                getattr(row, f"{prefix}_hours"),
+                getattr(row, f"{prefix}_completed_lives"),
+                getattr(row, f"{prefix}_kills_per_hour"),
+                getattr(row, f"{prefix}_kills_per_completed_life"),
+                getattr(row, f"{prefix}_kill_share_minus_time_share"),
+                getattr(row, f"{prefix}_kill_to_time_share_ratio"),
+                row.kit_kills,
+                row.kit_total_hours,
+                row.kit_players_with_time,
+                getattr(row, f"{counterpart_prefix}_id"),
+                (
+                    "Yes"
+                    if row.same_top_killer_and_playtime_player
+                    else "No"
+                ),
+            ]]
+            fig.add_trace(
+                go.Scatter(
+                    x=[getattr(row, f"{prefix}_time_share")],
+                    y=[getattr(row, f"{prefix}_kill_share")],
+                    mode="markers",
+                    name=row.kit_name,
+                    legendgroup=row.kit_name,
+                    marker=dict(
+                        size=12,
+                        color=KIT_COLORS[row.kit_name],
+                        line=dict(color="#333333", width=1),
+                    ),
+                    customdata=customdata,
+                    visible=view_index == 0,
+                    hovertemplate=(
+                        f"<b>{row.kit_name}</b><br>"
+                        f"{view['player_label']}: %{{customdata[0]}}<br>"
+                        "Kill share: %{y:.1%}<br>"
+                        "Playtime share: %{x:.1%}<br>"
+                        "Kill-share advantage: %{customdata[6]:+.1%}<br>"
+                        "Kill / playtime share ratio: "
+                        "%{customdata[7]:.2f}<br>"
+                        "Selected-player kills: %{customdata[1]:,.0f}<br>"
+                        "Selected-player playtime: "
+                        "%{customdata[2]:,.2f} h<br>"
+                        "Selected-player completed lives: "
+                        "%{customdata[3]:,.0f}<br>"
+                        "Selected-player kills / hour: "
+                        "%{customdata[4]:.2f}<br>"
+                        "Selected-player kills / life: "
+                        "%{customdata[5]:.2f}<br>"
+                        f"{view['counterpart_label']}: "
+                        "%{customdata[11]}<br>"
+                        "Same player in both modes: %{customdata[12]}<br>"
+                        "Kit kills: %{customdata[8]:,.0f}<br>"
+                        "Kit playtime: %{customdata[9]:,.2f} h<br>"
+                        "Kit players with playtime: "
+                        "%{customdata[10]:,.0f}<extra></extra>"
+                    ),
+                )
+            )
+            trace_view_indices.append(view_index)
 
     fig.add_shape(
         type="line",
@@ -1372,19 +1429,70 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
             bgcolor="rgba(255,255,255,0.72)",
         )
 
+    updatemenus = []
+    if len(available_views) > 1:
+        updatemenus = [
+            {
+                "type": "buttons",
+                "direction": "right",
+                "x": 0.5,
+                "xanchor": "center",
+                "y": 1.16,
+                "yanchor": "top",
+                "showactive": True,
+                "buttons": [
+                    {
+                        "label": view["button_label"],
+                        "method": "update",
+                        "args": [
+                            {
+                                "visible": [
+                                    trace_view_index == view_index
+                                    for trace_view_index in trace_view_indices
+                                ]
+                            },
+                            {
+                                "title": {"text": view["title"]},
+                                "xaxis": {
+                                    "title": {
+                                        "text": view["xaxis_title"]
+                                    },
+                                    "tickformat": ".0%",
+                                    "range": shared_range,
+                                    "constrain": "domain",
+                                },
+                                "yaxis": {
+                                    "title": {
+                                        "text": view["yaxis_title"]
+                                    },
+                                    "tickformat": ".0%",
+                                    "range": shared_range,
+                                    "scaleanchor": "x",
+                                    "scaleratio": 1,
+                                },
+                            },
+                        ],
+                    }
+                    for view_index, (view, _) in enumerate(available_views)
+                ],
+            }
+        ]
+
     fig.update_layout(
-        title=title,
+        title=first_view["title"],
         height=650,
         legend_title_text="Kit",
+        margin=dict(l=70, r=35, t=125, b=70),
+        updatemenus=updatemenus,
     )
     fig.update_xaxes(
-        title="Top killer's share of kit playtime",
+        title=first_view["xaxis_title"],
         tickformat=".0%",
         range=shared_range,
         constrain="domain",
     )
     fig.update_yaxes(
-        title="Top killer's share of kit kills",
+        title=first_view["yaxis_title"],
         tickformat=".0%",
         range=shared_range,
         scaleanchor="x",
@@ -1634,12 +1742,14 @@ def matchup_figure(
             "args": [
                 {"visible": trace_visibility(0)},
                 {
-                    "title": (
-                        "Directional share of observed kills "
-                        "between kit pairs"
-                    ),
-                    "xaxis": {"title": "Other kit"},
-                    "yaxis": {"title": "Row kit"},
+                    "title": {
+                        "text": (
+                            "Directional share of observed kills "
+                            "between kit pairs"
+                        )
+                    },
+                    "xaxis": {"title": {"text": "Other kit"}},
+                    "yaxis": {"title": {"text": "Row kit"}},
                 },
             ],
         },
@@ -1649,9 +1759,11 @@ def matchup_figure(
             "args": [
                 {"visible": trace_visibility(1)},
                 {
-                    "title": "Kills by killer kit and victim kit",
-                    "xaxis": {"title": "Victim kit"},
-                    "yaxis": {"title": "Killer kit"},
+                    "title": {
+                        "text": "Kills by killer kit and victim kit"
+                    },
+                    "xaxis": {"title": {"text": "Victim kit"}},
+                    "yaxis": {"title": {"text": "Killer kit"}},
                 },
             ],
         },
@@ -1665,12 +1777,18 @@ def matchup_figure(
                     "args": [
                         {"visible": trace_visibility(2)},
                         {
-                            "title": (
-                                "Directional share of attributed damage "
-                                "between kit pairs"
-                            ),
-                            "xaxis": {"title": "Other kit"},
-                            "yaxis": {"title": "Row kit"},
+                            "title": {
+                                "text": (
+                                    "Directional share of attributed damage "
+                                    "between kit pairs"
+                                )
+                            },
+                            "xaxis": {
+                                "title": {"text": "Other kit"}
+                            },
+                            "yaxis": {
+                                "title": {"text": "Row kit"}
+                            },
                         },
                     ],
                 },
@@ -1680,11 +1798,18 @@ def matchup_figure(
                     "args": [
                         {"visible": trace_visibility(3)},
                         {
-                            "title": (
-                                "Attributed damage by source kit and target kit"
-                            ),
-                            "xaxis": {"title": "Target kit"},
-                            "yaxis": {"title": "Source kit"},
+                            "title": {
+                                "text": (
+                                    "Attributed damage by source kit and "
+                                    "target kit"
+                                )
+                            },
+                            "xaxis": {
+                                "title": {"text": "Target kit"}
+                            },
+                            "yaxis": {
+                                "title": {"text": "Source kit"}
+                            },
                         },
                     ],
                 },
