@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
 from .core import KIT_NAMES, KIT_ORDER
-from .plot_components import STANDARD_FIGURE_HEIGHT
+from .plot_components import STANDARD_FIGURE_HEIGHT, _trace_count
 
 
 def matchup_figure(
@@ -39,15 +41,25 @@ def matchup_figure(
         pair_total = int(group["kills"].sum())
         if pair_total <= 0:
             continue
-        kill_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
-            f"{row.cause_name}: {row.kills:,} "
-            f"({row.kills / pair_total:.1%})"
-            for row in group.itertuples(index=False)
+        pair_ids = cast(tuple[float, float], pair)
+        cause_lines = []
+        for cause_name, kill_value in group[
+            ["cause_name", "kills"]
+        ].itertuples(index=False, name=None):
+            kill_count = int(cast(float, kill_value))
+            cause_lines.append(
+                f"{cause_name}: {kill_count:,} "
+                f"({kill_count / pair_total:.1%})"
+            )
+        kill_cause_lookup[(int(pair_ids[0]), int(pair_ids[1]))] = (
+            "<br>".join(cause_lines)
         )
 
     for killer_id, killer_name in enumerate(KIT_NAMES):
         for victim_id, victim_name in enumerate(KIT_NAMES):
-            kill_count = int(matchup_matrix.iloc[killer_id, victim_id])
+            kill_count = int(
+                cast(float, matchup_matrix.iloc[killer_id, victim_id])
+            )
             if not kill_count:
                 raw_kill_hover[killer_id, victim_id] = (
                     f"<b>{killer_name} → {victim_name}</b><br>"
@@ -75,9 +87,10 @@ def matchup_figure(
 
             kill_share_hover[i, j] = (
                 f"<b>{row_kit} vs {column_kit}</b><br>"
-                f"{row_kit} kills: {int(matchup_matrix.iloc[i, j]):,}<br>"
+                f"{row_kit} kills: "
+                f"{int(cast(float, matchup_matrix.iloc[i, j])):,}<br>"
                 f"{column_kit} kills: "
-                f"{int(matchup_matrix.iloc[j, i]):,}<br>"
+                f"{int(cast(float, matchup_matrix.iloc[j, i])):,}<br>"
                 f"{row_kit} directional share: "
                 f"{directional_share[i, j]:.1%}<br>"
                 f"Pair kills observed: {int(pair_totals[i, j]):,}<br><br>"
@@ -129,15 +142,12 @@ def matchup_figure(
     )
 
     elo_trace_index: int | None = None
-    has_elo = all(
-        value is not None
-        for value in (
-            elo_matchup_expected_share,
-            elo_matchup_score_difference,
-            elo_matchup_pair_totals,
-        )
-    )
-    if has_elo:
+    elo_arrays: tuple[np.ndarray, np.ndarray, np.ndarray] | None = None
+    if (
+        elo_matchup_expected_share is not None
+        and elo_matchup_score_difference is not None
+        and elo_matchup_pair_totals is not None
+    ):
         expected_shape = (len(KIT_NAMES), len(KIT_NAMES))
         elo_expected = np.asarray(
             elo_matchup_expected_share,
@@ -155,11 +165,11 @@ def matchup_figure(
             raise ValueError(
                 "Elo matchup arrays must match the kit matchup matrix shape"
             )
-        has_elo = bool(
-            np.isfinite(elo_difference).any() and (elo_totals > 0).any()
-        )
+        if np.isfinite(elo_difference).any() and (elo_totals > 0).any():
+            elo_arrays = (elo_expected, elo_difference, elo_totals)
 
-    if has_elo:
+    if elo_arrays is not None:
+        elo_expected, elo_difference, elo_totals = elo_arrays
         elo_display = elo_difference.copy()
         elo_display[np.tril_indices(len(KIT_NAMES))] = np.nan
         elo_hover = np.full_like(elo_difference, "", dtype=object)
@@ -200,7 +210,7 @@ def matchup_figure(
             else 0.0,
             0.02,
         )
-        elo_trace_index = len(fig.data)
+        elo_trace_index = _trace_count(fig)
         fig.add_trace(
             go.Heatmap(
                 z=elo_display,
@@ -235,6 +245,10 @@ def matchup_figure(
     damage_share_trace_index: int | None = None
     raw_damage_trace_index: int | None = None
     if has_damage:
+        assert damage_matchup_matrix is not None
+        assert damage_directional_share is not None
+        assert damage_pair_totals is not None
+        assert matchup_damage_by_cause is not None
         damage_share_display = damage_directional_share.copy()
         damage_share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
         damage_share_hover = np.full_like(
@@ -255,16 +269,27 @@ def matchup_figure(
             pair_total = float(group["damage_received"].sum())
             if pair_total <= 0:
                 continue
-            damage_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
-                f"{row.cause_name}: {row.damage_received:,.0f} hearts "
-                f"({row.damage_received / pair_total:.1%})"
-                for row in group.itertuples(index=False)
+            pair_ids = cast(tuple[float, float], pair)
+            cause_lines = []
+            for cause_name, damage_value in group[
+                ["cause_name", "damage_received"]
+            ].itertuples(index=False, name=None):
+                numeric_damage = float(cast(float, damage_value))
+                cause_lines.append(
+                    f"{cause_name}: {numeric_damage:,.0f} hearts "
+                    f"({numeric_damage / pair_total:.1%})"
+                )
+            damage_cause_lookup[(int(pair_ids[0]), int(pair_ids[1]))] = (
+                "<br>".join(cause_lines)
             )
 
         for source_id, source_name in enumerate(KIT_NAMES):
             for target_id, target_name in enumerate(KIT_NAMES):
                 damage_value = float(
-                    damage_matchup_matrix.iloc[source_id, target_id]
+                    cast(
+                        float,
+                        damage_matchup_matrix.iloc[source_id, target_id],
+                    )
                 )
                 if damage_value <= 0:
                     raw_damage_hover[source_id, target_id] = (
@@ -306,7 +331,7 @@ def matchup_figure(
                     f"{damage_cause_lookup.get((j, i), 'No attributed damage')}"
                 )
 
-        damage_share_trace_index = len(fig.data)
+        damage_share_trace_index = _trace_count(fig)
         fig.add_trace(
             go.Heatmap(
                 z=damage_share_display,
@@ -331,7 +356,7 @@ def matchup_figure(
                 visible=False,
             )
         )
-        raw_damage_trace_index = len(fig.data)
+        raw_damage_trace_index = _trace_count(fig)
         fig.add_trace(
             go.Heatmap(
                 z=damage_matchup_matrix.values,
@@ -346,7 +371,7 @@ def matchup_figure(
 
     def trace_visibility(trace_index: int) -> list[bool]:
         return [
-            index == trace_index for index in range(len(fig.data))
+            index == trace_index for index in range(_trace_count(fig))
         ]
 
     buttons = [

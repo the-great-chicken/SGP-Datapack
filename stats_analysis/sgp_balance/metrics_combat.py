@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import numpy as np
 import pandas as pd
 
@@ -30,13 +32,13 @@ def _build_kill_tables(
 ]:
     """Build kit totals, concentration, and pairwise kill tables."""
 
-    player_kit_kills = (
+    player_kit_kills = cast(
+        pd.DataFrame,
         attributed_kills.groupby(
             ["id_killer", "kit_id_killer"], as_index=False
         )["kills"]
         .sum()
-        .rename(columns={"kit_id_killer": "kit_id"})
-    )
+    ).rename(columns={"kit_id_killer": "kit_id"})
     player_kit_kills["kit_name"] = player_kit_kills["kit_id"].map(
         KIT_ID_TO_NAME
     )
@@ -103,17 +105,17 @@ def _build_damage_tables(
 ]:
     """Build offensive, defensive, and pairwise damage tables."""
 
-    player_kit_damage_dealt = (
+    player_kit_damage_dealt = cast(
+        pd.DataFrame,
         attributed_damage.groupby(
             ["id_source", "kit_id_source"], as_index=False
         )["damage_received"]
         .sum()
-        .rename(
-            columns={
-                "kit_id_source": "kit_id",
-                "damage_received": "damage_dealt",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_source": "kit_id",
+            "damage_received": "damage_dealt",
+        }
     )
     player_kit_damage_dealt["kit_name"] = player_kit_damage_dealt[
         "kit_id"
@@ -148,7 +150,8 @@ def _build_damage_tables(
         kit_damage_dealt_stats["players_dealing_damage"], errors="coerce"
     ).fillna(0).astype(int)
 
-    player_kit_damage_received = (
+    player_kit_damage_received = cast(
+        pd.DataFrame,
         damage_received.loc[
             damage_received["kit_id_target"].isin(KIT_ID_TO_NAME)
         ]
@@ -156,8 +159,7 @@ def _build_damage_tables(
             "damage_received"
         ]
         .sum()
-        .rename(columns={"kit_id_target": "kit_id"})
-    )
+    ).rename(columns={"kit_id_target": "kit_id"})
     player_kit_damage_received["kit_name"] = player_kit_damage_received[
         "kit_id"
     ].map(KIT_ID_TO_NAME)
@@ -482,15 +484,17 @@ def _build_elo_kill_context(
     observed_scores = np.zeros(shape, dtype=float)
     expected_scores = np.zeros(shape, dtype=float)
     for row in results.itertuples(index=False):
-        killer_kit = int(row.kit_id_killer)
-        victim_kit = int(row.kit_id_victim)
-        result_count = int(row.kills)
+        killer_kit = int(cast(float, row.kit_id_killer))
+        victim_kit = int(cast(float, row.kit_id_victim))
+        result_count = int(cast(float, row.kills))
         observed_scores[killer_kit, victim_kit] += result_count
         expected_scores[killer_kit, victim_kit] += (
-            result_count * row.killer_current_elo_expected_score
+            result_count
+            * cast(float, row.killer_current_elo_expected_score)
         )
         expected_scores[victim_kit, killer_kit] += (
-            result_count * row.victim_current_elo_expected_score
+            result_count
+            * cast(float, row.victim_current_elo_expected_score)
         )
         pair_totals[killer_kit, victim_kit] += result_count
         pair_totals[victim_kit, killer_kit] += result_count
@@ -626,13 +630,13 @@ def _build_kill_cause_tables(
         ["kit_id", "total_hours", "completed_lives"]
     ]
 
-    outgoing_counts = (
+    outgoing_counts = cast(
+        pd.DataFrame,
         attributed_kills.groupby(
             ["kit_id_killer", "cause_id"], as_index=False
         )["kills"]
         .sum()
-        .rename(columns={"kit_id_killer": "kit_id"})
-    )
+    ).rename(columns={"kit_id_killer": "kit_id"})
     outgoing = (
         cause_grid.merge(
             outgoing_counts,
@@ -656,17 +660,17 @@ def _build_kill_cause_tables(
         outgoing["kills"], outgoing["completed_lives"]
     )
 
-    incoming_counts = (
+    incoming_counts = cast(
+        pd.DataFrame,
         deaths_with_kit.groupby(
             ["kit_id_victim", "cause_id"], as_index=False
         )["kills"]
         .sum()
-        .rename(
-            columns={
-                "kit_id_victim": "kit_id",
-                "kills": "deaths",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_victim": "kit_id",
+            "kills": "deaths",
+        }
     )
     incoming = (
         cause_grid.merge(
@@ -691,25 +695,25 @@ def _build_kill_cause_tables(
         incoming["deaths"], incoming["completed_lives"]
     )
 
-    total_deaths = (
+    total_deaths = cast(
+        pd.DataFrame,
         deaths_with_kit.groupby("kit_id_victim", as_index=False)["kills"]
         .sum()
-        .rename(
-            columns={"kit_id_victim": "kit_id", "kills": "deaths"}
-        )
+    ).rename(
+        columns={"kit_id_victim": "kit_id", "kills": "deaths"}
     )
-    player_deaths = (
+    player_deaths = cast(
+        pd.DataFrame,
         deaths_with_kit.loc[
             deaths_with_kit["kit_id_killer"].isin(KIT_ID_TO_NAME)
         ]
         .groupby("kit_id_victim", as_index=False)["kills"]
         .sum()
-        .rename(
-            columns={
-                "kit_id_victim": "kit_id",
-                "kills": "player_caused_deaths",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_victim": "kit_id",
+            "kills": "player_caused_deaths",
+        }
     )
     death_metrics = (
         all_kits.merge(total_deaths, on="kit_id", how="left")
@@ -807,17 +811,17 @@ def _build_damage_cause_tables(
         ["kit_id", "total_hours", "completed_lives"]
     ]
 
-    outgoing_counts = (
+    outgoing_counts = cast(
+        pd.DataFrame,
         attributed_damage.groupby(
             ["kit_id_source", "cause_id"], as_index=False
         )["damage_received"]
         .sum()
-        .rename(
-            columns={
-                "kit_id_source": "kit_id",
-                "damage_received": "damage_dealt",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_source": "kit_id",
+            "damage_received": "damage_dealt",
+        }
     )
     outgoing = (
         cause_grid.merge(
@@ -844,13 +848,13 @@ def _build_damage_cause_tables(
         outgoing["damage_dealt"], outgoing["completed_lives"]
     )
 
-    incoming_counts = (
+    incoming_counts = cast(
+        pd.DataFrame,
         damage_with_kit.groupby(
             ["kit_id_target", "cause_id"], as_index=False
         )["damage_received"]
         .sum()
-        .rename(columns={"kit_id_target": "kit_id"})
-    )
+    ).rename(columns={"kit_id_target": "kit_id"})
     incoming = (
         cause_grid.merge(
             incoming_counts,
@@ -874,37 +878,37 @@ def _build_damage_cause_tables(
         incoming["damage_received"], incoming["completed_lives"]
     )
 
-    total_damage_dealt = (
+    total_damage_dealt = cast(
+        pd.DataFrame,
         attributed_damage.groupby("kit_id_source", as_index=False)[
             "damage_received"
         ]
         .sum()
-        .rename(
-            columns={
-                "kit_id_source": "kit_id",
-                "damage_received": "damage_dealt",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_source": "kit_id",
+            "damage_received": "damage_dealt",
+        }
     )
-    total_damage_received = (
+    total_damage_received = cast(
+        pd.DataFrame,
         damage_with_kit.groupby("kit_id_target", as_index=False)[
             "damage_received"
         ]
         .sum()
-        .rename(columns={"kit_id_target": "kit_id"})
-    )
-    player_damage_received = (
+    ).rename(columns={"kit_id_target": "kit_id"})
+    player_damage_received = cast(
+        pd.DataFrame,
         damage_with_kit.loc[
             damage_with_kit["kit_id_source"].isin(KIT_ID_TO_NAME)
         ]
         .groupby("kit_id_target", as_index=False)["damage_received"]
         .sum()
-        .rename(
-            columns={
-                "kit_id_target": "kit_id",
-                "damage_received": "player_damage_received",
-            }
-        )
+    ).rename(
+        columns={
+            "kit_id_target": "kit_id",
+            "damage_received": "player_damage_received",
+        }
     )
     damage_metrics = (
         all_kits.merge(total_damage_dealt, on="kit_id", how="left")

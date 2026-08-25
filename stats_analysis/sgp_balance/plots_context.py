@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -215,8 +217,11 @@ def player_reach_figure(report: ReportData) -> go.Figure:
     reach_line_x: list[float | None] = []
     reach_line_y: list[str | None] = []
     for row in plot_data.itertuples(index=False):
-        reach_line_x.extend([row.played, row.made_kill, None])
-        reach_line_y.extend([row.kit_name, row.kit_name, None])
+        reach_line_x.extend(
+            [cast(float, row.played), cast(float, row.made_kill), None]
+        )
+        kit_name = cast(str, row.kit_name)
+        reach_line_y.extend([kit_name, kit_name, None])
 
     fig.add_trace(
         go.Scatter(
@@ -686,13 +691,16 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
         )
         return fig
 
-    share_values = pd.concat(
-        [
-            plot_data[f"{view['prefix']}_{share_kind}_share"]
-            for view, plot_data in available_views
-            for share_kind in ("time", "kill")
-        ],
-        ignore_index=True,
+    share_values = cast(
+        pd.Series,
+        pd.concat(
+            [
+                plot_data[f"{view['prefix']}_{share_kind}_share"]
+                for view, plot_data in available_views
+                for share_kind in ("time", "kill")
+            ],
+            ignore_index=True,
+        ),
     )
     shared_range = _padded_axis_range(
         share_values,

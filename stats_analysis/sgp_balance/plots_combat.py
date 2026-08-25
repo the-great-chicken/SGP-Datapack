@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Sequence, TypedDict, cast
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -14,6 +16,7 @@ from .plot_components import (
     STANDARD_FIGURE_HEIGHT,
     _elo_name,
     _format_hours,
+    _trace_count,
     player_contribution_figure,
 )
 
@@ -30,6 +33,22 @@ CAUSE_COLOR_SEQUENCE = (
     "#9C755F",
     "#BAB0AC",
 )
+
+
+class _CauseMode(TypedDict):
+    """One complete state of the switchable cause-profile figure."""
+
+    button_label: str
+    data: pd.DataFrame
+    value_col: str
+    order: Sequence[str]
+    title: str
+    xaxis_title: str
+    yaxis_title: str
+    tickformat: str
+    range: list[int] | None
+    custom_cols: list[str]
+    hovertemplate: str
 
 
 def _cause_color_map(report: ReportData) -> dict[int, str]:
@@ -50,39 +69,44 @@ def _cause_color_map(report: ReportData) -> dict[int, str]:
 def _stacked_cause_modes_figure(
     *,
     causes: pd.DataFrame,
-    modes: tuple[dict[str, object], ...],
+    modes: Sequence[_CauseMode],
     cause_colors: dict[int, str],
     legend_title: str,
 ) -> go.Figure:
     """Render switchable stacked cause profiles in one single-axis figure."""
 
-    cause_rows = list(causes.sort_values("cause_id").itertuples(index=False))
+    cause_rows = [
+        (int(cast(float, cause_id)), str(cause_name))
+        for cause_id, cause_name in causes.sort_values("cause_id")[
+            ["cause_id", "cause_name"]
+        ].itertuples(index=False, name=None)
+    ]
     fig = go.Figure()
     traces_per_mode = len(cause_rows)
     for mode_index, mode in enumerate(modes):
         frame = mode["data"]
         order = mode["order"]
-        for cause in cause_rows:
+        for cause_id, cause_name in cause_rows:
             cause_data = (
-                frame.loc[frame["cause_id"] == cause.cause_id]
+                frame.loc[frame["cause_id"] == cause_id]
                 .set_index("kit_name")
-                .reindex(order)
+                .reindex(list(order))
             )
             fig.add_trace(
                 go.Bar(
                     x=order,
                     y=cause_data[mode["value_col"]],
-                    name=cause.cause_name,
-                    legendgroup=cause.cause_name,
-                    legendrank=cause.cause_id,
+                    name=cause_name,
+                    legendgroup=cause_name,
+                    legendrank=cause_id,
                     meta={
                         "role": "cause",
-                        "causeId": str(cause.cause_id),
+                        "causeId": str(cause_id),
                         "highlightGroup": "cause",
-                        "highlightValue": str(cause.cause_id),
+                        "highlightValue": str(cause_id),
                     },
                     marker=dict(
-                        color=cause_colors[cause.cause_id],
+                        color=cause_colors[cause_id],
                         line=dict(
                             color="rgba(255,255,255,0.75)",
                             width=0.5,
@@ -98,7 +122,7 @@ def _stacked_cause_modes_figure(
     def visibility(mode_index: int) -> list[bool]:
         return [
             trace_index // traces_per_mode == mode_index
-            for trace_index in range(len(fig.data))
+            for trace_index in range(_trace_count(fig))
         ]
 
     first_mode = modes[0]
@@ -502,7 +526,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
         )["kit_name"].tolist()
     )
 
-    modes = (
+    modes: tuple[_CauseMode, ...] = (
         {
             "button_label": "Outgoing share",
             "data": outgoing,
@@ -635,7 +659,7 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
         "kit_total_damage_received",
         "active_time_text",
     ]
-    modes = (
+    modes: tuple[_CauseMode, ...] = (
         {
             "button_label": "Dealt / hour",
             "data": outgoing,

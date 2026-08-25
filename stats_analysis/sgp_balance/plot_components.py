@@ -8,7 +8,8 @@ SGP-specific choice of metrics and report story remain in :mod:`sgp_report`.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, Sequence
+from importlib import import_module
+from typing import Any, Literal, Sequence, TypedDict, cast
 
 import numpy as np
 import pandas as pd
@@ -36,6 +37,21 @@ STANDARD_FIGURE_HEIGHT = 680
 
 MetricKind = Literal["count", "percent"]
 MetricSpec = tuple[str, str, MetricKind]
+
+
+class _QuadrantLayout(TypedDict):
+    """Plotly-ready layout fragments for one quadrant mode."""
+
+    xaxis: dict[str, Any]
+    yaxis: dict[str, Any]
+    shapes: list[dict[str, Any]]
+    annotations: list[dict[str, Any]]
+
+
+def _trace_count(fig: go.Figure) -> int:
+    """Return a figure's trace count across Plotly stub versions."""
+
+    return len(cast(Sequence[object], fig.data))
 
 
 @dataclass(frozen=True)
@@ -274,7 +290,7 @@ def player_contribution_figure(
         )
 
     aggregate_count = len(metric_views)
-    player_count = len(fig.data) - aggregate_count
+    player_count = _trace_count(fig) - aggregate_count
 
     def aggregate_visibility(mode_index: int) -> list[bool]:
         return [
@@ -413,14 +429,16 @@ def player_contribution_figure(
 def _show_click_highlight_figure(fig: go.Figure) -> None:
     """Display a figure with browser-side trace-group highlighting."""
 
-    from IPython.display import HTML, display
+    display_module = import_module("IPython.display")
+    html_fragment = display_module.HTML
+    display = display_module.display
 
     html = fig.to_html(
         full_html=False,
         include_plotlyjs=True,
         post_script=TRACE_HIGHLIGHT_POST_SCRIPT,
     )
-    display(HTML(html))
+    display(html_fragment(html))
 
 
 def show_player_contribution_figure(fig: go.Figure) -> None:
@@ -529,7 +547,7 @@ def concentration_figure(
                             {
                                 "visible": [
                                     trace_index // traces_per_view == view_index
-                                    for trace_index in range(len(fig.data))
+                                    for trace_index in range(_trace_count(fig))
                                 ]
                             },
                             {
@@ -587,7 +605,7 @@ def _quadrant_modes_figure(
         for mode in modes
     ]
     fig = go.Figure()
-    for row_index, row in plot_data.iterrows():
+    for row_index, (_, row) in enumerate(plot_data.iterrows()):
         kit_name = row["kit_name"]
         fig.add_trace(
             go.Scatter(
@@ -670,7 +688,7 @@ def _quadrant_modes_figure(
 def _quadrant_mode_layout(
     data: pd.DataFrame,
     mode: QuadrantMode,
-) -> dict[str, object]:
+) -> _QuadrantLayout:
     """Calculate axes, median guides, and quadrant labels for one mode."""
 
     finite = data[[mode.x_col, mode.y_col]].replace(
@@ -852,7 +870,7 @@ def _quadrant_scatter_figure(
         labels=labels,
         title=title,
     )
-    for trace in fig.data:
+    for trace in cast(Sequence[Any], fig.data):
         if trace.hovertemplate:
             trace.hovertemplate = trace.hovertemplate.replace("=", ": ")
     fig.update_traces(

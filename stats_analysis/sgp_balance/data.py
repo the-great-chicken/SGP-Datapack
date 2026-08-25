@@ -140,6 +140,7 @@ def prepare_report_data(
     if elo_metadata is None:
         elo_metadata = pd.DataFrame(columns=ELO_METADATA_COLUMNS)
         elo_ratings = pd.DataFrame(columns=ELO_RATING_COLUMNS)
+    assert elo_ratings is not None
     damage_causes = kill_causes
 
     (
