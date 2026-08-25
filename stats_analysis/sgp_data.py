@@ -37,6 +37,7 @@ NO_PLAYER_ID = "-1"
 KILL_COLUMNS = (
     "id_killer",
     "kit_id_killer",
+    "id_victim",
     "kit_id_victim",
     "cause_id",
     "kills",
@@ -156,6 +157,10 @@ class ReportData:
     player_kit_exposure: pd.DataFrame
     kit_exposure: pd.DataFrame
     kit_elo_context: pd.DataFrame
+    elo_kill_results: pd.DataFrame
+    elo_matchup_expected_share: np.ndarray
+    elo_matchup_score_difference: np.ndarray
+    elo_matchup_pair_totals: np.ndarray
     player_kit_metrics: pd.DataFrame
     kit_metrics: pd.DataFrame
     top_killer_exposure: pd.DataFrame
@@ -480,6 +485,7 @@ def prepare_report_data(
     ]
     all_player_ids = (
         set(kills["id_killer"])
+        | set(kills["id_victim"])
         | set(damage_received["id_target"])
         | set(damage_player_sources)
         | set(abilities["id"])
@@ -491,6 +497,17 @@ def prepare_report_data(
         elo_metadata,
         elo_ratings,
         kills,
+    )
+    (
+        elo_kill_results,
+        elo_matchup_expected_share,
+        elo_matchup_score_difference,
+        elo_matchup_pair_totals,
+    ) = _build_elo_kill_context(
+        attributed_kills,
+        player_elo,
+        elo_metadata,
+        all_kits,
     )
 
     player_kit_exposure, no_kit_exposure = _build_player_kit_exposure(
@@ -674,6 +691,10 @@ def prepare_report_data(
         player_kit_exposure=player_kit_exposure,
         kit_exposure=kit_exposure,
         kit_elo_context=kit_elo_context,
+        elo_kill_results=elo_kill_results,
+        elo_matchup_expected_share=elo_matchup_expected_share,
+        elo_matchup_score_difference=elo_matchup_score_difference,
+        elo_matchup_pair_totals=elo_matchup_pair_totals,
         player_kit_metrics=player_kit_metrics,
         kit_metrics=kit_metrics,
         top_killer_exposure=top_killer_exposure,
@@ -733,6 +754,7 @@ def _validate_and_normalize(
             raise ValueError(f"{name} contains missing values")
 
     kills["id_killer"] = kills["id_killer"].astype(str)
+    kills["id_victim"] = kills["id_victim"].astype(str)
     for column in ("kit_id_killer", "kit_id_victim", "cause_id", "kills"):
         kills[column] = pd.to_numeric(kills[column], errors="raise").astype(int)
 
@@ -836,7 +858,13 @@ def _validate_and_normalize(
     if not ability_metadata["kit_id"].isin(KIT_ID_TO_NAME).all():
         raise ValueError("Unknown ability-metadata kit ID found")
     if kills.duplicated(
-        ["id_killer", "kit_id_killer", "kit_id_victim", "cause_id"]
+        [
+            "id_killer",
+            "kit_id_killer",
+            "id_victim",
+            "kit_id_victim",
+            "cause_id",
+        ]
     ).any():
         raise ValueError("Duplicate kill-stat rows found")
     if damage_received.duplicated(
@@ -955,7 +983,7 @@ def _validate_and_normalize_elo(
     elo_metadata: pd.DataFrame,
     elo_ratings: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Validate the optional Elo snapshot emitted by schema version 4."""
+    """Validate the optional Elo snapshot emitted by schema version 5."""
 
     _require_columns(elo_metadata, ELO_METADATA_COLUMNS, "elo_metadata")
     _require_columns(elo_ratings, ELO_RATING_COLUMNS, "elo_ratings")
@@ -1112,24 +1140,266 @@ def _build_player_elo(
     )
 
     rated_lookup = players.set_index("id")["rated_encounters"]
-    credited_killers = set(
-        kills.loc[
-            (kills["kills"] > 0) & kills["id_killer"].ne(NO_PLAYER_ID),
-            "id_killer",
-        ]
+    rated_kills = kills.loc[
+        (kills["kills"] > 0)
+        & kills["kit_id_killer"].isin(KIT_ID_TO_NAME)
+        & kills["kit_id_victim"].isin(KIT_ID_TO_NAME)
+        & kills["id_killer"].ne(NO_PLAYER_ID)
+        & kills["id_victim"].ne(NO_PLAYER_ID)
+        & kills["id_killer"].ne(kills["id_victim"])
+    ]
+    credited_participants = set(rated_kills["id_killer"]) | set(
+        rated_kills["id_victim"]
     )
-    invalid_killers = sorted(
+    invalid_participants = sorted(
         player_id
-        for player_id in credited_killers
+        for player_id in credited_participants
         if player_id not in rated_lookup.index
         or int(rated_lookup.loc[player_id]) <= 0
     )
-    if invalid_killers:
+    if invalid_participants:
         raise ValueError(
-            "Players with credited kills must have rated encounters: "
-            f"{invalid_killers}"
+            "Players in credited PvP kill results must have rated "
+            f"encounters: {invalid_participants}"
         )
     return players
+
+
+def _build_elo_kill_context(
+    attributed_kills: pd.DataFrame,
+    player_elo: pd.DataFrame,
+    elo_metadata: pd.DataFrame,
+    all_kits: pd.DataFrame,
+) -> tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray]:
+    """Compare cross-kit kill results with the current Elo snapshot.
+
+    Each credited PvP kill contributes one observed score of 1 to the killer
+    and 0 to the victim. The corresponding expected scores use the configured
+    logistic Elo formula and both players' ratings at extraction time. These
+    are deliberately described as *current-Elo-implied* results: the extract
+    does not contain the pre-kill rating snapshots needed to reconstruct the
+    historical expectation of each encounter.
+
+    Same-kit results are excluded because they necessarily add one win and one
+    loss to the same kit and therefore carry no kit-balance signal.
+    """
+
+    output = all_kits.copy()
+    count_columns = (
+        "cross_kit_kills",
+        "cross_kit_deaths",
+        "cross_kit_results",
+        "players_in_cross_kit_results",
+    )
+    metric_columns = (
+        "observed_cross_kit_score_rate",
+        "current_elo_implied_score_rate",
+        "score_rate_minus_current_elo",
+        "current_elo_implied_score_sum",
+        "score_sum_minus_current_elo",
+    )
+    for column in count_columns:
+        output[column] = 0
+    for column in metric_columns:
+        output[column] = np.nan
+
+    shape = (len(KIT_NAMES), len(KIT_NAMES))
+    expected_share = np.full(shape, np.nan, dtype=float)
+    score_difference = np.full(shape, np.nan, dtype=float)
+    pair_totals = np.zeros(shape, dtype=int)
+    if elo_metadata.empty:
+        return output, expected_share, score_difference, pair_totals
+
+    algorithm = str(elo_metadata["algorithm"].iloc[0])
+    if algorithm != "elo_logistic":
+        raise ValueError(
+            "Current-Elo kill comparisons require algorithm "
+            f"'elo_logistic'; found {algorithm!r}"
+        )
+    result_type = str(elo_metadata["result_type"].iloc[0])
+    if result_type != "credited_pvp_kill":
+        raise ValueError(
+            "Current-Elo kill comparisons require result_type "
+            f"'credited_pvp_kill'; found {result_type!r}"
+        )
+
+    results = attributed_kills.loc[
+        (attributed_kills["kills"] > 0)
+        & attributed_kills["id_killer"].ne(NO_PLAYER_ID)
+        & attributed_kills["id_victim"].ne(NO_PLAYER_ID)
+        & attributed_kills["id_killer"].ne(attributed_kills["id_victim"])
+        & attributed_kills["kit_id_killer"].ne(
+            attributed_kills["kit_id_victim"]
+        )
+    ].copy()
+    if results.empty:
+        return output, expected_share, score_difference, pair_totals
+
+    rating_lookup = player_elo[
+        ["id", "rating", "rated_encounters"]
+    ]
+    results = (
+        results.merge(
+            rating_lookup.rename(
+                columns={
+                    "id": "id_killer",
+                    "rating": "killer_rating",
+                    "rated_encounters": "killer_rated_encounters",
+                }
+            ),
+            on="id_killer",
+            how="left",
+            validate="many_to_one",
+        )
+        .merge(
+            rating_lookup.rename(
+                columns={
+                    "id": "id_victim",
+                    "rating": "victim_rating",
+                    "rated_encounters": "victim_rated_encounters",
+                }
+            ),
+            on="id_victim",
+            how="left",
+            validate="many_to_one",
+        )
+    )
+    required_rating_columns = [
+        "killer_rating",
+        "victim_rating",
+        "killer_rated_encounters",
+        "victim_rated_encounters",
+    ]
+    if results[required_rating_columns].isna().any().any():
+        raise ValueError(
+            "Credited PvP kill results reference players missing from the "
+            "Elo snapshot"
+        )
+    if (
+        (results["killer_rated_encounters"] <= 0)
+        | (results["victim_rated_encounters"] <= 0)
+    ).any():
+        raise ValueError(
+            "Credited PvP kill results require positive rated encounters "
+            "for both players"
+        )
+
+    rating_divisor = float(elo_metadata["rating_divisor"].iloc[0])
+    rating_gap = (
+        results["victim_rating"] - results["killer_rating"]
+    ) / rating_divisor
+    # Clipping only protects the floating-point exponent at implausibly large
+    # rating gaps; it has no practical effect on ordinary Elo values.
+    odds = np.power(10.0, np.clip(rating_gap, -300.0, 300.0))
+    results["killer_current_elo_expected_score"] = 1.0 / (1.0 + odds)
+    results["victim_current_elo_expected_score"] = (
+        1.0 - results["killer_current_elo_expected_score"]
+    )
+
+    killer_sides = pd.DataFrame(
+        {
+            "id": results["id_killer"],
+            "kit_id": results["kit_id_killer"],
+            "cross_kit_kills": results["kills"],
+            "cross_kit_deaths": 0,
+            "cross_kit_results": results["kills"],
+            "observed_score_sum": results["kills"],
+            "current_elo_implied_score_sum": (
+                results["kills"]
+                * results["killer_current_elo_expected_score"]
+            ),
+        }
+    )
+    victim_sides = pd.DataFrame(
+        {
+            "id": results["id_victim"],
+            "kit_id": results["kit_id_victim"],
+            "cross_kit_kills": 0,
+            "cross_kit_deaths": results["kills"],
+            "cross_kit_results": results["kills"],
+            "observed_score_sum": 0,
+            "current_elo_implied_score_sum": (
+                results["kills"]
+                * results["victim_current_elo_expected_score"]
+            ),
+        }
+    )
+    sides = pd.concat([killer_sides, victim_sides], ignore_index=True)
+    totals = sides.groupby("kit_id", as_index=False).agg(
+        cross_kit_kills=("cross_kit_kills", "sum"),
+        cross_kit_deaths=("cross_kit_deaths", "sum"),
+        cross_kit_results=("cross_kit_results", "sum"),
+        observed_score_sum=("observed_score_sum", "sum"),
+        current_elo_implied_score_sum=(
+            "current_elo_implied_score_sum",
+            "sum",
+        ),
+        players_in_cross_kit_results=("id", "nunique"),
+    )
+    totals["observed_cross_kit_score_rate"] = _safe_divide(
+        totals["observed_score_sum"], totals["cross_kit_results"]
+    )
+    totals["current_elo_implied_score_rate"] = _safe_divide(
+        totals["current_elo_implied_score_sum"],
+        totals["cross_kit_results"],
+    )
+    totals["score_rate_minus_current_elo"] = (
+        totals["observed_cross_kit_score_rate"]
+        - totals["current_elo_implied_score_rate"]
+    )
+    totals["score_sum_minus_current_elo"] = (
+        totals["observed_score_sum"]
+        - totals["current_elo_implied_score_sum"]
+    )
+    output = all_kits.merge(
+        totals.drop(columns="observed_score_sum"),
+        on="kit_id",
+        how="left",
+        validate="one_to_one",
+    )
+    output[list(count_columns)] = output[list(count_columns)].fillna(0).astype(
+        int
+    )
+
+    observed_scores = np.zeros(shape, dtype=float)
+    expected_scores = np.zeros(shape, dtype=float)
+    for row in results.itertuples(index=False):
+        killer_kit = int(row.kit_id_killer)
+        victim_kit = int(row.kit_id_victim)
+        result_count = int(row.kills)
+        observed_scores[killer_kit, victim_kit] += result_count
+        expected_scores[killer_kit, victim_kit] += (
+            result_count * row.killer_current_elo_expected_score
+        )
+        expected_scores[victim_kit, killer_kit] += (
+            result_count * row.victim_current_elo_expected_score
+        )
+        pair_totals[killer_kit, victim_kit] += result_count
+        pair_totals[victim_kit, killer_kit] += result_count
+
+    observed_share = np.full(shape, np.nan, dtype=float)
+    np.divide(
+        observed_scores,
+        pair_totals,
+        out=observed_share,
+        where=pair_totals > 0,
+    )
+    np.divide(
+        expected_scores,
+        pair_totals,
+        out=expected_share,
+        where=pair_totals > 0,
+    )
+    score_difference = observed_share - expected_share
+    np.fill_diagonal(expected_share, np.nan)
+    np.fill_diagonal(score_difference, np.nan)
+    np.fill_diagonal(pair_totals, 0)
+    return (
+        output.sort_values("kit_id").reset_index(drop=True),
+        expected_share,
+        score_difference,
+        pair_totals,
+    )
 
 
 def _build_kit_elo_context(

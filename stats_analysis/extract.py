@@ -656,12 +656,22 @@ def get_elo_metric_definitions(elo_metadata: Any) -> Any:
 
 def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
     """
-    Extract the report-facing Elo metadata and metric definitions.
+    Extract Elo configuration and metric definitions.
 
     One row is emitted per metric.
 
     Columns:
+        elo_name
+        elo_description
+        algorithm
         initial_rating
+        k_factor
+        rating_divisor
+        result_type
+        major_events_rated
+        environmental_deaths_rated
+        self_kills_rated
+        update_mode
         metric_id
         metric_name
         metric_description
@@ -670,8 +680,27 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         display_scale
     """
     metrics = get_elo_metric_definitions(elo_metadata)
-    if "initial_rating" not in elo_metadata:
-        raise ValueError("Missing Elo metadata field: initial_rating")
+    required_configuration = [
+        "name",
+        "description",
+        "algorithm",
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+        "result_type",
+        "major_events_rated",
+        "environmental_deaths_rated",
+        "self_kills_rated",
+        "update_mode",
+    ]
+    missing_configuration = [
+        field for field in required_configuration if field not in elo_metadata
+    ]
+    if missing_configuration:
+        raise ValueError(
+            "Missing Elo metadata field(s): "
+            + ", ".join(missing_configuration)
+        )
 
     rows: list[dict[str, Any]] = []
 
@@ -701,7 +730,23 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
         rows.append(
             {
+                "elo_name": str(elo_metadata["name"]),
+                "elo_description": str(elo_metadata["description"]),
+                "algorithm": str(elo_metadata["algorithm"]),
                 "initial_rating": float(elo_metadata["initial_rating"]),
+                "k_factor": float(elo_metadata["k_factor"]),
+                "rating_divisor": float(elo_metadata["rating_divisor"]),
+                "result_type": str(elo_metadata["result_type"]),
+                "major_events_rated": bool(
+                    int(elo_metadata["major_events_rated"])
+                ),
+                "environmental_deaths_rated": bool(
+                    int(elo_metadata["environmental_deaths_rated"])
+                ),
+                "self_kills_rated": bool(
+                    int(elo_metadata["self_kills_rated"])
+                ),
+                "update_mode": str(elo_metadata["update_mode"]),
                 "metric_id": str(metric_id),
                 "metric_name": str(metric_data["name"]),
                 "metric_description": str(metric_data["description"]),
@@ -718,7 +763,17 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         pd.DataFrame(
             rows,
             columns=[
+                "elo_name",
+                "elo_description",
+                "algorithm",
                 "initial_rating",
+                "k_factor",
+                "rating_divisor",
+                "result_type",
+                "major_events_rated",
+                "environmental_deaths_rated",
+                "self_kills_rated",
+                "update_mode",
                 "metric_id",
                 "metric_name",
                 "metric_description",

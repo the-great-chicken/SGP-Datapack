@@ -1919,12 +1919,144 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     return fig
 
 
+def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
+    """Show kit kill results relative to players' current Elo ratings."""
+
+    elo_name = _elo_name(report)
+    title = (
+        "Which kits win more cross-kit kill exchanges than their players’ "
+        f"current {elo_name} implies?"
+    )
+    fig = go.Figure()
+    if report.elo_metadata.empty:
+        fig.update_layout(
+            title=title,
+            xaxis_title=(
+                "Observed minus current-Elo-implied kill-exchange share"
+            ),
+            yaxis_title="Kit",
+        )
+        fig.add_annotation(
+            text="Current Elo data is not available in this extraction.",
+            x=0.5,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+        )
+        return fig
+
+    plot_data = report.elo_kill_results.loc[
+        report.elo_kill_results["cross_kit_results"] > 0
+    ].copy()
+    plot_data = plot_data.replace([np.inf, -np.inf], np.nan).dropna(
+        subset=["score_rate_minus_current_elo"]
+    )
+    if plot_data.empty:
+        fig.update_layout(
+            title=title,
+            xaxis_title=(
+                "Observed minus current-Elo-implied kill-exchange share"
+            ),
+            yaxis_title="Kit",
+        )
+        fig.add_annotation(
+            text="No Elo-comparable cross-kit kill results were observed.",
+            x=0.5,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+        )
+        return fig
+
+    plot_data = plot_data.sort_values(
+        ["score_rate_minus_current_elo", "kit_id"],
+        ascending=[True, True],
+    )
+    order = plot_data["kit_name"].tolist()
+    customdata_columns = [
+        "observed_cross_kit_score_rate",
+        "current_elo_implied_score_rate",
+        "cross_kit_kills",
+        "cross_kit_deaths",
+        "cross_kit_results",
+        "current_elo_implied_score_sum",
+        "score_sum_minus_current_elo",
+        "players_in_cross_kit_results",
+    ]
+    fig.add_trace(
+        go.Bar(
+            x=plot_data["score_rate_minus_current_elo"],
+            y=plot_data["kit_name"],
+            orientation="h",
+            marker=dict(
+                color=plot_data["kit_name"].map(KIT_COLORS),
+                line=dict(color="#333333", width=0.7),
+            ),
+            customdata=plot_data[customdata_columns].to_numpy(),
+            hovertemplate=(
+                "<b>%{y}</b><br>Observed kill-exchange share: "
+                "%{customdata[0]:.1%}<br>Share implied by current "
+                f"{elo_name}: %{{customdata[1]:.1%}}<br>"
+                "Difference: %{x:+.1%}<br>Cross-kit kills: "
+                "%{customdata[2]:,.0f}<br>Cross-kit deaths: "
+                "%{customdata[3]:,.0f}<br>Results included: "
+                "%{customdata[4]:,.0f}<br>Wins implied by current "
+                f"{elo_name}: "
+                "%{customdata[5]:,.2f}<br>Wins above implication: "
+                "%{customdata[6]:+,.2f}<br>Players represented: "
+                "%{customdata[7]:,.0f}<br><br>Expectations use the current "
+                "rating snapshot,<br>not each result’s historical pre-kill "
+                "ratings.<extra></extra>"
+            ),
+            showlegend=False,
+        )
+    )
+    max_difference = max(
+        float(plot_data["score_rate_minus_current_elo"].abs().max()),
+        0.02,
+    )
+    axis_limit = min(1.05, max_difference * 1.16)
+    fig.add_vline(
+        x=0,
+        line=dict(color="#111111", width=2),
+        layer="below",
+    )
+    fig.update_layout(
+        title=title,
+        height=590,
+        margin=dict(l=90, r=40, t=90, b=75),
+        bargap=0.28,
+        hovermode="closest",
+    )
+    fig.update_xaxes(
+        title=(
+            "Observed minus current-Elo-implied kill-exchange share "
+            "(percentage points)"
+        ),
+        tickformat="+.0%",
+        range=[-axis_limit, axis_limit],
+        zeroline=False,
+    )
+    fig.update_yaxes(
+        title="Kit",
+        categoryorder="array",
+        categoryarray=order,
+    )
+    return fig
+
+
 def matchup_figure(
     matchup_matrix: pd.DataFrame,
     directional_share: np.ndarray,
     pair_totals: np.ndarray,
     matchup_kills_by_cause: pd.DataFrame,
     *,
+    elo_matchup_expected_share: np.ndarray | None = None,
+    elo_matchup_score_difference: np.ndarray | None = None,
+    elo_matchup_pair_totals: np.ndarray | None = None,
+    elo_name: str = "Kill Elo",
     damage_matchup_matrix: pd.DataFrame | None = None,
     damage_directional_share: np.ndarray | None = None,
     damage_pair_totals: np.ndarray | None = None,
@@ -2033,6 +2165,106 @@ def matchup_figure(
         )
     )
 
+    elo_trace_index: int | None = None
+    has_elo = all(
+        value is not None
+        for value in (
+            elo_matchup_expected_share,
+            elo_matchup_score_difference,
+            elo_matchup_pair_totals,
+        )
+    )
+    if has_elo:
+        expected_shape = (len(KIT_NAMES), len(KIT_NAMES))
+        elo_expected = np.asarray(
+            elo_matchup_expected_share,
+            dtype=float,
+        )
+        elo_difference = np.asarray(
+            elo_matchup_score_difference,
+            dtype=float,
+        )
+        elo_totals = np.asarray(elo_matchup_pair_totals, dtype=int)
+        if any(
+            values.shape != expected_shape
+            for values in (elo_expected, elo_difference, elo_totals)
+        ):
+            raise ValueError(
+                "Elo matchup arrays must match the kit matchup matrix shape"
+            )
+        has_elo = bool(
+            np.isfinite(elo_difference).any() and (elo_totals > 0).any()
+        )
+
+    if has_elo:
+        elo_display = elo_difference.copy()
+        elo_display[np.tril_indices(len(KIT_NAMES))] = np.nan
+        elo_hover = np.full_like(elo_difference, "", dtype=object)
+        for i, row_kit in enumerate(KIT_NAMES):
+            for j, column_kit in enumerate(KIT_NAMES):
+                if i >= j:
+                    continue
+                result_count = int(elo_totals[i, j])
+                if result_count <= 0 or not np.isfinite(
+                    elo_difference[i, j]
+                ):
+                    elo_hover[i, j] = (
+                        f"<b>{row_kit} vs {column_kit}</b><br>"
+                        "No Elo-comparable cross-kit kill results"
+                    )
+                    continue
+                observed_share = (
+                    elo_expected[i, j] + elo_difference[i, j]
+                )
+                row_kills = int(round(observed_share * result_count))
+                column_kills = result_count - row_kills
+                elo_hover[i, j] = (
+                    f"<b>{row_kit} vs {column_kit}</b><br>"
+                    f"Observed {row_kit} kill share: "
+                    f"{observed_share:.1%}<br>"
+                    f"Share implied by current {elo_name}: "
+                    f"{elo_expected[i, j]:.1%}<br>"
+                    f"Difference: {elo_difference[i, j]:+.1%}<br>"
+                    f"{row_kit} kills: {row_kills:,}<br>"
+                    f"{column_kit} kills: {column_kills:,}<br>"
+                    f"Results included: {result_count:,}<br><br>"
+                    "Expectations use current ratings, not each result’s "
+                    "historical pre-kill ratings."
+                )
+        finite_differences = np.abs(
+            elo_difference[np.isfinite(elo_difference)]
+        )
+        elo_limit = max(
+            float(finite_differences.max())
+            if finite_differences.size
+            else 0.0,
+            0.02,
+        )
+        elo_trace_index = len(fig.data)
+        fig.add_trace(
+            go.Heatmap(
+                z=elo_display,
+                x=KIT_ORDER,
+                y=KIT_ORDER,
+                zmin=-elo_limit,
+                zmax=elo_limit,
+                zmid=0,
+                colorscale=[
+                    [0, "#D08B37"],
+                    [0.5, "#F4F1EA"],
+                    [1, "#2A7F7A"],
+                ],
+                customdata=elo_hover,
+                hovertemplate="%{customdata}<extra></extra>",
+                hoverongaps=False,
+                colorbar=dict(
+                    title="Observed −<br>Elo-implied",
+                    tickformat="+.0%",
+                ),
+                visible=False,
+            )
+        )
+
     has_damage = (
         damage_matchup_matrix is not None
         and damage_directional_share is not None
@@ -2040,6 +2272,8 @@ def matchup_figure(
         and matchup_damage_by_cause is not None
         and float(damage_matchup_matrix.to_numpy().sum()) > 0
     )
+    damage_share_trace_index: int | None = None
+    raw_damage_trace_index: int | None = None
     if has_damage:
         damage_share_display = damage_directional_share.copy()
         damage_share_display[np.tril_indices(len(KIT_NAMES))] = np.nan
@@ -2112,6 +2346,7 @@ def matchup_figure(
                     f"{damage_cause_lookup.get((j, i), 'No attributed damage')}"
                 )
 
+        damage_share_trace_index = len(fig.data)
         fig.add_trace(
             go.Heatmap(
                 z=damage_share_display,
@@ -2136,6 +2371,7 @@ def matchup_figure(
                 visible=False,
             )
         )
+        raw_damage_trace_index = len(fig.data)
         fig.add_trace(
             go.Heatmap(
                 z=damage_matchup_matrix.values,
@@ -2189,14 +2425,43 @@ def matchup_figure(
             ],
         },
     ]
+    if elo_trace_index is not None:
+        buttons.append(
+            {
+                "label": "Kills vs Elo",
+                "method": "update",
+                "args": [
+                    {"visible": trace_visibility(elo_trace_index)},
+                    {
+                        "title": {
+                            "text": (
+                                "Which kit wins more of each matchup than "
+                                f"current {elo_name} implies?"
+                            )
+                        },
+                        "xaxis": {"title": {"text": "Other kit"}},
+                        "yaxis": {"title": {"text": "Row kit"}},
+                    },
+                ],
+            }
+        )
     if has_damage:
+        if (
+            damage_share_trace_index is None
+            or raw_damage_trace_index is None
+        ):
+            raise RuntimeError("Damage traces were not initialized")
         buttons.extend(
             [
                 {
                     "label": "Damage share",
                     "method": "update",
                     "args": [
-                        {"visible": trace_visibility(2)},
+                        {
+                            "visible": trace_visibility(
+                                damage_share_trace_index
+                            )
+                        },
                         {
                             "title": {
                                 "text": (
@@ -2217,7 +2482,11 @@ def matchup_figure(
                     "label": "Raw damage",
                     "method": "update",
                     "args": [
-                        {"visible": trace_visibility(3)},
+                        {
+                            "visible": trace_visibility(
+                                raw_damage_trace_index
+                            )
+                        },
                         {
                             "title": {
                                 "text": (
