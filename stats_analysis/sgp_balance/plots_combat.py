@@ -66,6 +66,27 @@ def _cause_color_map(report: ReportData) -> dict[int, str]:
     }
 
 
+def _parity_centered_axis_range(
+    values: pd.Series,
+    *,
+    baseline: float = 1.0,
+) -> tuple[float, float]:
+    """Return a ratio axis centered on parity whenever values allow it."""
+
+    finite = pd.to_numeric(values, errors="coerce").replace(
+        [np.inf, -np.inf], np.nan
+    ).dropna()
+    if finite.empty:
+        return (baseline - 0.1, baseline + 0.1)
+
+    largest_deviation = float((finite - baseline).abs().max())
+    half_span = max(largest_deviation * 1.12, 0.1)
+    return (
+        max(0.0, baseline - half_span),
+        baseline + half_span,
+    )
+
+
 def _stacked_cause_modes_figure(
     *,
     causes: pd.DataFrame,
@@ -237,10 +258,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
     pvp_death_rates = report.kit_metrics[
         "kills_per_player_caused_death"
     ].dropna()
-    pvp_death_axis_max = max(
-        1.0,
-        float(pvp_death_rates.max()) if not pvp_death_rates.empty else 0.0,
-    ) * 1.12
+    pvp_death_axis_range = _parity_centered_axis_range(pvp_death_rates)
 
     return player_contribution_figure(
         all_kits=report.all_kits,
@@ -322,11 +340,12 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                 button_label="Kills / PvP death",
                 value_col="kills_per_player_caused_death",
                 title=(
-                    "Which kits recorded the most kills per "
-                    "player-caused death?"
+                    "Which kits finished above or below PvP "
+                    "kill-death parity?"
                 ),
                 yaxis_title="Kills per player-caused death",
                 tickformat=".2f",
+                mark_type="lollipop",
                 reference_lines=(
                     HorizontalReferenceLine(
                         value=1.0,
@@ -335,7 +354,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                         width=4,
                     ),
                 ),
-                yaxis_range=(0, pvp_death_axis_max),
+                yaxis_range=pvp_death_axis_range,
                 hovertemplate=(
                     "<b>%{x}</b><br>Kills per player-caused death: "
                     "%{y:.2f}<br>"
@@ -367,10 +386,7 @@ def damage_figure(report: ReportData) -> go.Figure:
         ],
     ]
     exchange_rates = report.kit_metrics["damage_exchange_ratio"].dropna()
-    exchange_axis_max = max(
-        1.0,
-        float(exchange_rates.max()) if not exchange_rates.empty else 0.0,
-    ) * 1.12
+    exchange_axis_range = _parity_centered_axis_range(exchange_rates)
 
     return player_contribution_figure(
         all_kits=report.all_kits,
@@ -462,10 +478,12 @@ def damage_figure(report: ReportData) -> go.Figure:
                 button_label="PvP exchange",
                 value_col="damage_exchange_ratio",
                 title=(
-                    "Which kits dealt more player damage than they received?"
+                    "Which kits dealt more or less player damage than "
+                    "they received?"
                 ),
                 yaxis_title="Damage exchange ratio",
                 tickformat=".2f",
+                mark_type="lollipop",
                 reference_lines=(
                     HorizontalReferenceLine(
                         value=1.0,
@@ -474,7 +492,7 @@ def damage_figure(report: ReportData) -> go.Figure:
                         width=4,
                     ),
                 ),
-                yaxis_range=(0, exchange_axis_max),
+                yaxis_range=exchange_axis_range,
                 hovertemplate=(
                     "<b>%{x}</b><br>Damage exchange ratio: %{y:.2f}<br>"
                     "Player damage dealt: %{customdata[0]:,.0f} hearts<br>"

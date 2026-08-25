@@ -77,6 +77,8 @@ class AggregateMetricView:
     tickformat: str
     reference_lines: tuple[HorizontalReferenceLine, ...] = ()
     yaxis_range: tuple[float, float] | None = None
+    mark_type: Literal["bar", "lollipop"] = "bar"
+    lollipop_baseline: float = 1.0
 
 
 @dataclass(frozen=True)
@@ -94,7 +96,7 @@ class ConcentrationView:
 
 @dataclass(frozen=True)
 class QuadrantMode:
-    """Axes and annotations for one mode of a quadrant scatter."""
+    """Axes and optional annotations for one scatter mode."""
 
     button_label: str
     x_col: str
@@ -116,6 +118,7 @@ class QuadrantMode:
     y_padding_fraction: float = 0.08
     x_minimum_padding: float = 0.01
     y_minimum_padding: float = 0.01
+    show_quadrants: bool = True
 
 
 TRACE_DIM_OPACITY = 0.15
@@ -220,10 +223,32 @@ def player_contribution_figure(
     )
     aggregate_customdata = np.column_stack(aggregate_customdata_columns)
     for mode_index, mode in enumerate(metric_views):
-        fig.add_trace(
-            go.Bar(
-                x=totals["kit_name"],
-                y=totals[mode.value_col],
+        common_trace_properties = {
+            "x": totals["kit_name"],
+            "y": totals[mode.value_col],
+            "name": mode.button_label,
+            "meta": {"role": "aggregate"},
+            "customdata": aggregate_customdata,
+            "showlegend": False,
+            "visible": mode_index == 0,
+            "hovertemplate": mode.hovertemplate,
+        }
+        if mode.mark_type == "lollipop":
+            aggregate_trace = go.Scatter(
+                **common_trace_properties,
+                mode="markers",
+                marker={
+                    "size": 13,
+                    "color": totals["kit_name"].map(KIT_COLORS),
+                    "line": {
+                        "color": "#333333",
+                        "width": 1,
+                    },
+                },
+            )
+        else:
+            aggregate_trace = go.Bar(
+                **common_trace_properties,
                 marker={
                     "color": totals["kit_name"].map(KIT_COLORS),
                     "line": {
@@ -231,14 +256,8 @@ def player_contribution_figure(
                         "width": 1,
                     },
                 },
-                name=mode.button_label,
-                meta={"role": "aggregate"},
-                customdata=aggregate_customdata,
-                showlegend=False,
-                visible=mode_index == 0,
-                hovertemplate=mode.hovertemplate,
             )
-        )
+        fig.add_trace(aggregate_trace)
 
     for player_id, player_data in by_player.groupby(player_col):
         player_columns = [
@@ -304,7 +323,7 @@ def player_contribution_figure(
     )
 
     def reference_shapes(mode: AggregateMetricView) -> list[dict[str, object]]:
-        return [
+        shapes: list[dict[str, object]] = [
             {
                 "type": "line",
                 "xref": "paper",
@@ -322,6 +341,30 @@ def player_contribution_figure(
             }
             for reference in mode.reference_lines
         ]
+        if mode.mark_type == "lollipop":
+            values = pd.to_numeric(
+                totals[mode.value_col], errors="coerce"
+            ).replace([np.inf, -np.inf], np.nan)
+            for kit_name, value in zip(totals["kit_name"], values):
+                if pd.isna(value):
+                    continue
+                shapes.append(
+                    {
+                        "type": "line",
+                        "xref": "x",
+                        "yref": "y",
+                        "x0": kit_name,
+                        "x1": kit_name,
+                        "y0": mode.lollipop_baseline,
+                        "y1": float(value),
+                        "line": {
+                            "color": "#9CA3AF",
+                            "width": 2,
+                        },
+                        "layer": "below",
+                    }
+                )
+        return shapes
 
     def reference_annotations(
         mode: AggregateMetricView,
@@ -357,7 +400,11 @@ def player_contribution_figure(
                         "yaxis": {
                             "title": {"text": mode.yaxis_title},
                             "tickformat": mode.tickformat,
-                            "rangemode": "tozero",
+                            "rangemode": (
+                                "normal"
+                                if mode.mark_type == "lollipop"
+                                else "tozero"
+                            ),
                             "range": mode.yaxis_range,
                             "autorange": mode.yaxis_range is None,
                         },
@@ -420,7 +467,12 @@ def player_contribution_figure(
     )
     fig.update_yaxes(
         tickformat=first_mode.tickformat,
-        rangemode="tozero",
+        rangemode=(
+            "normal"
+            if first_mode.mark_type == "lollipop"
+            else "tozero"
+        ),
+        range=first_mode.yaxis_range,
     )
     fig.update_xaxes(categoryorder="array", categoryarray=KIT_ORDER)
 
@@ -689,7 +741,7 @@ def _quadrant_mode_layout(
     data: pd.DataFrame,
     mode: QuadrantMode,
 ) -> _QuadrantLayout:
-    """Calculate axes, median guides, and quadrant labels for one mode."""
+    """Calculate axes and optional reference quadrants for one mode."""
 
     finite = data[[mode.x_col, mode.y_col]].replace(
         [np.inf, -np.inf], np.nan
@@ -742,13 +794,7 @@ def _quadrant_mode_layout(
         lower_bound=mode.y_lower_bound,
         upper_bound=mode.y_upper_bound,
     )
-    positions = (
-        ((x_range[0] + x_mid) / 2, (y_mid + y_range[1]) / 2),
-        ((x_mid + x_range[1]) / 2, (y_mid + y_range[1]) / 2),
-        ((x_range[0] + x_mid) / 2, (y_range[0] + y_mid) / 2),
-        ((x_mid + x_range[1]) / 2, (y_range[0] + y_mid) / 2),
-    )
-    return {
+    axes = {
         "xaxis": {
             "title": {"text": mode.xaxis_title},
             "range": x_range,
@@ -759,6 +805,22 @@ def _quadrant_mode_layout(
             "range": y_range,
             "tickformat": mode.y_tickformat,
         },
+    }
+    if not mode.show_quadrants:
+        return {
+            **axes,
+            "shapes": [],
+            "annotations": [],
+        }
+
+    positions = (
+        ((x_range[0] + x_mid) / 2, (y_mid + y_range[1]) / 2),
+        ((x_mid + x_range[1]) / 2, (y_mid + y_range[1]) / 2),
+        ((x_range[0] + x_mid) / 2, (y_range[0] + y_mid) / 2),
+        ((x_mid + x_range[1]) / 2, (y_range[0] + y_mid) / 2),
+    )
+    return {
+        **axes,
         "shapes": [
             {
                 "type": "line",

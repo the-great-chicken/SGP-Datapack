@@ -217,6 +217,7 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Players affected per successful use",
                 x_tickformat=".0%",
                 y_tickformat=".2f",
+                show_quadrants=False,
                 quadrant_labels=(
                     "Lower engagement<br>broader successful casts",
                     "Higher engagement<br>broader successful casts",
@@ -249,6 +250,7 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Health impact per successful use (hearts)",
                 x_tickformat=".0%",
                 y_tickformat=".2f",
+                show_quadrants=False,
                 quadrant_labels=(
                     "Lower engagement<br>larger health impact",
                     "Higher engagement<br>larger health impact",

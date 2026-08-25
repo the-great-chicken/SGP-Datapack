@@ -922,15 +922,39 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
         "current_elo_implied_score_rate",
         "cross_kit_kills",
         "cross_kit_deaths",
+        "cross_kit_results",
     ]
+    stem_x: list[float | None] = []
+    stem_y: list[str | None] = []
+    for row in plot_data.itertuples(index=False):
+        difference = float(row.score_rate_minus_current_elo)
+        kit_name = str(row.kit_name)
+        stem_x.extend([0.0, difference, None])
+        stem_y.extend([kit_name, kit_name, None])
+
     fig.add_trace(
-        go.Bar(
+        go.Scatter(
+            x=stem_x,
+            y=stem_y,
+            mode="lines",
+            line=dict(color="#9CA3AF", width=2.5),
+            hoverinfo="skip",
+            showlegend=False,
+        )
+    )
+    result_counts = plot_data["cross_kit_results"].astype(float)
+    maximum_results = float(result_counts.max())
+    marker_sizes = 10 + 18 * np.sqrt(result_counts / maximum_results)
+    fig.add_trace(
+        go.Scatter(
             x=plot_data["score_rate_minus_current_elo"],
             y=plot_data["kit_name"],
-            orientation="h",
+            mode="markers",
             marker=dict(
+                size=marker_sizes,
+                sizemode="diameter",
                 color=plot_data["kit_name"].map(KIT_COLORS),
-                line=dict(color="#333333", width=0.7),
+                line=dict(color="#333333", width=1),
             ),
             customdata=plot_data[customdata_columns].to_numpy(),
             hovertemplate=(
@@ -939,7 +963,8 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
                 f"{elo_name}: %{{customdata[1]:.1%}}<br>"
                 "Difference: %{x:+.1%}<br>Cross-kit kills: "
                 "%{customdata[2]:,.0f}<br>Cross-kit deaths: "
-                "%{customdata[3]:,.0f}<extra></extra>"
+                "%{customdata[3]:,.0f}<br>Results included: "
+                "%{customdata[4]:,.0f}<extra></extra>"
             ),
             showlegend=False,
         )
@@ -955,48 +980,20 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
         layer="below",
     )
     fig.add_annotation(
-        x=0.01,
-        y=0.98,
+        x=1,
+        y=1.015,
         xref="paper",
         yref="paper",
-        text=(
-            "<b>Possible kit disadvantage</b><br>"
-            "Players using the kit claimed a smaller share of cross-kit "
-            "kills<br>than the killers’ and victims’ current ratings would "
-            "suggest.<br>If this persists across many kills and deaths,<br>"
-            "the kit may be holding them back."
-        ),
-        showarrow=False,
-        xanchor="left",
-        yanchor="top",
-        align="left",
-        font=dict(size=12, color="#555555"),
-        bgcolor="rgba(255,255,255,0.78)",
-    )
-    fig.add_annotation(
-        x=0.99,
-        y=0.02,
-        xref="paper",
-        yref="paper",
-        text=(
-            "<b>Possible kit advantage</b><br>"
-            "Players using the kit claimed a larger share of cross-kit "
-            "kills<br>than the killers’ and victims’ current ratings would "
-            "suggest.<br>If this persists across many kills and deaths,<br>"
-            "the kit may be helping them outperform their rating."
-        ),
+        text="Marker size represents included cross-kit results.",
         showarrow=False,
         xanchor="right",
         yanchor="bottom",
-        align="right",
-        font=dict(size=12, color="#555555"),
-        bgcolor="rgba(255,255,255,0.78)",
+        font=dict(size=11, color="#555555"),
     )
     fig.update_layout(
         title=title,
         height=STANDARD_FIGURE_HEIGHT,
-        margin=dict(l=90, r=40, t=90, b=75),
-        bargap=0.28,
+        margin=dict(l=90, r=40, t=110, b=75),
         hovermode="closest",
     )
     fig.update_xaxes(
