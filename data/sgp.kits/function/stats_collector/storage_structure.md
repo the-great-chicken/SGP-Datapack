@@ -2,9 +2,44 @@
 
 ```snbt
 {
-  schema_version: 2,
+  schema_version: 4,
   damage_cause_names: {
     "<cause_id:int>": string
+  },
+  elo_metadata: {
+    name: string,
+    description: string,
+    algorithm: "elo_logistic",
+    initial_rating: double,
+    k_factor: double,
+    rating_divisor: double,
+    result_type: "credited_pvp_kill",
+    major_events_rated: byte,
+    environmental_deaths_rated: byte,
+    self_kills_rated: byte,
+    update_mode: "same_tick_batch",
+    metrics: {
+      rating: {
+        name: string,
+        description: string,
+        stored_unit: "centi_elo",
+        display_unit: "elo",
+        display_scale: double
+      },
+      rated_encounters: {
+        name: string,
+        description: string,
+        stored_unit: "count",
+        display_unit: "encounters",
+        display_scale: double
+      }
+    }
+  },
+  elo_ratings: {
+    "<player_id:int>": {
+      rating: int,
+      rated_encounters: int
+    }
   },
   ability_metadata: {
     "<kit_id:int>": {
@@ -64,14 +99,3 @@
 ```
 
 `-1` for a player or kit id means no player/no kit.
-
-Ability values are lazy: a stored field is absent until its first increment. The
-metadata is authoritative for names, meanings, units, display scaling, timing,
-and whether a metric is stored or derived. In particular, Cancer's
-`bat_explosion_damage` is derived from `damage_received` and is not duplicated
-under `abilities.bats`.
-
-Damage values use the same integer convention as `damage_received`: tenths of a
-heart. Only positive health damage received by players tagged `sgp.in_game` is
-recorded. `pick.last_pick` exists transiently during a life and is removed when
-that life is finalized.

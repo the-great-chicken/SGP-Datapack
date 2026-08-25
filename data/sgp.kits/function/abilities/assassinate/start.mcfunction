@@ -5,7 +5,6 @@ execute store result score @s sgp.duration_ability run data get storage sgp:data
 function sgp.kits:stats_collector/ability/start {kit_id:9,ability_path:"assassinate"}
 
 scoreboard players reset @s sgp.damage_resisted
-tag @s add sgp.stats_assassinate_active
 
 tag @s add sgp.assassin
 

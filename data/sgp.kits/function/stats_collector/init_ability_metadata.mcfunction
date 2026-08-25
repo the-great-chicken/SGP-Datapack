@@ -3,7 +3,7 @@
 # Human- and machine-readable definitions for all ability metrics. Cooldowns and
 # durations are copied from the live kit settings below instead of duplicated.
 
-data modify storage sgp.kits:stats schema_version set value 2
+data modify storage sgp.kits:stats schema_version set value 4
 data modify storage sgp.kits:stats ability_metadata set value {}
 
 data modify storage sgp.kits:stats ability_metadata."0".pecking set value {metrics:{uses:{name:"Uses",description:"Times Pecking acquired a valid target and began; failed target-acquisition attempts are excluded.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"uses"}},successful_uses:{name:"Successful uses",description:"Same event as uses by design: acquiring a valid target is Pecking's success condition.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"successful_uses"}},target_lock_ticks:{name:"Target lock time",description:"Total ticks during which Pecking kept a valid target locked.",stored_unit:"ticks",display_unit:"seconds",display_scale:0.05d,source:{type:"ability_field",field:"target_lock_ticks"}}}}

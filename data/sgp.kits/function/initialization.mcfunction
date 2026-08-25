@@ -53,6 +53,12 @@ scoreboard objectives add sgp.last_ability_cast dummy
 scoreboard objectives add sgp.ability_result_window dummy
 scoreboard objectives add sgp.peck_lock_ticks dummy
 
+scoreboard objectives add sgp.elo dummy
+scoreboard objectives add sgp.elo_pending dummy
+scoreboard objectives add sgp.elo_encounters dummy
+scoreboard objectives add sgp.elo_deaths deathCount
+scoreboard objectives add sgp.elo_deaths_seen dummy
+
 
 
 # ---------- Create Teams ----------
@@ -84,6 +90,7 @@ data merge storage sgp.kits:stats {damage_cause_names:{"0":"unknown", "1":"playe
 execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
 
 function sgp.kits:stats_collector/init_ability_metadata
+function sgp.kits:stats_collector/elo/init
 
 data merge storage sgp:kits {\
     kit_id_order:[ \

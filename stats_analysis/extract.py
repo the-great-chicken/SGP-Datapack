@@ -15,7 +15,9 @@ KITS_PATH = (*STATS_PATH, "kits_dict")
 SCHEMA_VERSION_PATH = (*STATS_PATH, "schema_version")
 ABILITY_METADATA_PATH = (*STATS_PATH, "ability_metadata")
 DAMAGE_CAUSE_NAMES_PATH = (*STATS_PATH, "damage_cause_names")
-SUPPORTED_SCHEMA_VERSION = 2
+ELO_METADATA_PATH = (*STATS_PATH, "elo_metadata")
+ELO_RATINGS_PATH = (*STATS_PATH, "elo_ratings")
+SUPPORTED_SCHEMA_VERSION = 4
 DAMAGE_TENTHS_PER_HEART = 10
 
 
@@ -63,6 +65,16 @@ def get_ability_metadata(nbt_file: nbtlib.File) -> Any:
 def get_damage_cause_names(nbt_file: nbtlib.File) -> Any:
     """Return the shared damage-cause names from command_storage.dat."""
     return get_nbt_path(nbt_file, DAMAGE_CAUSE_NAMES_PATH)
+
+
+def get_elo_metadata(nbt_file: nbtlib.File) -> Any:
+    """Return the authoritative Elo configuration and metric metadata."""
+    return get_nbt_path(nbt_file, ELO_METADATA_PATH)
+
+
+def get_elo_ratings(nbt_file: nbtlib.File) -> Any:
+    """Return the current player-level Elo ratings."""
+    return get_nbt_path(nbt_file, ELO_RATINGS_PATH)
 
 
 def extract_kills(kits_dict: Any) -> pd.DataFrame:
@@ -618,6 +630,249 @@ def extract_damage_causes(damage_cause_names: Any) -> pd.DataFrame:
     )
 
 
+def get_elo_metric_definitions(elo_metadata: Any) -> Any:
+    """Return and validate the Elo metric-definition compound."""
+    if not hasattr(elo_metadata, "items"):
+        raise ValueError("Expected elo_metadata to be a compound")
+
+    metrics = elo_metadata.get("metrics")
+
+    if not hasattr(metrics, "items"):
+        raise ValueError("Expected metric definitions at elo_metadata.metrics")
+
+    return metrics
+
+
+def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
+    """
+    Extract Elo configuration and metric definitions.
+
+    One row is emitted per metric.
+
+    Columns:
+        elo_name
+        elo_description
+        algorithm
+        initial_rating
+        k_factor
+        rating_divisor
+        result_type
+        major_events_rated
+        environmental_deaths_rated
+        self_kills_rated
+        update_mode
+        metric_id
+        metric_name
+        metric_description
+        stored_unit
+        display_unit
+        display_scale
+    """
+    metrics = get_elo_metric_definitions(elo_metadata)
+    required_configuration = [
+        "name",
+        "description",
+        "algorithm",
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+        "result_type",
+        "major_events_rated",
+        "environmental_deaths_rated",
+        "self_kills_rated",
+        "update_mode",
+    ]
+    missing_configuration = [
+        field for field in required_configuration if field not in elo_metadata
+    ]
+
+    if missing_configuration:
+        raise ValueError(
+            "Missing Elo metadata field(s): "
+            + ", ".join(missing_configuration)
+        )
+
+    rows: list[dict[str, Any]] = []
+
+    for metric_id, metric_data in metrics.items():
+        metric_path = f"elo_metadata.metrics.{metric_id}"
+
+        if not hasattr(metric_data, "items"):
+            raise ValueError(f"Expected a metric compound at {metric_path}")
+
+        missing_metric_fields = [
+            field
+            for field in [
+                "name",
+                "description",
+                "stored_unit",
+                "display_unit",
+                "display_scale",
+            ]
+            if field not in metric_data
+        ]
+
+        if missing_metric_fields:
+            raise ValueError(
+                f"Missing field(s) at {metric_path}: "
+                + ", ".join(missing_metric_fields)
+            )
+
+        rows.append(
+            {
+                "elo_name": str(elo_metadata["name"]),
+                "elo_description": str(elo_metadata["description"]),
+                "algorithm": str(elo_metadata["algorithm"]),
+                "initial_rating": float(elo_metadata["initial_rating"]),
+                "k_factor": float(elo_metadata["k_factor"]),
+                "rating_divisor": float(elo_metadata["rating_divisor"]),
+                "result_type": str(elo_metadata["result_type"]),
+                "major_events_rated": bool(
+                    int(elo_metadata["major_events_rated"])
+                ),
+                "environmental_deaths_rated": bool(
+                    int(elo_metadata["environmental_deaths_rated"])
+                ),
+                "self_kills_rated": bool(
+                    int(elo_metadata["self_kills_rated"])
+                ),
+                "update_mode": str(elo_metadata["update_mode"]),
+                "metric_id": str(metric_id),
+                "metric_name": str(metric_data["name"]),
+                "metric_description": str(metric_data["description"]),
+                "stored_unit": str(metric_data["stored_unit"]),
+                "display_unit": str(metric_data["display_unit"]),
+                "display_scale": metric_display_scale(
+                    metric_data,
+                    metric_path,
+                ),
+            }
+        )
+
+    return (
+        pd.DataFrame(
+            rows,
+            columns=[
+                "elo_name",
+                "elo_description",
+                "algorithm",
+                "initial_rating",
+                "k_factor",
+                "rating_divisor",
+                "result_type",
+                "major_events_rated",
+                "environmental_deaths_rated",
+                "self_kills_rated",
+                "update_mode",
+                "metric_id",
+                "metric_name",
+                "metric_description",
+                "stored_unit",
+                "display_unit",
+                "display_scale",
+            ],
+        )
+        .sort_values("metric_id")
+        .reset_index(drop=True)
+    )
+
+
+def extract_elo_ratings(
+    elo_ratings: Any,
+    elo_metadata: Any,
+) -> pd.DataFrame:
+    """
+    Extract the current player-level Elo snapshot.
+
+    Columns:
+        id
+        rating
+        rated_encounters
+
+    ``rating`` is converted from its stored integer representation with the
+    metadata-provided display scale. ``rated_encounters`` remains an integer
+    count.
+    """
+    if not hasattr(elo_ratings, "items"):
+        raise ValueError("Expected elo_ratings to be a compound")
+
+    metrics = get_elo_metric_definitions(elo_metadata)
+    missing_metrics = [
+        metric_id
+        for metric_id in ["rating", "rated_encounters"]
+        if metric_id not in metrics
+    ]
+
+    if missing_metrics:
+        raise ValueError(
+            "Missing Elo metric definition(s): " + ", ".join(missing_metrics)
+        )
+
+    rating_metric = metrics["rating"]
+    encounters_metric = metrics["rated_encounters"]
+
+    if not hasattr(rating_metric, "items"):
+        raise ValueError(
+            "Expected a metric compound at elo_metadata.metrics.rating"
+        )
+    if not hasattr(encounters_metric, "items"):
+        raise ValueError(
+            "Expected a metric compound at "
+            "elo_metadata.metrics.rated_encounters"
+        )
+
+    rating_scale = metric_display_scale(
+        rating_metric,
+        "elo_metadata.metrics.rating",
+    )
+    encounters_scale = metric_display_scale(
+        encounters_metric,
+        "elo_metadata.metrics.rated_encounters",
+    )
+
+    if encounters_scale != 1.0:
+        raise ValueError(
+            "elo_metadata.metrics.rated_encounters.display_scale must be 1"
+        )
+
+    rows: list[dict[str, Any]] = []
+
+    for player_id, rating_data in elo_ratings.items():
+        rating_path = f"elo_ratings.{player_id}"
+
+        if not hasattr(rating_data, "items"):
+            raise ValueError(f"Expected a rating compound at {rating_path}")
+
+        missing_fields = [
+            field
+            for field in ["rating", "rated_encounters"]
+            if field not in rating_data
+        ]
+
+        if missing_fields:
+            raise ValueError(
+                f"Missing field(s) at {rating_path}: "
+                + ", ".join(missing_fields)
+            )
+
+        rows.append(
+            {
+                "id": str(player_id),
+                "rating": int(rating_data["rating"]) * rating_scale,
+                "rated_encounters": int(rating_data["rated_encounters"]),
+            }
+        )
+
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "id",
+            "rating",
+            "rated_encounters",
+        ],
+    )
+
+
 def extract(input_path: Path, output_dir: Path) -> None:
     """Extract statistics from command_storage.dat into Parquet files."""
     print(f"Reading {input_path}")
@@ -627,6 +882,8 @@ def extract(input_path: Path, output_dir: Path) -> None:
     kits_dict = get_kits_dict(nbt_file)
     ability_metadata = get_ability_metadata(nbt_file)
     damage_cause_names = get_damage_cause_names(nbt_file)
+    elo_metadata = get_elo_metadata(nbt_file)
+    elo_ratings = get_elo_ratings(nbt_file)
     damage_rows = list(iter_damage_received(kits_dict))
 
     kills = extract_kills(kits_dict)
@@ -639,8 +896,18 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks = extract_picks(kits_dict)
     extracted_ability_metadata = extract_ability_metadata(ability_metadata)
     damage_causes = extract_damage_causes(damage_cause_names)
+    extracted_elo_metadata = extract_elo_metadata(elo_metadata)
+    extracted_elo_ratings = extract_elo_ratings(
+        elo_ratings,
+        elo_metadata,
+    )
 
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    obsolete_elo_event_path = output_dir / "elo_event.parquet"
+    if obsolete_elo_event_path.exists():
+        obsolete_elo_event_path.unlink()
+        print(f"Removed obsolete output: {obsolete_elo_event_path}")
 
     kills_path = output_dir / "kills.parquet"
     damage_received_path = output_dir / "damage_received.parquet"
@@ -648,6 +915,8 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks_path = output_dir / "picks.parquet"
     ability_metadata_path = output_dir / "ability_metadata.parquet"
     damage_causes_path = output_dir / "damage_causes.parquet"
+    elo_metadata_path = output_dir / "elo_metadata.parquet"
+    elo_ratings_path = output_dir / "elo_ratings.parquet"
 
     kills.to_parquet(kills_path, index=False)
     damage_received.to_parquet(damage_received_path, index=False)
@@ -655,6 +924,8 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks.to_parquet(picks_path, index=False)
     extracted_ability_metadata.to_parquet(ability_metadata_path, index=False)
     damage_causes.to_parquet(damage_causes_path, index=False)
+    extracted_elo_metadata.to_parquet(elo_metadata_path, index=False)
+    extracted_elo_ratings.to_parquet(elo_ratings_path, index=False)
 
     print(f"Schema:     {schema_version}")
     print(f"Kills:      {len(kills):,} rows -> {kills_path}")
@@ -668,6 +939,14 @@ def extract(input_path: Path, output_dir: Path) -> None:
         f"{len(extracted_ability_metadata):,} rows -> {ability_metadata_path}"
     )
     print(f"Causes:     {len(damage_causes):,} rows -> {damage_causes_path}")
+    print(
+        "Elo metadata: "
+        f"{len(extracted_elo_metadata):,} rows -> {elo_metadata_path}"
+    )
+    print(
+        f"Elo ratings: {len(extracted_elo_ratings):,} rows -> "
+        f"{elo_ratings_path}"
+    )
 
 
 def main() -> None:
