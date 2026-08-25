@@ -1508,6 +1508,15 @@ def _build_kit_ability_settings(
         .groupby("kit_id", as_index=False)["supports_success_metric"]
         .any()
     )
+    success_metadata = ability_metadata.loc[
+        ability_metadata["metric_id"].eq("successful_uses"),
+        ["kit_id", "metric_name", "description"],
+    ].rename(
+        columns={
+            "metric_name": "ability_success_metric_name",
+            "description": "ability_success_description",
+        }
+    )
     effect = ability_metadata.loc[
         ~ability_metadata["metric_id"].isin({"uses", "successful_uses"}),
         [
@@ -1532,6 +1541,12 @@ def _build_kit_ability_settings(
     settings = (
         all_kits.merge(timing, on="kit_id", how="left", validate="one_to_one")
         .merge(success_support, on="kit_id", how="left", validate="one_to_one")
+        .merge(
+            success_metadata,
+            on="kit_id",
+            how="left",
+            validate="one_to_one",
+        )
         .merge(
             effect.drop(columns="ability_path"),
             on="kit_id",
@@ -1569,6 +1584,8 @@ def _build_ability_tables(
         "ability_path",
         "ability_name",
         "supports_success_metric",
+        "ability_success_metric_name",
+        "ability_success_description",
         "supports_effect_metric",
         "ability_effect_metric_id",
         "ability_effect_metric_name",
@@ -2413,6 +2430,8 @@ def _build_player_kit_metrics(
                     "ability_name",
                     "ability_duration",
                     "supports_success_metric",
+                    "ability_success_metric_name",
+                    "ability_success_description",
                     "supports_effect_metric",
                     "ability_effect_metric_id",
                     "ability_effect_metric_name",

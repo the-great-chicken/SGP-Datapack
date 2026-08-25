@@ -32,6 +32,7 @@ KIT_COLORS = {
     "roi": "#FFFF55",
     "cancer": "#AA0000",
 }
+STANDARD_FIGURE_HEIGHT = 680
 
 MetricKind = Literal["count", "percent"]
 MetricSpec = tuple[str, str, MetricKind]
@@ -379,6 +380,7 @@ def player_contribution_figure(
 
     fig.update_layout(
         title=first_mode.title,
+        height=STANDARD_FIGURE_HEIGHT,
         xaxis_title="Kit",
         yaxis_title=first_mode.yaxis_title,
         barmode="group",
@@ -393,7 +395,7 @@ def player_contribution_figure(
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.20,
+                "y": 1.11,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": mode_buttons,
@@ -504,6 +506,7 @@ def concentration_figure(
     first_view = views[0]
     fig.update_layout(
         title=first_view.title,
+        height=STANDARD_FIGURE_HEIGHT,
         xaxis_title="Kit",
         yaxis_title=first_view.yaxis_title,
         barmode="stack",
@@ -515,7 +518,7 @@ def concentration_figure(
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.20,
+                "y": 1.11,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": [
@@ -608,6 +611,7 @@ def _quadrant_modes_figure(
     first_layout = layouts[0]
     fig.update_layout(
         title=first_mode.title,
+        height=STANDARD_FIGURE_HEIGHT,
         legend_title_text="Kit",
         margin=dict(l=70, r=30, t=125, b=65),
         shapes=first_layout["shapes"],
@@ -618,7 +622,7 @@ def _quadrant_modes_figure(
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.20,
+                "y": 1.11,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": [
@@ -801,6 +805,8 @@ def _quadrant_scatter_figure(
         fig = go.Figure()
         fig.update_layout(
             title=title,
+            height=STANDARD_FIGURE_HEIGHT,
+            margin=dict(l=70, r=30, t=90, b=70),
             xaxis_title=labels[x_col],
             yaxis_title=labels[y_col],
         )
@@ -846,6 +852,9 @@ def _quadrant_scatter_figure(
         labels=labels,
         title=title,
     )
+    for trace in fig.data:
+        if trace.hovertemplate:
+            trace.hovertemplate = trace.hovertemplate.replace("=", ": ")
     fig.update_traces(
         marker=dict(size=12, line=dict(color="#333333", width=1))
     )
@@ -868,7 +877,11 @@ def _quadrant_scatter_figure(
             bgcolor="rgba(255,255,255,0.72)",
         )
 
-    fig.update_layout(legend_title_text="Kit")
+    fig.update_layout(
+        height=STANDARD_FIGURE_HEIGHT,
+        legend_title_text="Kit",
+        margin=dict(l=70, r=30, t=90, b=70),
+    )
     fig.update_xaxes(tickformat=x_tickformat, range=x_range)
     fig.update_yaxes(tickformat=y_tickformat, range=y_range)
     return fig

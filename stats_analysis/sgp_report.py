@@ -10,7 +10,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 from sgp_data import (
     KIT_NAMES,
@@ -25,12 +24,12 @@ from sgp_plot_components import (
     HorizontalReferenceLine,
     KIT_COLORS,
     QuadrantMode,
+    STANDARD_FIGURE_HEIGHT,
     _padded_axis_range,
     _quadrant_modes_figure,
     _quadrant_scatter_figure,
     concentration_figure,
     player_contribution_figure,
-    relative_metric_heatmap,
     show_cause_profile_figure,
     show_player_contribution_figure,
 )
@@ -89,11 +88,42 @@ def _ability_effect_per_success_text(data: pd.DataFrame) -> pd.Series:
         elif pd.isna(effect_value):
             values.append(f"{metric_name}: unavailable")
         else:
+            formatted_effect = (
+                f"{effect_value:,.0f}"
+                if effect_unit == "hearts"
+                else f"{effect_value:,.2f}"
+            )
             values.append(
-                f"{metric_name}: {effect_value:,.2f} "
+                f"{metric_name}: {formatted_effect} "
                 f"{effect_unit} / successful use"
             )
     return pd.Series(values, index=data.index, dtype=object)
+
+
+def _format_hours(value: object) -> str:
+    """Format fractional hours as a duration people can read at a glance."""
+
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+    if pd.isna(numeric):
+        return "Not available"
+    total_minutes = max(0, int(round(float(numeric) * 60)))
+    hours, minutes = divmod(total_minutes, 60)
+    if hours:
+        return f"{hours:,} h {minutes:02d} min"
+    return f"{minutes:,} min"
+
+
+def _format_minutes(value: object) -> str:
+    """Format fractional minutes without displaying decimal time."""
+
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+    if pd.isna(numeric):
+        return "Not available"
+    total_seconds = max(0, int(round(float(numeric) * 60)))
+    minutes, seconds = divmod(total_seconds, 60)
+    if minutes:
+        return f"{minutes:,} min {seconds:02d} sec"
+    return f"{seconds} sec"
 
 
 def _stacked_cause_modes_figure(
@@ -153,18 +183,29 @@ def _stacked_cause_modes_figure(
     first_mode = modes[0]
     fig.update_layout(
         title=first_mode["title"],
+        height=STANDARD_FIGURE_HEIGHT,
         barmode="stack",
         clickmode="event",
         hovermode="closest",
-        legend_title_text=legend_title,
-        margin=dict(l=70, r=40, t=125, b=70),
+        legend=dict(
+            title=dict(text=legend_title),
+            orientation="h",
+            x=0.5,
+            xanchor="center",
+            y=-0.18,
+            yanchor="top",
+            entrywidth=115,
+            entrywidthmode="pixels",
+            itemsizing="constant",
+        ),
+        margin=dict(l=70, r=40, t=160, b=135),
         updatemenus=[
             {
                 "type": "buttons",
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.18,
+                "y": 1.15,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": [
@@ -218,6 +259,8 @@ def total_kills_figure(report: ReportData) -> go.Figure:
 
     elo_available = not report.elo_metadata.empty
     elo_name = _elo_name(report)
+    totals = report.kit_metrics.copy()
+    totals["active_time_text"] = totals["total_hours"].map(_format_hours)
     player_kills = report.player_kit_metrics.loc[
         report.player_kit_metrics["kills"] > 0,
         ["id", "kit_id", "kills", "rating", "rated_encounters"],
@@ -256,7 +299,7 @@ def total_kills_figure(report: ReportData) -> go.Figure:
 
     return player_contribution_figure(
         all_kits=report.all_kits,
-        totals=report.kit_metrics,
+        totals=totals,
         by_player=player_kills,
         player_col="id",
         player_value_col="kills",
@@ -269,18 +312,17 @@ def total_kills_figure(report: ReportData) -> go.Figure:
         player_hovertemplate=(
             "<b>%{x}</b><br>Player ID: %{customdata[0]}<br>"
             f"Kills: %{{y:,.0f}}<br>{elo_name}: "
-            "%{customdata[1]:,.2f}<br>"
+            "%{customdata[1]:,.0f}<br>"
             "Rated encounters: %{customdata[2]:,.0f}<extra></extra>"
             if elo_available
             else None
         ),
         aggregate_customdata_cols=(
-            "deaths",
-            "deaths_per_hour",
             "player_caused_deaths",
             "non_player_deaths",
-            "non_player_death_share",
-            "kill_death_ratio",
+            "active_time_text",
+            "players_with_kill_rate_per_hour",
+            "players_with_kill_rate_per_life",
         ),
         metric_views=(
             AggregateMetricView(
@@ -291,10 +333,8 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                 tickformat=",.0f",
                 hovertemplate=(
                     "<b>%{x}</b><br>Total kills: %{y:,.0f}<br>"
-                    "Time played: %{customdata[1]:,.2f} h<br>"
-                    "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Players with playtime: %{customdata[3]:,.0f}<br>"
-                    "Deaths while using kit: %{customdata[6]:,.0f}"
+                    "Player-caused deaths: %{customdata[6]:,.0f}<br>"
+                    "Non-player deaths: %{customdata[7]:,.0f}"
                     "<extra></extra>"
                 ),
             ),
@@ -305,10 +345,12 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Kills per hour",
                 tickformat=".2f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Kills per hour: %{y:.2f}<br>"
-                    "Median player rate: %{customdata[4]:.2f}<br>"
+                    "<b>%{x}</b><br>Kit aggregate rate: %{y:.2f} kills / h<br>"
+                    "Median individual player rate: "
+                    "%{customdata[4]:.2f} kills / h "
+                    "(players: %{customdata[9]:,.0f})<br>"
                     "Total kills: %{customdata[0]:,.0f}<br>"
-                    "Time played: %{customdata[1]:,.2f} h"
+                    "Active time: %{customdata[8]}"
                     "<extra></extra>"
                 ),
             ),
@@ -321,8 +363,11 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                 reference_lines=tuple(life_references),
                 yaxis_range=(0, life_axis_max),
                 hovertemplate=(
-                    "<b>%{x}</b><br>Kills per completed life: %{y:.2f}<br>"
-                    "Median player rate: %{customdata[5]:.2f}<br>"
+                    "<b>%{x}</b><br>Kit aggregate rate: "
+                    "%{y:.2f} kills / completed life<br>"
+                    "Median individual player rate: "
+                    "%{customdata[5]:.2f} kills / completed life "
+                    "(players: %{customdata[10]:,.0f})<br>"
                     "Total kills: %{customdata[0]:,.0f}<br>"
                     "Completed lives: %{customdata[2]:,.0f}"
                     "<extra></extra>"
@@ -350,10 +395,8 @@ def total_kills_figure(report: ReportData) -> go.Figure:
                     "<b>%{x}</b><br>Kills per player-caused death: "
                     "%{y:.2f}<br>"
                     "Kills made: %{customdata[0]:,.0f}<br>"
-                    "Player-caused deaths: %{customdata[8]:,.0f}<br>"
-                    "All deaths: %{customdata[6]:,.0f}<br>"
-                    "Non-player deaths: %{customdata[9]:,.0f} "
-                    "(%{customdata[10]:.1%})"
+                    "Player-caused deaths: %{customdata[6]:,.0f}<br>"
+                    "Non-player deaths: %{customdata[7]:,.0f}"
                     "<extra></extra>"
                 ),
             ),
@@ -366,6 +409,8 @@ def damage_figure(report: ReportData) -> go.Figure:
 
     elo_available = not report.elo_metadata.empty
     elo_name = _elo_name(report)
+    totals = report.summary.copy()
+    totals["active_time_text"] = totals["total_hours"].map(_format_hours)
     player_damage = report.player_kit_metrics.loc[
         report.player_kit_metrics["damage_dealt"] > 0,
         [
@@ -384,7 +429,7 @@ def damage_figure(report: ReportData) -> go.Figure:
 
     return player_contribution_figure(
         all_kits=report.all_kits,
-        totals=report.summary,
+        totals=totals,
         by_player=player_damage,
         player_col="id",
         player_value_col="damage_dealt",
@@ -400,27 +445,24 @@ def damage_figure(report: ReportData) -> go.Figure:
         else (),
         player_hovertemplate=(
             "<b>%{x}</b><br>Player ID: %{customdata[0]}<br>"
-            "Damage dealt: %{y:,.1f} hearts<br>"
-            f"{elo_name}: %{{customdata[1]:,.2f}}<br>"
+            "Damage dealt: %{y:,.0f} hearts<br>"
+            f"{elo_name}: %{{customdata[1]:,.0f}}<br>"
             "Rated encounters: %{customdata[2]:,.0f}<extra></extra>"
             if elo_available
             else None
         ),
         aggregate_customdata_cols=(
-            "damage_received",
             "player_damage_received",
             "non_player_damage_received",
-            "damage_received_per_hour",
             "player_damage_received_per_hour",
             "non_player_damage_received_per_hour",
-            "non_player_damage_received_share",
             "damage_dealt_per_kill",
             "kills",
-            "players_receiving_damage",
-            "top_player_received_damage_share",
-            "top_3_received_damage_share",
+            "active_time_text",
+            "players_with_damage_rate_per_hour",
+            "damage_received",
         ),
-        player_value_format=",.1f",
+        player_value_format=",.0f",
         metric_views=(
             AggregateMetricView(
                 button_label="Total dealt",
@@ -429,14 +471,10 @@ def damage_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Damage dealt (hearts)",
                 tickformat=",.0f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Damage dealt: %{y:,.1f} hearts<br>"
-                    "Damage received: %{customdata[6]:,.1f} hearts<br>"
-                    "Player damage received: %{customdata[7]:,.1f} hearts<br>"
-                    "Time played: %{customdata[1]:,.2f} h<br>"
-                    "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Players with playtime: %{customdata[3]:,.0f}<br>"
-                    "Attributed kills: %{customdata[14]:,.0f}<br>"
-                    "Damage dealt per kill: %{customdata[13]:,.1f} hearts"
+                    "<b>%{x}</b><br>Damage dealt: %{y:,.0f} hearts<br>"
+                    "Attributed kills: %{customdata[11]:,.0f}<br>"
+                    "Damage per attributed kill: "
+                    "%{customdata[10]:,.0f} hearts"
                     "<extra></extra>"
                 ),
             ),
@@ -450,12 +488,13 @@ def damage_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Damage dealt per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Damage dealt per hour: %{y:,.1f} hearts<br>"
-                    "Median player rate: %{customdata[4]:,.1f} hearts / h<br>"
-                    "Damage received per hour: %{customdata[9]:,.1f} hearts<br>"
-                    "Total damage dealt: %{customdata[0]:,.1f} hearts<br>"
-                    "Time played: %{customdata[1]:,.2f} h<br>"
-                    "Attributed kills: %{customdata[14]:,.0f}"
+                    "<b>%{x}</b><br>Kit aggregate rate: "
+                    "%{y:,.0f} hearts / h<br>"
+                    "Median individual player rate: "
+                    "%{customdata[4]:,.0f} hearts / h "
+                    "(players: %{customdata[13]:,.0f})<br>"
+                    "Total damage dealt: %{customdata[0]:,.0f} hearts<br>"
+                    "Active time: %{customdata[12]}"
                     "<extra></extra>"
                 ),
             ),
@@ -466,16 +505,12 @@ def damage_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Damage received per hour (hearts)",
                 tickformat=",.1f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>All damage received per hour: "
-                    "%{y:,.1f} hearts<br>Player damage received per hour: "
-                    "%{customdata[10]:,.1f} hearts<br>Non-player damage per hour: "
-                    "%{customdata[11]:,.1f} hearts<br>Non-player damage share: "
-                    "%{customdata[12]:.1%}<br>Total damage received: "
-                    "%{customdata[6]:,.1f} hearts<br>Time played: "
-                    "%{customdata[1]:,.2f} h<br>Targets taking damage: "
-                    "%{customdata[15]:,.0f}<br>Top target's share: "
-                    "%{customdata[16]:.1%}<br>Top 3 targets' share: "
-                    "%{customdata[17]:.1%}<extra></extra>"
+                    "<b>%{x}</b><br>All damage received: "
+                    "%{y:,.0f} hearts / h<br>Player damage: "
+                    "%{customdata[8]:,.0f} hearts / h<br>"
+                    "Non-player damage: %{customdata[9]:,.0f} hearts / h<br>"
+                    "Total damage received: %{customdata[14]:,.0f} hearts<br>"
+                    "Active time: %{customdata[12]}<extra></extra>"
                 ),
             ),
             AggregateMetricView(
@@ -497,12 +532,9 @@ def damage_figure(report: ReportData) -> go.Figure:
                 yaxis_range=(0, exchange_axis_max),
                 hovertemplate=(
                     "<b>%{x}</b><br>Damage exchange ratio: %{y:.2f}<br>"
-                    "Player damage dealt: %{customdata[0]:,.1f} hearts<br>"
-                    "Player damage received: %{customdata[7]:,.1f} hearts<br>"
-                    "All damage received: %{customdata[6]:,.1f} hearts<br>"
-                    "Non-player damage: %{customdata[8]:,.1f} hearts "
-                    "(%{customdata[12]:.1%})<br>Attributed kills: "
-                    "%{customdata[14]:,.0f}<extra></extra>"
+                    "Player damage dealt: %{customdata[0]:,.0f} hearts<br>"
+                    "Player damage received: %{customdata[6]:,.0f} hearts"
+                    "<extra></extra>"
                 ),
             ),
         ),
@@ -517,12 +549,18 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
         fig = go.Figure()
         fig.update_layout(
             title="How do kill causes differ across kits?",
+            height=STANDARD_FIGURE_HEIGHT,
             xaxis_title="Kit",
             yaxis_title="Share",
         )
         return fig
 
     cause_colors = _cause_color_map(report)
+    outgoing = report.outgoing_kills_by_cause.copy()
+    incoming = report.incoming_deaths_by_cause.copy()
+    incoming["active_time_text"] = incoming["total_hours"].map(
+        _format_hours
+    )
     outgoing_order = (
         report.kit_metrics.sort_values(
             ["kills", "kit_id"],
@@ -546,7 +584,7 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
     modes = (
         {
             "button_label": "Outgoing share",
-            "data": report.outgoing_kills_by_cause,
+            "data": outgoing,
             "value_col": "cause_share_of_kit_kills",
             "order": outgoing_order,
             "title": "How does each kit secure its attributed player kills?",
@@ -556,24 +594,19 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "range": [0, 1],
             "custom_cols": [
                 "kills",
-                "cause_share_of_kit_kills",
-                "cause_kills_per_hour",
                 "kit_total_kills",
-                "total_hours",
             ],
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of kit kills: %{y:.1%}<br>"
                 "Kills from cause: %{customdata[0]:,.0f}<br>"
-                "Cause-specific kills per hour: %{customdata[2]:.2f}<br>"
-                "All attributed kit kills: %{customdata[3]:,.0f}<br>"
-                "Kit playtime: %{customdata[4]:,.2f} h"
+                "All attributed kit kills: %{customdata[1]:,.0f}"
                 "<extra></extra>"
             ),
         },
         {
             "button_label": "Incoming deaths / hour",
-            "data": report.incoming_deaths_by_cause,
+            "data": incoming,
             "value_col": "cause_deaths_per_hour",
             "order": incoming_rate_order,
             "title": "What kills each kit most often per active hour?",
@@ -584,30 +617,20 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "custom_cols": [
                 "deaths",
                 "cause_share_of_kit_deaths",
-                "cause_deaths_per_hour",
-                "kit_total_deaths",
-                "kit_deaths_per_hour",
-                "player_caused_deaths",
-                "non_player_deaths",
-                "non_player_death_share",
-                "total_hours",
+                "active_time_text",
             ],
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Deaths per hour from cause: %{y:.2f}<br>"
                 "Deaths from cause: %{customdata[0]:,.0f}<br>"
                 "Share of kit deaths: %{customdata[1]:.1%}<br>"
-                "All deaths per hour: %{customdata[4]:.2f}<br>"
-                "Player-caused deaths: %{customdata[5]:,.0f}<br>"
-                "Non-player deaths: %{customdata[6]:,.0f} "
-                "(%{customdata[7]:.1%})<br>"
-                "Kit playtime: %{customdata[8]:,.2f} h"
+                "Active time: %{customdata[2]}"
                 "<extra></extra>"
             ),
         },
         {
             "button_label": "Incoming share",
-            "data": report.incoming_deaths_by_cause,
+            "data": incoming,
             "value_col": "cause_share_of_kit_deaths",
             "order": incoming_share_order,
             "title": "What accounts for each kit's observed deaths?",
@@ -617,24 +640,13 @@ def kill_causes_figure(report: ReportData) -> go.Figure:
             "range": [0, 1],
             "custom_cols": [
                 "deaths",
-                "cause_share_of_kit_deaths",
-                "cause_deaths_per_hour",
                 "kit_total_deaths",
-                "kit_deaths_per_hour",
-                "player_caused_deaths",
-                "non_player_deaths",
-                "non_player_death_share",
-                "total_hours",
             ],
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of kit deaths: %{y:.1%}<br>"
                 "Deaths from cause: %{customdata[0]:,.0f}<br>"
-                "Cause-specific deaths per hour: "
-                "%{customdata[2]:.2f}<br>"
-                "All kit deaths: %{customdata[3]:,.0f}<br>"
-                "All deaths per hour: %{customdata[4]:.2f}<br>"
-                "Non-player death share: %{customdata[7]:.1%}"
+                "All kit deaths: %{customdata[1]:,.0f}"
                 "<extra></extra>"
             ),
         },
@@ -656,12 +668,21 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
         fig = go.Figure()
         fig.update_layout(
             title="How do damage causes differ across kits?",
+            height=STANDARD_FIGURE_HEIGHT,
             xaxis_title="Kit",
             yaxis_title="Damage",
         )
         return fig
 
     cause_colors = _cause_color_map(report)
+    outgoing = report.outgoing_damage_by_cause.copy()
+    incoming = report.incoming_damage_by_cause.copy()
+    outgoing["active_time_text"] = outgoing["total_hours"].map(
+        _format_hours
+    )
+    incoming["active_time_text"] = incoming["total_hours"].map(
+        _format_hours
+    )
     dealt_rate_order = (
         report.damage_metrics.sort_values(
             ["damage_dealt_per_hour", "damage_dealt", "kit_id"],
@@ -684,26 +705,19 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
     outgoing_custom_cols = [
         "damage_dealt",
         "cause_share_of_kit_damage_dealt",
-        "cause_damage_dealt_per_hour",
         "kit_total_damage_dealt",
-        "kit_damage_dealt_per_hour",
-        "total_hours",
+        "active_time_text",
     ]
     incoming_custom_cols = [
         "damage_received",
         "cause_share_of_kit_damage_received",
-        "cause_damage_received_per_hour",
         "kit_total_damage_received",
-        "kit_damage_received_per_hour",
-        "player_damage_received",
-        "non_player_damage_received",
-        "non_player_damage_received_share",
-        "total_hours",
+        "active_time_text",
     ]
     modes = (
         {
             "button_label": "Dealt / hour",
-            "data": report.outgoing_damage_by_cause,
+            "data": outgoing,
             "value_col": "cause_damage_dealt_per_hour",
             "order": dealt_rate_order,
             "title": (
@@ -717,18 +731,16 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "custom_cols": outgoing_custom_cols,
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
-                "Cause damage per hour: %{y:,.1f} hearts<br>"
-                "Cause damage: %{customdata[0]:,.1f} hearts<br>"
+                "Cause damage per hour: %{y:,.0f} hearts<br>"
+                "Cause damage: %{customdata[0]:,.0f} hearts<br>"
                 "Share of kit damage: %{customdata[1]:.1%}<br>"
-                "All kit damage per hour: %{customdata[4]:,.1f} hearts<br>"
-                "All attributed kit damage: %{customdata[3]:,.1f} hearts<br>"
-                "Kit playtime: %{customdata[5]:,.2f} h"
+                "Active time: %{customdata[3]}"
                 "<extra></extra>"
             ),
         },
         {
             "button_label": "Dealt share",
-            "data": report.outgoing_damage_by_cause,
+            "data": outgoing,
             "value_col": "cause_share_of_kit_damage_dealt",
             "order": dealt_share_order,
             "title": "How does each kit deal its attributed player damage?",
@@ -740,16 +752,15 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of kit damage: %{y:.1%}<br>"
-                "Cause damage: %{customdata[0]:,.1f} hearts<br>"
-                "Cause damage per hour: %{customdata[2]:,.1f} hearts<br>"
-                "All attributed kit damage: %{customdata[3]:,.1f} hearts<br>"
-                "All kit damage per hour: %{customdata[4]:,.1f} hearts"
+                "Cause damage: %{customdata[0]:,.0f} hearts<br>"
+                "All attributed kit damage: "
+                "%{customdata[2]:,.0f} hearts"
                 "<extra></extra>"
             ),
         },
         {
             "button_label": "Received / hour",
-            "data": report.incoming_damage_by_cause,
+            "data": incoming,
             "value_col": "cause_damage_received_per_hour",
             "order": received_rate_order,
             "title": "What causes the most damage to each kit per active hour?",
@@ -760,19 +771,15 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "custom_cols": incoming_custom_cols,
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
-                "Cause damage per hour: %{y:,.1f} hearts<br>"
-                "Cause damage received: %{customdata[0]:,.1f} hearts<br>"
+                "Cause damage per hour: %{y:,.0f} hearts<br>"
+                "Cause damage received: %{customdata[0]:,.0f} hearts<br>"
                 "Share of received damage: %{customdata[1]:.1%}<br>"
-                "All received damage per hour: %{customdata[4]:,.1f} hearts<br>"
-                "Player damage received: %{customdata[5]:,.1f} hearts<br>"
-                "Non-player damage: %{customdata[6]:,.1f} hearts "
-                "(%{customdata[7]:.1%})<br>Kit playtime: "
-                "%{customdata[8]:,.2f} h<extra></extra>"
+                "Active time: %{customdata[3]}<extra></extra>"
             ),
         },
         {
             "button_label": "Received share",
-            "data": report.incoming_damage_by_cause,
+            "data": incoming,
             "value_col": "cause_share_of_kit_damage_received",
             "order": received_share_order,
             "title": "What makes up each kit's received damage?",
@@ -784,11 +791,8 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
             "hovertemplate": (
                 "<b>%{x}</b><br>%{fullData.name}<br>"
                 "Share of received damage: %{y:.1%}<br>"
-                "Cause damage received: %{customdata[0]:,.1f} hearts<br>"
-                "Cause damage per hour: %{customdata[2]:,.1f} hearts<br>"
-                "All damage received: %{customdata[3]:,.1f} hearts<br>"
-                "All received damage per hour: %{customdata[4]:,.1f} hearts<br>"
-                "Non-player damage share: %{customdata[7]:.1%}"
+                "Cause damage received: %{customdata[0]:,.0f} hearts<br>"
+                "All damage received: %{customdata[2]:,.0f} hearts"
                 "<extra></extra>"
             ),
         },
@@ -829,6 +833,9 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
         .dropna(subset=["time_share", "kills_per_hour"])
         .copy()
     )
+    plot_data["active_time_text"] = plot_data["total_hours"].map(
+        _format_hours
+    )
     total_hours = float(report.kit_metrics["total_hours"].sum())
     overall_kill_rate = (
         float(report.kit_metrics["kills"].sum()) / total_hours
@@ -847,22 +854,14 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
             labels={
                 "time_share": "Share of kit playtime",
                 "kills_per_hour": "Kills per active hour",
-                "kills_per_completed_life": "Kills per completed life",
-                "player_reach": "Proportion of players who tried the kit",
-                "players_with_time": "Players with playtime",
-                "total_hours": "Time played (hours)",
-                "completed_lives": "Completed lives",
-                "kills": "Total kills",
+                "active_time_text": "Active time",
+                "kills": "Attributed kills",
                 "kit_name": "Kit",
             },
             hover_data={
                 "time_share": ":.1%",
                 "kills_per_hour": ":.2f",
-                "kills_per_completed_life": ":.2f",
-                "player_reach": ":.1%",
-                "players_with_time": True,
-                "total_hours": ":.2f",
-                "completed_lives": True,
+                "active_time_text": True,
                 "kills": True,
                 "kit_name": False,
             },
@@ -886,17 +885,11 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
     customdata_cols = (
         "time_share",
         "kills_per_hour",
-        "kills_per_completed_life",
-        "player_reach",
-        "players_with_time",
-        "total_hours",
-        "completed_lives",
         "kills",
+        "active_time_text",
         "playtime_weighted_player_elo",
         "overall_playtime_weighted_player_elo",
         "player_elo_difference_from_overall",
-        "rated_player_time_share",
-        "players_with_rated_encounters",
         "median_player_rated_encounters",
     )
     return _quadrant_modes_figure(
@@ -929,12 +922,8 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
                 hovertemplate=(
                     "<b>%{fullData.name}</b><br>Playtime share: "
                     "%{x:.1%}<br>Kills per hour: %{y:.2f}<br>"
-                    "Kills per completed life: %{customdata[2]:.2f}<br>"
-                    "Player reach: %{customdata[3]:.1%}<br>"
-                    "Players with playtime: %{customdata[4]:,.0f}<br>"
-                    "Time played: %{customdata[5]:,.2f} h<br>"
-                    "Completed lives: %{customdata[6]:,.0f}<br>"
-                    "Total kills: %{customdata[7]:,.0f}<extra></extra>"
+                    "Attributed kills: %{customdata[2]:,.0f}<br>"
+                    "Active time: %{customdata[3]}<extra></extra>"
                 ),
             ),
             QuadrantMode(
@@ -963,18 +952,13 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
                 ),
                 hovertemplate=(
                     "<b>%{fullData.name}</b><br>Playtime-weighted "
-                    f"{elo_name}: %{{x:,.2f}}<br>Difference from overall: "
-                    "%{customdata[10]:+.2f}<br>Overall observed "
-                    f"{elo_name}: %{{customdata[9]:,.2f}}<br>"
-                    "Rated playtime: "
-                    "%{customdata[11]:.1%}<br>Players with rated "
-                    "encounters: %{customdata[12]:,.0f} / "
-                    "%{customdata[4]:,.0f}<br>Median rated encounters: "
-                    "%{customdata[13]:,.0f}<br>Kills per hour: "
-                    "%{y:.2f}<br>Kills per completed life: "
-                    "%{customdata[2]:.2f}<br>Total kills: "
-                    "%{customdata[7]:,.0f}<br>Time played: "
-                    "%{customdata[5]:,.2f} h<extra></extra>"
+                    f"{elo_name}: %{{x:,.0f}}<br>Difference from overall: "
+                    "%{customdata[6]:+,.0f}<br>Overall playtime-weighted "
+                    f"{elo_name}: %{{customdata[5]:,.0f}}<br>"
+                    "Median player experience: %{customdata[7]:,.0f} "
+                    "rated encounters<br>Kills per hour: %{y:.2f}<br>"
+                    "Attributed kills: %{customdata[2]:,.0f}<br>"
+                    "Active time: %{customdata[3]}<extra></extra>"
                 ),
             ),
         ),
@@ -988,6 +972,7 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
     totals["ability_effect_per_success_text"] = (
         _ability_effect_per_success_text(totals)
     )
+    totals["active_time_text"] = totals["total_hours"].map(_format_hours)
     return player_contribution_figure(
         all_kits=report.all_kits,
         totals=totals,
@@ -1017,6 +1002,11 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
             "ability_effect_description",
             "ability_name",
             "ability_effect_per_success_text",
+            "ability_success_description",
+            "active_time_text",
+            "players_with_cooldown_normalized_use_rate",
+            "players_with_ability_success_rate",
+            "players_with_ability_rate_per_life",
         ),
         metric_views=(
             AggregateMetricView(
@@ -1026,12 +1016,10 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Ability uses",
                 tickformat=",.0f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Ability uses: %{y:,.0f}<br>"
-                    "Time played: %{customdata[1]:,.2f} h<br>"
-                    "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Players with playtime: %{customdata[3]:,.0f}<br>"
-                    "Cooldown: %{customdata[6]:.1f} s<br>"
-                    "Cooldown-normalized rate: %{customdata[9]:.1%}"
+                    "<b>%{x} — %{customdata[19]}</b><br>"
+                    "Ability uses: %{y:,.0f}<br>"
+                    "Active time: %{customdata[22]}<br>"
+                    "Cooldown: %{customdata[6]:.1f} s"
                     "<extra></extra>"
                 ),
             ),
@@ -1045,14 +1033,17 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Share of cooldown-only maximum use rate",
                 tickformat=".1%",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Cooldown-normalized rate: "
-                    "%{y:.1%}<br>Median player rate: "
-                    "%{customdata[10]:.1%}<br>Observed uses per hour: "
+                    "<b>%{x} — %{customdata[19]}</b><br>"
+                    "Kit aggregate normalized rate: "
+                    "%{y:.1%}<br>Median individual player rate: "
+                    "%{customdata[10]:.1%} "
+                    "(players: %{customdata[23]:,.0f})<br>"
+                    "Observed uses per hour: "
                     "%{customdata[8]:.2f}<br>Cooldown-only maximum: "
                     "%{customdata[7]:.2f} uses / h<br>Cooldown: "
                     "%{customdata[6]:.1f} s<br>Total uses: "
-                    "%{customdata[0]:,.0f}<br>Time played: "
-                    "%{customdata[1]:,.2f} h"
+                    "%{customdata[0]:,.0f}<br>Active time: "
+                    "%{customdata[22]}"
                     "<extra></extra>"
                 ),
             ),
@@ -1068,14 +1059,14 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                 yaxis_range=(0, 1.05),
                 hovertemplate=(
                     "<b>%{x} — %{customdata[19]}</b><br>Success rate: "
-                    "%{y:.1%}<br>Median eligible player: "
-                    "%{customdata[13]:.1%}<br>Successful uses: "
+                    "%{y:.1%}<br>Median individual player rate: "
+                    "%{customdata[13]:.1%} "
+                    "(players: %{customdata[24]:,.0f})<br>"
+                    "Successful uses: "
                     "%{customdata[11]:,.0f} / %{customdata[0]:,.0f}<br>"
-                    "Cooldown-normalized activation: "
-                    "%{customdata[9]:.1%}<br>Effect metric: "
-                    "%{customdata[15]}<br>Effectiveness: "
-                    "%{customdata[20]}<br>"
-                    "%{customdata[18]}<extra></extra>"
+                    "Success condition: %{customdata[21]}<br>"
+                    "Logged effect: %{customdata[20]}"
+                    "<extra></extra>"
                 ),
             ),
             AggregateMetricView(
@@ -1088,13 +1079,14 @@ def ability_uses_figure(report: ReportData) -> go.Figure:
                 yaxis_title="Ability uses per completed life",
                 tickformat=".2f",
                 hovertemplate=(
-                    "<b>%{x}</b><br>Ability uses per completed life: "
-                    "%{y:.2f}<br>Median player rate: "
-                    "%{customdata[5]:.2f}<br>Total uses: "
+                    "<b>%{x} — %{customdata[19]}</b><br>"
+                    "Kit aggregate rate: %{y:.2f} uses / completed life<br>"
+                    "Median individual player rate: "
+                    "%{customdata[5]:.2f} uses / completed life "
+                    "(players: %{customdata[25]:,.0f})<br>"
+                    "Total uses: "
                     "%{customdata[0]:,.0f}<br>"
-                    "Completed lives: %{customdata[2]:,.0f}<br>"
-                    "Cooldown: %{customdata[6]:.1f} s<br>"
-                    "Cooldown-normalized rate: %{customdata[9]:.1%}"
+                    "Completed lives: %{customdata[2]:,.0f}"
                     "<extra></extra>"
                 ),
             ),
@@ -1129,6 +1121,7 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
             "players_with_ability_effect_per_successful_use",
             "median_player_ability_effect_per_successful_use",
             "ability_effect_per_success_text",
+            "ability_success_description",
         ),
         modes=(
             QuadrantMode(
@@ -1154,12 +1147,10 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                     "Cooldown-normalized activation: %{x:.1%}<br>"
                     "Successful-use rate: %{y:.1%}<br>Successful uses: "
                     "%{customdata[1]:,.0f} / %{customdata[0]:,.0f}<br>"
-                    "Median eligible player: %{customdata[13]:.1%} "
+                    "Median individual player rate: %{customdata[13]:.1%} "
                     "(%{customdata[12]:,.0f} players)<br>"
-                    "Uses per hour: %{customdata[4]:.2f}<br>Effect metric: "
-                    "%{customdata[8]}<br>Effectiveness: "
-                    "%{customdata[16]}<br>"
-                    "%{customdata[9]}<extra></extra>"
+                    "Success condition: %{customdata[17]}"
+                    "<extra></extra>"
                 ),
             ),
             QuadrantMode(
@@ -1187,9 +1178,10 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                     "Successful-use rate: %{customdata[2]:.1%}<br>"
                     "Successful uses: %{customdata[1]:,.0f} / "
                     "%{customdata[0]:,.0f}<br>Total players affected: "
-                    "%{customdata[5]:,.0f}<br>Median eligible player: "
+                    "%{customdata[5]:,.0f}<br>Median individual result: "
                     "%{customdata[15]:.2f} players / success "
-                    "(%{customdata[14]:,.0f} players)<br>%{customdata[9]}"
+                    "(%{customdata[14]:,.0f} players)<br>"
+                    "Effect measured: %{customdata[9]}"
                     "<extra></extra>"
                 ),
             ),
@@ -1214,13 +1206,14 @@ def ability_effectiveness_figure(report: ReportData) -> go.Figure:
                 hovertemplate=(
                     "<b>%{fullData.name} — %{customdata[11]}</b><br>"
                     "Cooldown-normalized activation: %{x:.1%}<br>"
-                    "%{customdata[8]} per successful use: %{y:.2f} hearts<br>"
+                    "%{customdata[8]} per successful use: %{y:,.0f} hearts<br>"
                     "Successful-use rate: %{customdata[2]:.1%}<br>"
                     "Successful uses: %{customdata[1]:,.0f} / "
                     "%{customdata[0]:,.0f}<br>Total health impact: "
-                    "%{customdata[5]:,.1f} hearts<br>Median eligible player: "
-                    "%{customdata[15]:.2f} hearts / success "
-                    "(%{customdata[14]:,.0f} players)<br>%{customdata[9]}"
+                    "%{customdata[5]:,.0f} hearts<br>Median individual result: "
+                    "%{customdata[15]:,.0f} hearts / success "
+                    "(%{customdata[14]:,.0f} players)<br>"
+                    "Effect measured: %{customdata[9]}"
                     "<extra></extra>"
                 ),
             ),
@@ -1248,61 +1241,95 @@ def player_reach_figure(report: ReportData) -> go.Figure:
     )
     denominator = np.full(len(plot_data), report.n_players)
     kit_colors = plot_data["kit_name"].map(KIT_COLORS)
+    reach_order = (
+        plot_data.sort_values(
+            ["played", "used_ability", "made_kill", "kit_name"],
+            ascending=[True, True, True, True],
+            na_position="first",
+        )["kit_name"].tolist()
+    )
 
     fig = go.Figure()
 
-    # Wide, faded bars show direct adoption.  The narrower solid bars nested
-    # inside them show the subset that managed at least one player kill.
+    reach_line_x: list[float | None] = []
+    reach_line_y: list[str | None] = []
+    for row in plot_data.itertuples(index=False):
+        reach_line_x.extend([row.played, row.made_kill, None])
+        reach_line_y.extend([row.kit_name, row.kit_name, None])
+
     fig.add_trace(
-        go.Bar(
-            x=plot_data["kit_name"],
-            y=plot_data["played"],
-            width=0.82,
-            name="Tried the kit",
-            marker={
-                "color": kit_colors,
-                "line": {"color": "#333333", "width": 1},
-            },
-            opacity=0.32,
-            customdata=np.column_stack(
-                [
-                    plot_data["played_count"],
-                    denominator,
-                    plot_data["used_ability"],
-                    plot_data["used_ability_count"],
-                    plot_data["total_hours"],
-                    plot_data["completed_lives"],
-                ]
+        go.Scatter(
+            x=reach_line_x,
+            y=reach_line_y,
+            mode="lines",
+            line=dict(color="#A1A1AA", width=2),
+            hoverinfo="skip",
+            showlegend=False,
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=plot_data["played"],
+            y=plot_data["kit_name"],
+            mode="markers",
+            name="Tried kit",
+            marker=dict(
+                size=11,
+                color=kit_colors,
+                symbol="circle",
+                line=dict(color="#333333", width=1.2),
             ),
-            visible=True,
+            customdata=np.column_stack(
+                [plot_data["played_count"], denominator]
+            ),
             hovertemplate=(
-                "<b>%{x}</b><br>Players who tried it: %{y:.1%}<br>"
+                "<b>%{y}</b><br>Tried the kit: %{x:.1%}<br>"
                 "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}<br>"
-                "Used its ability: %{customdata[2]:.1%} "
-                "(%{customdata[3]:.0f} players)<br>"
-                "Time played: %{customdata[4]:,.2f} h<br>"
-                "Completed lives: %{customdata[5]:,.0f}<extra></extra>"
+                "<extra></extra>"
             ),
         )
     )
     fig.add_trace(
-        go.Bar(
-            x=plot_data["kit_name"],
-            y=plot_data["made_kill"],
-            width=0.42,
-            name="Made ≥1 player kill",
-            marker={
-                "color": kit_colors,
-                "line": {"color": "#222222", "width": 1.2},
-            },
+        go.Scatter(
+            x=plot_data["used_ability"],
+            y=plot_data["kit_name"],
+            mode="markers",
+            name="Used ability",
+            marker=dict(
+                size=11,
+                color=kit_colors,
+                symbol="circle-open",
+                line=dict(color="#333333", width=1.8),
+            ),
+            customdata=np.column_stack(
+                [plot_data["used_ability_count"], denominator]
+            ),
+            hovertemplate=(
+                "<b>%{y}</b><br>Used the ability: %{x:.1%}<br>"
+                "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}"
+                "<extra></extra>"
+            ),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=plot_data["made_kill"],
+            y=plot_data["kit_name"],
+            mode="markers",
+            name="Made a kill",
+            marker=dict(
+                size=12,
+                color=kit_colors,
+                symbol="diamond-open",
+                line=dict(color="#333333", width=2),
+            ),
             customdata=np.column_stack(
                 [plot_data["made_kill_count"], denominator]
             ),
-            visible=True,
             hovertemplate=(
-                "<b>%{x}</b><br>Made a player kill: %{y:.1%}<br>"
-                "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}"
-                "<extra></extra>"
+                "<b>%{y}</b><br>Made an attributed player kill: "
+                "%{x:.1%}<br>Players: %{customdata[0]:.0f} / "
+                "%{customdata[1]:.0f}<extra></extra>"
             ),
         )
     )
@@ -1325,7 +1352,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
                     "line": {"color": "#333333", "width": 0.7},
                 },
                 customdata=[
-                    [f'{row["total_hours"]:,.2f} h'],
+                    [_format_hours(row["total_hours"])],
                     [f'{row["completed_lives"]:,.0f} lives'],
                 ],
                 visible=False,
@@ -1338,8 +1365,9 @@ def player_reach_figure(report: ReportData) -> go.Figure:
 
     fig.add_trace(
         go.Bar(
-            x=plot_data["kit_name"],
-            y=plot_data["hours_per_completed_life"] * 60,
+            x=plot_data["hours_per_completed_life"] * 60,
+            y=plot_data["kit_name"],
+            orientation="h",
             name="Average life duration",
             marker={
                 "color": kit_colors,
@@ -1347,7 +1375,9 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             },
             customdata=np.column_stack(
                 [
-                    plot_data["total_hours"],
+                    (plot_data["hours_per_completed_life"] * 60).map(
+                        _format_minutes
+                    ),
                     plot_data["completed_lives"],
                     plot_data["players_with_completed_life"],
                 ]
@@ -1355,50 +1385,49 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             showlegend=False,
             visible=False,
             hovertemplate=(
-                "<b>%{x}</b><br>Time per completed life: %{y:.2f} min<br>"
-                "Time played: %{customdata[0]:,.2f} h<br>"
+                "<b>%{y}</b><br>Average completed-life duration: "
+                "%{customdata[0]}<br>"
                 "Completed lives: %{customdata[1]:,.0f}<br>"
-                "Players: %{customdata[2]:,.0f}<extra></extra>"
+                "Players with a completed life: %{customdata[2]:,.0f}"
+                "<extra></extra>"
             ),
         )
     )
 
     exposure_trace_count = len(exposure_order)
-    life_trace_index = 2 + exposure_trace_count
-    player_visibility = [True, True] + [False] * (
+    reach_trace_count = 4
+    life_trace_index = reach_trace_count + exposure_trace_count
+    player_visibility = [True] * reach_trace_count + [False] * (
         exposure_trace_count + 1
     )
-    exposure_visibility = [False, False] + [True] * exposure_trace_count + [
-        False
-    ]
+    exposure_visibility = [False] * reach_trace_count + [
+        True
+    ] * exposure_trace_count + [False]
     life_visibility = [False] * life_trace_index + [True]
 
     player_layout = {
         "title": {
-            "text": (
-                "Which kits reached the largest share of observed players?"
-            )
+            "text": "How broadly did each kit reach observed players?"
         },
-        "barmode": "overlay",
-        "height": 520,
+        "barmode": "group",
+        "height": STANDARD_FIGURE_HEIGHT,
         "xaxis": {
-            "title": {"text": "Kit"},
-            "type": "category",
-            "categoryorder": "array",
-            "categoryarray": list(KIT_ORDER),
-            "range": None,
-            "autorange": True,
-            "tickformat": "",
-        },
-        "yaxis": {
-            "title": {"text": "Proportion of players"},
+            "title": {"text": "Share of observed players"},
             "type": "linear",
             "tickformat": ".0%",
             "range": [0, 1],
             "autorange": False,
         },
+        "yaxis": {
+            "title": {"text": "Kit"},
+            "type": "category",
+            "categoryorder": "array",
+            "categoryarray": reach_order,
+            "range": None,
+            "autorange": True,
+        },
         "legend": {
-            "title": {"text": "Player reach"},
+            "title": {"text": "Reached by"},
             "orientation": "h",
             "x": 0.5,
             "xanchor": "center",
@@ -1414,7 +1443,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             )
         },
         "barmode": "stack",
-        "height": 430,
+        "height": STANDARD_FIGURE_HEIGHT,
         "xaxis": {
             "title": {"text": "Share of observed total"},
             "type": "linear",
@@ -1447,23 +1476,28 @@ def player_reach_figure(report: ReportData) -> go.Figure:
             )
         },
         "barmode": "group",
-        "height": 520,
+        "height": STANDARD_FIGURE_HEIGHT,
         "xaxis": {
+            "title": {"text": "Minutes per completed life"},
+            "type": "linear",
+            "range": None,
+            "autorange": True,
+            "tickformat": ".0f",
+            "rangemode": "tozero",
+        },
+        "yaxis": {
             "title": {"text": "Kit"},
             "type": "category",
             "categoryorder": "array",
-            "categoryarray": list(KIT_ORDER),
+            "categoryarray": (
+                plot_data.sort_values(
+                    "hours_per_completed_life",
+                    ascending=True,
+                    na_position="first",
+                )["kit_name"].tolist()
+            ),
             "range": None,
             "autorange": True,
-            "tickformat": "",
-        },
-        "yaxis": {
-            "title": {"text": "Minutes per completed life"},
-            "type": "linear",
-            "tickformat": ".1f",
-            "range": None,
-            "autorange": True,
-            "rangemode": "tozero",
         },
         "legend": {
             "orientation": "h",
@@ -1476,7 +1510,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
 
     fig.update_layout(
         **player_layout,
-        margin=dict(l=70, r=35, t=125, b=115),
+        margin=dict(l=105, r=35, t=125, b=135),
         hovermode="closest",
         updatemenus=[
             {
@@ -1484,7 +1518,7 @@ def player_reach_figure(report: ReportData) -> go.Figure:
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.20,
+                "y": 1.13,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": [
@@ -1592,10 +1626,6 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
             "kit_name",
             "kills",
             "kills_per_hour",
-            "kills_per_completed_life",
-            "time_share",
-            "total_hours",
-            "completed_lives",
             "players_with_kills",
             "top_player_share",
             "top_3_share",
@@ -1610,10 +1640,6 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
         labels={
             "kills": "Total kills",
             "kills_per_hour": "Kills per hour",
-            "kills_per_completed_life": "Kills per completed life",
-            "time_share": "Share of kit playtime",
-            "total_hours": "Time played (hours)",
-            "completed_lives": "Completed lives",
             "top_player_share": "Top player's share of kit kills",
             "players_with_kills": "Players with kills",
             "top_3_share": "Top 3 players' share",
@@ -1622,10 +1648,6 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
         hover_data={
             "kills": True,
             "kills_per_hour": ":.2f",
-            "kills_per_completed_life": ":.2f",
-            "time_share": ":.1%",
-            "total_hours": ":.2f",
-            "completed_lives": True,
             "players_with_kills": True,
             "top_player_share": ":.1%",
             "top_3_share": ":.1%",
@@ -1657,7 +1679,6 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
                 "their playtime share suggests?"
             ),
             "player_label": "Top killer",
-            "counterpart_label": "Top playtime player",
             "prefix": "top_killer",
             "xaxis_title": "Top killer's share of kit playtime",
             "yaxis_title": "Top killer's share of kit kills",
@@ -1669,7 +1690,6 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
                 "proportion to their playtime?"
             ),
             "player_label": "Top playtime player",
-            "counterpart_label": "Top killer",
             "prefix": "top_playtime_player",
             "xaxis_title": (
                 "Top playtime player's share of kit playtime"
@@ -1692,7 +1712,7 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     first_view = available_views[0][0] if available_views else views[0]
     if not available_views:
         fig = go.Figure()
-        fig.update_layout(title=first_view["title"])
+        fig.update_layout(title=first_view["title"], height=650)
         fig.update_xaxes(
             title=first_view["xaxis_title"],
             tickformat=".0%",
@@ -1724,57 +1744,24 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     trace_view_indices = []
     for view_index, (view, plot_data) in enumerate(available_views):
         prefix = view["prefix"]
-        counterpart_prefix = (
-            "top_playtime_player"
-            if prefix == "top_killer"
-            else "top_killer"
-        )
         for row in plot_data.itertuples(index=False):
             customdata_values = [
                 getattr(row, f"{prefix}_id"),
                 getattr(row, f"{prefix}_kills"),
-                getattr(row, f"{prefix}_hours"),
-                getattr(row, f"{prefix}_completed_lives"),
-                getattr(row, f"{prefix}_kills_per_hour"),
-                getattr(row, f"{prefix}_kills_per_completed_life"),
+                _format_hours(getattr(row, f"{prefix}_hours")),
                 getattr(row, f"{prefix}_kill_share_minus_time_share"),
-                getattr(row, f"{prefix}_kill_to_time_share_ratio"),
-                row.kit_kills,
-                row.kit_total_hours,
-                row.kit_players_with_time,
-                getattr(row, f"{counterpart_prefix}_id"),
-                (
-                    "Yes"
-                    if row.same_top_killer_and_playtime_player
-                    else "No"
-                ),
             ]
             if elo_available:
                 customdata_values.extend(
                     [
                         getattr(row, f"{prefix}_rating"),
                         getattr(row, f"{prefix}_rated_encounters"),
-                        getattr(row, f"{counterpart_prefix}_rating"),
-                        getattr(
-                            row,
-                            f"{counterpart_prefix}_rated_encounters",
-                        ),
                     ]
                 )
             customdata = [customdata_values]
             selected_elo_hover = (
-                f"Selected-player {elo_name}: "
-                "%{customdata[13]:,.2f}<br>"
-                "Selected-player rated encounters: "
-                "%{customdata[14]:,.0f}<br>"
-                if elo_available
-                else ""
-            )
-            counterpart_elo_hover = (
-                f"Counterpart {elo_name}: "
-                "%{customdata[15]:,.2f}<br>"
-                "Counterpart rated encounters: "
-                "%{customdata[16]:,.0f}<br>"
+                f"{elo_name}: %{{customdata[4]:,.0f}}<br>"
+                "Rated encounters: %{customdata[5]:,.0f}<br>"
                 if elo_available
                 else ""
             )
@@ -1797,28 +1784,12 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
                         f"{view['player_label']}: %{{customdata[0]}}<br>"
                         "Kill share: %{y:.1%}<br>"
                         "Playtime share: %{x:.1%}<br>"
-                        "Kill-share advantage: %{customdata[6]:+.1%}<br>"
-                        "Kill / playtime share ratio: "
-                        "%{customdata[7]:.2f}<br>"
-                        "Selected-player kills: %{customdata[1]:,.0f}<br>"
-                        "Selected-player playtime: "
-                        "%{customdata[2]:,.2f} h<br>"
-                        "Selected-player completed lives: "
-                        "%{customdata[3]:,.0f}<br>"
-                        "Selected-player kills / hour: "
-                        "%{customdata[4]:.2f}<br>"
-                        "Selected-player kills / life: "
-                        "%{customdata[5]:.2f}<br>"
+                        "Kill share − playtime share: "
+                        "%{customdata[3]:+.1%}<br>"
+                        "Attributed kills: %{customdata[1]:,.0f}<br>"
+                        "Active time: %{customdata[2]}<br>"
                         + selected_elo_hover
-                        + f"{view['counterpart_label']}: "
-                        "%{customdata[11]}<br>"
-                        + counterpart_elo_hover
-                        + "Same player in both modes: "
-                        "%{customdata[12]}<br>"
-                        "Kit kills: %{customdata[8]:,.0f}<br>"
-                        "Kit playtime: %{customdata[9]:,.2f} h<br>"
-                        "Kit players with playtime: "
-                        "%{customdata[10]:,.0f}<extra></extra>"
+                        + "<extra></extra>"
                     ),
                 )
             )
@@ -1931,6 +1902,7 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
     if report.elo_metadata.empty:
         fig.update_layout(
             title=title,
+            height=STANDARD_FIGURE_HEIGHT,
             xaxis_title=(
                 "Observed minus current-Elo-implied kill-exchange share"
             ),
@@ -1955,6 +1927,7 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
     if plot_data.empty:
         fig.update_layout(
             title=title,
+            height=STANDARD_FIGURE_HEIGHT,
             xaxis_title=(
                 "Observed minus current-Elo-implied kill-exchange share"
             ),
@@ -1980,10 +1953,6 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
         "current_elo_implied_score_rate",
         "cross_kit_kills",
         "cross_kit_deaths",
-        "cross_kit_results",
-        "current_elo_implied_score_sum",
-        "score_sum_minus_current_elo",
-        "players_in_cross_kit_results",
     ]
     fig.add_trace(
         go.Bar(
@@ -2001,14 +1970,7 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
                 f"{elo_name}: %{{customdata[1]:.1%}}<br>"
                 "Difference: %{x:+.1%}<br>Cross-kit kills: "
                 "%{customdata[2]:,.0f}<br>Cross-kit deaths: "
-                "%{customdata[3]:,.0f}<br>Results included: "
-                "%{customdata[4]:,.0f}<br>Wins implied by current "
-                f"{elo_name}: "
-                "%{customdata[5]:,.2f}<br>Wins above implication: "
-                "%{customdata[6]:+,.2f}<br>Players represented: "
-                "%{customdata[7]:,.0f}<br><br>Expectations use the current "
-                "rating snapshot,<br>not each result’s historical pre-kill "
-                "ratings.<extra></extra>"
+                "%{customdata[3]:,.0f}<extra></extra>"
             ),
             showlegend=False,
         )
@@ -2023,9 +1985,47 @@ def elo_adjusted_kill_results_figure(report: ReportData) -> go.Figure:
         line=dict(color="#111111", width=2),
         layer="below",
     )
+    fig.add_annotation(
+        x=0.01,
+        y=0.98,
+        xref="paper",
+        yref="paper",
+        text=(
+            "<b>Possible kit disadvantage</b><br>"
+            "Players using the kit claimed a smaller share of cross-kit "
+            "kills<br>than the killers’ and victims’ current ratings would "
+            "suggest.<br>If this persists across many kills and deaths,<br>"
+            "the kit may be holding them back."
+        ),
+        showarrow=False,
+        xanchor="left",
+        yanchor="top",
+        align="left",
+        font=dict(size=12, color="#555555"),
+        bgcolor="rgba(255,255,255,0.78)",
+    )
+    fig.add_annotation(
+        x=0.99,
+        y=0.02,
+        xref="paper",
+        yref="paper",
+        text=(
+            "<b>Possible kit advantage</b><br>"
+            "Players using the kit claimed a larger share of cross-kit "
+            "kills<br>than the killers’ and victims’ current ratings would "
+            "suggest.<br>If this persists across many kills and deaths,<br>"
+            "the kit may be helping them outperform their rating."
+        ),
+        showarrow=False,
+        xanchor="right",
+        yanchor="bottom",
+        align="right",
+        font=dict(size=12, color="#555555"),
+        bgcolor="rgba(255,255,255,0.78)",
+    )
     fig.update_layout(
         title=title,
-        height=590,
+        height=STANDARD_FIGURE_HEIGHT,
         margin=dict(l=90, r=40, t=90, b=75),
         bargap=0.28,
         hovermode="closest",
@@ -2226,10 +2226,7 @@ def matchup_figure(
                     f"{elo_expected[i, j]:.1%}<br>"
                     f"Difference: {elo_difference[i, j]:+.1%}<br>"
                     f"{row_kit} kills: {row_kills:,}<br>"
-                    f"{column_kit} kills: {column_kills:,}<br>"
-                    f"Results included: {result_count:,}<br><br>"
-                    "Expectations use current ratings, not each result’s "
-                    "historical pre-kill ratings."
+                    f"{column_kit} kills: {column_kills:,}"
                 )
         finite_differences = np.abs(
             elo_difference[np.isfinite(elo_difference)]
@@ -2296,7 +2293,7 @@ def matchup_figure(
             if pair_total <= 0:
                 continue
             damage_cause_lookup[(int(pair[0]), int(pair[1]))] = "<br>".join(
-                f"{row.cause_name}: {row.damage_received:,.1f} hearts "
+                f"{row.cause_name}: {row.damage_received:,.0f} hearts "
                 f"({row.damage_received / pair_total:.1%})"
                 for row in group.itertuples(index=False)
             )
@@ -2314,7 +2311,7 @@ def matchup_figure(
                     continue
                 raw_damage_hover[source_id, target_id] = (
                     f"<b>{source_name} → {target_name}</b><br>"
-                    f"Damage: {damage_value:,.1f} hearts<br><br>"
+                    f"Damage: {damage_value:,.0f} hearts<br><br>"
                     "<b>Cause breakdown</b><br>"
                     f"{damage_cause_lookup.get((source_id, target_id), 'Unavailable')}"
                 )
@@ -2332,13 +2329,13 @@ def matchup_figure(
                 damage_share_hover[i, j] = (
                     f"<b>{row_kit} vs {column_kit}</b><br>"
                     f"{row_kit} damage: "
-                    f"{damage_matchup_matrix.iloc[i, j]:,.1f} hearts<br>"
+                    f"{damage_matchup_matrix.iloc[i, j]:,.0f} hearts<br>"
                     f"{column_kit} damage: "
-                    f"{damage_matchup_matrix.iloc[j, i]:,.1f} hearts<br>"
+                    f"{damage_matchup_matrix.iloc[j, i]:,.0f} hearts<br>"
                     f"{row_kit} directional damage share: "
                     f"{damage_directional_share[i, j]:.1%}<br>"
                     f"Pair damage observed: "
-                    f"{damage_pair_totals[i, j]:,.1f} hearts<br><br>"
+                    f"{damage_pair_totals[i, j]:,.0f} hearts<br><br>"
                     f"<b>{row_kit} → {column_kit} causes</b><br>"
                     f"{damage_cause_lookup.get((i, j), 'No attributed damage')}"
                     "<br><br>"
@@ -2510,6 +2507,7 @@ def matchup_figure(
         title=(
             "Which kit leads each observed head-to-head kill exchange?"
         ),
+        height=STANDARD_FIGURE_HEIGHT,
         xaxis_title="Other kit",
         yaxis_title="Row kit",
         margin=dict(l=70, r=40, t=125, b=70),
@@ -2519,7 +2517,7 @@ def matchup_figure(
                 "direction": "right",
                 "x": 0.5,
                 "xanchor": "center",
-                "y": 1.16,
+                "y": 1.11,
                 "yanchor": "top",
                 "showactive": True,
                 "buttons": buttons,
@@ -2536,12 +2534,15 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
     plot_data["ability_effect_per_success_text"] = (
         _ability_effect_per_success_text(plot_data)
     )
+    plot_data["active_time_text"] = plot_data["total_hours"].map(
+        _format_hours
+    )
     return _quadrant_modes_figure(
         plot_data,
         customdata_cols=(
             "ability_use",
             "kills",
-            "total_hours",
+            "active_time_text",
             "completed_lives",
             "ability_cooldown_seconds",
             "ability_uses_per_hour",
@@ -2574,9 +2575,8 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                 ),
                 hovertemplate=(
                     "<b>%{fullData.name}</b><br>Ability uses: %{x:,.0f}<br>"
-                    "Kills: %{y:,.0f}<br>Time played: "
-                    "%{customdata[2]:,.2f} h<br>Completed lives: "
-                    "%{customdata[3]:,.0f}<br>Cooldown: "
+                    "Kills: %{y:,.0f}<br>Active time: "
+                    "%{customdata[2]}<br>Cooldown: "
                     "%{customdata[4]:.1f} s<extra></extra>"
                 ),
             ),
@@ -2605,8 +2605,8 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "%{customdata[5]:.2f}<br>Cooldown: "
                     "%{customdata[4]:.1f} s<br>Total uses: "
                     "%{customdata[0]:,.0f}<br>Total kills: "
-                    "%{customdata[1]:,.0f}<br>Time played: "
-                    "%{customdata[2]:,.2f} h<extra></extra>"
+                    "%{customdata[1]:,.0f}<br>Active time: "
+                    "%{customdata[2]}<extra></extra>"
                 ),
             ),
             QuadrantMode(
@@ -2629,9 +2629,7 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "%{x:.1%}<br>Kills per hour: %{y:.2f}<br>"
                     "Successful uses: %{customdata[7]:,.0f} / "
                     "%{customdata[0]:,.0f}<br>Cooldown-normalized "
-                    "activation: %{customdata[6]:.1%}<br>Effect metric: "
-                    "%{customdata[9]}<br>Effectiveness: "
-                    "%{customdata[12]}"
+                    "activation: %{customdata[6]:.1%}"
                     "<extra></extra>"
                 ),
             ),
@@ -2658,410 +2656,8 @@ def kills_vs_ability_uses_figure(combined_totals: pd.DataFrame) -> go.Figure:
                     "%{x:.2f}<br>Kills per life: %{y:.2f}<br>"
                     "Total uses: %{customdata[0]:,.0f}<br>Total kills: "
                     "%{customdata[1]:,.0f}<br>Completed lives: "
-                    "%{customdata[3]:,.0f}<br>Cooldown: "
-                    "%{customdata[4]:.1f} s<br>Cooldown-normalized rate: "
-                    "%{customdata[6]:.1%}<extra></extra>"
+                    "%{customdata[3]:,.0f}<extra></extra>"
                 ),
             ),
         ),
     )
-
-
-def report_summary_figure(report: ReportData) -> go.Figure:
-    """Render an aligned, unit-aware profile of every kit."""
-
-    plot_data = (
-        report.summary.sort_values("kills", ascending=True)
-        .reset_index(drop=True)
-        .copy()
-    )
-    kit_names = plot_data["kit_name"].tolist()
-    kit_colors = plot_data["kit_name"].map(KIT_COLORS).tolist()
-    dark_outline = "#333333"
-
-    fig = make_subplots(
-        rows=1,
-        cols=4,
-        shared_yaxes=True,
-        horizontal_spacing=0.055,
-        column_widths=[0.22, 0.22, 0.30, 0.26],
-        subplot_titles=(
-            "Kill volume",
-            "Ability use intensity",
-            "Player reach",
-            "Kill concentration",
-        ),
-    )
-
-    kill_hover = np.column_stack(
-        [
-            plot_data["players_with_kills"],
-            plot_data["kills_per_hour"],
-            plot_data["kills_per_completed_life"],
-            plot_data["total_hours"],
-            plot_data["completed_lives"],
-            plot_data["deaths"],
-            plot_data["deaths_per_hour"],
-            plot_data["kill_death_ratio"],
-            plot_data["non_player_death_share"],
-        ]
-    )
-    fig.add_trace(
-        go.Bar(
-            x=plot_data["kills"],
-            y=kit_names,
-            orientation="h",
-            width=0.48,
-            marker=dict(
-                color=kit_colors,
-                line=dict(color=dark_outline, width=1),
-            ),
-            opacity=0.18,
-            hoverinfo="skip",
-            showlegend=False,
-        ),
-        row=1,
-        col=1,
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["kills"],
-            y=kit_names,
-            mode="markers",
-            marker=dict(
-                size=11,
-                color=kit_colors,
-                line=dict(color=dark_outline, width=1.25),
-            ),
-            customdata=kill_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Total kills: %{x:,}<br>"
-                "Kills per hour: %{customdata[1]:.2f}<br>"
-                "Kills per completed life: %{customdata[2]:.2f}<br>"
-                "Time played: %{customdata[3]:,.2f} h<br>"
-                "Completed lives: %{customdata[4]:,.0f}<br>"
-                "Deaths experienced: %{customdata[5]:,.0f}<br>"
-                "Deaths per hour: %{customdata[6]:.2f}<br>"
-                "Kills per death: %{customdata[7]:.2f}<br>"
-                "Non-player death share: %{customdata[8]:.1%}<br>"
-                "Players with ≥1 kill: %{customdata[0]:.0f}"
-                "<extra></extra>"
-            ),
-            showlegend=False,
-        ),
-        row=1,
-        col=1,
-    )
-
-    ability_success_text = [
-        (
-            f"{rate:.1%} ({successful:,.0f} successes)"
-            if pd.notna(rate)
-            else "Not logged"
-        )
-        for rate, successful in zip(
-            plot_data["ability_success_rate"],
-            plot_data["successful_uses"],
-        )
-    ]
-    ability_effect_text = _ability_effect_per_success_text(plot_data)
-    ability_hover = np.column_stack(
-        [
-            plot_data["players_using_ability"],
-            plot_data["ability_use"],
-            plot_data["ability_uses_per_hour"],
-            plot_data["ability_uses_per_completed_life"],
-            plot_data["ability_cooldown_seconds"],
-            plot_data["theoretical_ability_uses_per_hour"],
-            plot_data["median_player_cooldown_normalized_use_rate"],
-            plot_data["total_hours"],
-            plot_data["completed_lives"],
-            ability_success_text,
-            ability_effect_text,
-        ]
-    )
-    fig.add_trace(
-        go.Bar(
-            x=plot_data["cooldown_normalized_use_rate"],
-            y=kit_names,
-            orientation="h",
-            width=0.48,
-            marker=dict(
-                color=kit_colors,
-                line=dict(color=dark_outline, width=1),
-            ),
-            opacity=0.18,
-            hoverinfo="skip",
-            showlegend=False,
-        ),
-        row=1,
-        col=2,
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["cooldown_normalized_use_rate"],
-            y=kit_names,
-            mode="markers",
-            marker=dict(
-                size=11,
-                color=kit_colors,
-                line=dict(color=dark_outline, width=1.25),
-            ),
-            customdata=ability_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Cooldown-normalized rate: %{x:.1%}<br>"
-                "Median player rate: %{customdata[6]:.1%}<br>"
-                "Cooldown: %{customdata[4]:.1f} s<br>"
-                "Observed uses per hour: %{customdata[2]:.2f}<br>"
-                "Cooldown-only maximum: %{customdata[5]:.2f} uses / h<br>"
-                "Uses per completed life: %{customdata[3]:.2f}<br>"
-                "Total uses: %{customdata[1]:,.0f}<br>"
-                "Successful-use rate: %{customdata[9]}<br>"
-                "Effectiveness: %{customdata[10]}<br>"
-                "Time played: %{customdata[7]:,.2f} h<br>"
-                "Completed lives: %{customdata[8]:,.0f}<br>"
-                "Players using ability: %{customdata[0]:.0f}"
-                "<extra></extra>"
-            ),
-            showlegend=False,
-        ),
-        row=1,
-        col=2,
-    )
-
-    reach_line_x: list[float | None] = []
-    reach_line_y: list[str | None] = []
-    for kit_name, played_reach, kill_reach in zip(
-        kit_names,
-        plot_data["played"],
-        plot_data["made_kill"],
-    ):
-        reach_line_x.extend([played_reach, kill_reach, None])
-        reach_line_y.extend([kit_name, kit_name, None])
-
-    fig.add_trace(
-        go.Scatter(
-            x=reach_line_x,
-            y=reach_line_y,
-            mode="lines",
-            line=dict(color="#A1A1AA", width=2),
-            hoverinfo="skip",
-            showlegend=False,
-        ),
-        row=1,
-        col=3,
-    )
-    played_reach_hover = np.column_stack(
-        [
-            plot_data["played_count"],
-            np.full(len(plot_data), report.n_players),
-            plot_data["total_hours"],
-        ]
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["played"],
-            y=kit_names,
-            mode="markers",
-            name="Played kit",
-            marker=dict(
-                size=11,
-                color=kit_colors,
-                symbol="circle",
-                line=dict(color=dark_outline, width=1.25),
-            ),
-            customdata=played_reach_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>Played kit: %{x:.1%}<br>"
-                "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}<br>"
-                "Time played: %{customdata[2]:,.2f} h"
-                "<extra></extra>"
-            ),
-            showlegend=True,
-        ),
-        row=1,
-        col=3,
-    )
-    ability_reach_hover = np.column_stack(
-        [
-            plot_data["players_using_ability"],
-            np.full(len(plot_data), report.n_players),
-        ]
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["used_ability"],
-            y=kit_names,
-            mode="markers",
-            name="Used ability",
-            marker=dict(
-                size=11,
-                color=kit_colors,
-                symbol="circle-open",
-                line=dict(width=1.75),
-            ),
-            customdata=ability_reach_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Used ability: %{x:.1%}<br>"
-                "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}"
-                "<extra></extra>"
-            ),
-            showlegend=True,
-        ),
-        row=1,
-        col=3,
-    )
-    kill_reach_hover = np.column_stack(
-        [
-            plot_data["players_with_kills"],
-            np.full(len(plot_data), report.n_players),
-        ]
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["made_kill"],
-            y=kit_names,
-            mode="markers",
-            name="Made a kill",
-            marker=dict(
-                size=12,
-                color=kit_colors,
-                symbol="diamond-open",
-                line=dict(width=2),
-            ),
-            customdata=kill_reach_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Made a kill: %{x:.1%}<br>"
-                "Players: %{customdata[0]:.0f} / %{customdata[1]:.0f}"
-                "<extra></extra>"
-            ),
-            showlegend=True,
-        ),
-        row=1,
-        col=3,
-    )
-
-    concentration_values = plot_data["top_player_share"].dropna()
-    concentration_range = (
-        _padded_axis_range(
-            concentration_values,
-            padding_fraction=0.12,
-            minimum_padding=0.025,
-            upper_bound=1,
-        )
-        if not concentration_values.empty
-        else [0, 1]
-    )
-    concentration_hover = np.column_stack(
-        [plot_data["players_with_kills"]]
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=plot_data["top_player_share"],
-            y=kit_names,
-            mode="markers",
-            marker=dict(
-                size=11,
-                color=kit_colors,
-                line=dict(color=dark_outline, width=1.25),
-            ),
-            customdata=concentration_hover,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Top-player kill share: %{x:.1%}<br>"
-                "Players with ≥1 kill: %{customdata[0]:.0f}"
-                "<extra></extra>"
-            ),
-            showlegend=False,
-        ),
-        row=1,
-        col=4,
-    )
-
-    ability_intensity_values = plot_data[
-        "cooldown_normalized_use_rate"
-    ].dropna()
-    median_specs = (
-        (1, plot_data["kills"]),
-        (2, ability_intensity_values),
-        (4, concentration_values),
-    )
-    for column, values in median_specs:
-        if values.empty:
-            continue
-        fig.add_vline(
-            x=float(values.median()),
-            line=dict(color="#8C8C8C", width=1, dash="dot"),
-            opacity=0.8,
-            row=1,
-            col=column,
-        )
-    played_values = plot_data["played"].dropna()
-    if not played_values.empty:
-        fig.add_vline(
-            x=float(played_values.median()),
-            line=dict(color="#777777", width=1, dash="dot"),
-            opacity=0.8,
-            row=1,
-            col=3,
-        )
-    kill_reach_values = plot_data["made_kill"].dropna()
-    if not kill_reach_values.empty:
-        fig.add_vline(
-            x=float(kill_reach_values.median()),
-            line=dict(color="#A1A1AA", width=1, dash="dash"),
-            opacity=0.8,
-            row=1,
-            col=3,
-        )
-
-    fig.update_xaxes(title_text="Kills", rangemode="tozero", row=1, col=1)
-    fig.update_xaxes(
-        title_text="Cooldown-normalized use rate",
-        tickformat=".0%",
-        rangemode="tozero",
-        row=1,
-        col=2,
-    )
-    fig.update_xaxes(
-        title_text="Share of observed players",
-        tickformat=".0%",
-        range=[0, 1],
-        row=1,
-        col=3,
-    )
-    fig.update_xaxes(
-        title_text="Top-player share",
-        tickformat=".0%",
-        range=concentration_range,
-        row=1,
-        col=4,
-    )
-    fig.update_yaxes(
-        categoryorder="array",
-        categoryarray=kit_names,
-        showgrid=False,
-    )
-    for column in (2, 3, 4):
-        fig.update_yaxes(showticklabels=False, row=1, col=column)
-
-    fig.update_layout(
-        title="How do kits compare across the report's main balance signals?",
-        height=max(540, 34 * len(plot_data) + 175),
-        barmode="overlay",
-        hovermode="closest",
-        margin=dict(l=105, r=35, t=95, b=100),
-        legend=dict(
-            title="Reach signals",
-            orientation="h",
-            x=0.50,
-            xanchor="center",
-            y=-0.16,
-            yanchor="top",
-        ),
-    )
-    return fig
