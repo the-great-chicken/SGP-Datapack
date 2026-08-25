@@ -82,7 +82,9 @@
         },
         pick: {
           total_time: int,
-          nbr_picks: int
+          nbr_picks: int,
+          last_pick?: int,
+          paused_ticks?: int
         }
       }
     }
@@ -96,6 +98,6 @@
 stop on any other version; no in-pack migration or compatibility path exists.
 
 All accumulated statistics pause while
-`sgp.majeurs:event_in_progress` is true. Active kit-pick time is closed at the
-start boundary; collection resumes only after the event's synthetic cleanup
-deaths are consumed, so neither event time nor cleanup results are included.
+`sgp.majeurs:event_in_progress` is true. Online kit-pick intervals close at the
+start boundary. Offline intervals retain their start and paused-tick snapshot,
+so event and synthetic-cleanup ticks are subtracted when they are later closed.

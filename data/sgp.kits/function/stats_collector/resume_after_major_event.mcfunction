@@ -4,6 +4,10 @@
 # have been consumed. Begin new kit-time intervals for normal SGP play; other
 # collectors require no resume action because they are event-driven.
 
+execute store result score #death_time sgp.dummy run time query gametime
+scoreboard players operation #death_time sgp.dummy -= #stats_pause_started sgp.dummy
+scoreboard players operation #stats_paused_ticks sgp.dummy += #death_time sgp.dummy
+scoreboard players reset #stats_pause_started sgp.dummy
 scoreboard players set #stats_paused sgp.dummy 0
 
 # Major-event gameplay may have touched the same detector objectives after the

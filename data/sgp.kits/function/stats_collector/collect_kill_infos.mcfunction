@@ -35,7 +35,6 @@ execute on attacker \
 
 
 function sgp.kits:stats_collector/save_kill_cause_stat with storage sgp:macro stats.current_kill_info
-function sgp.kits:stats_collector/save_pick_infos with storage sgp:macro stats.current_kill_info
 
 # Never let a non-damage death inherit the previous life's last damage mechanism.
 scoreboard players set @s sgp.death_cause 0

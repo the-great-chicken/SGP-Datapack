@@ -25,6 +25,14 @@ execute unless score #stats_schema_version sgp.dummy matches 5 \
     run tellraw @a [{text:"[SGP stats] ",color:red,bold:true},{text:"Unsupported statistics schema. Collection is disabled; reset it before a new edition with /function sgp.kits:stats_collector/reset_for_new_edition.",color:red}]
 execute unless score #stats_schema_version sgp.dummy matches 5 run return 0
 
+scoreboard players add #stats_paused_ticks sgp.dummy 0
+
+# Preserve an in-progress pause across reloads. When upgrading during an event,
+# only the still-observable portion can be excluded from legacy intervals.
+execute if score #stats_paused sgp.dummy matches 1 \
+    unless score #stats_pause_started sgp.dummy = #stats_pause_started sgp.dummy \
+        store result score #stats_pause_started sgp.dummy run time query gametime
+
 execute unless data storage sgp.kits:stats kits_dict \
     run data modify storage sgp.kits:stats kits_dict set value {}
 

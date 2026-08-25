@@ -5,6 +5,7 @@
 
 execute unless score #stats_schema_version sgp.dummy matches 5 run return 0
 
+execute store result score #stats_pause_started sgp.dummy run time query gametime
 scoreboard players set #stats_paused sgp.dummy 1
 
 execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,scores={sgp.id=1..,sgp.kit_id=0..11}] \

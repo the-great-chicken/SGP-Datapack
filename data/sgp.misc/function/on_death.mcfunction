@@ -4,6 +4,7 @@
 
 execute unless score @s sgp.synthetic_death matches 1.. \
     run function sgp.kits:stats_collector/collect_kill_infos
+function sgp.kits:stats_collector/pause_pick_as_player
 scoreboard players reset @s sgp.synthetic_death
 scoreboard players set @s sgp.kit_id -1
 
