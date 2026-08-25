@@ -15,12 +15,12 @@ scoreboard players add #elo_difference sgp.dummy 50
 scoreboard players operation #elo_difference sgp.dummy /= 100 sgp.dummy
 execute if score #elo_difference_negative sgp.dummy matches 1 run scoreboard players operation #elo_difference sgp.dummy *= -1 sgp.dummy
 
-# At these extremes the K=10 result already rounds to 10.00 or 0.00.
-execute if score #elo_difference sgp.dummy matches ..-1322 run scoreboard players set #elo_difference sgp.dummy -1321
-execute if score #elo_difference sgp.dummy matches 1322.. run scoreboard players set #elo_difference sgp.dummy 1321
+# At these extremes the K=30 result already rounds to 30.00 or 0.00.
+execute if score #elo_difference sgp.dummy matches ..-1513 run scoreboard players set #elo_difference sgp.dummy -1512
+execute if score #elo_difference sgp.dummy matches 1513.. run scoreboard players set #elo_difference sgp.dummy 1512
 
 scoreboard players operation #elo_lookup_index sgp.dummy = #elo_difference sgp.dummy
-scoreboard players add #elo_lookup_index sgp.dummy 1321
+scoreboard players add #elo_lookup_index sgp.dummy 1512
 execute store result storage sgp:macro stats.elo_lookup.index int 1 \
     run scoreboard players get #elo_lookup_index sgp.dummy
 scoreboard players set #elo_delta sgp.dummy 0

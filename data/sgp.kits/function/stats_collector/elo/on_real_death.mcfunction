@@ -7,10 +7,9 @@ scoreboard players add @s sgp.elo_deaths_seen 0
 execute unless score @s sgp.elo_deaths > @s sgp.elo_deaths_seen run return 0
 scoreboard players operation @s sgp.elo_deaths_seen = @s sgp.elo_deaths
 
-# Always consume the real-death marker above, but never rate a major event.
-execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
-# Pigeons has its own predicate but is not currently in event_in_progress.
-execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run return 0
+# Always consume the real-death marker above, then use the shared collection
+# gate so Elo pauses at exactly the same boundary as every other statistic.
+execute unless function sgp.kits:stats_collector/can_collect run return 0
 
 execute unless entity @s[tag=sgp.in_game,tag=!sgp.peaceful,scores={sgp.id=1..,sgp.kit_id=0..11}] run return 0
 

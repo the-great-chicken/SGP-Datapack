@@ -5,7 +5,8 @@ $execute if data storage sgp.kits:stats elo_ratings.$(id).rating \
     if data storage sgp.kits:stats elo_ratings.$(id).rated_encounters \
         run return run function sgp.kits:stats_collector/elo/load_player with storage sgp:macro stats.current_elo_player
 
-scoreboard players set @s sgp.elo 100000
+execute store result score @s sgp.elo \
+    run data get storage sgp.kits:stats elo_metadata.initial_rating 100
 scoreboard players set @s sgp.elo_encounters 0
 scoreboard players set @s sgp.elo_pending 0
 function sgp.kits:stats_collector/elo/save_player with storage sgp:macro stats.current_elo_player

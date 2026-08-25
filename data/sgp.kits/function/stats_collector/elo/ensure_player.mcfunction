@@ -2,6 +2,7 @@
 #
 # Ensure the executing in-game player has runtime Elo scores.
 
+execute unless function sgp.kits:stats_collector/can_collect run return 0
 execute unless entity @s[tag=sgp.in_game,scores={sgp.id=1..}] run return 0
 
 execute if score @s sgp.elo = @s sgp.elo \

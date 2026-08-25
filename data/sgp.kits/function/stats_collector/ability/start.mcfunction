@@ -4,6 +4,8 @@
 # Opens a new cast and records one real activation. Abilities whose trigger may
 # fail (currently Pecking) call this only after their own validation succeeds.
 
+execute unless function sgp.kits:stats_collector/can_collect run return 0
+
 scoreboard players add #next_ability_cast sgp.dummy 1
 scoreboard players operation @s sgp.ability_cast = #next_ability_cast sgp.dummy
 $scoreboard players set @s sgp.ability_kind $(kit_id)

@@ -2,22 +2,12 @@
 
 ```snbt
 {
-  schema_version: 4,
+  schema_version: 5,
   damage_cause_names: {
     "<cause_id:int>": string
   },
   elo_metadata: {
-    name: string,
-    description: string,
-    algorithm: "elo_logistic",
     initial_rating: double,
-    k_factor: double,
-    rating_divisor: double,
-    result_type: "credited_pvp_kill",
-    major_events_rated: byte,
-    environmental_deaths_rated: byte,
-    self_kills_rated: byte,
-    update_mode: "same_tick_batch",
     metrics: {
       rating: {
         name: string,
@@ -77,8 +67,10 @@
           }
         },
         kills: {
-          "<victim_kit_id:int>": {
-            "<cause_id:int>": int
+          "<victim_player_id:int>": {
+            "<victim_kit_id:int>": {
+              "<cause_id:int>": int
+            }
           }
         },
         damage_received: {
@@ -99,3 +91,11 @@
 ```
 
 `-1` for a player or kit id means no player/no kit.
+
+`schema_version` is a strict format identifier. Collectors and the extractor
+stop on any other version; no in-pack migration or compatibility path exists.
+
+All accumulated statistics pause while
+`sgp.majeurs:event_in_progress` is true. Active kit-pick time is closed at the
+start boundary; collection resumes only after the event's synthetic cleanup
+deaths are consumed, so neither event time nor cleanup results are included.

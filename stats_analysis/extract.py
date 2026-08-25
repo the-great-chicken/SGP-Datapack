@@ -17,7 +17,7 @@ ABILITY_METADATA_PATH = (*STATS_PATH, "ability_metadata")
 DAMAGE_CAUSE_NAMES_PATH = (*STATS_PATH, "damage_cause_names")
 ELO_METADATA_PATH = (*STATS_PATH, "elo_metadata")
 ELO_RATINGS_PATH = (*STATS_PATH, "elo_ratings")
-SUPPORTED_SCHEMA_VERSION = 4
+SUPPORTED_SCHEMA_VERSION = 5
 DAMAGE_TENTHS_PER_HEART = 10
 
 
@@ -84,6 +84,7 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
     Columns:
         id_killer
         kit_id_killer
+        id_victim
         kit_id_victim
         cause_id
         kills
@@ -94,30 +95,40 @@ def extract_kills(kits_dict: Any) -> pd.DataFrame:
         for kit_id_killer, kit_data in player_data.items():
             kills_data = kit_data.get("kills", {})
 
-            for kit_id_victim, causes_data in kills_data.items():
-                if not hasattr(causes_data, "items"):
+            for id_victim, victim_player_data in kills_data.items():
+                if not hasattr(victim_player_data, "items"):
                     raise ValueError(
-                        "Expected nested kill causes at "
+                        "Expected victim kits at "
                         f"kits_dict.{id_killer}.{kit_id_killer}.kills."
-                        f"{kit_id_victim}"
+                        f"{id_victim}"
                     )
 
-                for cause_id, kill_count in causes_data.items():
-                    rows.append(
-                        {
-                            "id_killer": str(id_killer),
-                            "kit_id_killer": int(kit_id_killer),
-                            "kit_id_victim": int(kit_id_victim),
-                            "cause_id": int(cause_id),
-                            "kills": int(kill_count),
-                        }
-                    )
+                for kit_id_victim, causes_data in victim_player_data.items():
+                    if not hasattr(causes_data, "items"):
+                        raise ValueError(
+                            "Expected nested kill causes at "
+                            f"kits_dict.{id_killer}.{kit_id_killer}.kills."
+                            f"{id_victim}.{kit_id_victim}"
+                        )
+
+                    for cause_id, kill_count in causes_data.items():
+                        rows.append(
+                            {
+                                "id_killer": str(id_killer),
+                                "kit_id_killer": int(kit_id_killer),
+                                "id_victim": str(id_victim),
+                                "kit_id_victim": int(kit_id_victim),
+                                "cause_id": int(cause_id),
+                                "kills": int(kill_count),
+                            }
+                        )
 
     return pd.DataFrame(
         rows,
         columns=[
             "id_killer",
             "kit_id_killer",
+            "id_victim",
             "kit_id_victim",
             "cause_id",
             "kills",
@@ -645,22 +656,12 @@ def get_elo_metric_definitions(elo_metadata: Any) -> Any:
 
 def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
     """
-    Extract Elo configuration and metric definitions.
+    Extract the report-facing Elo metadata and metric definitions.
 
     One row is emitted per metric.
 
     Columns:
-        elo_name
-        elo_description
-        algorithm
         initial_rating
-        k_factor
-        rating_divisor
-        result_type
-        major_events_rated
-        environmental_deaths_rated
-        self_kills_rated
-        update_mode
         metric_id
         metric_name
         metric_description
@@ -669,28 +670,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         display_scale
     """
     metrics = get_elo_metric_definitions(elo_metadata)
-    required_configuration = [
-        "name",
-        "description",
-        "algorithm",
-        "initial_rating",
-        "k_factor",
-        "rating_divisor",
-        "result_type",
-        "major_events_rated",
-        "environmental_deaths_rated",
-        "self_kills_rated",
-        "update_mode",
-    ]
-    missing_configuration = [
-        field for field in required_configuration if field not in elo_metadata
-    ]
-
-    if missing_configuration:
-        raise ValueError(
-            "Missing Elo metadata field(s): "
-            + ", ".join(missing_configuration)
-        )
+    if "initial_rating" not in elo_metadata:
+        raise ValueError("Missing Elo metadata field: initial_rating")
 
     rows: list[dict[str, Any]] = []
 
@@ -720,23 +701,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
         rows.append(
             {
-                "elo_name": str(elo_metadata["name"]),
-                "elo_description": str(elo_metadata["description"]),
-                "algorithm": str(elo_metadata["algorithm"]),
                 "initial_rating": float(elo_metadata["initial_rating"]),
-                "k_factor": float(elo_metadata["k_factor"]),
-                "rating_divisor": float(elo_metadata["rating_divisor"]),
-                "result_type": str(elo_metadata["result_type"]),
-                "major_events_rated": bool(
-                    int(elo_metadata["major_events_rated"])
-                ),
-                "environmental_deaths_rated": bool(
-                    int(elo_metadata["environmental_deaths_rated"])
-                ),
-                "self_kills_rated": bool(
-                    int(elo_metadata["self_kills_rated"])
-                ),
-                "update_mode": str(elo_metadata["update_mode"]),
                 "metric_id": str(metric_id),
                 "metric_name": str(metric_data["name"]),
                 "metric_description": str(metric_data["description"]),
@@ -753,17 +718,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         pd.DataFrame(
             rows,
             columns=[
-                "elo_name",
-                "elo_description",
-                "algorithm",
                 "initial_rating",
-                "k_factor",
-                "rating_divisor",
-                "result_type",
-                "major_events_rated",
-                "environmental_deaths_rated",
-                "self_kills_rated",
-                "update_mode",
                 "metric_id",
                 "metric_name",
                 "metric_description",
@@ -903,11 +858,6 @@ def extract(input_path: Path, output_dir: Path) -> None:
     )
 
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    obsolete_elo_event_path = output_dir / "elo_event.parquet"
-    if obsolete_elo_event_path.exists():
-        obsolete_elo_event_path.unlink()
-        print(f"Removed obsolete output: {obsolete_elo_event_path}")
 
     kills_path = output_dir / "kills.parquet"
     damage_received_path = output_dir / "damage_received.parquet"
