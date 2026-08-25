@@ -14,6 +14,7 @@ data remove storage sgp:macro stats
 
 # Reset the existing edition-wide kill/death, K/D, and streak scoreboards.
 scoreboard players reset * sgp.just_died
+scoreboard players reset * sgp.synthetic_death
 scoreboard players reset * sgp.streak_reset
 scoreboard players reset * sgp.morts
 scoreboard players reset * sgp.kd

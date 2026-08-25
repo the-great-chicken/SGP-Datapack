@@ -5,6 +5,12 @@
 
 execute unless score #stats_schema_version sgp.dummy matches 5 run return 0
 
+# Out-of-game deaths have no gameplay cleanup. Consume their independent Elo
+# death marker, then clear the shared marker before it can block event resume.
+execute as @a[tag=!sgp.in_game,scores={sgp.just_died=1..}] \
+    run function sgp.kits:stats_collector/elo/on_real_death
+scoreboard players set @a[tag=!sgp.in_game,scores={sgp.just_died=1..}] sgp.just_died 0
+
 execute store success score #stats_major_event_active sgp.dummy \
     if entity @a[predicate=sgp.majeurs:event_in_progress]
 

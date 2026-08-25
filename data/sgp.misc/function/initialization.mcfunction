@@ -31,6 +31,7 @@ scoreboard objectives add sgp.ab.water_trident_cooldown_last_fill dummy
 scoreboard objectives add sgp.ab.water_trident_cooldown_last_current dummy
 
 scoreboard objectives add sgp.just_died deathCount
+scoreboard objectives add sgp.synthetic_death dummy
 scoreboard objectives add sgp.streak_reset deathCount
 scoreboard objectives add sgp.morts deathCount
 

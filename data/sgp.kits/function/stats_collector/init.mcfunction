@@ -3,6 +3,9 @@
 # Initialize a fresh schema, validate an existing one, and rebuild metadata.
 # This function never migrates or relabels data from another schema version.
 
+# Never let a previous load's cache authorize collection after validation fails.
+scoreboard players reset #stats_schema_version sgp.dummy
+
 # A populated pre-versioned storage is old data, not a fresh installation.
 execute unless data storage sgp.kits:stats schema_version \
     if data storage sgp.kits:stats kits_dict \
