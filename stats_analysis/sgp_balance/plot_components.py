@@ -15,7 +15,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from sgp_data import KIT_ORDER
+from .core import KIT_ORDER, ReportData
 
 
 KIT_COLORS = {
@@ -961,3 +961,65 @@ def relative_metric_heatmap(
     )
     fig.update_layout(title=title, xaxis_title="Kit", yaxis_title="")
     return fig
+
+
+def _elo_name(report: ReportData) -> str:
+    """Return the authoritative display name for the Elo snapshot."""
+
+    if report.elo_metadata.empty:
+        return "Kill Elo"
+    return str(report.elo_metadata["elo_name"].iloc[0])
+
+
+def _ability_effect_per_success_text(data: pd.DataFrame) -> pd.Series:
+    """Format heterogeneous ability effects without exposing NaN in hover."""
+
+    values: list[str] = []
+    for row in data.itertuples(index=False):
+        metric_name = getattr(row, "ability_effect_metric_name")
+        successful_uses = getattr(row, "successful_uses")
+        effect_value = getattr(row, "ability_effect_per_successful_use")
+        effect_unit = getattr(row, "ability_effect_unit")
+        if pd.isna(metric_name):
+            values.append("Not logged")
+        elif pd.isna(successful_uses) or successful_uses <= 0:
+            values.append(f"{metric_name}: no successful uses")
+        elif pd.isna(effect_value):
+            values.append(f"{metric_name}: unavailable")
+        else:
+            formatted_effect = (
+                f"{effect_value:,.0f}"
+                if effect_unit == "hearts"
+                else f"{effect_value:,.2f}"
+            )
+            values.append(
+                f"{metric_name}: {formatted_effect} "
+                f"{effect_unit} / successful use"
+            )
+    return pd.Series(values, index=data.index, dtype=object)
+
+
+def _format_hours(value: object) -> str:
+    """Format fractional hours as a duration people can read at a glance."""
+
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+    if pd.isna(numeric):
+        return "Not available"
+    total_minutes = max(0, int(round(float(numeric) * 60)))
+    hours, minutes = divmod(total_minutes, 60)
+    if hours:
+        return f"{hours:,} h {minutes:02d} min"
+    return f"{minutes:,} min"
+
+
+def _format_minutes(value: object) -> str:
+    """Format fractional minutes without displaying decimal time."""
+
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+    if pd.isna(numeric):
+        return "Not available"
+    total_seconds = max(0, int(round(float(numeric) * 60)))
+    minutes, seconds = divmod(total_seconds, 60)
+    if minutes:
+        return f"{minutes:,} min {seconds:02d} sec"
+    return f"{seconds} sec"
