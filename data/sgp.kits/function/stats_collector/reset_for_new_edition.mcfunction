@@ -65,7 +65,6 @@ scoreboard players reset #nbr_kills_by_cause sgp.dummy
 scoreboard players reset #nbr_picks sgp.dummy
 scoreboard players reset #next_ability_cast sgp.dummy
 scoreboard players reset #pick_elapsed_time sgp.dummy
-scoreboard players reset #stats_schema_version sgp.dummy
 scoreboard players reset #stats_can_collect sgp.dummy
 scoreboard players reset #stats_paused sgp.dummy
 scoreboard players reset #stats_major_event_active sgp.dummy
@@ -80,7 +79,6 @@ tag @a remove sgp.elo_touched
 # Rebuild authoritative metadata and runtime lookup state. If a major event is
 # already active, stay paused; otherwise begin timing current kit picks now.
 function sgp.kits:stats_collector/init
-scoreboard players set #stats_paused sgp.dummy 0
 execute if entity @a[predicate=sgp.majeurs:event_in_progress] \
     run scoreboard players set #stats_paused sgp.dummy 1
 execute unless score #stats_paused sgp.dummy matches 1 \

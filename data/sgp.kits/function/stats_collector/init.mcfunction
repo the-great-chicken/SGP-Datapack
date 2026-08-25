@@ -15,7 +15,6 @@ execute unless data storage sgp.kits:stats schema_version \
 execute unless data storage sgp.kits:stats schema_version \
     run data modify storage sgp.kits:stats schema_version set value 5
 
-scoreboard players set #stats_schema_version sgp.dummy 0
 execute store result score #stats_schema_version sgp.dummy \
     run data get storage sgp.kits:stats schema_version
 
@@ -31,8 +30,3 @@ data modify storage sgp.kits:stats damage_cause_names set value {"0":"unknown","
 
 function sgp.kits:stats_collector/init_ability_metadata
 function sgp.kits:stats_collector/elo/init
-
-# Preserve transition state across ordinary reloads. A fresh install starts in
-# the current predicate state; the next tick performs any required transition.
-scoreboard players add #stats_paused sgp.dummy 0
-scoreboard players add #stats_major_event_active sgp.dummy 0

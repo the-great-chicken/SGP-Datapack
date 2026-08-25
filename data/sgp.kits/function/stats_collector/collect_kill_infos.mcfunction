@@ -4,7 +4,6 @@
 
 # Always clear the transient cause, even when this death belongs to a major
 # event or the storage schema is unsupported.
-scoreboard players set #stats_can_collect sgp.dummy 0
 execute store result score #stats_can_collect sgp.dummy \
     run function sgp.kits:stats_collector/can_collect
 execute unless score #stats_can_collect sgp.dummy matches 1 \

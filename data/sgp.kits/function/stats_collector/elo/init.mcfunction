@@ -13,7 +13,6 @@ function sgp.kits:stats_collector/elo/init_lookup
 
 # No pending transaction or temporary selector tag may survive a reload.
 scoreboard players set @a sgp.elo_pending 0
-scoreboard players add @a sgp.elo_deaths_seen 0
 tag @a remove sgp.elo_victim
 tag @a remove sgp.elo_touched
 

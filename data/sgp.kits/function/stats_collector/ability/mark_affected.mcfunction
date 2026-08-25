@@ -5,8 +5,6 @@
 # A global cast id makes the victim count at most once for this cast, including
 # abilities whose damage repeats over several ticks.
 
-execute unless entity @a[tag=sgp.ability_damage_target,tag=sgp.in_game,tag=!sgp.peaceful,limit=1] run return 0
-execute if score @a[tag=sgp.ability_damage_target,limit=1] sgp.id = @s sgp.id run return 0
 execute if score @a[tag=sgp.ability_damage_target,limit=1] sgp.last_ability_cast = @s sgp.ability_cast run return 0
 
 scoreboard players operation @a[tag=sgp.ability_damage_target,limit=1] sgp.last_ability_cast = @s sgp.ability_cast

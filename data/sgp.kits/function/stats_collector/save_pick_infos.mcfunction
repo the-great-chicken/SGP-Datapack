@@ -5,10 +5,6 @@ $execute unless data storage sgp.kits:stats kits_dict.$(id_victim).$(kit_id_vict
     run return fail
 
 # Computed life elapsed time with the kit, and add it to the total time
-scoreboard players set #last_pick_time sgp.dummy 0
-scoreboard players set #total_pick_time sgp.dummy 0
-scoreboard players set #nbr_picks sgp.dummy 0
-
 $execute store result score #last_pick_time sgp.dummy \
     run data get storage sgp.kits:stats kits_dict.$(id_victim).$(kit_id_victim).pick.last_pick
 

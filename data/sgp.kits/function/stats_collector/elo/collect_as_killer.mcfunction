@@ -23,7 +23,6 @@ scoreboard players operation #elo_lookup_index sgp.dummy = #elo_difference sgp.d
 scoreboard players add #elo_lookup_index sgp.dummy 1512
 execute store result storage sgp:macro stats.elo_lookup.index int 1 \
     run scoreboard players get #elo_lookup_index sgp.dummy
-scoreboard players set #elo_delta sgp.dummy 0
 function sgp.kits:stats_collector/elo/read_delta with storage sgp:macro stats.elo_lookup
 
 # One zero-sum transfer; both ratings are applied after every death is collected.
