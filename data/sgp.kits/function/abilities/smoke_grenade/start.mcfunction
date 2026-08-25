@@ -3,8 +3,6 @@
 execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.smoke_grenade.cooldown
 function sgp.kits:stats_collector/ability/start {kit_id:7,ability_path:"smoke_grenade"}
 
-execute unless score @s sgp.id matches 1.. run scoreboard players add #global sgp.id 1
-execute unless score @s sgp.id matches 1.. run scoreboard players operation @s sgp.id = #global sgp.id
 scoreboard players operation #smoke_temp sgp.id = @s sgp.id
 
 # Summons a marker at 0 0 0, but 1 block in the direction where the player is looking at. That gives vectors of where the player is aiming as the marker's coordinates

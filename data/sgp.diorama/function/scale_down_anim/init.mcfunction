@@ -1,9 +1,6 @@
 #> sgp.diorama:scale_down_anim/init
 # `{init_yaw, init_pitch: int}`
 
-execute unless score @s sgp.id matches 1.. \
-    store result score @s sgp.id \
-        run scoreboard players add #global sgp.id 1
 execute store result storage sgp:macro diorama.scale_down_anim.id int 1 run scoreboard players get @s sgp.id
 
 # Create the per-player target marker
