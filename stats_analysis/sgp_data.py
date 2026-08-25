@@ -76,6 +76,26 @@ ABILITY_METADATA_COLUMNS = (
     "source_exclude_self",
 )
 DAMAGE_CAUSE_COLUMNS = ("cause_id", "cause_name")
+ELO_METADATA_COLUMNS = (
+    "elo_name",
+    "elo_description",
+    "algorithm",
+    "initial_rating",
+    "k_factor",
+    "rating_divisor",
+    "result_type",
+    "major_events_rated",
+    "environmental_deaths_rated",
+    "self_kills_rated",
+    "update_mode",
+    "metric_id",
+    "metric_name",
+    "metric_description",
+    "stored_unit",
+    "display_unit",
+    "display_scale",
+)
+ELO_RATING_COLUMNS = ("id", "rating", "rated_encounters")
 
 # The default assumes ``total_time`` is logged in Minecraft game ticks.  Keep
 # the conversion configurable at the public entry points in case the datapack
@@ -98,6 +118,8 @@ class ReportData:
     damage_received: pd.DataFrame
     abilities: pd.DataFrame
     ability_metadata: pd.DataFrame
+    elo_metadata: pd.DataFrame
+    elo_ratings: pd.DataFrame
     picks: pd.DataFrame
     # One derived row per kit. Kept as ``kit_settings`` so the established
     # cooldown-based calculations and public ReportData attribute stay stable.
@@ -130,8 +152,10 @@ class ReportData:
     player_kit_abilities: pd.DataFrame
     total_abilities_by_kit: pd.DataFrame
     kit_ability_stats: pd.DataFrame
+    player_elo: pd.DataFrame
     player_kit_exposure: pd.DataFrame
     kit_exposure: pd.DataFrame
+    kit_elo_context: pd.DataFrame
     player_kit_metrics: pd.DataFrame
     kit_metrics: pd.DataFrame
     top_killer_exposure: pd.DataFrame
@@ -172,6 +196,19 @@ def load_report_data(
     if not damage_causes_path.exists():
         damage_causes_path = data_dir / "kill_causes.parquet"
     damage_causes = pd.read_parquet(damage_causes_path)
+    elo_metadata_path = data_dir / "elo_metadata.parquet"
+    elo_ratings_path = data_dir / "elo_ratings.parquet"
+    if elo_metadata_path.exists() != elo_ratings_path.exists():
+        raise FileNotFoundError(
+            "elo_metadata.parquet and elo_ratings.parquet must either both "
+            "exist or both be absent"
+        )
+    if elo_metadata_path.exists():
+        elo_metadata = pd.read_parquet(elo_metadata_path)
+        elo_ratings = pd.read_parquet(elo_ratings_path)
+    else:
+        elo_metadata = pd.DataFrame(columns=ELO_METADATA_COLUMNS)
+        elo_ratings = pd.DataFrame(columns=ELO_RATING_COLUMNS)
     return prepare_report_data(
         kills,
         abilities,
@@ -179,6 +216,8 @@ def load_report_data(
         ability_metadata,
         damage_causes,
         damage_received=damage_received,
+        elo_metadata=elo_metadata,
+        elo_ratings=elo_ratings,
         time_units_per_hour=time_units_per_hour,
     )
 
@@ -191,12 +230,16 @@ def prepare_report_data(
     kill_causes: pd.DataFrame,
     *,
     damage_received: pd.DataFrame | None = None,
+    elo_metadata: pd.DataFrame | None = None,
+    elo_ratings: pd.DataFrame | None = None,
     time_units_per_hour: float = DEFAULT_TIME_UNITS_PER_HOUR,
 ) -> ReportData:
     """Validate normalized inputs and derive analysis-ready datasets.
 
     ``ability_metadata`` supplies the canonical activation counter, success
     condition, optional effect metric, and timing for one ability per kit.
+    ``elo_metadata`` and ``elo_ratings`` provide optional current player-skill
+    context; when present they must be supplied together.
     ``kill_causes`` keeps the established public parameter name.  The new
     extract writes the same shared cause metadata to ``damage_causes.parquet``
     because it now describes both kill and damage rows.
@@ -207,6 +250,13 @@ def prepare_report_data(
 
     if damage_received is None:
         damage_received = pd.DataFrame(columns=DAMAGE_COLUMNS)
+    if (elo_metadata is None) != (elo_ratings is None):
+        raise ValueError(
+            "elo_metadata and elo_ratings must be provided together"
+        )
+    if elo_metadata is None:
+        elo_metadata = pd.DataFrame(columns=ELO_METADATA_COLUMNS)
+        elo_ratings = pd.DataFrame(columns=ELO_RATING_COLUMNS)
     damage_causes = kill_causes
 
     (
@@ -225,6 +275,10 @@ def prepare_report_data(
             ability_metadata,
             damage_causes,
         )
+    )
+    elo_metadata, elo_ratings = _validate_and_normalize_elo(
+        elo_metadata,
+        elo_ratings,
     )
     all_kits = pd.DataFrame(
         {
@@ -432,6 +486,12 @@ def prepare_report_data(
         | set(picks["id"])
     ) - {NO_PLAYER_ID}
     n_players = len(all_player_ids)
+    player_elo = _build_player_elo(
+        all_player_ids,
+        elo_metadata,
+        elo_ratings,
+        kills,
+    )
 
     player_kit_exposure, no_kit_exposure = _build_player_kit_exposure(
         picks,
@@ -441,6 +501,11 @@ def prepare_report_data(
         player_kit_exposure,
         all_kits,
         n_players=n_players,
+    )
+    kit_elo_context = _build_kit_elo_context(
+        player_kit_exposure,
+        player_elo,
+        all_kits,
     )
     (
         kill_causes,
@@ -474,6 +539,7 @@ def prepare_report_data(
         player_kit_abilities,
         player_kit_damage_dealt,
         kit_settings,
+        player_elo,
     )
     player_rate_stats = _build_player_rate_stats(
         player_kit_metrics,
@@ -488,6 +554,7 @@ def prepare_report_data(
         kit_settings,
         death_metrics,
         damage_metrics,
+        kit_elo_context,
     )
     top_killer_exposure = _build_top_killer_exposure(
         player_kit_metrics,
@@ -571,6 +638,8 @@ def prepare_report_data(
         damage_received=damage_received,
         abilities=abilities,
         ability_metadata=ability_metadata,
+        elo_metadata=elo_metadata,
+        elo_ratings=elo_ratings,
         picks=picks,
         kit_settings=kit_settings,
         all_kits=all_kits,
@@ -601,8 +670,10 @@ def prepare_report_data(
         player_kit_abilities=player_kit_abilities,
         total_abilities_by_kit=total_abilities_by_kit,
         kit_ability_stats=kit_ability_stats,
+        player_elo=player_elo,
         player_kit_exposure=player_kit_exposure,
         kit_exposure=kit_exposure,
+        kit_elo_context=kit_elo_context,
         player_kit_metrics=player_kit_metrics,
         kit_metrics=kit_metrics,
         top_killer_exposure=top_killer_exposure,
@@ -878,6 +949,262 @@ def _require_columns(
     missing = set(required) - set(frame.columns)
     if missing:
         raise ValueError(f"{name} is missing columns: {sorted(missing)}")
+
+
+def _validate_and_normalize_elo(
+    elo_metadata: pd.DataFrame,
+    elo_ratings: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Validate the optional Elo snapshot emitted by schema version 4."""
+
+    _require_columns(elo_metadata, ELO_METADATA_COLUMNS, "elo_metadata")
+    _require_columns(elo_ratings, ELO_RATING_COLUMNS, "elo_ratings")
+    metadata = elo_metadata.copy()
+    ratings = elo_ratings.copy()
+
+    if metadata.empty:
+        if not ratings.empty:
+            raise ValueError("elo_ratings requires non-empty elo_metadata")
+        return metadata, ratings
+
+    if metadata[list(ELO_METADATA_COLUMNS)].isna().any().any():
+        raise ValueError("elo_metadata contains missing values")
+    if ratings[list(ELO_RATING_COLUMNS)].isna().any().any():
+        raise ValueError("elo_ratings contains missing values")
+
+    string_columns = (
+        "elo_name",
+        "elo_description",
+        "algorithm",
+        "result_type",
+        "update_mode",
+        "metric_id",
+        "metric_name",
+        "metric_description",
+        "stored_unit",
+        "display_unit",
+    )
+    for column in string_columns:
+        metadata[column] = metadata[column].astype(str)
+        if metadata[column].str.strip().eq("").any():
+            raise ValueError(f"Blank Elo metadata value found in {column}")
+
+    numeric_columns = (
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+        "display_scale",
+    )
+    for column in numeric_columns:
+        metadata[column] = pd.to_numeric(
+            metadata[column], errors="raise"
+        ).astype(float)
+        if not np.isfinite(metadata[column]).all():
+            raise ValueError(f"Non-finite Elo metadata value found in {column}")
+
+    boolean_columns = (
+        "major_events_rated",
+        "environmental_deaths_rated",
+        "self_kills_rated",
+    )
+    for column in boolean_columns:
+        metadata[column] = metadata[column].astype("boolean").astype(bool)
+
+    if (metadata["k_factor"] <= 0).any():
+        raise ValueError("Elo k_factor must be positive")
+    if (metadata["rating_divisor"] <= 0).any():
+        raise ValueError("Elo rating_divisor must be positive")
+    if (metadata["display_scale"] <= 0).any():
+        raise ValueError("Elo display scales must be positive")
+    if metadata.duplicated("metric_id").any():
+        raise ValueError("Duplicate Elo metric metadata rows found")
+
+    required_metric_ids = {"rating", "rated_encounters"}
+    missing_metrics = required_metric_ids - set(metadata["metric_id"])
+    if missing_metrics:
+        raise ValueError(
+            f"Missing Elo metric metadata: {sorted(missing_metrics)}"
+        )
+
+    configuration_columns = (
+        "elo_name",
+        "elo_description",
+        "algorithm",
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+        "result_type",
+        "major_events_rated",
+        "environmental_deaths_rated",
+        "self_kills_rated",
+        "update_mode",
+    )
+    inconsistent = [
+        column
+        for column in configuration_columns
+        if metadata[column].nunique(dropna=False) != 1
+    ]
+    if inconsistent:
+        raise ValueError(
+            "Inconsistent Elo configuration columns: "
+            f"{sorted(inconsistent)}"
+        )
+
+    ratings["id"] = ratings["id"].astype(str)
+    ratings["rating"] = pd.to_numeric(
+        ratings["rating"], errors="raise"
+    ).astype(float)
+    encounters = pd.to_numeric(
+        ratings["rated_encounters"], errors="raise"
+    )
+    if not np.allclose(encounters, np.round(encounters)):
+        raise ValueError("rated_encounters must contain whole counts")
+    ratings["rated_encounters"] = encounters.astype(int)
+    if not np.isfinite(ratings["rating"]).all():
+        raise ValueError("Non-finite Elo rating found")
+    if (ratings["rated_encounters"] < 0).any():
+        raise ValueError("Negative rated_encounters found")
+    if ratings["id"].eq(NO_PLAYER_ID).any():
+        raise ValueError("The no-player sentinel cannot have an Elo rating")
+    if ratings.duplicated("id").any():
+        raise ValueError("Duplicate Elo rating rows found")
+
+    return (
+        metadata.sort_values("metric_id").reset_index(drop=True),
+        ratings.sort_values("id").reset_index(drop=True),
+    )
+
+
+def _build_player_elo(
+    player_ids: set[str],
+    elo_metadata: pd.DataFrame,
+    elo_ratings: pd.DataFrame,
+    kills: pd.DataFrame,
+) -> pd.DataFrame:
+    """Complete the Elo snapshot for every player observed in report data."""
+
+    players = pd.DataFrame(
+        {"id": pd.Series(sorted(player_ids), dtype=str)}
+    )
+    if elo_metadata.empty:
+        players["rating"] = np.nan
+        players["rated_encounters"] = pd.Series(
+            pd.NA,
+            index=players.index,
+            dtype="Int64",
+        )
+        players["elo_rating_recorded"] = False
+        return players
+
+    initial_rating = float(elo_metadata["initial_rating"].iloc[0])
+    players = players.merge(
+        elo_ratings,
+        on="id",
+        how="left",
+        validate="one_to_one",
+        indicator=True,
+    )
+    players["elo_rating_recorded"] = players["_merge"].eq("both")
+    players = players.drop(columns="_merge")
+    players["rating"] = players["rating"].fillna(initial_rating).astype(float)
+    players["rated_encounters"] = (
+        players["rated_encounters"].fillna(0).astype(int)
+    )
+
+    rated_lookup = players.set_index("id")["rated_encounters"]
+    credited_killers = set(
+        kills.loc[
+            (kills["kills"] > 0) & kills["id_killer"].ne(NO_PLAYER_ID),
+            "id_killer",
+        ]
+    )
+    invalid_killers = sorted(
+        player_id
+        for player_id in credited_killers
+        if player_id not in rated_lookup.index
+        or int(rated_lookup.loc[player_id]) <= 0
+    )
+    if invalid_killers:
+        raise ValueError(
+            "Players with credited kills must have rated encounters: "
+            f"{invalid_killers}"
+        )
+    return players
+
+
+def _build_kit_elo_context(
+    player_kit_exposure: pd.DataFrame,
+    player_elo: pd.DataFrame,
+    all_kits: pd.DataFrame,
+) -> pd.DataFrame:
+    """Summarize the Elo composition behind each kit's observed playtime."""
+
+    output = all_kits.copy()
+    metric_columns = (
+        "playtime_weighted_player_elo",
+        "overall_playtime_weighted_player_elo",
+        "player_elo_difference_from_overall",
+        "rated_player_time_share",
+        "players_with_rated_encounters",
+        "median_player_rated_encounters",
+    )
+    if player_kit_exposure.empty or player_elo["rating"].notna().sum() == 0:
+        for column in metric_columns:
+            output[column] = np.nan
+        output["players_with_rated_encounters"] = 0
+        return output
+
+    exposure = player_kit_exposure.loc[
+        player_kit_exposure["total_time"] > 0
+    ].merge(
+        player_elo[["id", "rating", "rated_encounters"]],
+        on="id",
+        how="left",
+        validate="many_to_one",
+    )
+    exposure["weighted_rating"] = exposure["total_time"] * exposure["rating"]
+    exposure["rated_time"] = exposure["total_time"].where(
+        exposure["rated_encounters"] > 0,
+        0,
+    )
+    totals = exposure.groupby("kit_id", as_index=False).agg(
+        elo_weighted_rating_sum=("weighted_rating", "sum"),
+        elo_total_time=("total_time", "sum"),
+        elo_rated_time=("rated_time", "sum"),
+        players_with_rated_encounters=(
+            "rated_encounters",
+            lambda values: int((values > 0).sum()),
+        ),
+        median_player_rated_encounters=("rated_encounters", "median"),
+    )
+    totals["playtime_weighted_player_elo"] = _safe_divide(
+        totals["elo_weighted_rating_sum"],
+        totals["elo_total_time"],
+    )
+    totals["rated_player_time_share"] = _safe_divide(
+        totals["elo_rated_time"],
+        totals["elo_total_time"],
+    )
+    overall_total_time = float(totals["elo_total_time"].sum())
+    overall_rating = (
+        float(totals["elo_weighted_rating_sum"].sum()) / overall_total_time
+        if overall_total_time > 0
+        else np.nan
+    )
+    totals["overall_playtime_weighted_player_elo"] = overall_rating
+    totals["player_elo_difference_from_overall"] = (
+        totals["playtime_weighted_player_elo"] - overall_rating
+    )
+    output = output.merge(
+        totals[["kit_id", *metric_columns]],
+        on="kit_id",
+        how="left",
+        validate="one_to_one",
+    )
+    output["players_with_rated_encounters"] = pd.to_numeric(
+        output["players_with_rated_encounters"], errors="coerce"
+    ).fillna(0).astype(int)
+    return output.sort_values("kit_id").reset_index(drop=True)
 
 
 def _build_kit_ability_settings(
@@ -1751,6 +2078,7 @@ def _build_player_kit_metrics(
     player_kit_abilities: pd.DataFrame,
     player_kit_damage_dealt: pd.DataFrame,
     kit_settings: pd.DataFrame,
+    player_elo: pd.DataFrame,
 ) -> pd.DataFrame:
     kills = player_kit_kills.rename(columns={"id_killer": "id"})[
         ["id", "kit_id", "kills"]
@@ -1798,6 +2126,12 @@ def _build_player_kit_metrics(
         .merge(kills, on=["id", "kit_id"], how="left")
         .merge(abilities, on=["id", "kit_id"], how="left")
         .merge(damage, on=["id", "kit_id"], how="left")
+        .merge(
+            player_elo[["id", "rating", "rated_encounters"]],
+            on="id",
+            how="left",
+            validate="many_to_one",
+        )
         .merge(
             kit_settings[
                 [
@@ -1975,6 +2309,7 @@ def _build_kit_metrics(
     kit_settings: pd.DataFrame,
     death_metrics: pd.DataFrame,
     damage_metrics: pd.DataFrame,
+    kit_elo_context: pd.DataFrame,
 ) -> pd.DataFrame:
     metrics = (
         all_kits.merge(
@@ -2049,6 +2384,12 @@ def _build_kit_metrics(
             player_rate_stats.drop(columns="kit_name"),
             on="kit_id",
             how="left",
+        )
+        .merge(
+            kit_elo_context.drop(columns="kit_name"),
+            on="kit_id",
+            how="left",
+            validate="one_to_one",
         )
     )
     count_columns = [
@@ -2152,6 +2493,8 @@ def _build_top_killer_exposure(
         "top_killer_completed_lives",
         "top_killer_kills_per_hour",
         "top_killer_kills_per_completed_life",
+        "top_killer_rating",
+        "top_killer_rated_encounters",
         "top_killer_kill_share",
         "top_killer_time_share",
         "top_killer_kill_share_minus_time_share",
@@ -2162,6 +2505,8 @@ def _build_top_killer_exposure(
         "top_playtime_player_completed_lives",
         "top_playtime_player_kills_per_hour",
         "top_playtime_player_kills_per_completed_life",
+        "top_playtime_player_rating",
+        "top_playtime_player_rated_encounters",
         "top_playtime_player_kill_share",
         "top_playtime_player_time_share",
         "top_playtime_player_kill_share_minus_time_share",
@@ -2197,6 +2542,8 @@ def _build_top_killer_exposure(
                 "completed_lives",
                 "kills_per_hour",
                 "kills_per_completed_life",
+                "rating",
+                "rated_encounters",
                 "player_kill_share_of_kit",
                 "player_time_share_of_kit",
                 "kill_share_minus_time_share",
@@ -2213,6 +2560,8 @@ def _build_top_killer_exposure(
                 "kills_per_completed_life": (
                     "top_killer_kills_per_completed_life"
                 ),
+                "rating": "top_killer_rating",
+                "rated_encounters": "top_killer_rated_encounters",
                 "player_kill_share_of_kit": "top_killer_kill_share",
                 "player_time_share_of_kit": "top_killer_time_share",
                 "kill_share_minus_time_share": (
@@ -2244,6 +2593,8 @@ def _build_top_killer_exposure(
                 "completed_lives",
                 "kills_per_hour",
                 "kills_per_completed_life",
+                "rating",
+                "rated_encounters",
                 "player_kill_share_of_kit",
                 "player_time_share_of_kit",
                 "kill_share_minus_time_share",
@@ -2261,6 +2612,10 @@ def _build_top_killer_exposure(
                 "kills_per_hour": "top_playtime_player_kills_per_hour",
                 "kills_per_completed_life": (
                     "top_playtime_player_kills_per_completed_life"
+                ),
+                "rating": "top_playtime_player_rating",
+                "rated_encounters": (
+                    "top_playtime_player_rated_encounters"
                 ),
                 "player_kill_share_of_kit": (
                     "top_playtime_player_kill_share"

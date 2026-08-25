@@ -89,6 +89,16 @@ class QuadrantMode:
     hovertemplate: str
     x_tickformat: str | None = None
     y_tickformat: str | None = None
+    x_reference: float | None = None
+    y_reference: float | None = None
+    x_lower_bound: float | None = 0.0
+    y_lower_bound: float | None = 0.0
+    x_upper_bound: float | None = None
+    y_upper_bound: float | None = None
+    x_padding_fraction: float = 0.08
+    y_padding_fraction: float = 0.08
+    x_minimum_padding: float = 0.01
+    y_minimum_padding: float = 0.01
 
 
 TRACE_DIM_OPACITY = 0.15
@@ -165,6 +175,8 @@ def player_contribution_figure(
     metric_views: Sequence[AggregateMetricView],
     player_title: str | None = None,
     aggregate_customdata_cols: Sequence[str] = (),
+    player_customdata_cols: Sequence[str] = (),
+    player_hovertemplate: str | None = None,
     player_value_format: str = ",.0f",
 ) -> go.Figure:
     """Build aggregate-rate modes plus the player-contribution interaction.
@@ -212,14 +224,28 @@ def player_contribution_figure(
         )
 
     for player_id, player_data in by_player.groupby(player_col):
+        player_columns = [
+            "kit_id",
+            player_value_col,
+            *player_customdata_cols,
+        ]
         complete_player_data = (
             all_kits[["kit_id", "kit_name"]]
             .merge(
-                player_data[["kit_id", player_value_col]],
+                player_data[player_columns],
                 on="kit_id",
                 how="left",
             )
             .fillna({player_value_col: 0})
+        )
+        player_customdata = np.column_stack(
+            [
+                np.full(len(complete_player_data), str(player_id)),
+                *(
+                    complete_player_data[column]
+                    for column in player_customdata_cols
+                ),
+            ]
         )
         fig.add_trace(
             go.Bar(
@@ -232,13 +258,11 @@ def player_contribution_figure(
                     "highlightGroup": "player",
                     "highlightValue": str(player_id),
                 },
-                customdata=np.full(
-                    (len(complete_player_data), 1),
-                    str(player_id),
-                ),
+                customdata=player_customdata,
                 showlegend=False,
                 visible=False,
-                hovertemplate=(
+                hovertemplate=player_hovertemplate
+                or (
                     "<b>%{x}</b><br>"
                     "Player ID: %{customdata[0]}<br>"
                     f"{metric_views[0].yaxis_title}: "
@@ -664,13 +688,37 @@ def _quadrant_mode_layout(
             "annotations": [],
         }
 
-    x_mid = float(finite[mode.x_col].median())
-    y_mid = float(finite[mode.y_col].median())
+    x_mid = (
+        float(mode.x_reference)
+        if mode.x_reference is not None
+        else float(finite[mode.x_col].median())
+    )
+    y_mid = (
+        float(mode.y_reference)
+        if mode.y_reference is not None
+        else float(finite[mode.y_col].median())
+    )
+    x_values = pd.concat(
+        [finite[mode.x_col], pd.Series([x_mid])],
+        ignore_index=True,
+    )
+    y_values = pd.concat(
+        [finite[mode.y_col], pd.Series([y_mid])],
+        ignore_index=True,
+    )
     x_range = _padded_axis_range(
-        finite[mode.x_col], minimum_padding=0.01
+        x_values,
+        padding_fraction=mode.x_padding_fraction,
+        minimum_padding=mode.x_minimum_padding,
+        lower_bound=mode.x_lower_bound,
+        upper_bound=mode.x_upper_bound,
     )
     y_range = _padded_axis_range(
-        finite[mode.y_col], minimum_padding=0.01
+        y_values,
+        padding_fraction=mode.y_padding_fraction,
+        minimum_padding=mode.y_minimum_padding,
+        lower_bound=mode.y_lower_bound,
+        upper_bound=mode.y_upper_bound,
     )
     positions = (
         ((x_range[0] + x_mid) / 2, (y_mid + y_range[1]) / 2),
@@ -831,15 +879,19 @@ def _padded_axis_range(
     *,
     padding_fraction: float = 0.08,
     minimum_padding: float = 1,
+    lower_bound: float | None = 0.0,
     upper_bound: float | None = None,
 ) -> list[float]:
-    """Return a non-negative axis range with modest data-dependent padding."""
+    """Return a bounded axis range with modest data-dependent padding."""
 
     minimum = float(values.min())
     maximum = float(values.max())
     span = maximum - minimum
-    padding = max(span * padding_fraction, maximum * 0.03, minimum_padding)
-    lower = max(0.0, minimum - padding)
+    magnitude = max(abs(minimum), abs(maximum))
+    padding = max(span * padding_fraction, magnitude * 0.03, minimum_padding)
+    lower = minimum - padding
+    if lower_bound is not None:
+        lower = max(lower_bound, lower)
     upper = maximum + padding
     if upper_bound is not None:
         upper = min(upper_bound, upper)

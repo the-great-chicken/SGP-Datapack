@@ -50,6 +50,14 @@ CAUSE_COLOR_SEQUENCE = (
 )
 
 
+def _elo_name(report: ReportData) -> str:
+    """Return the authoritative display name for the Elo snapshot."""
+
+    if report.elo_metadata.empty:
+        return "Kill Elo"
+    return str(report.elo_metadata["elo_name"].iloc[0])
+
+
 def _cause_color_map(report: ReportData) -> dict[int, str]:
     """Keep shared damage-cause colors stable across cause figures."""
 
@@ -208,6 +216,12 @@ def _stacked_cause_modes_figure(
 def total_kills_figure(report: ReportData) -> go.Figure:
     """Build total, exposure-normalized, and PvP-exchange modes."""
 
+    elo_available = not report.elo_metadata.empty
+    elo_name = _elo_name(report)
+    player_kills = report.player_kit_metrics.loc[
+        report.player_kit_metrics["kills"] > 0,
+        ["id", "kit_id", "kills", "rating", "rated_encounters"],
+    ]
     life_rates = report.kit_metrics["kills_per_completed_life"].dropna()
     life_references = [
         HorizontalReferenceLine(
@@ -243,12 +257,23 @@ def total_kills_figure(report: ReportData) -> go.Figure:
     return player_contribution_figure(
         all_kits=report.all_kits,
         totals=report.kit_metrics,
-        by_player=report.player_kit_kills,
-        player_col="id_killer",
+        by_player=player_kills,
+        player_col="id",
         player_value_col="kills",
         median_per_hour_col="median_player_kills_per_hour",
         median_per_life_col="median_player_kills_per_completed_life",
         player_title="Which players account for each kit's attributed kills?",
+        player_customdata_cols=("rating", "rated_encounters")
+        if elo_available
+        else (),
+        player_hovertemplate=(
+            "<b>%{x}</b><br>Player ID: %{customdata[0]}<br>"
+            f"Kills: %{{y:,.0f}}<br>{elo_name}: "
+            "%{customdata[1]:,.2f}<br>"
+            "Rated encounters: %{customdata[2]:,.0f}<extra></extra>"
+            if elo_available
+            else None
+        ),
         aggregate_customdata_cols=(
             "deaths",
             "deaths_per_hour",
@@ -339,6 +364,18 @@ def total_kills_figure(report: ReportData) -> go.Figure:
 def damage_figure(report: ReportData) -> go.Figure:
     """Compare damage output, intake, exchange, and source players."""
 
+    elo_available = not report.elo_metadata.empty
+    elo_name = _elo_name(report)
+    player_damage = report.player_kit_metrics.loc[
+        report.player_kit_metrics["damage_dealt"] > 0,
+        [
+            "id",
+            "kit_id",
+            "damage_dealt",
+            "rating",
+            "rated_encounters",
+        ],
+    ]
     exchange_rates = report.kit_metrics["damage_exchange_ratio"].dropna()
     exchange_axis_max = max(
         1.0,
@@ -348,8 +385,8 @@ def damage_figure(report: ReportData) -> go.Figure:
     return player_contribution_figure(
         all_kits=report.all_kits,
         totals=report.summary,
-        by_player=report.player_kit_damage_dealt,
-        player_col="id_source",
+        by_player=player_damage,
+        player_col="id",
         player_value_col="damage_dealt",
         median_per_hour_col="median_player_damage_dealt_per_hour",
         median_per_life_col=(
@@ -357,6 +394,17 @@ def damage_figure(report: ReportData) -> go.Figure:
         ),
         player_title=(
             "Which players account for each kit's attributed damage?"
+        ),
+        player_customdata_cols=("rating", "rated_encounters")
+        if elo_available
+        else (),
+        player_hovertemplate=(
+            "<b>%{x}</b><br>Player ID: %{customdata[0]}<br>"
+            "Damage dealt: %{y:,.1f} hearts<br>"
+            f"{elo_name}: %{{customdata[1]:,.2f}}<br>"
+            "Rated encounters: %{customdata[2]:,.0f}<extra></extra>"
+            if elo_available
+            else None
         ),
         aggregate_customdata_cols=(
             "damage_received",
@@ -754,10 +802,12 @@ def damage_causes_figure(report: ReportData) -> go.Figure:
 
 
 def popularity_efficiency_figure(report: ReportData) -> go.Figure:
-    """Relate observed kit popularity to exposure-normalized kill output."""
+    """Relate kill efficiency to popularity and player Elo composition."""
 
+    elo_name = _elo_name(report)
     columns = [
         "kit_name",
+        "kit_id",
         "time_share",
         "kills_per_hour",
         "kills_per_completed_life",
@@ -766,6 +816,12 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
         "total_hours",
         "completed_lives",
         "kills",
+        "playtime_weighted_player_elo",
+        "overall_playtime_weighted_player_elo",
+        "player_elo_difference_from_overall",
+        "rated_player_time_share",
+        "players_with_rated_encounters",
+        "median_player_rated_encounters",
     ]
     plot_data = (
         report.kit_metrics[columns]
@@ -779,48 +835,149 @@ def popularity_efficiency_figure(report: ReportData) -> go.Figure:
         if total_hours > 0
         else np.nan
     )
+    elo_reference_values = plot_data[
+        "overall_playtime_weighted_player_elo"
+    ].dropna()
+    if report.elo_metadata.empty or elo_reference_values.empty:
+        return _quadrant_scatter_figure(
+            plot_data,
+            x_col="time_share",
+            y_col="kills_per_hour",
+            title="Are the most-played kits also the most kill-efficient?",
+            labels={
+                "time_share": "Share of kit playtime",
+                "kills_per_hour": "Kills per active hour",
+                "kills_per_completed_life": "Kills per completed life",
+                "player_reach": "Proportion of players who tried the kit",
+                "players_with_time": "Players with playtime",
+                "total_hours": "Time played (hours)",
+                "completed_lives": "Completed lives",
+                "kills": "Total kills",
+                "kit_name": "Kit",
+            },
+            hover_data={
+                "time_share": ":.1%",
+                "kills_per_hour": ":.2f",
+                "kills_per_completed_life": ":.2f",
+                "player_reach": ":.1%",
+                "players_with_time": True,
+                "total_hours": ":.2f",
+                "completed_lives": True,
+                "kills": True,
+                "kit_name": False,
+            },
+            quadrant_labels=(
+                "Lower playtime<br>higher kill rate",
+                "Higher playtime<br>higher kill rate",
+                "Lower playtime<br>lower kill rate",
+                "Higher playtime<br>lower kill rate",
+            ),
+            x_tickformat=".0%",
+            x_reference=1 / len(KIT_NAMES),
+            y_reference=overall_kill_rate,
+            x_upper_bound=1,
+            x_padding_fraction=0.12,
+            x_minimum_padding=0.01,
+            y_padding_fraction=0.12,
+            y_minimum_padding=0.05,
+        )
 
-    return _quadrant_scatter_figure(
+    overall_elo = float(elo_reference_values.iloc[0])
+    customdata_cols = (
+        "time_share",
+        "kills_per_hour",
+        "kills_per_completed_life",
+        "player_reach",
+        "players_with_time",
+        "total_hours",
+        "completed_lives",
+        "kills",
+        "playtime_weighted_player_elo",
+        "overall_playtime_weighted_player_elo",
+        "player_elo_difference_from_overall",
+        "rated_player_time_share",
+        "players_with_rated_encounters",
+        "median_player_rated_encounters",
+    )
+    return _quadrant_modes_figure(
         plot_data,
-        x_col="time_share",
-        y_col="kills_per_hour",
-        title="Are the most-played kits also the most kill-efficient?",
-        labels={
-            "time_share": "Share of kit playtime",
-            "kills_per_hour": "Kills per active hour",
-            "kills_per_completed_life": "Kills per completed life",
-            "player_reach": "Proportion of players who tried the kit",
-            "players_with_time": "Players with playtime",
-            "total_hours": "Time played (hours)",
-            "completed_lives": "Completed lives",
-            "kills": "Total kills",
-            "kit_name": "Kit",
-        },
-        hover_data={
-            "time_share": ":.1%",
-            "kills_per_hour": ":.2f",
-            "kills_per_completed_life": ":.2f",
-            "player_reach": ":.1%",
-            "players_with_time": True,
-            "total_hours": ":.2f",
-            "completed_lives": True,
-            "kills": True,
-            "kit_name": False,
-        },
-        quadrant_labels=(
-            "Lower playtime<br>higher kill rate",
-            "Higher playtime<br>higher kill rate",
-            "Lower playtime<br>lower kill rate",
-            "Higher playtime<br>lower kill rate",
+        customdata_cols=customdata_cols,
+        modes=(
+            QuadrantMode(
+                button_label="Popularity",
+                x_col="time_share",
+                y_col="kills_per_hour",
+                title=(
+                    "Are the most-played kits also the most kill-efficient?"
+                ),
+                xaxis_title="Share of kit playtime",
+                yaxis_title="Kills per active hour",
+                x_tickformat=".0%",
+                y_tickformat=".2f",
+                x_reference=1 / len(KIT_NAMES),
+                y_reference=overall_kill_rate,
+                x_upper_bound=1,
+                x_padding_fraction=0.12,
+                y_padding_fraction=0.12,
+                y_minimum_padding=0.05,
+                quadrant_labels=(
+                    "Lower playtime<br>higher kill rate",
+                    "Higher playtime<br>higher kill rate",
+                    "Lower playtime<br>lower kill rate",
+                    "Higher playtime<br>lower kill rate",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name}</b><br>Playtime share: "
+                    "%{x:.1%}<br>Kills per hour: %{y:.2f}<br>"
+                    "Kills per completed life: %{customdata[2]:.2f}<br>"
+                    "Player reach: %{customdata[3]:.1%}<br>"
+                    "Players with playtime: %{customdata[4]:,.0f}<br>"
+                    "Time played: %{customdata[5]:,.2f} h<br>"
+                    "Completed lives: %{customdata[6]:,.0f}<br>"
+                    "Total kills: %{customdata[7]:,.0f}<extra></extra>"
+                ),
+            ),
+            QuadrantMode(
+                button_label="Player Elo",
+                x_col="playtime_weighted_player_elo",
+                y_col="kills_per_hour",
+                title=(
+                    "Are kits with higher kill rates disproportionately "
+                    "played by higher-rated players?"
+                ),
+                xaxis_title=f"Playtime-weighted player {elo_name}",
+                yaxis_title="Kills per active hour",
+                x_tickformat=",.0f",
+                y_tickformat=".2f",
+                x_reference=overall_elo,
+                y_reference=overall_kill_rate,
+                x_lower_bound=None,
+                x_padding_fraction=0.12,
+                y_padding_fraction=0.12,
+                y_minimum_padding=0.05,
+                quadrant_labels=(
+                    "Below-overall Elo<br>higher kill rate",
+                    "Above-overall Elo<br>higher kill rate",
+                    "Below-overall Elo<br>lower kill rate",
+                    "Above-overall Elo<br>lower kill rate",
+                ),
+                hovertemplate=(
+                    "<b>%{fullData.name}</b><br>Playtime-weighted "
+                    f"{elo_name}: %{{x:,.2f}}<br>Difference from overall: "
+                    "%{customdata[10]:+.2f}<br>Overall observed "
+                    f"{elo_name}: %{{customdata[9]:,.2f}}<br>"
+                    "Rated playtime: "
+                    "%{customdata[11]:.1%}<br>Players with rated "
+                    "encounters: %{customdata[12]:,.0f} / "
+                    "%{customdata[4]:,.0f}<br>Median rated encounters: "
+                    "%{customdata[13]:,.0f}<br>Kills per hour: "
+                    "%{y:.2f}<br>Kills per completed life: "
+                    "%{customdata[2]:.2f}<br>Total kills: "
+                    "%{customdata[7]:,.0f}<br>Time played: "
+                    "%{customdata[5]:,.2f} h<extra></extra>"
+                ),
+            ),
         ),
-        x_tickformat=".0%",
-        x_reference=1 / len(KIT_NAMES),
-        y_reference=overall_kill_rate,
-        x_upper_bound=1,
-        x_padding_fraction=0.12,
-        x_minimum_padding=0.01,
-        y_padding_fraction=0.12,
-        y_minimum_padding=0.05,
     )
 
 
@@ -1490,6 +1647,8 @@ def kill_concentration_scatter_figure(report: ReportData) -> go.Figure:
 def top_killer_exposure_figure(report: ReportData) -> go.Figure:
     """Compare selected players' kill shares with their exposure shares."""
 
+    elo_available = not report.elo_metadata.empty
+    elo_name = _elo_name(report)
     views = (
         {
             "button_label": "Top killer",
@@ -1571,7 +1730,7 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
             else "top_killer"
         )
         for row in plot_data.itertuples(index=False):
-            customdata = [[
+            customdata_values = [
                 getattr(row, f"{prefix}_id"),
                 getattr(row, f"{prefix}_kills"),
                 getattr(row, f"{prefix}_hours"),
@@ -1589,7 +1748,36 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
                     if row.same_top_killer_and_playtime_player
                     else "No"
                 ),
-            ]]
+            ]
+            if elo_available:
+                customdata_values.extend(
+                    [
+                        getattr(row, f"{prefix}_rating"),
+                        getattr(row, f"{prefix}_rated_encounters"),
+                        getattr(row, f"{counterpart_prefix}_rating"),
+                        getattr(
+                            row,
+                            f"{counterpart_prefix}_rated_encounters",
+                        ),
+                    ]
+                )
+            customdata = [customdata_values]
+            selected_elo_hover = (
+                f"Selected-player {elo_name}: "
+                "%{customdata[13]:,.2f}<br>"
+                "Selected-player rated encounters: "
+                "%{customdata[14]:,.0f}<br>"
+                if elo_available
+                else ""
+            )
+            counterpart_elo_hover = (
+                f"Counterpart {elo_name}: "
+                "%{customdata[15]:,.2f}<br>"
+                "Counterpart rated encounters: "
+                "%{customdata[16]:,.0f}<br>"
+                if elo_available
+                else ""
+            )
             fig.add_trace(
                 go.Scatter(
                     x=[getattr(row, f"{prefix}_time_share")],
@@ -1621,9 +1809,12 @@ def top_killer_exposure_figure(report: ReportData) -> go.Figure:
                         "%{customdata[4]:.2f}<br>"
                         "Selected-player kills / life: "
                         "%{customdata[5]:.2f}<br>"
-                        f"{view['counterpart_label']}: "
+                        + selected_elo_hover
+                        + f"{view['counterpart_label']}: "
                         "%{customdata[11]}<br>"
-                        "Same player in both modes: %{customdata[12]}<br>"
+                        + counterpart_elo_hover
+                        + "Same player in both modes: "
+                        "%{customdata[12]}<br>"
                         "Kit kills: %{customdata[8]:,.0f}<br>"
                         "Kit playtime: %{customdata[9]:,.2f} h<br>"
                         "Kit players with playtime: "
