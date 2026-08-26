@@ -16,14 +16,14 @@ execute unless data storage sgp.kits:stats schema_version \
 
 # Only an actually fresh storage receives the current version automatically.
 execute unless data storage sgp.kits:stats schema_version \
-    run data modify storage sgp.kits:stats schema_version set value 5
+    run data modify storage sgp.kits:stats schema_version set value 6
 
 execute store result score #stats_schema_version sgp.dummy \
     run data get storage sgp.kits:stats schema_version
 
-execute unless score #stats_schema_version sgp.dummy matches 5 \
+execute unless score #stats_schema_version sgp.dummy matches 6 \
     run tellraw @a [{text:"[SGP stats] ",color:red,bold:true},{text:"Unsupported statistics schema. Collection is disabled; reset it before a new edition with /function sgp.kits:stats_collector/reset_for_new_edition.",color:red}]
-execute unless score #stats_schema_version sgp.dummy matches 5 run return 0
+execute unless score #stats_schema_version sgp.dummy matches 6 run return 0
 
 scoreboard players add #stats_paused_ticks sgp.dummy 0
 
@@ -35,6 +35,12 @@ execute if score #stats_paused sgp.dummy matches 1 \
 
 execute unless data storage sgp.kits:stats kits_dict \
     run data modify storage sgp.kits:stats kits_dict set value {}
+
+execute unless data storage sgp.kits:stats death_positions \
+    run data modify storage sgp.kits:stats death_positions set value {}
+
+# Authoritative position units and bucket semantics for extraction/reporting.
+data modify storage sgp.kits:stats death_position_metadata set value {stored_unit:"block_tenths",display_unit:"blocks",display_scale:0.1d,quantization:"floor",position_reference:"feet"}
 
 # Stable final-damage-mechanism ids shared by kills and damage_received.
 data modify storage sgp.kits:stats damage_cause_names set value {"0":"unknown","1":"player_attack","2":"mace_smash","3":"spear","4":"arrow","5":"trident","6":"mob_projectile","7":"fireball","8":"wind_charge","9":"sonic_boom","10":"fireworks","11":"fire_tick","12":"fire_contact","13":"lava","14":"explosion","15":"indirect_magic","16":"magic_effect","17":"thorns","18":"fall","19":"impact","20":"drowning","21":"suffocation","22":"starvation","23":"freezing","24":"lightning","25":"void_border","26":"environmental_contact","27":"mob_attack","28":"generic","100":"giant_sweep","101":"pecking","102":"ray"}

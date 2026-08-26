@@ -15,10 +15,13 @@ KITS_PATH = (*STATS_PATH, "kits_dict")
 SCHEMA_VERSION_PATH = (*STATS_PATH, "schema_version")
 ABILITY_METADATA_PATH = (*STATS_PATH, "ability_metadata")
 DAMAGE_CAUSE_NAMES_PATH = (*STATS_PATH, "damage_cause_names")
+DEATH_POSITION_METADATA_PATH = (*STATS_PATH, "death_position_metadata")
+DEATH_POSITIONS_PATH = (*STATS_PATH, "death_positions")
 ELO_METADATA_PATH = (*STATS_PATH, "elo_metadata")
 ELO_RATINGS_PATH = (*STATS_PATH, "elo_ratings")
-SUPPORTED_SCHEMA_VERSION = 5
+SUPPORTED_SCHEMA_VERSION = 6
 DAMAGE_TENTHS_PER_HEART = 10
+DEATH_POSITION_KEY_SEPARATOR = ","
 
 
 def get_nbt_path(nbt_file: nbtlib.File, path: tuple[str, ...]) -> Any:
@@ -65,6 +68,16 @@ def get_ability_metadata(nbt_file: nbtlib.File) -> Any:
 def get_damage_cause_names(nbt_file: nbtlib.File) -> Any:
     """Return the shared damage-cause names from command_storage.dat."""
     return get_nbt_path(nbt_file, DAMAGE_CAUSE_NAMES_PATH)
+
+
+def get_death_position_metadata(nbt_file: nbtlib.File) -> Any:
+    """Return the death-position units and bucket semantics."""
+    return get_nbt_path(nbt_file, DEATH_POSITION_METADATA_PATH)
+
+
+def get_death_positions(nbt_file: nbtlib.File) -> Any:
+    """Return the aggregated death-position counters."""
+    return get_nbt_path(nbt_file, DEATH_POSITIONS_PATH)
 
 
 def get_elo_metadata(nbt_file: nbtlib.File) -> Any:
@@ -641,6 +654,131 @@ def extract_damage_causes(damage_cause_names: Any) -> pd.DataFrame:
     )
 
 
+def parse_death_position_metadata(metadata: Any) -> dict[str, Any]:
+    """Validate and unpack the death-position metadata compound."""
+    if not hasattr(metadata, "items"):
+        raise ValueError("Expected death_position_metadata to be a compound")
+
+    required_fields = [
+        "stored_unit",
+        "display_unit",
+        "display_scale",
+        "quantization",
+        "position_reference",
+    ]
+    missing_fields = [
+        field for field in required_fields if field not in metadata
+    ]
+
+    if missing_fields:
+        raise ValueError(
+            "Missing death-position metadata field(s): "
+            + ", ".join(missing_fields)
+        )
+
+    display_scale = float(metadata["display_scale"])
+    if display_scale <= 0:
+        raise ValueError(
+            "death_position_metadata.display_scale must be positive"
+        )
+
+    return {
+        "stored_unit": str(metadata["stored_unit"]),
+        "display_unit": str(metadata["display_unit"]),
+        "display_scale": display_scale,
+        "quantization": str(metadata["quantization"]),
+        "position_reference": str(metadata["position_reference"]),
+    }
+
+
+def extract_death_position_metadata(metadata: Any) -> pd.DataFrame:
+    """Extract the units and bucket semantics as one metadata row."""
+    values = parse_death_position_metadata(metadata)
+    return pd.DataFrame([values], columns=list(values))
+
+
+def extract_death_positions(
+    death_positions: Any,
+    metadata: Any,
+) -> pd.DataFrame:
+    """
+    Extract aggregated in-game death locations.
+
+    Columns:
+        dimension
+        x
+        y
+        z
+        deaths
+
+    Coordinates are converted from their stored integer representation using
+    the metadata-provided display scale.
+    """
+    if not hasattr(death_positions, "items"):
+        raise ValueError("Expected death_positions to be a compound")
+
+    parsed_metadata = parse_death_position_metadata(metadata)
+    display_scale = parsed_metadata["display_scale"]
+    rows: list[dict[str, Any]] = []
+
+    for dimension, dimension_data in death_positions.items():
+        if not hasattr(dimension_data, "items"):
+            raise ValueError(
+                f"Expected position counters at death_positions.{dimension}"
+            )
+
+        for position_key, death_count in dimension_data.items():
+            coordinate_parts = str(position_key).split(
+                DEATH_POSITION_KEY_SEPARATOR
+            )
+
+            if len(coordinate_parts) != 3:
+                raise ValueError(
+                    "Expected three scaled coordinates in death-position key "
+                    f"{position_key!r} for dimension {dimension!r}"
+                )
+
+            try:
+                x_scaled, y_scaled, z_scaled = map(int, coordinate_parts)
+            except ValueError as exc:
+                raise ValueError(
+                    "Expected integer scaled coordinates in death-position "
+                    f"key {position_key!r} for dimension {dimension!r}"
+                ) from exc
+
+            deaths = int(death_count)
+            if deaths <= 0:
+                raise ValueError(
+                    "Expected a positive death count at "
+                    f"death_positions.{dimension}.{position_key}"
+                )
+
+            rows.append(
+                {
+                    "dimension": str(dimension),
+                    "x": x_scaled * display_scale,
+                    "y": y_scaled * display_scale,
+                    "z": z_scaled * display_scale,
+                    "deaths": deaths,
+                }
+            )
+
+    result = pd.DataFrame(
+        rows,
+        columns=[
+            "dimension",
+            "x",
+            "y",
+            "z",
+            "deaths",
+        ],
+    )
+
+    return result.sort_values(
+        ["dimension", "x", "y", "z"]
+    ).reset_index(drop=True)
+
+
 def get_elo_metric_definitions(elo_metadata: Any) -> Any:
     """Return and validate the Elo metric-definition compound."""
     if not hasattr(elo_metadata, "items"):
@@ -661,17 +799,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
     One row is emitted per metric.
 
     Columns:
-        elo_name
-        elo_description
-        algorithm
         initial_rating
-        k_factor
-        rating_divisor
-        result_type
-        major_events_rated
-        environmental_deaths_rated
-        self_kills_rated
-        update_mode
         metric_id
         metric_name
         metric_description
@@ -680,27 +808,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         display_scale
     """
     metrics = get_elo_metric_definitions(elo_metadata)
-    required_configuration = [
-        "name",
-        "description",
-        "algorithm",
-        "initial_rating",
-        "k_factor",
-        "rating_divisor",
-        "result_type",
-        "major_events_rated",
-        "environmental_deaths_rated",
-        "self_kills_rated",
-        "update_mode",
-    ]
-    missing_configuration = [
-        field for field in required_configuration if field not in elo_metadata
-    ]
-    if missing_configuration:
-        raise ValueError(
-            "Missing Elo metadata field(s): "
-            + ", ".join(missing_configuration)
-        )
+    if "initial_rating" not in elo_metadata:
+        raise ValueError("Missing Elo metadata field: initial_rating")
 
     rows: list[dict[str, Any]] = []
 
@@ -730,23 +839,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
         rows.append(
             {
-                "elo_name": str(elo_metadata["name"]),
-                "elo_description": str(elo_metadata["description"]),
-                "algorithm": str(elo_metadata["algorithm"]),
                 "initial_rating": float(elo_metadata["initial_rating"]),
-                "k_factor": float(elo_metadata["k_factor"]),
-                "rating_divisor": float(elo_metadata["rating_divisor"]),
-                "result_type": str(elo_metadata["result_type"]),
-                "major_events_rated": bool(
-                    int(elo_metadata["major_events_rated"])
-                ),
-                "environmental_deaths_rated": bool(
-                    int(elo_metadata["environmental_deaths_rated"])
-                ),
-                "self_kills_rated": bool(
-                    int(elo_metadata["self_kills_rated"])
-                ),
-                "update_mode": str(elo_metadata["update_mode"]),
                 "metric_id": str(metric_id),
                 "metric_name": str(metric_data["name"]),
                 "metric_description": str(metric_data["description"]),
@@ -763,17 +856,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         pd.DataFrame(
             rows,
             columns=[
-                "elo_name",
-                "elo_description",
-                "algorithm",
                 "initial_rating",
-                "k_factor",
-                "rating_divisor",
-                "result_type",
-                "major_events_rated",
-                "environmental_deaths_rated",
-                "self_kills_rated",
-                "update_mode",
                 "metric_id",
                 "metric_name",
                 "metric_description",
@@ -892,6 +975,8 @@ def extract(input_path: Path, output_dir: Path) -> None:
     kits_dict = get_kits_dict(nbt_file)
     ability_metadata = get_ability_metadata(nbt_file)
     damage_cause_names = get_damage_cause_names(nbt_file)
+    death_position_metadata = get_death_position_metadata(nbt_file)
+    death_positions_data = get_death_positions(nbt_file)
     elo_metadata = get_elo_metadata(nbt_file)
     elo_ratings = get_elo_ratings(nbt_file)
     damage_rows = list(iter_damage_received(kits_dict))
@@ -906,6 +991,13 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks = extract_picks(kits_dict)
     extracted_ability_metadata = extract_ability_metadata(ability_metadata)
     damage_causes = extract_damage_causes(damage_cause_names)
+    extracted_death_position_metadata = extract_death_position_metadata(
+        death_position_metadata
+    )
+    death_positions = extract_death_positions(
+        death_positions_data,
+        death_position_metadata,
+    )
     extracted_elo_metadata = extract_elo_metadata(elo_metadata)
     extracted_elo_ratings = extract_elo_ratings(
         elo_ratings,
@@ -920,6 +1012,10 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks_path = output_dir / "picks.parquet"
     ability_metadata_path = output_dir / "ability_metadata.parquet"
     damage_causes_path = output_dir / "damage_causes.parquet"
+    death_position_metadata_path = (
+        output_dir / "death_position_metadata.parquet"
+    )
+    death_positions_path = output_dir / "death_positions.parquet"
     elo_metadata_path = output_dir / "elo_metadata.parquet"
     elo_ratings_path = output_dir / "elo_ratings.parquet"
 
@@ -929,6 +1025,11 @@ def extract(input_path: Path, output_dir: Path) -> None:
     picks.to_parquet(picks_path, index=False)
     extracted_ability_metadata.to_parquet(ability_metadata_path, index=False)
     damage_causes.to_parquet(damage_causes_path, index=False)
+    extracted_death_position_metadata.to_parquet(
+        death_position_metadata_path,
+        index=False,
+    )
+    death_positions.to_parquet(death_positions_path, index=False)
     extracted_elo_metadata.to_parquet(elo_metadata_path, index=False)
     extracted_elo_ratings.to_parquet(elo_ratings_path, index=False)
 
@@ -944,6 +1045,15 @@ def extract(input_path: Path, output_dir: Path) -> None:
         f"{len(extracted_ability_metadata):,} rows -> {ability_metadata_path}"
     )
     print(f"Causes:     {len(damage_causes):,} rows -> {damage_causes_path}")
+    print(
+        "Death-position metadata: "
+        f"{len(extracted_death_position_metadata):,} rows -> "
+        f"{death_position_metadata_path}"
+    )
+    print(
+        f"Death positions: {len(death_positions):,} rows -> "
+        f"{death_positions_path}"
+    )
     print(
         "Elo metadata: "
         f"{len(extracted_elo_metadata):,} rows -> {elo_metadata_path}"

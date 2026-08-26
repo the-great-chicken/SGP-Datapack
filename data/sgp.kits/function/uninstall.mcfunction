@@ -73,6 +73,8 @@ schedule clear sgp.kits:kit_tags/prefixes_check
 
 data remove storage sgp.kits:stats kits_dict
 data remove storage sgp.kits:stats damage_cause_names
+data remove storage sgp.kits:stats death_position_metadata
+data remove storage sgp.kits:stats death_positions
 data remove storage sgp.kits:stats ability_metadata
 data remove storage sgp.kits:stats elo_metadata
 data remove storage sgp.kits:stats elo_ratings

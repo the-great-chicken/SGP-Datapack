@@ -3,7 +3,7 @@
 # Return success only when the current schema is valid and no major event is
 # active. All persistent statistics entry points use this same gate.
 
-execute unless score #stats_schema_version sgp.dummy matches 5 run return 0
+execute unless score #stats_schema_version sgp.dummy matches 6 run return 0
 execute if score #stats_paused sgp.dummy matches 1 run return 0
 execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
 return 1

@@ -7,8 +7,9 @@
 
 # Clear every accumulated statistics branch and select the current schema.
 # Metadata is overwritten from its authoritative definitions during init.
-data modify storage sgp.kits:stats schema_version set value 5
+data modify storage sgp.kits:stats schema_version set value 6
 data modify storage sgp.kits:stats kits_dict set value {}
+data modify storage sgp.kits:stats death_positions set value {}
 data modify storage sgp.kits:stats elo_ratings set value {}
 data remove storage sgp:macro stats
 
@@ -56,6 +57,7 @@ scoreboard players reset #ability_metric_delta sgp.dummy
 scoreboard players reset #ability_metric_total sgp.dummy
 scoreboard players reset #damage_received_delta sgp.dummy
 scoreboard players reset #damage_received_total sgp.dummy
+scoreboard players reset #death_position_total sgp.dummy
 scoreboard players reset #death_time sgp.dummy
 scoreboard players reset #elo_delta sgp.dummy
 scoreboard players reset #elo_difference sgp.dummy

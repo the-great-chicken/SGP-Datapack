@@ -25,7 +25,7 @@ function sgp.kits:stats_collector/tick
 
 # Capture and batch genuine deaths before special modes consume sgp.just_died.
 execute as @a[scores={sgp.just_died=1..}] run \
-    function sgp.kits:stats_collector/elo/on_real_death
+    function sgp.kits:stats_collector/on_real_death
 execute as @a[tag=sgp.elo_touched] run \
     function sgp.kits:stats_collector/elo/apply_pending
 
