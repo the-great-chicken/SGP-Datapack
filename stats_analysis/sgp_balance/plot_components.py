@@ -33,6 +33,12 @@ KIT_COLORS = {
     "roi": "#FFFF55",
     "cancer": "#AA0000",
 }
+CONTRIBUTOR_RANK_COLORSCALE = (
+    (0.0, "#17324D"),
+    (0.35, "#2F6F9F"),
+    (0.7, "#78B6D6"),
+    (1.0, "#C7E5F1"),
+)
 STANDARD_FIGURE_HEIGHT = 680
 
 MetricKind = Literal["count", "percent"]
@@ -83,15 +89,15 @@ class AggregateMetricView:
 
 @dataclass(frozen=True)
 class ConcentrationView:
-    """Columns and labels for one contributor-concentration mode."""
+    """Metric and display labels for one contributor-concentration mode."""
 
     button_label: str
-    total_col: str
-    top_player_col: str
-    top_three_col: str
-    players_col: str
+    metric_id: str
     title: str
     yaxis_title: str
+    value_label: str
+    value_format: str
+    value_suffix: str = ""
 
 
 @dataclass(frozen=True)
@@ -504,67 +510,118 @@ def show_cause_profile_figure(fig: go.Figure) -> None:
 
     _show_click_highlight_figure(fig)
 
+
 def concentration_figure(
-    stats: pd.DataFrame,
+    profiles: pd.DataFrame,
     *,
     views: Sequence[ConcentrationView],
 ) -> go.Figure:
-    """Toggle among contributor-concentration measures in one figure."""
+    """Toggle ranked-player stacks across output and exposure measures."""
 
     if not views:
         raise ValueError("views must contain at least one concentration mode")
 
     fig = go.Figure()
     category_orders: list[list[str]] = []
-    traces_per_view = 4
+    trace_view_indices: list[int] = []
     for view_index, view in enumerate(views):
-        plot_data = stats.loc[
-            stats[view.total_col] > 0,
-            [
-                "kit_name",
-                view.top_player_col,
-                view.top_three_col,
-                view.players_col,
-            ],
-        ].sort_values(view.top_player_col, ascending=False)
+        plot_data = profiles.loc[
+            profiles["metric_id"] == view.metric_id
+        ].copy()
+        leaders = plot_data.loc[plot_data["rank"] == 1].sort_values(
+            ["share", "kit_id"],
+            ascending=[False, True],
+            kind="stable",
+        )
+        order = leaders["kit_name"].tolist()
+        category_orders.append(order)
+        maximum_rank = (
+            int(plot_data["rank"].max()) if not plot_data.empty else 0
+        )
+        hovertemplate = (
+            "<b>%{x}</b><br>Player rank: "
+            "%{customdata[1]:.0f} of %{customdata[2]:.0f}<br>"
+            "Player ID: %{customdata[0]}<br>"
+            f"{view.value_label}: "
+            f"%{{customdata[3]:{view.value_format}}}"
+            f"{view.value_suffix}<br>"
+            f"{view.yaxis_title}: %{{y:.1%}}<br>"
+            "Cumulative share through this rank: "
+            "%{customdata[4]:.1%}<br>Top-three share: "
+            "%{customdata[5]:.1%}<extra></extra>"
+        )
 
-        plot_data = plot_data.copy()
-        plot_data["players_2_3_share"] = (
-            plot_data[view.top_three_col]
-            - plot_data[view.top_player_col]
-        ).clip(lower=0)
-        plot_data["remaining_share"] = (
-            1 - plot_data[view.top_three_col]
-        ).clip(lower=0)
-        contributor_counts = plot_data[view.players_col].astype(int)
-        category_orders.append(plot_data["kit_name"].tolist())
-
-        for column, label, color in (
-            (view.top_player_col, "Top player", "#7F1D1D"),
-            ("players_2_3_share", "Players 2–3", "#D97706"),
-            ("remaining_share", "Everyone else", "#94A3B8"),
-        ):
+        for rank in range(1, maximum_rank + 1):
+            rank_data = (
+                plot_data.loc[plot_data["rank"] == rank]
+                .set_index("kit_name")
+                .reindex(order)
+            )
             fig.add_trace(
                 go.Bar(
-                    x=plot_data["kit_name"],
-                    y=plot_data[column],
-                    name=label,
-                    marker_color=color,
-                    customdata=np.column_stack([contributor_counts]),
-                    visible=view_index == 0,
-                    hovertemplate=(
-                        f"<b>%{{x}}</b><br>{label}: %{{y:.1%}}<br>"
-                        "Contributors: %{customdata[0]:.0f}"
-                        "<extra></extra>"
+                    x=order,
+                    y=rank_data["share"],
+                    name=f"Player rank {rank}",
+                    marker=dict(
+                        color=rank_data["rank_fraction"],
+                        colorscale=CONTRIBUTOR_RANK_COLORSCALE,
+                        cmin=0,
+                        cmax=1,
+                        showscale=rank == 1,
+                        colorbar=dict(
+                            title=dict(text="Rank within kit"),
+                            tickvals=[0, 1],
+                            ticktext=["Top", "Last"],
+                            len=0.42,
+                            thickness=14,
+                        ),
+                        line=dict(
+                            color="rgba(31,41,55,0.35)",
+                            width=0.4,
+                        ),
                     ),
+                    customdata=np.column_stack(
+                        [
+                            rank_data["player_id"],
+                            rank_data["rank"],
+                            rank_data["contributors"],
+                            rank_data["value"],
+                            rank_data["cumulative_share"],
+                            rank_data["top_three_share"],
+                        ]
+                    ),
+                    visible=view_index == 0,
+                    hovertemplate=hovertemplate,
+                    showlegend=False,
                 )
             )
+            trace_view_indices.append(view_index)
+
         fig.add_trace(
             go.Scatter(
-                x=plot_data["kit_name"],
-                y=np.full(len(plot_data), 1.025),
+                x=order,
+                y=leaders["top_three_share"],
+                mode="markers",
+                marker=dict(
+                    symbol="line-ew",
+                    size=24,
+                    color="#374151",
+                    line=dict(color="#374151", width=2),
+                ),
+                hoverinfo="skip",
+                showlegend=False,
+                visible=view_index == 0,
+            )
+        )
+        trace_view_indices.append(view_index)
+        fig.add_trace(
+            go.Scatter(
+                x=order,
+                y=np.full(len(leaders), 1.03),
                 mode="text",
-                text=[f"n={count}" for count in contributor_counts],
+                text=[
+                    f"n={int(count)}" for count in leaders["contributors"]
+                ],
                 textfont=dict(color="#475569", size=11),
                 hoverinfo="skip",
                 showlegend=False,
@@ -572,6 +629,7 @@ def concentration_figure(
                 visible=view_index == 0,
             )
         )
+        trace_view_indices.append(view_index)
 
     first_view = views[0]
     fig.update_layout(
@@ -580,8 +638,9 @@ def concentration_figure(
         xaxis_title="Kit",
         yaxis_title=first_view.yaxis_title,
         barmode="stack",
-        legend_title_text="Share of total",
-        margin=dict(l=60, r=30, t=125, b=60),
+        hovermode="closest",
+        showlegend=False,
+        margin=dict(l=60, r=100, t=125, b=60),
         updatemenus=[
             {
                 "type": "buttons",
@@ -598,8 +657,8 @@ def concentration_figure(
                         "args": [
                             {
                                 "visible": [
-                                    trace_index // traces_per_view == view_index
-                                    for trace_index in range(_trace_count(fig))
+                                    trace_view_index == view_index
+                                    for trace_view_index in trace_view_indices
                                 ]
                             },
                             {
@@ -628,6 +687,7 @@ def concentration_figure(
     )
     fig.update_yaxes(tickformat=".0%", range=[0, 1.08])
     return fig
+
 
 def _quadrant_modes_figure(
     data: pd.DataFrame,

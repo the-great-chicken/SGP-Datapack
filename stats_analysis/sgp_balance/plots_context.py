@@ -9,6 +9,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from .core import KIT_NAMES, KIT_ORDER, ReportData
+from .metrics_players import _build_player_concentration_profiles
 from .plot_components import (
     ConcentrationView,
     KIT_COLORS,
@@ -522,62 +523,66 @@ def player_reach_figure(report: ReportData) -> go.Figure:
 def kill_concentration_figure(report: ReportData) -> go.Figure:
     """Compare output and exposure concentration across players."""
 
+    profiles = _build_player_concentration_profiles(
+        report.player_kit_kills,
+        report.player_kit_damage_dealt,
+        report.player_kit_damage_received,
+        report.player_kit_exposure,
+    )
     return concentration_figure(
-        report.summary,
+        profiles,
         views=(
             ConcentrationView(
                 button_label="Kills",
-                total_col="kills",
-                top_player_col="top_player_share",
-                top_three_col="top_3_share",
-                players_col="players_with_kills",
+                metric_id="kills",
                 title="How concentrated is each kit's kill output among players?",
                 yaxis_title="Share of kit kills",
+                value_label="Kills",
+                value_format=",.0f",
             ),
             ConcentrationView(
                 button_label="Damage dealt",
-                total_col="damage_dealt",
-                top_player_col="top_player_damage_share",
-                top_three_col="top_3_damage_share",
-                players_col="players_dealing_damage",
+                metric_id="damage_dealt",
                 title=(
                     "How concentrated is each kit's attributed damage "
                     "among players?"
                 ),
                 yaxis_title="Share of attributed damage dealt",
+                value_label="Attributed damage dealt",
+                value_format=",.0f",
+                value_suffix=" hearts",
             ),
             ConcentrationView(
                 button_label="Damage received",
-                total_col="damage_received",
-                top_player_col="top_player_received_damage_share",
-                top_three_col="top_3_received_damage_share",
-                players_col="players_receiving_damage",
+                metric_id="damage_received",
                 title=(
                     "How concentrated is each kit's received damage "
                     "among players?"
                 ),
                 yaxis_title="Share of all damage received",
+                value_label="All damage received",
+                value_format=",.0f",
+                value_suffix=" hearts",
             ),
             ConcentrationView(
                 button_label="Playtime",
-                total_col="total_time",
-                top_player_col="top_player_time_share",
-                top_three_col="top_3_time_share",
-                players_col="players_contributing_time",
+                metric_id="playtime",
                 title="How concentrated is each kit's playtime among players?",
                 yaxis_title="Share of kit playtime",
+                value_label="Active time",
+                value_format=",.2f",
+                value_suffix=" h",
             ),
             ConcentrationView(
                 button_label="Completed lives",
-                total_col="completed_lives",
-                top_player_col="top_player_completed_life_share",
-                top_three_col="top_3_completed_life_share",
-                players_col="players_contributing_completed_lives",
+                metric_id="completed_lives",
                 title=(
                     "How concentrated are each kit's completed lives "
                     "among its players?"
                 ),
                 yaxis_title="Share of completed lives",
+                value_label="Completed lives",
+                value_format=",.0f",
             ),
         ),
     )

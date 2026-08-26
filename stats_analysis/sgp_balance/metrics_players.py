@@ -158,6 +158,121 @@ def _build_kit_exposure(
     return exposure.sort_values("kit_id").reset_index(drop=True)
 
 
+def _ranked_contribution_profile(
+    frame: pd.DataFrame,
+    *,
+    metric_id: str,
+    player_col: str,
+    value_col: str,
+) -> pd.DataFrame:
+    """Rank positive contributors and retain their full kit-total shares."""
+
+    columns = (
+        "metric_id",
+        "kit_id",
+        "kit_name",
+        "player_id",
+        "value",
+        "share",
+        "rank",
+        "contributors",
+        "rank_fraction",
+        "cumulative_share",
+        "top_three_share",
+    )
+    profile = frame[
+        [player_col, "kit_id", "kit_name", value_col]
+    ].rename(
+        columns={
+            player_col: "player_id",
+            value_col: "value",
+        }
+    )
+    profile["value"] = pd.to_numeric(
+        profile["value"], errors="coerce"
+    ).replace([np.inf, -np.inf], np.nan)
+    profile = profile.loc[
+        profile["kit_name"].notna() & (profile["value"] > 0)
+    ].copy()
+    if profile.empty:
+        return pd.DataFrame(columns=columns)
+
+    profile["player_id"] = profile["player_id"].astype(str)
+    profile = profile.groupby(
+        ["kit_id", "kit_name", "player_id"],
+        as_index=False,
+        sort=False,
+    )["value"].sum()
+    profile = profile.sort_values(
+        ["kit_id", "value", "player_id"],
+        ascending=[True, False, True],
+        kind="stable",
+    ).reset_index(drop=True)
+    groups = profile.groupby("kit_id", sort=False)
+    profile["rank"] = groups.cumcount() + 1
+    profile["contributors"] = groups["player_id"].transform("size")
+    totals = groups["value"].transform("sum")
+    profile["share"] = profile["value"] / totals
+    profile["cumulative_share"] = profile.groupby(
+        "kit_id", sort=False
+    )["share"].cumsum()
+    top_three = (
+        profile.loc[profile["rank"] <= 3]
+        .groupby("kit_id", sort=False)["share"]
+        .sum()
+    )
+    profile["top_three_share"] = profile["kit_id"].map(top_three)
+    rank_denominator = (profile["contributors"] - 1).replace(0, np.nan)
+    profile["rank_fraction"] = (
+        (profile["rank"] - 1) / rank_denominator
+    ).fillna(0.0)
+    profile["metric_id"] = metric_id
+    return profile[list(columns)]
+
+
+def _build_player_concentration_profiles(
+    player_kit_kills: pd.DataFrame,
+    player_kit_damage_dealt: pd.DataFrame,
+    player_kit_damage_received: pd.DataFrame,
+    player_kit_exposure: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build comparable ranked profiles for output and exposure modes."""
+
+    profiles = (
+        _ranked_contribution_profile(
+            player_kit_kills,
+            metric_id="kills",
+            player_col="id_killer",
+            value_col="kills",
+        ),
+        _ranked_contribution_profile(
+            player_kit_damage_dealt,
+            metric_id="damage_dealt",
+            player_col="id_source",
+            value_col="damage_dealt",
+        ),
+        _ranked_contribution_profile(
+            player_kit_damage_received,
+            metric_id="damage_received",
+            player_col="id_target",
+            value_col="damage_received",
+        ),
+        _ranked_contribution_profile(
+            player_kit_exposure,
+            metric_id="playtime",
+            player_col="id",
+            value_col="total_hours",
+        ),
+        _ranked_contribution_profile(
+            player_kit_exposure,
+            metric_id="completed_lives",
+            player_col="id",
+            value_col="completed_lives",
+        ),
+    )
+    return pd.concat(profiles, ignore_index=True)
+
+
 def _build_player_kit_metrics(
     player_kit_exposure: pd.DataFrame,
     player_kit_kills: pd.DataFrame,
