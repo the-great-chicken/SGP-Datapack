@@ -6,8 +6,8 @@ function sgp.kits:abilities/tag_dropped_item with entity @s
 execute at @e[tag=sgp.marker,name="abilities_shulker",limit=1,type=marker] run function sgp.kits:abilities/give_back_item
 kill @n[tag=sgp.dropped,distance=..4,type=item]
 
-execute unless entity @s[gamemode=creative] run \
-    luckperms user @s permission set worldguard.* false
+execute unless entity @s[gamemode=creative] run tag @s add sgp.to_remove_perm
+execute unless entity @s[gamemode=creative] run schedule function sgp.kits:abilities/remove_perms 1t append
 
 execute if score @s sgp.cooldown_ability matches 1.. run function sgp.kits:abilities/display_cooldown {type:cooldown_ability, every:1}
 
