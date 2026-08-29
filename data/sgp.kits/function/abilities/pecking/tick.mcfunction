@@ -33,6 +33,9 @@ tag @s remove sgp.source_peck
 # Stop pecking if not looking at player
 execute unless entity @a[tag=sgp.is_being_pecked,tag=!sgp.peaceful] run return run function sgp.kits:abilities/pecking/end
 
+# Count valid lock-on time in a scoreboard and flush it only when the cast ends.
+scoreboard players add @s sgp.peck_lock_ticks 1
+
 # Only peck every few ticks (modifiable value)
 scoreboard players add @s sgp.pecking_timer 1
 execute unless score @s sgp.pecking_timer matches 2.. run return run tag @a[tag=sgp.is_being_pecked] remove sgp.is_being_pecked

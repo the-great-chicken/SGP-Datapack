@@ -38,6 +38,7 @@ scoreboard objectives remove sgp.ab.water_trident_cooldown_last_fill
 scoreboard objectives remove sgp.ab.water_trident_cooldown_last_current
 
 scoreboard objectives remove sgp.just_died
+scoreboard objectives remove sgp.synthetic_death
 scoreboard objectives remove sgp.streak_reset
 scoreboard objectives remove sgp.morts
 
@@ -46,7 +47,6 @@ scoreboard objectives remove sgp.plus_grande_streak
 scoreboard objectives remove sgp.kills
 
 scoreboard objectives remove sgp.streak_en_cours
-scoreboard objectives remove sgp.last_kill_count
 
 scoreboard objectives remove sgp.dummy
 scoreboard objectives remove sgp.timer

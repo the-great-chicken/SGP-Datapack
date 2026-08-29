@@ -40,6 +40,25 @@ scoreboard objectives add sgp.kit_id dummy
 scoreboard objectives add sgp.kit_prefix_set dummy
 scoreboard objectives add sgp.reset_tags dummy
 
+scoreboard objectives add sgp.last_kill_count playerKillCount
+
+scoreboard objectives add sgp.death_cause dummy
+scoreboard objectives add sgp.damage_taken minecraft.custom:minecraft.damage_taken
+scoreboard objectives add sgp.damage_owner dummy
+scoreboard objectives add sgp.damage_resisted minecraft.custom:minecraft.damage_resisted
+scoreboard objectives add sgp.ability_cast dummy
+scoreboard objectives add sgp.ability_kind dummy
+scoreboard objectives add sgp.ability_success dummy
+scoreboard objectives add sgp.last_ability_cast dummy
+scoreboard objectives add sgp.ability_result_window dummy
+scoreboard objectives add sgp.peck_lock_ticks dummy
+
+scoreboard objectives add sgp.elo dummy
+scoreboard objectives add sgp.elo_pending dummy
+scoreboard objectives add sgp.elo_encounters dummy
+scoreboard objectives add sgp.elo_deaths deathCount
+scoreboard objectives add sgp.elo_deaths_seen dummy
+
 
 
 # ---------- Create Teams ----------
@@ -63,10 +82,25 @@ function sgp.kits:kit_tags/prefixes_check
 
 # ---------- Initialize Storages ----------
 
-execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{ assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
+execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}, splash:{cooldown:20s}}}}
+
+function sgp.kits:stats_collector/init
 
 data merge storage sgp:kits {\
-    kit_id_order:[{kit_path:pigeon},{kit_path:combattant},{kit_path:archer},{kit_path:vindicateur},{kit_path:pyromane},{kit_path:tank},{kit_path:roi},{kit_path:eclaireur},{kit_path:alchimiste},{kit_path:enderman},{kit_path:cancer},{kit_path:poseidon}], \
+    kit_id_order:[ \
+        {kit_id:0,kit_path:pigeon,ability_path:pecking}, \
+        {kit_id:1,kit_path:combattant,ability_path:cleave}, \
+        {kit_id:2,kit_path:archer,ability_path:repulsion}, \
+        {kit_id:3,kit_path:vindicateur,ability_path:fangs}, \
+        {kit_id:4,kit_path:pyromane,ability_path:tnt}, \
+        {kit_id:5,kit_path:tank,ability_path:bigger}, \
+        {kit_id:6,kit_path:roi,ability_path:rays}, \
+        {kit_id:7,kit_path:eclaireur,ability_path:smoke_grenade}, \
+        {kit_id:8,kit_path:alchimiste,ability_path:illusions}, \
+        {kit_id:9,kit_path:enderman,ability_path:assassinate}, \
+        {kit_id:10,kit_path:cancer,ability_path:bats}, \
+        {kit_id:11,kit_path:poseidon,ability_path:splash} \
+    ], \
     eclaireur:{kit:eclaireur, kit_color:aqua, kit_name:"Éclaireur", kit_icon:""}, \
     enderman:{kit:enderman, kit_color:dark_purple, kit_name:Enderman, kit_icon:""}, \
     pigeon:{kit:pigeon, kit_color:dark_gray, kit_name:Pigeon, kit_icon:""}, \

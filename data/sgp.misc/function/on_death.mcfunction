@@ -2,8 +2,11 @@
 # 
 # Executed when a players dies: resets things,...
 
-execute store result score #kit_id_victime sgp.dummy run scoreboard players get @s sgp.kit_id
-scoreboard players reset @s sgp.kit_id
+execute unless score @s sgp.synthetic_death matches 1.. \
+    run function sgp.kits:stats_collector/collect_kill_infos
+function sgp.kits:stats_collector/pause_pick_as_player
+scoreboard players reset @s sgp.synthetic_death
+scoreboard players set @s sgp.kit_id -1
 
 # Reset ability
 scoreboard players set @s sgp.duration_ability 1

@@ -13,8 +13,25 @@ execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
 scoreboard players add #20_ticks sgp.dummy 1
 execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
+# Allocate stable player ids before any subsystem records player-linked state.
+execute as @a unless score @s sgp.id matches 1.. run function sgp.misc:player_id/allocate
+
 # Expire actionbar segments before systems refresh the parts they still need.
 function sgp.misc:actionbar/tick
+
+# Keep every statistics collector synchronized with the shared major-event
+# predicate before processing this tick's deaths or ability results.
+function sgp.kits:stats_collector/tick
+
+# Capture and batch genuine deaths before special modes consume sgp.just_died.
+execute as @a[scores={sgp.just_died=1..}] run \
+    function sgp.kits:stats_collector/on_real_death
+execute as @a[tag=sgp.elo_touched] run \
+    function sgp.kits:stats_collector/elo/apply_pending
+
+# Consume delayed synthetic cleanup before a later event's death handler can.
+execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
+    function sgp.misc:on_death
 
 
 # Must be in this order
@@ -43,7 +60,6 @@ function sgp.kits:abilities/tick
 
 
 # ---------- MISCELLANEOUS ----------
-function sgp.misc:kill_counter
 
 function minecraft:128_ticks_functions
 

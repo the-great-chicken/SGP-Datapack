@@ -31,6 +31,7 @@ scoreboard objectives add sgp.ab.water_trident_cooldown_last_fill dummy
 scoreboard objectives add sgp.ab.water_trident_cooldown_last_current dummy
 
 scoreboard objectives add sgp.just_died deathCount
+scoreboard objectives add sgp.synthetic_death dummy
 scoreboard objectives add sgp.streak_reset deathCount
 scoreboard objectives add sgp.morts deathCount
 
@@ -39,7 +40,6 @@ scoreboard objectives add sgp.plus_grande_streak dummy {bold:true,color:dark_aqu
 scoreboard objectives add sgp.kills playerKillCount {bold:true,color:dark_red,text:"Kills au PvP"}
 
 scoreboard objectives add sgp.streak_en_cours minecraft.custom:minecraft.player_kills
-scoreboard objectives add sgp.last_kill_count playerKillCount
 
 scoreboard objectives add sgp.dummy dummy
 scoreboard objectives add sgp.timer dummy
@@ -95,8 +95,6 @@ function sgp.misc:bossbar/cycle_name
 
 
 # ---------- Initialize Storages ----------
-
-execute unless data storage sgp:kill_counter KillArray run data merge storage sgp:kill_counter {KillArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],KillUpdates: [],provKillTueur: 4,increment: 20,KillArrayCopy: [],provKillUpdate: 49,provKillVictime: 1}
 
 data modify storage sgp:text prefix set value {text:"[", color:gray, extra:[{text:"SGP", color:gold}, {text:"] "}]}
 

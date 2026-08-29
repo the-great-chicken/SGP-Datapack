@@ -1,0 +1,4 @@
+nbtlib 
+pandas 
+pyarrow
+plotly
