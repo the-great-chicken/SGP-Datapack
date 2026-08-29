@@ -3,8 +3,6 @@
 
 # ---------- Create Objectives ----------
 
-scoreboard objectives add sgp.devenir_pigeon trigger
-scoreboard objectives add sgp.devenir_chasseur trigger
 scoreboard objectives add sgp.devenir_roi_rouge trigger
 scoreboard objectives add sgp.devenir_roi_bleu trigger
 
@@ -39,17 +37,6 @@ execute unless score #protect_max_rounds sgp.dummy matches 0.. \
 
 
 # ---------- Create Teams ----------
-team add sgp.Defenseur "Défenseur"
-team modify sgp.Defenseur collisionRule never
-team modify sgp.Defenseur color blue
-team modify sgp.Defenseur friendlyFire false
-
-team add sgp.Attaquant
-team modify sgp.Attaquant collisionRule never
-team modify sgp.Attaquant color red
-team modify sgp.Attaquant friendlyFire false
-team modify sgp.Attaquant nametagVisibility hideForOtherTeams
-
 team add sgp.rouge
 team modify sgp.rouge collisionRule never
 team modify sgp.rouge color dark_red
@@ -61,16 +48,6 @@ team modify sgp.bleue collisionRule never
 team modify sgp.bleue color dark_blue
 team modify sgp.bleue friendlyFire false
 team modify sgp.bleue nametagVisibility hideForOtherTeams
-
-team add sgp.Chasseurs_pigeon "Chasseurs"
-team modify sgp.Chasseurs_pigeon collisionRule never
-team modify sgp.Chasseurs_pigeon color dark_green
-team modify sgp.Chasseurs_pigeon friendlyFire false
-
-team add sgp.Pigeons
-team modify sgp.Pigeons collisionRule never
-team modify sgp.Pigeons color gray
-team modify sgp.Pigeons friendlyFire false
 
 team add sgp.Oie
 team modify sgp.Oie collisionRule never

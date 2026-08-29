@@ -51,9 +51,7 @@ All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner 
 
 ### Major Events
 
-- at least 1 `Attaquant_Invasion`: spawnpoints when the Invasion event is active
 - 1 `devenir_roi_rouge` and 1 `devenir_roi_bleu`: These are rooms where a player can become the Roi when "Protéger le Roi" is active. Note that Devenir Roi Rouge and Devenir Roi Bleu cannot be in the same location.
-- 1 `devenir_chasseur` and 1 `devenir_pigeon`: These are rooms where players can become Chasseurs or Pigeons. Note that Devenir Chasseur and Devenir Pigeons cannot be in the same location.
 - 3 `pco_cage_storage`: one for each team. They should not be placed somewhere visible, and are used to clone the cages from there to the arena at the start of the event. They should have the following data: `{cage:"<team>", dx, dy, dz}` The 3 first `dx dy dz` are the size of the cages.
 - 3 `pco_uncage_storage`: one for each team. They should be near the `pco_cage_storage`s, and should have the following data: `{cage:"<team>", dx, dy, dz}`
 - 3 `pco_<team>_cage_arena` that should be placed in the corner of the cage of the team, in the arena.
@@ -61,8 +59,6 @@ All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner 
 - 3 `pco_spawn_cage_<team>` that are the place at which the players from the specified team respawn when he is capture
 - 1 `spawn_seeker` spawn of the seeker team
 - 1 `spawn_hider` spawn of the hider team
-
-Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can share the same location. Similarly, the markers for Devenir Roi Bleu and Devenir Pigeons can share the same location.
 
 ## Interaction Entities
 

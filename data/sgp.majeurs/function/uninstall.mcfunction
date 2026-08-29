@@ -2,8 +2,6 @@
 
 # ---------- Remove Objectives ----------
 
-scoreboard objectives remove sgp.devenir_pigeon
-scoreboard objectives remove sgp.devenir_chasseur
 scoreboard objectives remove sgp.devenir_roi_rouge
 scoreboard objectives remove sgp.devenir_roi_bleu
 
@@ -28,12 +26,8 @@ scoreboard objectives remove sgp.link_teams
 
 # ---------- Remove Teams ----------
 
-team remove sgp.Defenseur
-team remove sgp.Attaquant
 team remove sgp.rouge
 team remove sgp.bleue
-team remove sgp.Chasseurs_pigeon
-team remove sgp.Pigeons
 team remove sgp.Oie
 team remove sgp.Poule
 team remove sgp.Canard
