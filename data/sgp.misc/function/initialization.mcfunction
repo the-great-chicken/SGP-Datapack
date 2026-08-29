@@ -54,6 +54,7 @@ scoreboard players set 1 sgp.dummy 1
 scoreboard players set 2 sgp.dummy 2
 scoreboard players set 3 sgp.dummy 3
 scoreboard players set 4 sgp.dummy 4
+scoreboard players set 5 sgp.dummy 5
 scoreboard players set 6 sgp.dummy 6
 scoreboard players set 7 sgp.dummy 7
 scoreboard players set 8 sgp.dummy 8
