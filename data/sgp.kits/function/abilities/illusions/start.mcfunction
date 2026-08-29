@@ -4,6 +4,7 @@
 
 execute store result score @s sgp.cooldown_ability run data get storage sgp:data kits.ability_cooldowns.illusions.cooldown
 execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.illusions.duration
+function sgp.kits:stats_collector/ability/start {kit_id:8,ability_path:"illusions"}
 team join sgp.Illusion @s
 
 # Summon mannequins with the player's profile

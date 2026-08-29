@@ -4,8 +4,8 @@
 	"env": {
         "mcmetaSummaryOverrides": {
             "commands":{
-                "path": "command_registration.json",
-                "replace": true
+                "path": "converted_commands.json",
+                "replace": false
             }
         }
 	},
@@ -19,7 +19,7 @@
         "undeclaredSymbol": [
             {
                 "if": {
-                "pattern": "^(#?bs|smithed)\\..*"
+                "pattern": "^(#?bs|smithed|dah)\\..*"
                 },
                 "then": { "report": "hint" }
             },

@@ -2,7 +2,7 @@
 # 
 # Start the major event Invasion
 
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Lancement d'Invasion...", color:dark_blue, bold:true}]
+tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Lancement d'Invasion...", color:dark_blue, bold:true}]
 
 function sgp.majeurs:common/start
 
@@ -22,8 +22,8 @@ title @a[team=sgp.Attaquant] title [{text:"Tu es Attaquant(e)", color:red, bold:
 move @a[team=sgp.Defenseur] #Défenseurs
 move @a[team=sgp.Attaquant] #Attaquants
 
-glow add @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] RED
-glow add @a[team=sgp.Defenseur] @a[gamemode=survival,team=sgp.Defenseur] BLUE
+glow add @a[team=sgp.Attaquant] @a[gamemode=survival,team=sgp.Attaquant] red
+glow add @a[team=sgp.Defenseur] @a[gamemode=survival,team=sgp.Defenseur] blue
 
 give @a[team=sgp.Defenseur] potion[ \
     custom_name={text:"Potion du Maitre Tortue", color:dark_blue, italic:false, bold:true}, \

@@ -1,7 +1,7 @@
 #> sgp.kits:abilities/illusions/summon
 # `{current_uuid: player UUID, current_direction: right|left|opposite}`
 
-$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, Tags:["sgp.illusion_init", "sgp.illusion", "sgp.direction_$(current_direction)"], CustomNameVisible:true, description:{text:"20 ",extra:[{text:"❤", color:red}]}, Health:2}
+$summon mannequin ~ ~ ~ {profile: {id: $(current_uuid)}, Tags:["sgp.illusion_init", "sgp.illusion", "sgp.direction_$(current_direction)"], CustomNameVisible:true, description:{text:"20 ",extra:[{text:"❤", color:red}]}, Health:1}
 $execute as @e[tag=sgp.illusion_init,tag=sgp.direction_$(current_direction),distance=..0.1,limit=1,type=mannequin] at @p run function sgp.kits:abilities/illusions/link
 
 # Give player's name to illusion

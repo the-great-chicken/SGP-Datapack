@@ -12,7 +12,7 @@ You can join the discord of the original SGP at https://www.discord.gg/FqGKSqPBb
 
 ## Required
 
-The [**Actionbar**](https://wiki.smithed.dev/libraries/actionbar/) datapack from Smithed is required.
+The [**Actionbar Mixer**](https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft) datapack is required.
 [**Bookshelf**](https://docs.mcbookshelf.dev/en/latest/) is also required.
 
 ## Optional
@@ -26,6 +26,7 @@ For example tnt-based abilities will destroy your world, or poseidon's trident a
 
 We do replace the #bypasses_shield damage type tag with all its vanilla damage type, to allow us to have a damage type that bypasses armor but not shield.
 We also replace the vanilla magenta_shulker_box death loot table.
+We completely OWN the actionbar UwU. (Although it's possible to add things to it by calling our related functions)
 
 # Installation
 
@@ -33,16 +34,20 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 
 ## Markers to create
 
+The template to summon one is `/summon marker ~ ~ ~ {CustomName:"<name>", Tags:["sgp.marker"], data:{<data>}}`.
+All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner with coordinates `- - -` of the bounding box, at `<x>.0 <y>.0 <z>.0`.
+
 ### Base
 
 - 1 `respawn`: spawnpoint of the players when they die, should be also the place where they choose their kit
-- any number of `lieu` with data corresponding to the POI. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD"}`. Need 8 `\` to escape a `'`.
-- any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`
-- at least 1 `Confinement`: spawnpoints when the Confinement event is active
+- any number of `lieu` : They are bounding boxes corresponding to an in-game POI. The players can "collect" these by going inside, and it will show them the POI name everytime they come back in. Example : `data:{dx:16, dy:3, dz:6, lieu:observatoire, lieu_propre:"Observatoire", couleur:"#DDDDDD", width:72, exclusion_box{x:1, y:2, z:2, dx:2, dy:2, dz:2}}`. Need 8 `\` to escape a `'`. The `exclusion_box` parameter is completely optional. <a href="#note4">⚠</a>
+- any number of `teleporter` with data corresponding to the teleporter destination : `data:{x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>}`. When a player is on the same block as the marker, it gets teleported after a while. The teleporter is visible through particles.
+- at least 1 `Confinement`: spawnpoints when the Confinement event is active. Should better be "inside" buildings, else players will die UwU.
 - at least 1 `Lootdrop`: locations of lootdrop chests, with the visual direction of the chest: `data:{facing:<direction>}`
 - 1 `abilities_shulker`: somewhere hidden, in an empty (air) block, to allow abilities to work
 - At least 1 `playable_map` in the corner of the playable map: `{dx, dy, dz, id: int}` (the `id` is not mandatory if you're not using dioramas)
-- Optionally at least 1 `playable_map_model` in the corner of the smaller model of the map: `{id: int}`. The id should correspond to the one of the `playable_map` it should be linked to. No duplicates.
+
+<a id="note4">⚠</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
 
 ### Major Events
 
@@ -64,27 +69,65 @@ Additional Note: The markers for Devenir Roi Rouge and Devenir Chasseur can shar
 The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction", "sgp.<name>"], data:{args:{<args>}, function: "<func>"}, response:true}`.
 Each of these is optional (or can be present multiple times), depending on how you want to make your players' UX.
 
-- `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, article:<"à la"|"au"|...>, title:"<escaped_text_component>", id:1` <a href="#note1">*</a> <a href="#note2">**</a>
-- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no arg: `id: <int>`. <a href="#note3">***</a>
+- `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, article:<"à la"|"au"|...>, title:"<escaped_text_component>", id:1` <a href="#note1">⚠</a> <a href="#note2">⚠⚠</a>
+- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no arg: `id: <int>`. <a href="#note3">⚠⚠⚠</a>
 - `to_spawns`, with the function `sgp.misc:interactions/go_to_choose_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_cosms`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_reception`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_kits`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 
-<a id="note1">*</a> There needs to be the same number of `spawn_tper` for each spawn type, or else the random will be skewed.
-<a id="note2">**</a> You do not need to add any if you're using the diorama! Instead initialize the storage.
-<a id="note3">***</a> If you're not using dioramas, choose `id: 1`. Else it should be the id of the diorama it will choose the spawns from.
+<a id="note1">⚠</a> There needs to be the same number of `spawn_tper` for each spawn type, or else the random will be skewed.
+
+<a id="note2">⚠⚠</a> You do not need to add any if you're using the diorama! Instead initialize the [storage](#storages).
+
+<a id="note3">⚠⚠⚠</a> If you're not using dioramas, choose `id: 1`. Else it should be the id of the diorama it will choose the spawns from.
 
 ## Storages
 
 - You can change the cooldowns and durations of all abilities by changing the values in `sgp:data kits.ability_cooldowns`
-- `sgp:data spawns[{id:int, list:[]}]` The `list` is containing all the spawns, and will be used if you're using the diorama to automatically place the interation entities and text displays. Each element should be exactly what would have been the `args` of the `spawn_tper`s. The id should correspond to the diorama in which you want these spawns to appear in.
 
 ## Other stuff
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
+- Whatever is described in the [Diorama module Readme](data/sgp.diorama/README.md)
 - You should forceload all the chunks in which you placed markers.
-- If you want the diorama mannequins to replicate players' swings, and don't use `/give` in general (else you'll have stacking issues), you can enable it with `/scoreboard players set #mannequins_swing_enabled sgp.dummy 1`
+
+## Plugin configuration
+
+### CommandAPI
+
+Change these settings in CommandAPI's config.yml:
+```yml
+skip-initial-datapack-reload: false
+hook-paper-reload: true
+
+plugins-to-convert:
+- LuckPerms:
+  - luckperms (user) <user>[api:players] <args>[api:greedy_string]
+  - luckperms (creategroup|createtrack) <name>[brigadier:string]
+  - luckperms (group) <name>[brigadier:string] (meta) (setprefix) <priority>[brigadier:integer] <prefix>[api:greedy_string]
+  - luckperms (track) (kit) (append) <name>[brigadier:string]
+- TGCPlugin:
+  - statuswarp <name>[brigadier:string] (enabled|disabled)
+- DiscordSRV-SGP-extension:
+  - move <player>[api:players] <channel>[api:greedy_string]
+- Citizens:
+  - npc (spawn|despawn)
+  - npc (select) <id>[brigadier:integer]
+- Essentials:
+  - playerlist
+
+other-commands-to-convert:
+  - glow add <player>[api:players] <entities>[api:entities]
+  - glow add <player>[api:players] <entities>[api:entities] <color>[minecraft:color]
+  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer]
+  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer] <color>[minecraft:color]
+  - glow remove <entities>[api:entities]
+  - useglow (toggle)
+
+skip-sender-proxy:
+- LuckPerms
+```
 
 # Uninstallation
 

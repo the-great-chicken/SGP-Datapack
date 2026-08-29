@@ -35,7 +35,8 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_1=1..}] run function sgp.kit
     actionbar:' \
         {text:"+ 1 ⟰ Flèche de Lévitation ", color:"#F2F3F4", bold:true}, \
         {text:"et 1 ⬳ Flèche de Lenteur !", color:"#555555"} \
-        ' \
+        ', \
+    width:644, \
     }
 
 execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run give @s golden_apple[ \
@@ -87,8 +88,7 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
         ]', \
     actionbar:' \
         {text:"+ 1 ❤ Pomme d\\\'or, ", color:yellow, bold:true}, \
-        {text:"1 ⟰ Flèche de Lévitation, ", color:white}, \
-        {text:"1 ⬳ Flèche de Lenteur, ", color:"#555555"}, \
         {text:"1 ➠ Potion de Rapidité ", color:aqua}, \
-        {text:"et 1 ⇪ Potion de Saut !", color:green} ' \
+        {text:"et 1 ⇪ Potion de Saut !", color:green} ', \
+    width:760, \
     }

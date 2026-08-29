@@ -13,7 +13,6 @@ tag @s remove sgp.hider
 team leave @s
 function sgp.majeurs:hide_and_seek/teams/check_teams
 
-#message de mort
 tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {selector:"@s"}, {text:" de l'équipe "}, {score:{name:"#death_in_team", objective:"sgp.link_teams"}}, {text:" a été éliminé(e) !"}]
 
 execute if score #teammates_alive sgp.link_teams matches 0 \

@@ -6,7 +6,8 @@ execute as @a[tag=sgp.combattant,scores={sgp.kills_give_1=1..}] run function sgp
     nb:1, \
     give:"arrow 3", \
     give_2:air, \
-    actionbar:{text:"+ 3 ➶ Flèches !", color:gray, bold:true} \
+    actionbar:{text:"+ 3 ➶ Flèches !", color:gray, bold:true}, \
+    width:179, \
     }
 
 execute as @a[tag=sgp.combattant,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
@@ -23,8 +24,6 @@ execute as @a[tag=sgp.combattant,scores={sgp.kills_give_2=2..}] run function sgp
             ] \
         ]', \
     give_2:air, \
-    actionbar:' \
-        {text:"+ 3 ➶ Flèches ", color:gray, bold:true}, \
-        {text:"et 1 ❤ Pomme d\\\'or !", color:yellow} \
-        ' \
+    actionbar:{text:"+ 1 ❤ Pomme d'or !", color:yellow, bold:true}, \
+    width:222, \
     }

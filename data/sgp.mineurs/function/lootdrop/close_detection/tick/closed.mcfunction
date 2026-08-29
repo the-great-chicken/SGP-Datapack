@@ -4,10 +4,10 @@
 
 scoreboard players enable @p[tag=sgp.container_open] sgp.share_item
 tellraw @p[tag=sgp.container_open] [ \
-    {storage:"sgp.text", nbt:"prefix", interpret:true}, \
+    {storage:"sgp:text", nbt:"prefix", interpret:true}, \
     {translate: "Bravo d'avoir trouvé le %s ! As-tu obtenu un %s ?\n", "color": "yellow", \
         with: [{"text": "coffre", "color": "green"}, {"text": "item intéressant", "color": aqua}]}, \
-    {storage:"sgp.text", nbt:"prefix", interpret:true}, \
+    {storage:"sgp:text", nbt:"prefix", interpret:true}, \
     {text:"Si oui, ", "color": "yellow"}, \
     {text: "[Clique ici pour le montrer à tout le monde]", underlined:true, "color": "yellow", \
         "hover_event": {"action": "show_text", "value": "Cela affichera dans le chat l'item que tu tiens actuellement"}, \
@@ -19,7 +19,7 @@ setblock ~ ~ ~ air replace
 
 playsound minecraft:block.beacon.power_select master @a[tag=sgp.in_game] ~ ~ ~ 1 0.5
 
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {translate:"Un %s a été trouvé !", color:gold,with:[{text:"coffre",color:green}]}]
+tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {translate:"Un %s a été trouvé !", color:gold,with:[{text:"coffre",color:green}]}]
 
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000
 

@@ -1,1 +1,0 @@
-$scoreboard objectives add sgp.lieu_$(lieu) dummy

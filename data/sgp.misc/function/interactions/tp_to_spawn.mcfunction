@@ -3,6 +3,8 @@
 
 execute if score @s sgp.anim_timer matches 1.. run return fail
 
+function sgp.kits:stats_collector/collect_kit_pick_infos
+
 $execute unless score #diorama_enabled sgp.dummy matches 1 run return run tp @s $(x) $(y) $(z) $(yaw) $(pitch)
 
 $data modify storage sgp:macro diorama.scale_down_anim.yaw set value $(yaw)
@@ -14,6 +16,6 @@ $data modify storage sgp:macro diorama.scale_down_anim.z set value $(z)
 data modify storage sgp:macro diorama.scale_down_anim.init_yaw set from entity @s Rotation[0]
 data modify storage sgp:macro diorama.scale_down_anim.init_pitch set from entity @s Rotation[1]
 
-function sgp.misc:diorama/scale_down_anim/init with storage sgp:macro diorama.scale_down_anim
+function sgp.diorama:scale_down_anim/init with storage sgp:macro diorama.scale_down_anim
 
-$tellraw @s ["Tu vas spawn $(article) ", $(title)]
+$tellraw @s ["Tu vas spawn $(article)", $(title)]
