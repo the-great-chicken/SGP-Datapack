@@ -35,7 +35,7 @@ Add the datapack to your world, and add the necessary markers in your world, tha
 ## Markers to create
 
 The template to summon one is `/summon marker ~ ~ ~ {CustomName:"<name>", Tags:["sgp.marker"], data:{<data>}}`.
-All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner with coordinates `- - -` of the bounding box, at `<x>.0 <y>.0 <z>.0`.
+All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner with coordinates `- - -` of the bounding box, at `<x>.0 <y>.0 <z>.0`. All chunks containing markers should be forceloaded.
 
 ### Base
 
@@ -48,17 +48,6 @@ All markers with a bounding box (`dx, dy, dz`) must be positioned in the corner 
 - At least 1 `playable_map` in the corner of the playable map: `{dx, dy, dz, id: int}` (the `id` is not mandatory if you're not using dioramas)
 
 <a id="note4">⚠</a> When testing the width, please use `/function sgp.misc:actionbar/width_test/main {text:<text component>, width:<int>}` to properly test with multiple of them (it often varies!)
-
-### Major Events
-
-- 1 `devenir_roi_rouge` and 1 `devenir_roi_bleu`: These are rooms where a player can become the Roi when "Protéger le Roi" is active. Note that Devenir Roi Rouge and Devenir Roi Bleu cannot be in the same location.
-- 3 `pco_cage_storage`: one for each team. They should not be placed somewhere visible, and are used to clone the cages from there to the arena at the start of the event. They should have the following data: `{cage:"<team>", dx, dy, dz}` The 3 first `dx dy dz` are the size of the cages.
-- 3 `pco_uncage_storage`: one for each team. They should be near the `pco_cage_storage`s, and should have the following data: `{cage:"<team>", dx, dy, dz}`
-- 3 `pco_<team>_cage_arena` that should be placed in the corner of the cage of the team, in the arena.
-- 3 `pco_<team>_spawn` that are the place at which the players from the specified team spawn
-- 3 `pco_spawn_cage_<team>` that are the place at which the players from the specified team respawn when he is capture
-- 1 `spawn_seeker` spawn of the seeker team
-- 1 `spawn_hider` spawn of the hider team
 
 ## Interaction Entities
 
@@ -86,7 +75,7 @@ Each of these is optional (or can be present multiple times), depending on how y
 - Whatever is described in the [Kits module Readme](data/sgp.kits/README.md)
 - Whatever is described in the [Cosmetics module Readme](data/sgp.cosmetics/README.md)
 - Whatever is described in the [Diorama module Readme](data/sgp.diorama/README.md)
-- You should forceload all the chunks in which you placed markers.
+- Whatever is described in the [Major events module Readme](data/sgp.majeurs/README.md)
 
 ## Plugin configuration
 

@@ -1,5 +1,8 @@
 #> sgp.majeurs:uninstall
 
+# Stop the scheduler, pending rounds, and any active event before removing state.
+function sgp.majeurs:scheduler/abort
+
 # ---------- Remove Objectives ----------
 
 scoreboard objectives remove sgp.devenir_roi_rouge
