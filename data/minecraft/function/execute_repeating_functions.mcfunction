@@ -105,17 +105,4 @@ function sgp.cosmetics:tick
 
 
 # ---------- MAJOR EVENTS ----------
-# Protéger le Roi
-execute as @a[scores={sgp.devenir_roi_bleu=1..}] run \
-    function sgp.majeurs:protect/devenir_roi {side:bleu, team:bleue, name:Bleu, color:dark_blue}
-
-execute as @a[scores={sgp.devenir_roi_rouge=1..}] run \
-    function sgp.majeurs:protect/devenir_roi {side:rouge, team:rouge, name:Rouge, color:dark_red}
-
-execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run \
-    function sgp.majeurs:protect/running
-
-
-
-# PCO
-execute as @r[tag=sgp.in_game] if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
+function sgp.majeurs:tick

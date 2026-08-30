@@ -22,6 +22,7 @@ scoreboard objectives add sgp.posy dummy
 scoreboard objectives add sgp.posz dummy
 
 scoreboard objectives add sgp.link_teams dummy
+scoreboard objectives add sgp.teammate_deaths dummy
 
 
 

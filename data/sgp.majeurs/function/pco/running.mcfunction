@@ -9,7 +9,7 @@ function sgp.majeurs:pco/empower
 
 function sgp.majeurs:pco/check_death
 
-execute as @a[tag=sgp.in_game] \
+execute as @a[tag=sgp.major_participant] \
     run function sgp.majeurs:pco/cabane/run_check_inside
 
 # Activer/désactiver le fait de pouvoir cliquer sur les panneaux de libération
@@ -38,24 +38,24 @@ execute as @a[team=sgp.Poule,scores={sgp.liberer_poules=1,sgp.en_cage=1}] \
 
 
 # Si on clique sur un panneau de libération
-execute as @a[scores={sgp.liberer_oies=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_oies=2}] \
     run function sgp.majeurs:pco/cage/uncage {cage:oie, team:Oie, team_color:yellow, catchers:Canard}
 
-execute as @a[scores={sgp.liberer_oies=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_oies=2}] \
     run scoreboard players set @a[tag=sgp.in_game] sgp.liberer_oies 0
 
 
-execute as @a[scores={sgp.liberer_poules=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_poules=2}] \
     run function sgp.majeurs:pco/cage/uncage {cage:poule, team:Poule, team_color:red, catchers:Oie}
 
-execute as @a[scores={sgp.liberer_poules=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_poules=2}] \
     run scoreboard players set @a[tag=sgp.in_game] sgp.liberer_poules 0
 
 
-execute as @a[scores={sgp.liberer_canards=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_canards=2}] \
     run function sgp.majeurs:pco/cage/uncage {cage:canard, team:Canard, team_color:green, catchers:Poule}
 
-execute as @a[scores={sgp.liberer_canards=2}] \
+execute as @a[tag=sgp.major_participant,scores={sgp.liberer_canards=2}] \
     run scoreboard players set @a[tag=sgp.in_game] sgp.liberer_canards 0
 
 

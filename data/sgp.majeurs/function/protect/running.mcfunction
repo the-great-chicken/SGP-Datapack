@@ -12,8 +12,8 @@ execute at @e[type=marker,tag=sgp.marker,name="respawn",limit=1] \
         run tag @s remove sgp.roi_bleu
 
 execute if score #kings_chosen sgp.dummy matches 0 \
-    if entity @a[predicate=sgp.majeurs:protect/roi_bleu_vivant] \
-    if entity @a[predicate=sgp.majeurs:protect/roi_rouge_vivant] \
+    if score #king_bleu_chosen sgp.dummy matches 1 \
+    if score #king_rouge_chosen sgp.dummy matches 1 \
         run scoreboard players set #kings_chosen sgp.dummy 1
 
 execute as @a[tag=sgp.roi_bleu] run function sgp.majeurs:protect/king_effect {team:bleue, color:"[0.0,0.0,1.0]"}

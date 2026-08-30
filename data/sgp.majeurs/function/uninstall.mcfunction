@@ -24,6 +24,7 @@ scoreboard objectives remove sgp.posy
 scoreboard objectives remove sgp.posz
 
 scoreboard objectives remove sgp.link_teams
+scoreboard objectives remove sgp.teammate_deaths
 
 
 

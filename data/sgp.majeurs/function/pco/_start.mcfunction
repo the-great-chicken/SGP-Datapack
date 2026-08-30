@@ -56,4 +56,4 @@ title @a[team=sgp.Canard] title {text:"Canard", color:green, bold:true}
 tellraw @a[team=sgp.Canard] [{text:"Tu es un ", color:white}, {text:"Canard. ", color:green, bold:true}, {text:"Vous devez chasser les ", color:white}, {text:"Oies.", color:yellow, bold:true}]
 
 
-scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
+scoreboard players set @a[tag=sgp.major_participant] sgp.temps_cabane_pco 0
