@@ -2,8 +2,8 @@
 #
 # Route an exiting participant while their event team is still available.
 
-execute if entity @s[team=sgp.rouge] run return run function sgp.majeurs:protect/participant_exit {team:rouge,name:Rouge,name_ennemies:Bleu,color_ennemies:dark_blue}
-execute if entity @s[team=sgp.bleue] run return run function sgp.majeurs:protect/participant_exit {team:bleue,name:Bleu,name_ennemies:Rouge,color_ennemies:dark_red}
+function #sgp.majeurs:events/participant_exit
+execute unless entity @s[tag=sgp.major_participant] run return 1
 
 execute if entity @s[team=sgp.Poule] run return run function sgp.majeurs:pco/participant_exit {team:Poule,name_ennemies:Oies,color_ennemies:yellow}
 execute if entity @s[team=sgp.Canard] run return run function sgp.majeurs:pco/participant_exit {team:Canard,name_ennemies:Poules,color_ennemies:red}

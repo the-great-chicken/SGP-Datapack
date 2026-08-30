@@ -7,5 +7,5 @@ team leave @s
 tag @s remove sgp.major_participant
 tag @s add sgp.major_spectator
 gamemode spectator @s
-function #bs.schedule:schedule {run:"tp @s @e[type=marker,tag=sgp.marker,name='pvp_arena',limit=1]",with:{time:2,unit:"t"}}
+function #bs.schedule:schedule {run:"tp @s @e[tag=sgp.marker,name='pvp_arena',limit=1,type=marker]",with:{id:"major_event",time:2,unit:"t"}}
 move @s #Morts

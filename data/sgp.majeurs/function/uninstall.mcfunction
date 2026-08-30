@@ -2,11 +2,9 @@
 
 # Stop the scheduler, pending rounds, and any active event before removing state.
 function sgp.majeurs:scheduler/abort
+function #sgp.majeurs:events/uninstall
 
 # ---------- Remove Objectives ----------
-
-scoreboard objectives remove sgp.devenir_roi_rouge
-scoreboard objectives remove sgp.devenir_roi_bleu
 
 scoreboard objectives remove sgp.liberer_oies
 scoreboard objectives remove sgp.liberer_poules
@@ -30,8 +28,6 @@ scoreboard objectives remove sgp.teammate_deaths
 
 # ---------- Remove Teams ----------
 
-team remove sgp.rouge
-team remove sgp.bleue
 team remove sgp.Oie
 team remove sgp.Poule
 team remove sgp.Canard

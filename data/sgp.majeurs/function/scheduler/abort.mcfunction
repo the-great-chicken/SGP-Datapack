@@ -6,6 +6,6 @@ function sgp.majeurs:scheduler/stop
 # common/rounds increments before comparing; leave one point of headroom.
 scoreboard players set #rounds sgp.dummy 2147483646
 
+function #sgp.majeurs:events/abort
 execute if entity @a[predicate=sgp.majeurs:pco/ongoing] run function sgp.majeurs:pco/_stop
-execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run function sgp.majeurs:protect/_stop
 execute if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] run function sgp.majeurs:hide_and_seek/_stop

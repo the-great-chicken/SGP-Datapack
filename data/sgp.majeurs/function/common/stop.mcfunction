@@ -14,13 +14,13 @@ team leave @a[tag=sgp.major_spectator]
 
 # Unlike a selector, `team empty` also removes offline scoreboard members.
 # Clear every team that can keep an event_in_progress predicate true.
-team empty sgp.rouge
-team empty sgp.bleue
 team empty sgp.Oie
 team empty sgp.Poule
 team empty sgp.Canard
 team empty sgp.hider
 team empty sgp.seeker
+
+function #bs.schedule:cancel_all {with:{id:"major_event"}}
 
 function sgp.lore:npcs/enable
 experience set @a[tag=sgp.major_participant] 0 levels

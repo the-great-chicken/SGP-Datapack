@@ -3,9 +3,6 @@
 
 # ---------- Create Objectives ----------
 
-scoreboard objectives add sgp.devenir_roi_rouge trigger
-scoreboard objectives add sgp.devenir_roi_bleu trigger
-
 scoreboard objectives add sgp.liberer_oies trigger
 scoreboard objectives add sgp.liberer_poules trigger
 scoreboard objectives add sgp.liberer_canards trigger
@@ -44,7 +41,7 @@ execute unless score #protect_hour sgp.dummy matches 0..23 \
 execute unless score #protect_minute sgp.dummy matches 0..59 \
     run scoreboard players set #protect_minute sgp.dummy 30
 
-# Events rounds count 
+# Events rounds count
 execute unless score #pco_max_rounds sgp.dummy matches 1.. \
     run scoreboard players set #pco_max_rounds sgp.dummy 3
 execute unless score #hide_and_seek_max_rounds sgp.dummy matches 1.. \
@@ -59,17 +56,7 @@ function sgp.majeurs:config/recompute_announcement {event:"protect"}
 
 
 # ---------- Create Teams ----------
-team add sgp.rouge
-team modify sgp.rouge collisionRule never
-team modify sgp.rouge color dark_red
-team modify sgp.rouge friendlyFire false
-team modify sgp.rouge nametagVisibility hideForOtherTeams
-
-team add sgp.bleue
-team modify sgp.bleue collisionRule never
-team modify sgp.bleue color dark_blue
-team modify sgp.bleue friendlyFire false
-team modify sgp.bleue nametagVisibility hideForOtherTeams
+function #sgp.majeurs:events/initialization
 
 team add sgp.Oie
 team modify sgp.Oie collisionRule never

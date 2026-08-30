@@ -71,7 +71,7 @@ Keep every marker and its associated structures in forceloaded chunks.
 | `pvp_arena`            | 1        | Final-death destination and arena sound origin |
 | `respawn`              | 1 shared | Detects player deaths (shared with normal respawns, don't duplicate it!) |
 
-The two role-selection markers must be in distinct locations. At event start, the datapack rewrites the block at local position `^ ^1 ^1` from each marker as the clickable "Devenir le Roi" sign. Position and rotate each marker so that this block is the intended sign.
+The two role-selection markers must be in distinct locations. Position and rotate each marker so the existing wall sign is at local position `^ ^1 ^1`; the datapack rewrites that sign and creates its interaction entity automatically.
 
 ### Poule Canard Oie setup
 
