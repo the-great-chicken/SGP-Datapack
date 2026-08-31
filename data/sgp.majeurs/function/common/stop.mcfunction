@@ -12,11 +12,6 @@ glow remove @a[tag=sgp.major_spectator]
 team leave @a[tag=sgp.major_participant]
 team leave @a[tag=sgp.major_spectator]
 
-# Unlike a selector, `team empty` also removes offline scoreboard members.
-# Clear every team that can keep an event_in_progress predicate true.
-team empty sgp.Oie
-team empty sgp.Poule
-team empty sgp.Canard
 team empty sgp.hider
 team empty sgp.seeker
 

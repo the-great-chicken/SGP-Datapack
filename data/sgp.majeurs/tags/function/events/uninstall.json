@@ -1,5 +1,6 @@
 {
   "values": [
-    "sgp.majeurs:protect/uninstall"
+    "sgp.majeurs:protect/uninstall",
+    "sgp.majeurs:pco/uninstall"
   ]
 }

@@ -1,8 +1,7 @@
 #> sgp.majeurs:pco/kit
 # `{color, color_material, color_hex}`
 #
-# Equip a player with a custom kit for the "Poule-Canard-Oie" game, including
-# a feather weapon, bread for healing, and colored leather armor.
+# Equip one participant with the PCO weapon, food, and colored armor.
 
 function sgp.kits:clear
 
@@ -14,7 +13,7 @@ $item replace entity @s hotbar.0 with feather[ \
         {text:"⚔ Tranchant I", color:dark_red, italic:false}, \
         {text:"4 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={unbreaking:0, sharpness:1} \
+    enchantments={unbreaking:0, sharpness:1}, \
     tooltip_display={hidden_components:["attribute_modifiers","enchantments"]} \
     ]
 
@@ -24,10 +23,7 @@ $item replace entity @s armor.head with leather_helmet[ \
     custom_name={text:"Tête", color:"$(color)", italic:false, bold:true}, \
     enchantments={binding_curse:1}, \
     dyed_color=$(color_hex), \
-    trim={ \
-        pattern:"sentry", \
-        material:"$(color_material)" \
-        }, \
+    trim={pattern:"sentry", material:"$(color_material)"}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
@@ -36,10 +32,7 @@ $item replace entity @s armor.chest with leather_chestplate[ \
     custom_name={text:"Corps", color:"$(color)", italic:false, bold:true}, \
     enchantments={binding_curse:1}, \
     dyed_color=$(color_hex), \
-    trim={ \
-        pattern:"snout", \
-        material:"quartz" \
-        }, \
+    trim={pattern:"snout", material:"quartz"}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
@@ -48,10 +41,7 @@ $item replace entity @s armor.legs with leather_leggings[ \
     custom_name={text:"Cuisses", color:"$(color)", italic:false, bold:true}, \
     enchantments={binding_curse:1}, \
     dyed_color=$(color_hex), \
-    trim={ \
-        pattern:"coast", \
-        material:"quartz" \
-        }, \
+    trim={pattern:"coast", material:"quartz"}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]
@@ -60,10 +50,7 @@ $item replace entity @s armor.feet with leather_boots[ \
     custom_name={text:"Pattes", color:"$(color)", italic:false, bold:true}, \
     enchantments={binding_curse:1}, \
     dyed_color=$(color_hex), \
-    trim={ \
-        pattern:"wild", \
-        material:gold, \
-        }, \
+    trim={pattern:"wild", material:gold}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim","dyed_color"]} \
     ]

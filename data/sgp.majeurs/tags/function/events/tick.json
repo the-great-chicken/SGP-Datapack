@@ -1,5 +1,6 @@
 {
   "values": [
-    "sgp.majeurs:protect/running"
+    "sgp.majeurs:protect/running",
+    "sgp.majeurs:pco/running"
   ]
 }

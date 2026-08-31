@@ -26,8 +26,7 @@ Each fonction should be documented in the following way:
 #> namespace:path/to/your/function 
 # `{macro_param_a: optional_type, macro_param_b}`
 # 
-# Description of your function stating its purpose, inputs, and outputs. Wrap 
-# at 80 characters.
+# Description of your function stating its purpose, inputs, and outputs.
 #
 # You can have multiple lines!
 ```

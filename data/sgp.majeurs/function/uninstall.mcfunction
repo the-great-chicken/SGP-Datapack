@@ -6,31 +6,8 @@ function #sgp.majeurs:events/uninstall
 
 # ---------- Remove Objectives ----------
 
-scoreboard objectives remove sgp.liberer_oies
-scoreboard objectives remove sgp.liberer_poules
-scoreboard objectives remove sgp.liberer_canards
-
-scoreboard objectives remove sgp.temps_cabane_pco
-scoreboard objectives remove sgp.temps_cabane_pco_secondes
-scoreboard objectives remove sgp.en_cage
-
-scoreboard objectives remove sgp.posx1
-scoreboard objectives remove sgp.posy1
-scoreboard objectives remove sgp.posz1
-scoreboard objectives remove sgp.posx
-scoreboard objectives remove sgp.posy
-scoreboard objectives remove sgp.posz
-
 scoreboard objectives remove sgp.link_teams
 scoreboard objectives remove sgp.teammate_deaths
-
-
-
-# ---------- Remove Teams ----------
-
-team remove sgp.Oie
-team remove sgp.Poule
-team remove sgp.Canard
 
 
 

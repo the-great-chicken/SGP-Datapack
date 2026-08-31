@@ -1,6 +1,8 @@
 #> sgp.misc:uninstall
-# 
+#
 # Remove the datapack's data
+
+execute as @a run function sgp.misc:actionbar/clear
 
 function sgp.cosmetics:uninstall
 function sgp.diorama:uninstall
@@ -23,7 +25,6 @@ scoreboard objectives remove sgp.ab.location
 scoreboard objectives remove sgp.ab.location_width
 scoreboard objectives remove sgp.ab.location_inside
 scoreboard objectives remove sgp.ab.hide_hider
-scoreboard objectives remove sgp.ab.pco_cabane
 scoreboard objectives remove sgp.ab.ability_cooldown
 scoreboard objectives remove sgp.ab.ability_cooldown_max
 scoreboard objectives remove sgp.ab.ability_cooldown_last_fill
@@ -42,7 +43,7 @@ scoreboard objectives remove sgp.synthetic_death
 scoreboard objectives remove sgp.streak_reset
 scoreboard objectives remove sgp.morts
 
-scoreboard objectives remove sgp.kd 
+scoreboard objectives remove sgp.kd
 scoreboard objectives remove sgp.plus_grande_streak
 scoreboard objectives remove sgp.kills
 
@@ -56,7 +57,6 @@ scoreboard objectives remove sgp.timer
 # ---------- Misc ----------
 
 bossbar remove sgp:lgp
-execute as @a run function sgp.misc:actionbar/clear
 
 
 

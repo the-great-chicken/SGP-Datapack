@@ -3,21 +3,6 @@
 
 # ---------- Create Objectives ----------
 
-scoreboard objectives add sgp.liberer_oies trigger
-scoreboard objectives add sgp.liberer_poules trigger
-scoreboard objectives add sgp.liberer_canards trigger
-
-scoreboard objectives add sgp.temps_cabane_pco dummy
-scoreboard objectives add sgp.temps_cabane_pco_secondes dummy
-scoreboard objectives add sgp.en_cage dummy
-
-scoreboard objectives add sgp.posx1 dummy
-scoreboard objectives add sgp.posy1 dummy
-scoreboard objectives add sgp.posz1 dummy
-scoreboard objectives add sgp.posx dummy
-scoreboard objectives add sgp.posy dummy
-scoreboard objectives add sgp.posz dummy
-
 scoreboard objectives add sgp.link_teams dummy
 scoreboard objectives add sgp.teammate_deaths dummy
 
@@ -55,23 +40,8 @@ function sgp.majeurs:config/recompute_announcement {event:"protect"}
 
 
 
-# ---------- Create Teams ----------
+# ---------- Initialize Event-owned State ----------
 function #sgp.majeurs:events/initialization
-
-team add sgp.Oie
-team modify sgp.Oie collisionRule never
-team modify sgp.Oie color yellow
-team modify sgp.Oie friendlyFire false
-
-team add sgp.Poule
-team modify sgp.Poule collisionRule never
-team modify sgp.Poule color red
-team modify sgp.Poule friendlyFire false
-
-team add sgp.Canard
-team modify sgp.Canard collisionRule never
-team modify sgp.Canard color green
-team modify sgp.Canard friendlyFire false
 
 team add sgp.hider "Volaille"
 team modify sgp.hider collisionRule pushOtherTeams

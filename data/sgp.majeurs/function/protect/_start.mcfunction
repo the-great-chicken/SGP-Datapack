@@ -2,7 +2,7 @@
 #
 # Start a Protéger le Roi round in its king-selection phase.
 
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
 
 tellraw @a[tag=sgp.in_game] [{text:"Lancement de l'événement Protéger le Roi...",color:gold,bold:true}]
 function sgp.majeurs:common/start

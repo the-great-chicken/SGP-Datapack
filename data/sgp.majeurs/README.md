@@ -75,24 +75,35 @@ The two role-selection markers must be in distinct locations. Position and rotat
 
 ### Poule Canard Oie setup
 
-PCO supports multiple arena/location sets. Every marker belonging to the selected set must also have the `sgp.enabled` tag, and inactive sets must not have that tag. Enable exactly one complete set before starting PCO.
+PCO supports multiple location sets on the main map. Sets rotate automatically between rounds in the order chosen.
+
+Every marker in a new set must be summoned with the tag `sgp.pco.location_marker` and the same short unique ID in `data.pco_location`, for example `Tags:["sgp.marker","sgp.pco.location_marker"],data:{pco_location:"village"}`. After summoning all 15 markers, run the following command to record its position in the rotation.
+
+```mcfunction
+/function sgp.majeurs:pco/locations/add {id:"village"}
+```
 
 In the table below, `<team>` is lowercase `poule`, `canard`, or `oie`, while `<Team>` is title-case `Poule`, `Canard`, or `Oie`.
 
-| Marker                  | Count per enabled set | Required data / purpose                                                     |
-|-------------------------|----------------------:|-----------------------------------------------------------------------------|
-| `pco_cage_storage`      | 3                     | One source cage per team with `{cage:"<team>",dx:<int>,dy:<int>,dz:<int>}`  |
-| `pco_uncage_storage`    | 3                     | One uncaged source per team with the same `cage`, `dx`, `dy`, and `dz` data |
-| `pco_<team>_cage_arena` | 3                     | Destination corner for the arena cage                                       |
-| `pco_<team>_spawn`      | 3                     | Initial team spawns                                                         |
-| `pco_spawn_cage_<Team>` | 3                     | Respawn points for captured players; capitalization is significant          |
-| `respawn`               | 1 shared              | Detects player deaths                                                       |
+| Marker                  | Count per set | Required data / purpose                                                     |
+|-------------------------|--------------:|-----------------------------------------------------------------------------|
+| `pco_cage_storage`      | 3             | One source cage per team with `{cage:"<team>",dx:<int>,dy:<int>,dz:<int>}`  |
+| `pco_uncage_storage`    | 3             | One uncaged source per team with the same `cage`, `dx`, `dy`, and `dz` data |
+| `pco_<team>_cage_arena` | 3             | Destination corner for the cage                                             |
+| `pco_<team>_spawn`      | 3             | Initial team spawns                                                         |
+| `pco_spawn_cage_<Team>` | 3             | Respawn points for captured players; capitalization is significant          |
+| `respawn`               | 1 shared      | Detects player deaths and **is not part of a location set**                 |
 
-The cloned cages must contain the clickable signs that run the corresponding trigger:
+The cloned cages must contain clickable signs using the corresponding trigger: `sgp.liberer_poules`, `sgp.liberer_canards`, or `sgp.liberer_oies`.
 
-- `sgp.liberer_poules`
-- `sgp.liberer_canards`
-- `sgp.liberer_oies`
+Use these controls to inspect the rotation, choose the first set of the next automatic rotation, pin one set for every round, or resume rotation:
+
+```mcfunction
+/function sgp.majeurs:pco/locations/show
+/function sgp.majeurs:pco/locations/first {id:"village"}
+/function sgp.majeurs:pco/locations/pin {id:"village"}
+/function sgp.majeurs:pco/locations/unpin
+```
 
 ### Cache-cache setup
 
