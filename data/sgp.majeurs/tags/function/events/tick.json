@@ -1,6 +1,7 @@
 {
   "values": [
     "sgp.majeurs:protect/running",
-    "sgp.majeurs:pco/running"
+    "sgp.majeurs:pco/running",
+    "sgp.majeurs:hide_and_seek/running"
   ]
 }

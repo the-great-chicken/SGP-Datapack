@@ -1,6 +1,7 @@
 {
   "values": [
     "sgp.majeurs:protect/initialization",
-    "sgp.majeurs:pco/initialization"
+    "sgp.majeurs:pco/initialization",
+    "sgp.majeurs:hide_and_seek/initialization"
   ]
 }

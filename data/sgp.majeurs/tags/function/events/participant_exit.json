@@ -1,6 +1,7 @@
 {
   "values": [
     "sgp.majeurs:protect/participant_exit_hook",
-    "sgp.majeurs:pco/participant_exit_hook"
+    "sgp.majeurs:pco/participant_exit_hook",
+    "sgp.majeurs:hide_and_seek/participant_exit"
   ]
 }

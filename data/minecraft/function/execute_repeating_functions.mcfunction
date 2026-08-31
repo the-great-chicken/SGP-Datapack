@@ -36,8 +36,7 @@ execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
 
 # Must be in this order
 execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] \
-    if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
-        run function sgp.majeurs:hide_and_seek/delay_death
+    run function #sgp.majeurs:events/death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
     run function sgp.diorama:tick/main

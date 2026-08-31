@@ -1,5 +1,6 @@
 {
   "values": [
-    "sgp.majeurs:pco/cabane/actionbar_tick"
+    "sgp.majeurs:pco/cabane/actionbar_tick",
+    "sgp.majeurs:hide_and_seek/actionbar/tick"
   ]
 }

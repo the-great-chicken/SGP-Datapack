@@ -25,10 +25,6 @@ execute if score @s sgp.ab.reward_3 matches 1.. run scoreboard players add @s sg
 execute if score @s sgp.ab.location matches 1.. run scoreboard players operation @s sgp.ab.normal_width += @s sgp.ab.location_width
 execute if score @s sgp.ab.location matches 1.. run scoreboard players operation @s sgp.ab.normal_count += @s sgp.ab.location
 
-execute if score @s sgp.ab.hide_hider matches 1.. run scoreboard players operation @s sgp.ab.normal_width += #sgp.ab.width.hide_hider sgp.dummy
-execute if score @s sgp.ab.hide_hider matches 1.. if score #hider sgp.timer matches 10.. run scoreboard players operation @s sgp.ab.normal_width += 12 sgp.dummy
-execute if score @s sgp.ab.hide_hider matches 1.. run scoreboard players add @s sgp.ab.normal_count 1
-
 function #sgp.misc:actionbar/build_width_extensions
 
 # Water trident still uses the normal Actionbar Mixer line for now.

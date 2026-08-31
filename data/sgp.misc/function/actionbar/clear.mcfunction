@@ -5,7 +5,6 @@
 function dah.actbar_mixer:remove/this {id:"sgp:reward_1"}
 function dah.actbar_mixer:remove/this {id:"sgp:reward_2"}
 function dah.actbar_mixer:remove/this {id:"sgp:reward_3"}
-function dah.actbar_mixer:remove/this {id:"sgp:hide_hider"}
 
 scoreboard players reset @s sgp.ab.reward_1
 scoreboard players reset @s sgp.ab.reward_1_width
@@ -20,7 +19,6 @@ tag @s remove sgp.ab.location_clear_target
 
 scoreboard players reset @s sgp.ab.location
 scoreboard players reset @s sgp.ab.location_width
-scoreboard players reset @s sgp.ab.hide_hider
 function sgp.misc:actionbar/water_trident_cooldown_clear
 scoreboard players reset @s sgp.ab.normal_width
 scoreboard players reset @s sgp.ab.normal_count

@@ -5,7 +5,7 @@
 team join sgp.seeker @s
 tag @s add sgp.seeker
 tag @s add sgp.seeker_waiting
-tellraw @s [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Tu dois éliminer toutes les Volailles", color:red}]
+tellraw @s [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Tu dois éliminer toutes les Volailles", color:red}]
 attribute @s attack_damage modifier add sgp:hide_and_seek.seeker 1000 add_value
 function sgp.misc:stun/apply {duration:infinite}
 function sgp.majeurs:hide_and_seek/role/equipment/seeker

@@ -1,5 +1,6 @@
 {
   "values": [
-    "sgp.majeurs:pco/cabane/actionbar_clear"
+    "sgp.majeurs:pco/cabane/actionbar_clear",
+    "sgp.majeurs:hide_and_seek/actionbar/clear"
   ]
 }

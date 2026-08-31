@@ -12,9 +12,6 @@ glow remove @a[tag=sgp.major_spectator]
 team leave @a[tag=sgp.major_participant]
 team leave @a[tag=sgp.major_spectator]
 
-team empty sgp.hider
-team empty sgp.seeker
-
 function #bs.schedule:cancel_all {with:{id:"major_event"}}
 
 function sgp.lore:npcs/enable

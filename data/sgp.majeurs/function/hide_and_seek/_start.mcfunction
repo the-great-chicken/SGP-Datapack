@@ -2,6 +2,8 @@
 #
 # Start the hide and seek game.
 
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
+
 function sgp.majeurs:common/start
 
 # Select the seekers

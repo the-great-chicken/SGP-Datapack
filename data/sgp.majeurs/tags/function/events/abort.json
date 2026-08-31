@@ -1,6 +1,7 @@
 {
   "values": [
     "sgp.majeurs:protect/_stop",
-    "sgp.majeurs:pco/_stop"
+    "sgp.majeurs:pco/_stop",
+    "sgp.majeurs:hide_and_seek/_stop"
   ]
 }

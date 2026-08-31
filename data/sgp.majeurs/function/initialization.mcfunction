@@ -1,13 +1,6 @@
 #> sgp.majeurs:initialization
 
 
-# ---------- Create Objectives ----------
-
-scoreboard objectives add sgp.link_teams dummy
-scoreboard objectives add sgp.teammate_deaths dummy
-
-
-
 # ---------- Initialize Values ----------
 
 # Events start time
@@ -42,17 +35,6 @@ function sgp.majeurs:config/recompute_announcement {event:"protect"}
 
 # ---------- Initialize Event-owned State ----------
 function #sgp.majeurs:events/initialization
-
-team add sgp.hider "Volaille"
-team modify sgp.hider collisionRule pushOtherTeams
-team modify sgp.hider nametagVisibility never
-team modify sgp.hider color yellow
-
-team add sgp.seeker "Chasseurs"
-team modify sgp.seeker friendlyFire false
-team modify sgp.seeker color dark_green
-
-
 
 # ---------- Initialize Storages ----------
 

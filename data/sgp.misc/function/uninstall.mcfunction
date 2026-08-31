@@ -24,7 +24,6 @@ scoreboard objectives remove sgp.ab.reward_3_width
 scoreboard objectives remove sgp.ab.location
 scoreboard objectives remove sgp.ab.location_width
 scoreboard objectives remove sgp.ab.location_inside
-scoreboard objectives remove sgp.ab.hide_hider
 scoreboard objectives remove sgp.ab.ability_cooldown
 scoreboard objectives remove sgp.ab.ability_cooldown_max
 scoreboard objectives remove sgp.ab.ability_cooldown_last_fill

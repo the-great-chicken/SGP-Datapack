@@ -3,6 +3,7 @@
 # do the stuff when a player dies
 
 execute unless entity @s[tag=sgp.major_participant] run return 0
+function sgp.majeurs:hide_and_seek/actionbar/clear
 
 # If a seeker dies, keep their current release state.
 execute as @s[team=sgp.seeker] run function sgp.majeurs:hide_and_seek/role/equipment/seeker
