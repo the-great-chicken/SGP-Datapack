@@ -13,19 +13,39 @@ execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
 scoreboard players add #20_ticks sgp.dummy 1
 execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
+# Allocate stable player ids before any subsystem records player-linked state.
+execute as @a unless score @s sgp.id matches 1.. run function sgp.misc:player_id/allocate
+
+# Expire actionbar segments before systems refresh the parts they still need.
+function sgp.misc:actionbar/tick
+
+# Keep every statistics collector synchronized with the shared major-event
+# predicate before processing this tick's deaths or ability results.
+function sgp.kits:stats_collector/tick
+
+# Capture and batch genuine deaths before special modes consume sgp.just_died.
+execute as @a[scores={sgp.just_died=1..}] run \
+    function sgp.kits:stats_collector/on_real_death
+execute as @a[tag=sgp.elo_touched] run \
+    function sgp.kits:stats_collector/elo/apply_pending
+
+# Consume delayed synthetic cleanup before a later event's death handler can.
+execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
+    function sgp.misc:on_death
+
 
 # Must be in this order
 execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
     function sgp.majeurs:pigeons/running
 
-execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] \
+execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] \
     if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
         run function sgp.majeurs:hide_and_seek/delay_death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
-    run function sgp.misc:diorama/tick
+    run function sgp.diorama:tick/main
 
-execute as @a[tag=sgp.in_game,scores={sgp.death_reset_tags=1..}] run \
+execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] run \
     function sgp.misc:on_death
 
 
@@ -35,23 +55,13 @@ function sgp.kits:kills_give/check
 
 function sgp.kits:kit_tags/management
 
-# This is the most frequent we can do luckperms prefixes update
-execute if score #52_ticks_clock sgp.dummy matches 0 run \
-    function sgp.kits:kit_tags/prefixes_check
-
-scoreboard players add #52_ticks_clock sgp.dummy 1
-
-execute if score #52_ticks_clock sgp.dummy matches 52.. run \
-    scoreboard players set #52_ticks_clock sgp.dummy 0
-
 function sgp.kits:abilities/tick
 
 
 
 # ---------- MISCELLANEOUS ----------
-function sgp.misc:kill_counter
 
-function sgp.misc:128_ticks_functions
+function minecraft:128_ticks_functions
 
 execute as @a[tag=sgp.in_game,tag=!sgp.climbing,predicate=sgp.world:is_climbing] \
     run function sgp.world:climbing_boost/add
@@ -69,6 +79,9 @@ function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
 
+scoreboard players set @a sgp.ab.location 0
+scoreboard players set @a sgp.ab.location_width 0
+
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
 
 function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
@@ -77,15 +90,15 @@ execute as @a[tag=sgp.in_game,scores={sgp.reward=1..}] \
     run function sgp.mineurs:bounty/reward/trigger
 
 execute as @a[scores={sgp.anim_timer=1..}] at @s \
-    run function sgp.misc:diorama/scale_down_anim/step
+    run function sgp.diorama:scale_down_anim/step
 
 # @r so that it doesn't cost so much: we don't need the enchants to be up-to-date all the time
 # That means some players may get the piercing weapon only after a few seconds if unlucky
 execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
-    as @r[tag=sgp.in_game] run function sgp.misc:add_piercing_weapon
+    as @r[tag=sgp.in_game] run function sgp.diorama:left_click/add_piercing_weapon
 
 execute if score #mannequins_swing_enabled sgp.dummy matches 1 \
-    as @a[tag=sgp.in_game] run function sgp.misc:remove_piercing_weapon
+    as @a[tag=sgp.in_game] run function sgp.diorama:left_click/remove_piercing_weapon
 
 
 

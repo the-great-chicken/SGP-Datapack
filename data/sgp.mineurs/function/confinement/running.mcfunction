@@ -3,7 +3,7 @@
 scoreboard players add #confines_secondes sgp.timer 1
 
 # Démarrage de l'event après x secondes
-execute if score #confines_secondes sgp.timer matches 15 run tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"CONFINEMENT ! ", bold:true}, {text:"L'événement a commencé et se terminera dans 2 minutes 15s !", color:white}]
+execute if score #confines_secondes sgp.timer matches 15 run tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"CONFINEMENT ! ", bold:true}, {text:"L'événement a commencé et se terminera dans 2 minutes 15s !", color:white}]
 execute if score #confines_secondes sgp.timer matches 15 run schedule clear sgp.mineurs:confinement/add_time_clock
 
 # Fait des dégâts quand les joueurs ne sont pas en Intérieur

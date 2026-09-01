@@ -7,4 +7,4 @@ execute if entity @s[tag=sgp.fire_explosion_bigger] run return run function sgp.
 
 particle flame ~ ~ ~ 1.5 1.5 1.5 0 10
 particle lava ~ ~ ~ 1.5 1.5 1.5 0 1
-execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,distance=..3.5] run damage @s 2 on_fire
+function sgp.kits:abilities/tnt/damage_fire {radius:3.5}

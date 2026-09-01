@@ -17,7 +17,7 @@ scoreboard players operation #seconds sgp.dummy += 1 sgp.dummy
 # scoreboard players operation #tenths sgp.dummy /= 2 sgp.dummy
 
 tellraw @s [ \
-  {storage:"sgp.text", nbt:"prefix", interpret:true}, \
+  {storage:"sgp:text", nbt:"prefix", interpret:true}, \
   {"text": "En cooldown pendant ", "color": "red"}, \
   {"score": {"name": "#seconds", "objective": "sgp.dummy"}, "color": "gold", "bold": true}, \
   {"text": " secondes", "color": "red"} \

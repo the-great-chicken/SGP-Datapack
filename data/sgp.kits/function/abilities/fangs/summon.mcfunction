@@ -16,10 +16,10 @@ execute if block ~ ~-1 ~ #bs.hitbox:can_pass_through \
 
 # Make it look better on bottom slabs
 execute if block ~ ~-0.1 ~ #bs.block:has_state[type=bottom] \
-        run summon evoker_fangs ~ ~-0.5 ~
+        positioned ~ ~-0.5 ~ run function sgp.kits:abilities/fangs/summon_owned
 
 execute unless block ~ ~-0.1 ~ #bs.block:has_state[type=bottom] \
-        run summon evoker_fangs
+        run function sgp.kits:abilities/fangs/summon_owned
 
 scoreboard players remove #nbr_fangs sgp.dummy 1
 execute positioned ^ ^ ^1.6 run function sgp.kits:abilities/fangs/summon

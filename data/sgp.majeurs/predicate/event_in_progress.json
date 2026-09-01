@@ -16,6 +16,10 @@
     {
       "condition": "minecraft:reference",
       "name": "sgp.majeurs:hide_and_seek/ongoing"
+    },
+    {
+      "condition": "minecraft:reference",
+      "name": "sgp.majeurs:pigeons/ongoing"
     }
   ]
 }

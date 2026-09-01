@@ -2,6 +2,14 @@
 
 scoreboard players operation #current_smoke sgp.id = @s sgp.id
 
+scoreboard players set #smoke_affected sgp.dummy 0
+execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,distance=..5] \
+    unless score @s sgp.id = #current_smoke sgp.id \
+        run scoreboard players add #smoke_affected sgp.dummy 1
+
+execute as @a if score @s sgp.id = #current_smoke sgp.id \
+    run function sgp.kits:abilities/smoke_grenade/record_result
+
 execute as @a unless score @s sgp.id = #current_smoke sgp.id run particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 2000 normal @s
 particle minecraft:dust{scale:4f,color:[0.3f, 0.3f, 0.3f]} ~ ~1 ~ 2 2 2 0 250 force
 kill @s

@@ -7,8 +7,6 @@
 
 advancement revoke @s only sgp.cosmetics:death
 
-execute as @a[tag=sgp.in_game] store result score @s sgp.killer on attacker run data get entity @s UUID.[1]
-
 execute at @s run summon minecraft:marker ~ ~ ~ {CustomName:"death_reaper", Tags:["sgp.marker"]}
 
 execute on attacker run function sgp.cosmetics:kill_effects/summon

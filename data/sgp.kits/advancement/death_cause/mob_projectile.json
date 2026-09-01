@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "track": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "id": "sgp.kits:death_cause/mob_projectile",
+                "expected": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "sgp.kits:stats_collector/death_cause/mob_projectile"
+  }
+}

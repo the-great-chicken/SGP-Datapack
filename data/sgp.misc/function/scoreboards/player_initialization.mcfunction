@@ -14,11 +14,11 @@ scoreboard players add @s sgp.cooldown_ability 0
 scoreboard players add @s sgp.cooldown_water_trident 0
 scoreboard players add @s sgp.pecking_timer 0
 
-execute unless score @s sgp.uuid matches 0.. unless score @s sgp.uuid matches ..0 store result score @s sgp.uuid run data get entity @s UUID[1]
+function sgp.kits:stats_collector/elo/ensure_player
 
 tag @s add sgp.initialize_lieux
 scoreboard players add @a[tag=sgp.initialize_lieux,limit=1] sgp.lieu_count 0
-execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.misc:scoreboards/player_initialization_lieux with entity @s data
+execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/player_initialization with entity @s data
 tag @s remove sgp.initialize_lieux
 
 scoreboard players add @s sgp.teleporteur 0

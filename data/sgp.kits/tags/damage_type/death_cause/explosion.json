@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:explosion",
+    "minecraft:player_explosion",
+    "minecraft:bad_respawn_point"
+  ]
+}

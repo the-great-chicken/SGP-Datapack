@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:magic",
+    "minecraft:wither",
+    "minecraft:dragon_breath"
+  ]
+}

@@ -4,8 +4,7 @@
 # Equip a player with a custom kit for the "Poule-Canard-Oie" game, including
 # a feather weapon, bread for healing, and colored leather armor.
 
-clear @s
-effect clear @s
+function sgp.kits:clear
 
 # ---------- WEAPON ----------
 $item replace entity @s hotbar.0 with feather[ \
