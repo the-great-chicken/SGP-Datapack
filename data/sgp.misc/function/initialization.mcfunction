@@ -35,9 +35,10 @@ scoreboard objectives add sgp.synthetic_death dummy
 scoreboard objectives add sgp.streak_reset deathCount
 scoreboard objectives add sgp.morts deathCount
 
-scoreboard objectives add sgp.kd dummy {bold:true,color:dark_green,text:"Kills/Deaths (en %)"}
-scoreboard objectives add sgp.plus_grande_streak dummy {bold:true,color:dark_aqua,text:"Plus grande streak"}
-scoreboard objectives add sgp.kills playerKillCount {bold:true,color:dark_red,text:"Kills au PvP"}
+scoreboard objectives add sgp.kd dummy {text:"Kills/Deaths (en %)", color:dark_green, bold:true}
+scoreboard objectives add sgp.plus_grande_streak dummy {text:"Plus grande streak", color:dark_aqua, bold:true}
+scoreboard objectives add sgp.kills playerKillCount {text:"Kills", color:dark_red, bold:true}
+scoreboard objectives add sgp.elo_display dummy {text:"Elo (30+ fights)", color:gold, bold:true}
 
 scoreboard objectives add sgp.streak_en_cours minecraft.custom:minecraft.player_kills
 

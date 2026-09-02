@@ -20,6 +20,7 @@ scoreboard players reset * sgp.streak_reset
 scoreboard players reset * sgp.morts
 scoreboard players reset * sgp.kd
 scoreboard players reset * sgp.plus_grande_streak
+scoreboard players reset * sgp.elo_display
 scoreboard players reset * sgp.kills
 scoreboard players reset * sgp.streak_en_cours
 scoreboard players reset * sgp.kills_give_1
@@ -59,9 +60,13 @@ scoreboard players reset #damage_received_delta sgp.dummy
 scoreboard players reset #damage_received_total sgp.dummy
 scoreboard players reset #death_position_total sgp.dummy
 scoreboard players reset #death_time sgp.dummy
+scoreboard players reset #elo_average_encounters sgp.dummy
 scoreboard players reset #elo_delta sgp.dummy
 scoreboard players reset #elo_difference sgp.dummy
 scoreboard players reset #elo_difference_negative sgp.dummy
+scoreboard players reset #elo_display_available sgp.dummy
+scoreboard players reset #elo_favorite_delta sgp.dummy
+scoreboard players reset #elo_k_factor sgp.dummy
 scoreboard players reset #elo_lookup_index sgp.dummy
 scoreboard players reset #last_pick_time sgp.dummy
 scoreboard players reset #nbr_kills_by_cause sgp.dummy

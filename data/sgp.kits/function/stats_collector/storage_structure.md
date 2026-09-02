@@ -20,6 +20,12 @@
   },
   elo_metadata: {
     initial_rating: double,
+    k_factor: double,
+    k_factor_schedule: [{
+      minimum_average_encounters: int,
+      k_factor: double
+    }],
+    rating_divisor: double,
     metrics: {
       rating: {
         name: string,
@@ -115,6 +121,18 @@ during a statistics pause are not collected.
 
 `schema_version` is a strict format identifier. Collectors and the extractor
 stop on any other version; no in-pack migration or compatibility path exists.
+
+Elo starts at 1000 and uses the logistic expectation with a 1050-point rating
+divisor. The winner gains `K * (1 - expected_score)` and the loser gives up the
+same amount. One shared K is selected from the floor of the two participants'
+average pre-fight encounter count: 80 below 25, 50 from 25 through 74, 30 from
+75 through 149, and 18 from 150 onward. Runtime ratings are stored in
+centi-Elo. `k_factor` records the initial/maximum value for tabular report
+compatibility; `k_factor_schedule` is the authoritative schedule.
+
+`sgp.elo_display` is deliberately absent for a player until their 30th rated
+encounter. It is rounded down to a whole-Elo sidebar value whenever that
+player's rating is next applied after an encounter.
 
 All accumulated statistics pause while
 `sgp.majeurs:event_in_progress` is true. Online kit-pick intervals close at the

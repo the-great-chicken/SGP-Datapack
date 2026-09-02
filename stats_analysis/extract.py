@@ -800,6 +800,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
     Columns:
         initial_rating
+        k_factor
+        rating_divisor
         metric_id
         metric_name
         metric_description
@@ -808,8 +810,25 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         display_scale
     """
     metrics = get_elo_metric_definitions(elo_metadata)
-    if "initial_rating" not in elo_metadata:
-        raise ValueError("Missing Elo metadata field: initial_rating")
+    configuration_fields = (
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+    )
+    missing_configuration_fields = [
+        field for field in configuration_fields if field not in elo_metadata
+    ]
+    if missing_configuration_fields:
+        raise ValueError(
+            "Missing Elo metadata field(s): "
+            + ", ".join(missing_configuration_fields)
+        )
+
+    configuration = {
+        "initial_rating": float(elo_metadata["initial_rating"]),
+        "k_factor": float(elo_metadata["k_factor"]),
+        "rating_divisor": float(elo_metadata["rating_divisor"]),
+    }
 
     rows: list[dict[str, Any]] = []
 
@@ -839,7 +858,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
         rows.append(
             {
-                "initial_rating": float(elo_metadata["initial_rating"]),
+                **configuration,
                 "metric_id": str(metric_id),
                 "metric_name": str(metric_data["name"]),
                 "metric_description": str(metric_data["description"]),
@@ -857,6 +876,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
             rows,
             columns=[
                 "initial_rating",
+                "k_factor",
+                "rating_divisor",
                 "metric_id",
                 "metric_name",
                 "metric_description",
