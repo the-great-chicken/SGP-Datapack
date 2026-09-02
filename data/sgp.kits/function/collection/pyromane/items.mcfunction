@@ -8,11 +8,10 @@ item replace entity @s hotbar.0 with blaze_rod[ \
     lore=[ \
         {text:"--------------", color:"#C0C0C0", italic:false}, \
         {text:"⚔ Tranchant IX", color:dark_red, italic:false}, \
-        {text:"🔥 Flamme I", color:"#FF8C00", italic:false}, \
         {text:"⬱ Recul I", color:"#6F4E37", italic:false}, \
         {text:"6 dégâts", color:blue, italic:false} \
         ], \
-    enchantments={knockback:1, fire_aspect:1}, \
+    enchantments={knockback:1}, \
     attribute_modifiers=[ \
         {type:"attack_damage", slot:"mainhand", id:"sgp.damage", amount:5.0, operation:"add_value"} \
         ], \
@@ -96,7 +95,7 @@ item replace entity @s armor.feet with iron_boots[ \
 
 
 # ---------- MISC ----------
-item replace entity @s hotbar.7 with arrow 8
+item replace entity @s hotbar.7 with arrow 4
 
 item replace entity @s weapon.offhand with flint_and_steel[ \
     custom_name={text:"Briquet", color:gold, italic:false, bold:true}, \
@@ -114,7 +113,7 @@ item replace entity @s hotbar.4 with strider_spawn_egg[ \
         }}} \
         }, \
     custom_name={text:"Explosifs", color:red, italic:false, bold:true} \
-    ] 8
+    ] 4
 
 
 # ---------- FOOD ----------

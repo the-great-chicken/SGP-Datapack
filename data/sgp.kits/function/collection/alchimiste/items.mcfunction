@@ -24,9 +24,10 @@ item replace entity @s armor.head with chainmail_helmet[ \
     custom_name={text:"Casque de Mailles", color:light_purple, italic:false, bold:true}, \
     lore=[ \
         {text:"------------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false} \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"⚗ Protection I", color:light_purple, italic:false} \
         ], \
-    enchantments={protection:1}, \
+    enchantments={protection:1, "sgp.kits:alchemical_protection":1}, \
     trim={ \
         pattern:"tide", \
         material:"amethyst" \
@@ -39,10 +40,11 @@ item replace entity @s armor.chest with chainmail_chestplate[ \
     custom_name={text:"Cotte de Mailles", color:light_purple, italic:false, bold:true}, \
     lore=[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
-        {text:"➹ Protection II", color:dark_blue, italic:false} \
+        {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
+        {text:"➹ Protection II", color:dark_blue, italic:false}, \
+        {text:"⚗ Protection I", color:light_purple, italic:false} \
         ], \
-    enchantments={protection:1, projectile_protection:2}, \
+    enchantments={protection:2, projectile_protection:2, "sgp.kits:alchemical_protection":1}, \
     trim={ \
         pattern:"sentry", \
         material:"amethyst" \
@@ -55,9 +57,10 @@ item replace entity @s armor.legs with chainmail_leggings[ \
     custom_name={text:"Jambières de Mailles", color:light_purple, italic:false, bold:true}, \
     lore=[ \
         {text:"--------------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false} \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"⚗ Protection I", color:light_purple, italic:false} \
         ], \
-    enchantments={protection:1}, \
+    enchantments={protection:1, "sgp.kits:alchemical_protection":1}, \
     trim={ \
         pattern:"sentry", \
         material:"amethyst" \
@@ -71,8 +74,9 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
     lore=[ \
         {text:"-----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"⚗ Protection I", color:light_purple, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -81,9 +85,9 @@ item replace entity @s armor.feet with minecraft:chainmail_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={protection:1, "sgp.kits:depth_strider_boosted":1}, \
+    enchantments={protection:1, "sgp.kits:depth_strider_boosted":1, "sgp.kits:alchemical_protection":1}, \
     trim={ \
         pattern:'sentry', \
         material:'amethyst', \

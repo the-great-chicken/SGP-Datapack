@@ -37,7 +37,7 @@ item replace entity @s armor.head with player_head[ \
     profile="__pif__", \
     enchantments={binding_curse:1}, \
     unbreakable={}, \
-    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments"]} \
+    tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","profile"]} \
     ]
 
 item replace entity @s armor.chest with elytra[ \
@@ -55,10 +55,10 @@ item replace entity @s armor.legs with chainmail_leggings[ \
 item replace entity @s armor.feet with chainmail_boots[ \
     custom_name={text:"Pattes", color:dark_gray, italic:false, bold:true}, \
     lore=[ \
-        {text:"----------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
+        {text:"-----------------", color:"#C0C0C0", italic:false}, \
+        {text:"🛡 Protection III", color:dark_aqua, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -67,9 +67,9 @@ item replace entity @s armor.feet with chainmail_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={protection:2, "sgp.kits:depth_strider_boosted":1}, \
+    enchantments={protection:3, "sgp.kits:depth_strider_boosted":1}, \
     unbreakable={}, \
     tooltip_display={hidden_components:["unbreakable","attribute_modifiers","enchantments","trim"]} \
     ]
@@ -83,7 +83,7 @@ item replace entity @s inventory.8 with arrow[ \
 item replace entity @s hotbar.2 with firework_rocket[ \
     custom_name={text:"Boost", color:dark_gray, italic:false, bold:true}, \
     tooltip_display= {hidden_components:["fireworks"]}, \
-    ] 5
+    ] 3
 
 
 # ---------- FOOD ----------

@@ -30,9 +30,10 @@ item replace entity @s armor.head with leather_helmet[ \
     custom_name={text:"Chapeau en Cuir", color:aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
-        {text:"᠅ Épines II", color:dark_green, italic:false} \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={thorns:2}, \
+    enchantments={protection:1, thorns:1}, \
     trim={ \
         pattern:"raiser", \
         material:"emerald" \
@@ -45,9 +46,10 @@ item replace entity @s armor.chest with leather_chestplate[ \
     custom_name={text:"Tunique en Cuir", color:aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"----------------", color:"#C0C0C0", italic:false}, \
-        {text:"᠅ Épines II", color:dark_green, italic:false} \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={thorns:2}, \
+    enchantments={protection:1, thorns:1}, \
     trim={ \
         pattern:"raiser", \
         material:"emerald" \
@@ -60,9 +62,10 @@ item replace entity @s armor.legs with leather_leggings[ \
     custom_name={text:"Pantalon en Cuir", color:aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"-----------------", color:"#C0C0C0", italic:false}, \
-        {text:"᠅ Épines II", color:dark_green, italic:false} \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={thorns:2}, \
+    enchantments={protection:1, thorns:1}, \
     trim={ \
         pattern:"raiser", \
         material:"emerald" \
@@ -75,9 +78,10 @@ item replace entity @s armor.feet with diamond_boots[ \
     custom_name={text:"Bottes d'Exploration", color:aqua, italic:false, bold:true}, \
     lore=[ \
         {text:"---------------------", color:"#C0C0C0", italic:false}, \
-        {text:"᠅ Épines II", color:dark_green, italic:false}, \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"᠅ Épines I", color:dark_green, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -86,9 +90,9 @@ item replace entity @s armor.feet with diamond_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={thorns:2, "sgp.kits:depth_strider_boosted":1}, \
+    enchantments={protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \
         pattern:"raiser", \
         material:"emerald" \
