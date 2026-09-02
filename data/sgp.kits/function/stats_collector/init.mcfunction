@@ -43,7 +43,7 @@ execute unless data storage sgp.kits:stats death_positions \
 data modify storage sgp.kits:stats death_position_metadata set value {stored_unit:"block_tenths",display_unit:"blocks",display_scale:0.1d,quantization:"floor",position_reference:"feet"}
 
 # Stable final-damage-mechanism ids shared by kills and damage_received.
-data modify storage sgp.kits:stats damage_cause_names set value {"0":"unknown","1":"player_attack","2":"mace_smash","3":"spear","4":"arrow","5":"trident","6":"mob_projectile","7":"fireball","8":"wind_charge","9":"sonic_boom","10":"fireworks","11":"fire_tick","12":"fire_contact","13":"lava","14":"explosion","15":"indirect_magic","16":"magic_effect","17":"thorns","18":"fall","19":"impact","20":"drowning","21":"suffocation","22":"starvation","23":"freezing","24":"lightning","25":"void_border","26":"environmental_contact","27":"mob_attack","28":"generic","100":"giant_sweep","101":"pecking","102":"ray"}
+data modify storage sgp.kits:stats damage_cause_names set value {"0":"unknown", "1":"player_attack", "2":"mace_smash", "3":"spear", "4":"arrow", "5":"trident", "6":"mob_projectile", "7":"fireball", "8":"wind_charge", "9":"sonic_boom", "10":"fireworks", "11":"fire_tick", "12":"fire_contact", "13":"lava", "14":"explosion", "15":"indirect_magic", "16":"magic_effect", "17":"thorns", "18":"fall", "19":"impact", "20":"drowning", "21":"suffocation", "22":"starvation", "23":"freezing", "24":"lightning", "25":"void_border", "26":"environmental_contact", "27":"mob_attack", "28":"generic", "100":"giant_sweep", "101":"pecking", "102":"ray"}
 
 function sgp.kits:stats_collector/init_ability_metadata
 function sgp.kits:stats_collector/elo/init

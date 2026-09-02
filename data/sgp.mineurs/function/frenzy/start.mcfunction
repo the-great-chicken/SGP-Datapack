@@ -23,5 +23,5 @@ scoreboard players operation @a[tag=sgp.in_game] sgp.cooldown_ability /= 2 sgp.d
 title @a[tag=sgp.in_game] title {text:"FRENZY!",color:dark_aqua,bold:true}
 tellraw @a[tag=sgp.in_game] [{storage:"sgp.text",nbt:"prefix",interpret:true},{text:"FRENZY! ",color:dark_aqua,bold:true},{text:"Le Grand Poulet a divisé les temps de recharge des compétences par 2 !",color:aqua}]
 
-function sgp.misc:timer_experience {duration:150}
+function sgp.mineurs:common/timed_event/start {event:"frenzy", duration:150}
 schedule function sgp.mineurs:frenzy/end 150s

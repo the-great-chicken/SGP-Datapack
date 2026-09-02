@@ -11,4 +11,4 @@ data remove storage sgp:data mineurs.haste.active
 data remove storage sgp:data mineurs.haste.walker
 
 schedule clear sgp.mineurs:frenzy/end
-scoreboard players set #second sgp.timer 0
+function sgp.mineurs:common/timed_event/stop {event:"frenzy"}

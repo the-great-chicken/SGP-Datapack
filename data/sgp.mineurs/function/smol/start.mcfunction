@@ -6,5 +6,5 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true},
 execute as @a[tag=sgp.in_game] \
     run attribute @s minecraft:scale modifier add sgp.smol -0.5 add_multiplied_total
 
-function sgp.misc:timer_experience {duration:150}
+function sgp.mineurs:common/timed_event/start {event:"smol", duration:150}
 schedule function sgp.mineurs:smol/end 150s

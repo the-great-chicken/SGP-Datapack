@@ -6,7 +6,7 @@ execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
     run scoreboard objectives setdisplay sidebar sgp.plus_grande_streak
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
-    as @e[type=minecraft:arrow,tag=!smithed.entity,tag=!sgp.smoke_grenade] \
+    as @e[tag=!smithed.entity,tag=!sgp.smoke_grenade,type=arrow] \
         run function #bs.health:time_to_live {with:{time:120,unit:"t"}}
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 1 \

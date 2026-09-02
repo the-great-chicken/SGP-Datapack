@@ -11,4 +11,4 @@ execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
 function sgp.mineurs:confinement/add_time_clock
 
 schedule function sgp.mineurs:confinement/running 1s
-function sgp.misc:timer_experience {duration:150}
+function sgp.mineurs:common/timed_event/start {event:"confinement", duration:150}

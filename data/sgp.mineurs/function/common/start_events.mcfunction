@@ -7,7 +7,7 @@ scoreboard players operation #last_nbr_events sgp.dummy = #random_nbr_events sgp
 
 # Randomly choose the number of events for this round
 data modify storage bs:in random.weighted_choice.options set value [1, 2, 3]
-data modify storage bs:in random.weighted_choice.weights set value [6, 3, 1]
+data modify storage bs:in random.weighted_choice.weights set value [11, 3, 1]
 function #bs.random:weighted_choice
 execute store result score #random_nbr_events sgp.dummy run data get storage bs:out random.weighted_choice
 
