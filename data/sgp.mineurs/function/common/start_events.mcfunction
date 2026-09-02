@@ -20,16 +20,11 @@ execute if score #random_nbr_events sgp.dummy matches 3.. \
 
 # Override the title if multiple events at the same time
 execute if score #random_nbr_events sgp.dummy matches 2.. \
-    run title @a[tag=sgp.in_game] subtitle [{score:{name:"#random_nbr_events", objective:"sgp.dummy"}},{text:" events mineurs à la fois !!", color:white, bold:true}]
-execute if score #random_nbr_events sgp.dummy matches 2.. \
-    run title @a[tag=sgp.in_game] title {text:"COMBO!", color:white, bold:true} 
+    run function sgp.mineurs:common/announce_combo
 
 execute at @e[tag=sgp.marker,name="pvp_arena",limit=1,type=marker] \
     run playsound minecraft:entity.experience_orb.pickup master @a[tag=sgp.in_game] ~ ~ ~ 100
 
-# Choose the time before the next round, and reset the timer
-execute store result score #random_event_timer_roll sgp.dummy run random value 3..5
-scoreboard players operation #random_event_timer_roll_minus_1 sgp.dummy = #random_event_timer_roll sgp.dummy
-scoreboard players operation #random_event_timer_roll_minus_1 sgp.dummy -= 1 sgp.dummy
+function sgp.mineurs:common/roll_time_event
 
-scoreboard players set #events_mineurs_minutes sgp.timer 0
+scoreboard players set #events_mineurs_seconds sgp.timer 0
