@@ -32,10 +32,6 @@ execute if score @s sgp.ab.hide_hider matches 1.. run scoreboard players add @s 
 execute if score @s sgp.ab.pco_cabane matches 1.. run scoreboard players operation @s sgp.ab.normal_width += #sgp.ab.width.pco_cabane sgp.dummy
 execute if score @s sgp.ab.pco_cabane matches 1.. run scoreboard players add @s sgp.ab.normal_count 1
 
-# Water trident still uses the normal Actionbar Mixer line for now.
-execute if score @s sgp.ab.water_trident_cooldown matches 1 run scoreboard players operation @s sgp.ab.normal_width += #sgp.ab.width.water_trident sgp.dummy
-execute if score @s sgp.ab.water_trident_cooldown matches 1 run scoreboard players add @s sgp.ab.normal_count 1
-
 execute if score @s sgp.ab.normal_count matches 1.. run scoreboard players remove @s sgp.ab.normal_count 1
 scoreboard players operation @s sgp.ab.normal_count *= #sgp.ab.width.separator sgp.dummy
 scoreboard players operation @s sgp.ab.normal_width += @s sgp.ab.normal_count

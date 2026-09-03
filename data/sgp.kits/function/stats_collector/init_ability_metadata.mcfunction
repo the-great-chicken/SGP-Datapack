@@ -27,7 +27,7 @@ data modify storage sgp.kits:stats ability_metadata."9".assassinate set value {m
 
 data modify storage sgp.kits:stats ability_metadata."10".bats set value {metrics:{uses:{name:"Uses",description:"Bats activations.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"uses"}},successful_uses:{name:"Successful uses",description:"Uses during which at least one grenade bat exploded.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"successful_uses"}},bat_explosion_damage:{name:"Bat explosion damage",description:"Positive health damage dealt to other players by bat explosions; derived from damage_received rather than stored twice.",stored_unit:"damage_tenths",display_unit:"hearts",display_scale:0.1d,source:{type:"damage_received",source_kit_id:10,cause_ids:[14],exclude_self:true}}}}
 
-data modify storage sgp.kits:stats ability_metadata."11".splash set value {metrics:{uses:{name:"Uses",description:"Splash activations.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"uses"}}}}
+data modify storage sgp.kits:stats ability_metadata."11".water_trident set value {metrics:{uses:{name:"Uses",description:"Water Trident activations that successfully placed temporary water.",stored_unit:"count",display_unit:"uses",display_scale:1.0d,source:{type:"ability_field",field:"uses"}}}}
 
 # Keep timing metadata synchronized with the actual configurable ability values.
 data modify storage sgp.kits:stats ability_metadata."0".pecking.cooldown set from storage sgp:data kits.ability_cooldowns.pecking.cooldown
@@ -46,4 +46,4 @@ data modify storage sgp.kits:stats ability_metadata."9".assassinate.cooldown set
 data modify storage sgp.kits:stats ability_metadata."9".assassinate.duration set from storage sgp:data kits.ability_cooldowns.assassinate.duration
 data modify storage sgp.kits:stats ability_metadata."10".bats.cooldown set from storage sgp:data kits.ability_cooldowns.bats.cooldown
 data modify storage sgp.kits:stats ability_metadata."10".bats.duration set from storage sgp:data kits.ability_cooldowns.bats.duration
-data modify storage sgp.kits:stats ability_metadata."11".splash.cooldown set from storage sgp:data kits.ability_cooldowns.splash.cooldown
+data modify storage sgp.kits:stats ability_metadata."11".water_trident.cooldown set from storage sgp:data kits.ability_cooldowns.water_trident.cooldown

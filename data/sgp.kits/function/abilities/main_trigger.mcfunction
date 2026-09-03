@@ -9,8 +9,8 @@ kill @n[tag=sgp.dropped,distance=..4,type=item]
 execute unless entity @s[gamemode=creative] run tag @s add sgp.to_remove_perm
 execute unless entity @s[gamemode=creative] run schedule function sgp.kits:abilities/remove_perms 1t append
 
-execute if score @s sgp.cooldown_ability matches 1.. run function sgp.kits:abilities/display_cooldown {type:cooldown_ability, every:1}
+execute unless entity @s[tag=sgp.poseidon] if score @s sgp.cooldown_ability matches 1.. run function sgp.kits:abilities/display_cooldown {type:cooldown_ability, every:1}
 
-execute if score @s sgp.cooldown_ability matches ..0 run function sgp.kits:abilities/route_ability
+execute unless entity @s[tag=sgp.poseidon] if score @s sgp.cooldown_ability matches ..0 run function sgp.kits:abilities/route_ability
 
 scoreboard players reset @s sgp.drop_any

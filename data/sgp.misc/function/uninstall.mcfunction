@@ -32,10 +32,6 @@ scoreboard objectives remove sgp.ab.hud_ability
 scoreboard objectives remove sgp.ab.hud_ability_fill
 scoreboard objectives remove sgp.ab.normal_width
 scoreboard objectives remove sgp.ab.normal_count
-scoreboard objectives remove sgp.ab.water_trident_cooldown
-scoreboard objectives remove sgp.ab.water_trident_cooldown_max
-scoreboard objectives remove sgp.ab.water_trident_cooldown_last_fill
-scoreboard objectives remove sgp.ab.water_trident_cooldown_last_current
 
 scoreboard objectives remove sgp.just_died
 scoreboard objectives remove sgp.synthetic_death

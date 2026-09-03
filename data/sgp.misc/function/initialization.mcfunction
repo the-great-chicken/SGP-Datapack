@@ -25,10 +25,6 @@ scoreboard objectives add sgp.ab.hud_ability dummy
 scoreboard objectives add sgp.ab.hud_ability_fill dummy
 scoreboard objectives add sgp.ab.normal_width dummy
 scoreboard objectives add sgp.ab.normal_count dummy
-scoreboard objectives add sgp.ab.water_trident_cooldown dummy
-scoreboard objectives add sgp.ab.water_trident_cooldown_max dummy
-scoreboard objectives add sgp.ab.water_trident_cooldown_last_fill dummy
-scoreboard objectives add sgp.ab.water_trident_cooldown_last_current dummy
 
 scoreboard objectives add sgp.just_died deathCount
 scoreboard objectives add sgp.synthetic_death dummy
@@ -124,7 +120,6 @@ scoreboard players set #sgp.ab.bar_length sgp.dummy 20
 scoreboard players set #sgp.ab.space_limit sgp.dummy 768
 
 scoreboard players set #sgp.ab.width.separator sgp.dummy 26
-scoreboard players set #sgp.ab.width.water_trident sgp.dummy 120
 scoreboard players set #sgp.ab.width.hide_hider sgp.dummy 344
 scoreboard players set #sgp.ab.width.pco_cabane sgp.dummy 410
 

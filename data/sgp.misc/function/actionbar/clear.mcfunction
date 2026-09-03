@@ -23,7 +23,6 @@ scoreboard players reset @s sgp.ab.location
 scoreboard players reset @s sgp.ab.location_width
 scoreboard players reset @s sgp.ab.hide_hider
 scoreboard players reset @s sgp.ab.pco_cabane
-function sgp.misc:actionbar/water_trident_cooldown_clear
 scoreboard players reset @s sgp.ab.normal_width
 scoreboard players reset @s sgp.ab.normal_count
 

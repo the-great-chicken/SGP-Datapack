@@ -16,7 +16,6 @@ scoreboard objectives remove sgp.peaceful_found
 scoreboard objectives remove sgp.cooldown_ability
 scoreboard objectives remove sgp.duration_ability
 scoreboard objectives remove sgp.trigger_repulsion
-scoreboard objectives remove sgp.cooldown_water_trident
 scoreboard objectives remove sgp.drop_any
 execute as @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ air
 scoreboard objectives remove sgp.current_attack_damage
