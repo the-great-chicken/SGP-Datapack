@@ -1,4 +1,4 @@
-#> sgp.diorama:tick/main_small
+#> sgp.diorama:tick/tick_small
 # `{id: int}`
 
 function sgp.diorama:tick/check_for_spawned_player with entity @s data
