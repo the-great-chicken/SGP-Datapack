@@ -3,3 +3,4 @@
 *.parquet
 *.dat
 __pycache__
+/stats_analysis/edition-*.json
