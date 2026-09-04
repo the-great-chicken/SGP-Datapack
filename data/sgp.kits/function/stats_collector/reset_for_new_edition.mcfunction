@@ -7,8 +7,9 @@
 
 # Clear every accumulated statistics branch and select the current schema.
 # Metadata is overwritten from its authoritative definitions during init.
-data modify storage sgp.kits:stats schema_version set value 6
+data modify storage sgp.kits:stats schema_version set value 7
 data modify storage sgp.kits:stats kits_dict set value {}
+data modify storage sgp.kits:stats players set value {}
 data modify storage sgp.kits:stats death_positions set value {}
 data modify storage sgp.kits:stats elo_ratings set value {}
 data remove storage sgp:macro stats

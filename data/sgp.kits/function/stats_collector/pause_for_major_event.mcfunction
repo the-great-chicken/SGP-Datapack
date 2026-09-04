@@ -3,7 +3,7 @@
 # Close active normal-play lives at the event boundary, then discard every
 # in-flight collector-only value so results cannot cross the boundary.
 
-execute unless score #stats_schema_version sgp.dummy matches 6 run return 0
+execute unless score #stats_schema_version sgp.dummy matches 7 run return 0
 
 execute store result score #stats_pause_started sgp.dummy run time query gametime
 scoreboard players set #stats_paused sgp.dummy 1

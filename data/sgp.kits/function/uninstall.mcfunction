@@ -53,6 +53,8 @@ scoreboard objectives remove sgp.elo_pending
 scoreboard objectives remove sgp.elo_encounters
 scoreboard objectives remove sgp.elo_deaths
 scoreboard objectives remove sgp.elo_deaths_seen
+scoreboard objectives remove sgp.leave_game
+scoreboard objectives remove sgp.leave_seen
 
 
 
@@ -71,6 +73,7 @@ data remove storage sgp.kits:stats death_positions
 data remove storage sgp.kits:stats ability_metadata
 data remove storage sgp.kits:stats elo_metadata
 data remove storage sgp.kits:stats elo_ratings
+data remove storage sgp.kits:stats players
 data remove storage sgp.kits:stats schema_version
 data remove storage sgp.kits:runtime elo_delta_lookup
 

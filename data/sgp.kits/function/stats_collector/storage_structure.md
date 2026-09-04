@@ -2,7 +2,13 @@
 
 ```snbt
 {
-  schema_version: 6,
+  schema_version: 7,
+  players: {
+    "<player_id:int>": {
+      uuid: int_array,
+      nickname: string
+    }
+  },
   damage_cause_names: {
     "<cause_id:int>": string
   },
@@ -112,27 +118,10 @@
 
 `-1` for a player or kit id means no player/no kit.
 
-`death_positions` aggregates genuine in-game deaths by dimension and feet
-position. Each coordinate is stored as `floor(Pos * 10)`, and the three scaled
-integers form the fixed `"x,y,z"` compound key. For example,
-`"-124,645,987": 3` means three deaths in the bucket beginning at
-`(-12.4, 64.5, 98.7)` blocks. Synthetic cleanup, out-of-game deaths, and deaths
-during a statistics pause are not collected.
+`players` maps each persistent `sgp.id` to the player's Minecraft UUID and the
+nickname observed during their latest connection in this edition. The UUID is
+stored in Minecraft's native four-integer array representation.
 
-`schema_version` is a strict format identifier. Collectors and the extractor
-stop on any other version; no in-pack migration or compatibility path exists.
-
-Elo starts at 1000 and uses the logistic expectation with a 1050-point rating
-divisor. The winner gains `K * (1 - expected_score)` and the loser gives up the
-same amount. One shared K is selected from the floor of the two participants'
-average pre-fight encounter count: 80 below 25, 50 from 25 through 74, 30 from
-75 through 149, and 18 from 150 onward. Runtime ratings are stored in
-centi-Elo. `k_factor` records the initial/maximum value for tabular report
-compatibility; `k_factor_schedule` is the authoritative schedule.
-
-`sgp.elo_display` is deliberately absent for a player until their 30th rated
-encounter. It is rounded down to a whole-Elo sidebar value whenever that
-player's rating is next applied after an encounter.
 
 All accumulated statistics pause while
 `sgp.majeurs:event_in_progress` is true. Online kit-pick intervals close at the

@@ -16,16 +16,17 @@ execute unless data storage sgp.kits:stats schema_version \
 
 # Only an actually fresh storage receives the current version automatically.
 execute unless data storage sgp.kits:stats schema_version \
-    run data modify storage sgp.kits:stats schema_version set value 6
+    run data modify storage sgp.kits:stats schema_version set value 7
 
 execute store result score #stats_schema_version sgp.dummy \
     run data get storage sgp.kits:stats schema_version
 
-execute unless score #stats_schema_version sgp.dummy matches 6 \
+execute unless score #stats_schema_version sgp.dummy matches 7 \
     run tellraw @a [{text:"[SGP stats] ",color:red,bold:true},{text:"Unsupported statistics schema. Collection is disabled; reset it before a new edition with /function sgp.kits:stats_collector/reset_for_new_edition.",color:red}]
-execute unless score #stats_schema_version sgp.dummy matches 6 run return 0
+execute unless score #stats_schema_version sgp.dummy matches 7 run return 0
 
 scoreboard players add #stats_paused_ticks sgp.dummy 0
+scoreboard players reset * sgp.leave_seen
 
 # Preserve an in-progress pause across reloads. When upgrading during an event,
 # only the still-observable portion can be excluded from legacy intervals.
@@ -35,6 +36,9 @@ execute if score #stats_paused sgp.dummy matches 1 \
 
 execute unless data storage sgp.kits:stats kits_dict \
     run data modify storage sgp.kits:stats kits_dict set value {}
+
+execute unless data storage sgp.kits:stats players \
+    run data modify storage sgp.kits:stats players set value {}
 
 execute unless data storage sgp.kits:stats death_positions \
     run data modify storage sgp.kits:stats death_positions set value {}

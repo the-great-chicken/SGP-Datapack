@@ -57,6 +57,8 @@ scoreboard objectives add sgp.elo_pending dummy
 scoreboard objectives add sgp.elo_encounters dummy
 scoreboard objectives add sgp.elo_deaths deathCount
 scoreboard objectives add sgp.elo_deaths_seen dummy
+scoreboard objectives add sgp.leave_game minecraft.custom:minecraft.leave_game
+scoreboard objectives add sgp.leave_seen dummy
 
 
 
