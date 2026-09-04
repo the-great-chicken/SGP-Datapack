@@ -48,12 +48,17 @@ scoreboard objectives remove sgp.streak_en_cours
 scoreboard objectives remove sgp.dummy
 scoreboard objectives remove sgp.timer
 
+scoreboard objectives remove sgp.tab_dirty
+scoreboard objectives remove sgp.tab_candidate
+scoreboard objectives remove sgp.tab_applied
+
 
 
 # ---------- Misc ----------
 
 bossbar remove sgp:lgp
 execute as @a run function sgp.misc:actionbar/clear
+execute as @e[tag=sgp.marker,name="lieu",type=marker] run function sgp.misc:tab/location/remove_applied_tag_for_all with entity @s data
 
 
 

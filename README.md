@@ -105,8 +105,8 @@ plugins-to-convert:
 - LuckPerms:
   - luckperms (user) <user>[api:players] <args>[api:greedy_string]
   - luckperms (creategroup|createtrack) <name>[brigadier:string]
-  - luckperms (group) <name>[brigadier:string] (meta) (setprefix) <priority>[brigadier:integer] <prefix>[api:greedy_string]
-  - luckperms (track) (kit) (append) <name>[brigadier:string]
+  - luckperms (group) <name>[brigadier:string] (meta) (setprefix|setsuffix) <priority>[brigadier:integer] <meta>[api:greedy_string]
+  - luckperms (track) <track>[brigadier:string] (append) <name>[brigadier:string]
 - TGCPlugin:
   - statuswarp <name>[brigadier:string] (enabled|disabled)
 - DiscordSRV-SGP-extension:
@@ -128,6 +128,27 @@ other-commands-to-convert:
 skip-sender-proxy:
 - LuckPerms
 ```
+
+We recommend adding these filters to Luckperms' notifications:
+```yml
+log-notify-filtered-descriptions:
+  - "meta setprefix 0 .*"
+  - "meta setsuffix 0 .*"
+  - "parent settrack kit .*"
+  - "parent settrack sgp-location .*"
+  - "parent cleartrack sgp-location"
+```
+
+Also, the workaround of using essential's `playerlist` command to update prefixes in the tab menu will spam the console, so you can use the ConsoleSpamFixReborn plugin with the following configuration:
+```yml
+Messages-To-Hide-Filter:
+  contains:
+  regex:
+    - '^default \:.*$'
+    - '^CONSOLE issued server command\: /playerlist $'
+    - '^Il y a [1-9]* joueurs en ligne sur [1-9]* au total\.$'
+```
+
 
 # Uninstallation
 

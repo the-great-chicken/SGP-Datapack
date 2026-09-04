@@ -67,18 +67,6 @@ team modify sgp.Illusion collisionRule never
 
 
 
-# ---------- Misc ----------
-
-function sgp.kits:kit_tags/init_luckperms
-
-
-
-# ---------- Start Schedules ----------
-
-function sgp.kits:kit_tags/prefixes_check
-
-
-
 # ---------- Initialize Storages ----------
 
 execute unless data storage sgp:data kits.ability_cooldowns run data merge storage sgp:data {kits:{ability_cooldowns:{assassinate:{cooldown:400s,duration:100s}, bats:{cooldown:400s,duration:100s}, bigger:{cooldown:400s,duration:100s}, cleave:{cooldown:300s}, fangs:{cooldown:260s}, illusions:{cooldown:400s,duration:140s}, pecking:{cooldown:400s}, rays:{cooldown:400s,duration:100s}, repulsion:{cooldown:400s}, smoke_grenade:{cooldown:400s}, tnt:{cooldown:400s}, water_trident:{cooldown:160s}}}}

@@ -62,12 +62,6 @@ team remove sgp.Illusion
 
 
 
-# ---------- Clear Schedules ----------
-
-schedule clear sgp.kits:kit_tags/prefixes_check
-
-
-
 # ---------- Remove Storages ----------
 
 data remove storage sgp.kits:stats kits_dict
