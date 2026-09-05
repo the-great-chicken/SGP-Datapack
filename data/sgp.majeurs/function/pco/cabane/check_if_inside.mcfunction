@@ -1,13 +1,8 @@
 #> sgp.majeurs:pco/cabane/check_if_inside
-# 
-# Check if the player is inside the cabane, giving them the appropriate effect
-# depending on their time left in sgp.temps_cabane_pco
+#
+# Spend refuge time when the player is inside; otherwise recharge it.
 
-# If they are inside
-execute if entity @s[distance=..15] \
-    at @s if block ~ ~-1 ~ green_concrete \
-        run function sgp.majeurs:pco/cabane/if_inside
-
-# If they are not inside: add time
-execute at @s unless block ~ ~-1 ~ green_concrete \
-    run scoreboard players add @s sgp.temps_cabane_pco 1
+execute if entity @s[distance=..15] at @s \
+    if block ~ ~-1 ~ green_concrete \
+        run return run function sgp.majeurs:pco/cabane/if_inside
+scoreboard players add @s sgp.temps_cabane_pco 1

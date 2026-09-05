@@ -1,5 +1,5 @@
 #> sgp.misc:uninstall
-# 
+#
 # Remove the datapack's data
 
 function sgp.cosmetics:uninstall
@@ -22,8 +22,6 @@ scoreboard objectives remove sgp.ab.reward_3_width
 scoreboard objectives remove sgp.ab.location
 scoreboard objectives remove sgp.ab.location_width
 scoreboard objectives remove sgp.ab.location_inside
-scoreboard objectives remove sgp.ab.hide_hider
-scoreboard objectives remove sgp.ab.pco_cabane
 scoreboard objectives remove sgp.ab.ability_cooldown
 scoreboard objectives remove sgp.ab.ability_cooldown_max
 scoreboard objectives remove sgp.ab.ability_cooldown_last_fill
@@ -38,7 +36,7 @@ scoreboard objectives remove sgp.synthetic_death
 scoreboard objectives remove sgp.streak_reset
 scoreboard objectives remove sgp.morts
 
-scoreboard objectives remove sgp.kd 
+scoreboard objectives remove sgp.kd
 scoreboard objectives remove sgp.plus_grande_streak
 scoreboard objectives remove sgp.kills
 scoreboard objectives remove sgp.elo_display
@@ -57,6 +55,7 @@ scoreboard objectives remove sgp.tab_applied
 # ---------- Misc ----------
 
 bossbar remove sgp:lgp
+
 execute as @a run function sgp.misc:actionbar/clear
 execute as @e[tag=sgp.marker,name="lieu",type=marker] run function sgp.misc:tab/location/remove_applied_tag_for_all with entity @s data
 

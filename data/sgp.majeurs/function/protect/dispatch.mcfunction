@@ -1,11 +1,12 @@
 #> sgp.majeurs:protect/dispatch
 #
-# Dispatch the players evenly between the two teams, by calling itself until
-# no players are left without a team
+# Split the round participants between the two teams and move them to their selection rooms.
 
-function sgp.misc:selected_player/main {div:2, tag:sgp.select ,sign:'/', add:0}
+function sgp.misc:selected_player/main {div:2,tag:sgp.protect.blue_team,sign:"/",add:0}
 
-tp @a[tag=sgp.in_game,tag=sgp.select] @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1]
-tp @a[tag=sgp.in_game,tag=!sgp.select] @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1]
+team join sgp.bleue @a[tag=sgp.major_participant,tag=sgp.protect.blue_team]
+team join sgp.rouge @a[tag=sgp.major_participant,tag=!sgp.protect.blue_team]
+tp @a[team=sgp.bleue] @e[tag=sgp.marker,name="devenir_roi_bleu",limit=1,type=marker]
+tp @a[team=sgp.rouge] @e[tag=sgp.marker,name="devenir_roi_rouge",limit=1,type=marker]
 
-tag @a[tag=sgp.select] remove sgp.select
+tag @a remove sgp.protect.blue_team

@@ -35,12 +35,8 @@ execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
 
 
 # Must be in this order
-execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
-    function sgp.majeurs:pigeons/running
-
 execute as @a[tag=sgp.in_game,scores={sgp.just_died=1..}] \
-    if entity @a[predicate=sgp.majeurs:hide_and_seek/ongoing] \
-        run function sgp.majeurs:hide_and_seek/delay_death
+    run function #sgp.majeurs:events/death
 
 execute if score #diorama_enabled sgp.dummy matches 1 \
     run function sgp.diorama:tick/main
@@ -110,35 +106,4 @@ function sgp.cosmetics:tick
 
 
 # ---------- MAJOR EVENTS ----------
-# Protéger le Roi
-execute as @a[scores={sgp.devenir_roi_bleu=1..}] run \
-    function sgp.majeurs:protect/devenir_roi {side:bleu, team:bleue, name:Bleu, color:dark_blue}
-
-execute as @a[scores={sgp.devenir_roi_rouge=1..}] run \
-    function sgp.majeurs:protect/devenir_roi {side:rouge, team:rouge, name:Rouge, color:dark_red}
-
-execute if entity @a[predicate=sgp.majeurs:protect/ongoing] run \
-    function sgp.majeurs:protect/running
-
-
-
-# PCO
-execute as @r[tag=sgp.in_game] if predicate sgp.majeurs:pco/ongoing run function sgp.majeurs:pco/running
-
-
-
-# Invasion
-execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run function sgp.majeurs:invasion/defenders_dying
-execute if entity @a[predicate=sgp.majeurs:invasion/ongoing] run function sgp.majeurs:invasion/running
-
-
-
-# Chasse aux pigeons
-execute as @a[scores={sgp.devenir_chasseur=1..}] run \
-    function sgp.majeurs:pigeons/devenir_chasseur
-
-execute as @a[scores={sgp.devenir_pigeon=1..}] run \
-    function sgp.majeurs:pigeons/devenir_pigeon
-
-execute if entity @a[predicate=sgp.majeurs:pigeons/ongoing] run \
-    function sgp.majeurs:pigeons/timer
+function sgp.majeurs:tick

@@ -3,9 +3,9 @@
 #
 # Tp to place to choose spawnpoint, except if confinement is running (then tp to a random confinement spawn)
 
-execute if score #confines_secondes sgp.timer matches 1.. run return run tp @s @e[tag=sgp.marker,name="Confinement",limit=1,sort=random,type=marker] 
+execute if score #confines_secondes sgp.timer matches 1.. run return run tp @s @e[tag=sgp.marker,name="Confinement",limit=1,sort=random,type=marker]
 
-execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return run function sgp.majeurs:common/kits_to_spawn
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return run function #sgp.majeurs:events/kits_to_spawn
 
 $data modify storage sgp:macro spawns_select.spawns set value $(spawns)
 data modify storage sgp:macro spawns_select.function set value "sgp.misc:interactions/simple_tp"

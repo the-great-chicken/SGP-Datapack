@@ -1,9 +1,7 @@
 #> sgp.majeurs:pco/cage/clone_cage
 # `{cage, x, y, z, x2, y2, z2}`
 #
-# If executed as a pco_cage_storage marker,
-# clone its cage to the position of the pco_cage_arena
+# Clone the current source structure into its active location-set destination.
 
-$execute if entity @s[nbt={data:{cage:$(cage)}}] \
-    at @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_$(cage)_cage_arena",limit=1] \
-        run clone $(x) $(y) $(z) $(x2) $(y2) $(z2) ~ ~ ~
+$execute at @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_$(cage)_cage_arena",limit=1,type=marker] \
+    run clone $(x) $(y) $(z) $(x2) $(y2) $(z2) ~ ~ ~

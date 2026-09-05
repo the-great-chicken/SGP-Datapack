@@ -1,11 +1,6 @@
 #> sgp.majeurs:pco/dispatch
 #
-# Dispatch the players evenly between the teams.
-# Call itself until no one is left without a team.
+# Dispatch participants once in random order, keeping team sizes within one player.
 
-team join sgp.Poule @r[tag=sgp.in_game,team=!sgp.Poule,team=!sgp.Oie,team=!sgp.Canard]
-team join sgp.Oie @r[tag=sgp.in_game,team=!sgp.Poule,team=!sgp.Oie,team=!sgp.Canard]
-team join sgp.Canard @r[tag=sgp.in_game,team=!sgp.Poule,team=!sgp.Oie,team=!sgp.Canard]
-
-execute if entity @a[tag=sgp.in_game,team=!sgp.Poule,team=!sgp.Oie,team=!sgp.Canard] \
-    run function sgp.majeurs:pco/dispatch
+scoreboard players set #pco_dispatch_team sgp.dummy 0
+execute as @a[tag=sgp.major_participant,sort=random] run function sgp.majeurs:pco/dispatch_player

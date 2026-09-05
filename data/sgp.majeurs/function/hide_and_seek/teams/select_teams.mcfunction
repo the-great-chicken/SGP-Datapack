@@ -24,7 +24,7 @@ execute if score #team_size sgp.link_teams matches 3 as @a[tag=!sgp.hider,team=s
 execute if score #team_size sgp.link_teams matches 4 as @a[tag=!sgp.hider,team=sgp.hider,limit=4,sort=random] at @s run function sgp.majeurs:hide_and_seek/teams/select_player
 execute if score #team_size sgp.link_teams matches 5 as @a[tag=!sgp.hider,team=sgp.hider,limit=5,sort=random] at @s run function sgp.majeurs:hide_and_seek/teams/select_player
 
-tellraw @a[tag=sgp.current_team] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Tu es avec : "}, {selector:"@a[tag=sgp.current_team]"}]
+tellraw @a[tag=sgp.current_team] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Tu es avec : "}, {selector:"@a[tag=sgp.current_team]"}]
 
 scoreboard players add #selector sgp.link_teams 1
 

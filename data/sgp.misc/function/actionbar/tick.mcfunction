@@ -16,10 +16,4 @@ scoreboard players remove @a[scores={sgp.ab.reward_3=1..}] sgp.ab.reward_3 1
 execute as @a[scores={sgp.ab.reward_3=0}] run function dah.actbar_mixer:remove/this {id:"sgp:reward_3"}
 execute as @a[scores={sgp.ab.reward_3=0}] run scoreboard players reset @s sgp.ab.reward_3
 
-scoreboard players remove @a[scores={sgp.ab.hide_hider=1..}] sgp.ab.hide_hider 1
-execute as @a[scores={sgp.ab.hide_hider=0}] run function dah.actbar_mixer:remove/this {id:"sgp:hide_hider"}
-execute as @a[scores={sgp.ab.hide_hider=0}] run scoreboard players reset @s sgp.ab.hide_hider
-
-scoreboard players remove @a[scores={sgp.ab.pco_cabane=1..}] sgp.ab.pco_cabane 1
-execute as @a[scores={sgp.ab.pco_cabane=0}] run function dah.actbar_mixer:remove/this {id:"sgp:pco_cabane"}
-execute as @a[scores={sgp.ab.pco_cabane=0}] run scoreboard players reset @s sgp.ab.pco_cabane
+function #sgp.misc:actionbar/tick_extensions

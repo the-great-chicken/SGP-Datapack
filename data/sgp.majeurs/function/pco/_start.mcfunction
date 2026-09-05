@@ -1,51 +1,50 @@
 #> sgp.majeurs:pco/_start
 #
-# Start the PCO major event
+# Start one PCO round on the next configured location set.
 
-tellraw @a[tag=sgp.in_game] [{storage:"sgp.text", nbt:"prefix", interpret:true}, {text:"Lancement de Poule Canard Oie...", color:dark_purple, bold:true}]
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
+execute unless data storage sgp:data majeurs.pco.locations[0] run return run tellraw @a[tag=sgp.in_game] [{storage:"sgp:text",nbt:"prefix",interpret:true}, {text:"Aucun lieu PCO n'est enregistré.", color:red}]
+
+scoreboard players set #pco_phase sgp.dummy 1
+function sgp.majeurs:pco/locations/select
+tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Lancement de Poule Canard Oie...", color:dark_purple, bold:true}]
 
 function sgp.majeurs:common/start
+
+execute as @a run function sgp.majeurs:pco/reset_player_state
 
 function sgp.majeurs:pco/dispatch
 
 # Spawn the cages
-execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage"] \
+execute as @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_cage_storage",type=marker] \
     run function sgp.majeurs:pco/cage/compute_markers_coordinates
 
-execute as @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_cage_storage"] \
+execute as @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_cage_storage",type=marker] \
     run function sgp.majeurs:pco/cage/clone_cage with entity @s data
-
 
 # Give the kit to the players, and apply glowing
 execute as @a[team=sgp.Poule] \
-    run function sgp.majeurs:pco/on_start {color:red, color_hex:16733525, color_material:redstone, cage:poule, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
+    run function sgp.majeurs:pco/on_start {color:red, color_hex:16733525, color_material:redstone, team:Poule, to_catch:Canard, color_team:RED, color_to_catch:GREEN}
 
 execute as @a[team=sgp.Canard] \
-    run function sgp.majeurs:pco/on_start {color:green, color_hex:5635925, color_material:emerald, cage:canard, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
+    run function sgp.majeurs:pco/on_start {color:green, color_hex:5635925, color_material:emerald, team:Canard, to_catch:Oie, color_team:GREEN, color_to_catch:YELLOW}
 
 execute as @a[team=sgp.Oie] \
-    run function sgp.majeurs:pco/on_start {color:yellow, color_hex:16777045, color_material:gold, cage:oie, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
+    run function sgp.majeurs:pco/on_start {color:yellow, color_hex:16777045, color_material:gold, team:Oie, to_catch:Poule, color_team:YELLOW, color_to_catch:RED}
 
 
 # Teleport the players to their spawn
-tp @a[team=sgp.Poule] @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_poule_spawn",limit=1]
-tp @a[team=sgp.Canard] @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_canard_spawn",limit=1]
-tp @a[team=sgp.Oie] @e[type=marker,tag=sgp.marker,tag=sgp.enabled,name="pco_oie_spawn",limit=1]
-
+tp @a[team=sgp.Poule] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_poule_spawn",limit=1,type=marker]
+tp @a[team=sgp.Canard] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_canard_spawn",limit=1,type=marker]
+tp @a[team=sgp.Oie] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_oie_spawn",limit=1,type=marker]
 
 move @a[team=sgp.Oie] #Oies
 move @a[team=sgp.Poule] #Poules
 move @a[team=sgp.Canard] #Canards
 
-
-scoreboard players set @a[team=sgp.Oie] sgp.liberer_oies 0
-scoreboard players set @a[team=sgp.Canard] sgp.liberer_canards 0
-scoreboard players set @a[team=sgp.Poule] sgp.liberer_poules 0
-
-
 title @a[team=sgp.Oie] subtitle [{text:"Chassez les ", color:white, bold:true}, {text:"Poules", color:red}]
 title @a[team=sgp.Oie] title {text:"Oie", color:yellow, bold:true}
-tellraw @a[team=sgp.Oie] [{text:"Tu es une ", color:white}, {text:"Oie. ", color:yellow, bold:true},{text:"Vous devez chasser les ", color:white}, {text:"Poules.", color:red, bold:true}]
+tellraw @a[team=sgp.Oie] [{text:"Tu es une ", color:white}, {text:"Oie. ", color:yellow, bold:true}, {text:"Vous devez chasser les ", color:white}, {text:"Poules.", color:red, bold:true}]
 
 title @a[team=sgp.Poule] subtitle [{text:"Chassez les ", color:white, bold:true}, {text:"Canards", color:green}]
 title @a[team=sgp.Poule] title {text:"Poule", color:red, bold:true}
@@ -55,5 +54,4 @@ title @a[team=sgp.Canard] subtitle [{text:"Chassez les ", color:white, bold:true
 title @a[team=sgp.Canard] title {text:"Canard", color:green, bold:true}
 tellraw @a[team=sgp.Canard] [{text:"Tu es un ", color:white}, {text:"Canard. ", color:green, bold:true}, {text:"Vous devez chasser les ", color:white}, {text:"Oies.", color:yellow, bold:true}]
 
-
-scoreboard players set @a[tag=sgp.in_game] sgp.temps_cabane_pco 0
+scoreboard players set #pco_phase sgp.dummy 2

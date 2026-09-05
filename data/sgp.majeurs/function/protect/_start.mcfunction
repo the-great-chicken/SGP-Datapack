@@ -1,25 +1,20 @@
-execute run tellraw @a[tag=sgp.in_game] [{text:"Lancement de l'event Proteger le Roi...", color:gold, bold:true}]
+#> sgp.majeurs:protect/_start
+#
+# Start a Protéger le Roi round in its king-selection phase.
 
+execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
+
+tellraw @a[tag=sgp.in_game] [{text:"Lancement de l'événement Protéger le Roi...",color:gold,bold:true}]
 function sgp.majeurs:common/start
 
-scoreboard players set #kings_chosen sgp.dummy 0
+scoreboard players set #protect_phase sgp.dummy 1
 
-execute as @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] at @s run data modify block ^ ^1 ^1 {} merge value {front_text:{messages:['[""]','["",{text:"DEVENIR",bold:true,color:dark_red}]','[{text:"LE ROI",bold:true,color:dark_red,click_event:{action:run_command,command:"trigger sgp.devenir_roi_rouge"}}]','[""]']}}
-execute as @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] at @s run data modify block ^ ^1 ^1 {} merge value {front_text:{messages:['[""]','["",{text:"DEVENIR",bold:true,color:dark_blue}]','[{text:"LE ROI",bold:true,color:dark_blue,click_event:{action:run_command,command:"trigger sgp.devenir_roi_bleu"}}]','[""]']}}
+function sgp.majeurs:protect/dispatch
 
+execute as @e[tag=sgp.marker,name="devenir_roi_rouge",limit=1,type=marker] at @s run function sgp.majeurs:protect/setup_king_selector {side:rouge,team:rouge,name:Rouge,color:dark_red}
+execute as @e[tag=sgp.marker,name="devenir_roi_bleu",limit=1,type=marker] at @s run function sgp.majeurs:protect/setup_king_selector {side:bleu,team:bleue,name:Bleu,color:dark_blue}
 
-execute as @a[tag=sgp.in_game] run function sgp.majeurs:protect/dispatch
-
-function sgp.mineurs:_stop
-
-scoreboard players set #mort_roi_rouge_annoncee sgp.dummy 0
-scoreboard players set #mort_roi_bleue_annoncee sgp.dummy 0
-
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run scoreboard players enable @s sgp.devenir_roi_rouge
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run title @s title [{text:"Équipe Rouge", color:dark_red}]
-
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run scoreboard players enable @s sgp.devenir_roi_bleu
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run title @s title [{text:"Équipe Bleue", color:dark_blue}]
-
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_bleu",limit=1] as @a[distance=..2] run move @s #Bleus
-execute at @e[type=marker,tag=sgp.marker,name="devenir_roi_rouge",limit=1] as @a[distance=..2] run move @s #Rouges
+title @a[team=sgp.rouge] title {text:"Équipe Rouge",color:dark_red}
+title @a[team=sgp.bleue] title {text:"Équipe Bleue",color:dark_blue}
+move @a[team=sgp.rouge] #Rouges
+move @a[team=sgp.bleue] #Bleus
