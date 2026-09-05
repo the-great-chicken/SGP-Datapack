@@ -13,7 +13,7 @@ execute as @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_uncage_storage",type=m
 
 execute as @a run function sgp.majeurs:pco/reset_player_state
 
-move @a[tag=sgp.major_participant] #Morts
+function #sgp.hooks:discord/majeurs/pco/_stop_1
 
 function sgp.majeurs:common/stop
 

@@ -1,5 +1,8 @@
 #> sgp.world:initialization
 
+# Entry order belongs to core location tracking, including the actionbar.
+execute unless score #tab_location_serial sgp.dummy matches -2147483648..2147483647 run scoreboard players set #tab_location_serial sgp.dummy 1000000
+
 # ---------- Create Objectives ----------
 
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/initialization with entity @s data

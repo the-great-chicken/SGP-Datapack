@@ -15,5 +15,4 @@ function sgp.kits:stats_collector/pause_for_major_event
 team leave @a[tag=sgp.major_participant]
 execute as @a[tag=sgp.major_participant] run function sgp.misc:on_death
 function sgp.mineurs:_stop
-useglow toggle
-function sgp.lore:npcs/disable
+function #sgp.hooks:tgc/majeurs/common/start_1

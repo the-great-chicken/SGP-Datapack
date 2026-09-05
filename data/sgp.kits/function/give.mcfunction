@@ -19,7 +19,7 @@ scoreboard players set @s sgp.reset_tags 1
 
 $function sgp.kits:collection/$(kit)/specifics
 
-scoreboard players set @s sgp.kit_prefix_set 0
+function #sgp.hooks:tab/kit_changed
 
 execute if score #restart_pick sgp.dummy matches 1 \
     if function sgp.kits:stats_collector/can_collect \

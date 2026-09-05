@@ -16,5 +16,4 @@ execute as @e[tag=sgp.marker,name="devenir_roi_bleu",limit=1,type=marker] at @s 
 
 title @a[team=sgp.rouge] title {text:"Équipe Rouge",color:dark_red}
 title @a[team=sgp.bleue] title {text:"Équipe Bleue",color:dark_blue}
-move @a[team=sgp.rouge] #Rouges
-move @a[team=sgp.bleue] #Bleus
+function #sgp.hooks:discord/majeurs/protect/_start_1

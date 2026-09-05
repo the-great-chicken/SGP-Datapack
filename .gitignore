@@ -4,3 +4,4 @@
 *.dat
 __pycache__
 /stats_analysis/edition-*.json
+/.packtest-server/

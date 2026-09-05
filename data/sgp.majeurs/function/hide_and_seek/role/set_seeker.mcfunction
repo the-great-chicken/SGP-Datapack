@@ -12,4 +12,4 @@ function sgp.majeurs:hide_and_seek/role/equipment/seeker
 
 tp @s @n[type=marker,tag=sgp.marker,name=spawn_seeker]
 
-move @s #Chasseurs
+function #sgp.hooks:discord/majeurs/hide_and_seek/role/set_seeker_1

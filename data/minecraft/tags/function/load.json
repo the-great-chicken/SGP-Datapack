@@ -1,12 +1,12 @@
 {
-    "values": [
-        "sgp.misc:initialization",
-        "sgp.cosmetics:initialization",
-        "sgp.diorama:initialization",
-        "sgp.kits:initialization",
-        "sgp.majeurs:initialization",
-        "sgp.mineurs:initialization",
-        "sgp.world:initialization"
-    ]
-  }
-  
+  "values": [
+    "sgp.misc:initialization",
+    "sgp.cosmetics:initialization",
+    "sgp.diorama:initialization",
+    "sgp.kits:initialization",
+    "sgp.majeurs:initialization",
+    "sgp.mineurs:initialization",
+    "sgp.world:initialization",
+    "sgp.hooks:initialization"
+  ]
+}
