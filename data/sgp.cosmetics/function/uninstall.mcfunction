@@ -2,6 +2,8 @@
 
 # ---------- Remove Objectives ----------
 
+scoreboard objectives remove sgp.cosmetics.api
+
 scoreboard objectives remove sgp.intensity.light_unlocked
 scoreboard objectives remove sgp.intensity.medium_unlocked
 scoreboard objectives remove sgp.intensity.heavy_unlocked

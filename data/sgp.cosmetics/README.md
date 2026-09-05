@@ -43,3 +43,9 @@ The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction
 - 1 `disable_cloak`, with the function `sgp.cosmetics:particles/manually_disable` and no args
 - 1 `disable_kill_effect`, with the function `sgp.cosmetics:kill_effects/manually_disable` and no args
 - as many `reward` as you want with the function `sgp.cosmetics:reward/give` and args: `objective:<name_of_reward_scoreboard>, reward_name:<text_to_display>, reward_type:<Kill Effect|Cloak|...>, reward_color:<color>, trial_name:<text_to_display>`
+
+## Website catalogue
+
+TGCPlugin reads `function/initialization.mcfunction` on startup and datapack reload. Declare cosmetics on one line as `scoreboard objectives add sgp.<category>.<key>_unlocked dummy "Display name"`; names are JSON-quoted strings of 1–100 characters, and declaration order controls display order.
+
+Each declaration needs a matching `api/equip/<category>/<key>.mcfunction` and an entry in the category's clear function. Equip hooks must check the player's unlock before changing tags and return 1 on success. Categories are `particle`, `intensity` and `kill`; keys use lowercase letters and underscores.
