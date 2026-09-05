@@ -19,7 +19,6 @@ tag @s remove sgp.ab.location_clear_target
 
 scoreboard players reset @s sgp.ab.location
 scoreboard players reset @s sgp.ab.location_width
-function sgp.misc:actionbar/water_trident_cooldown_clear
 scoreboard players reset @s sgp.ab.normal_width
 scoreboard players reset @s sgp.ab.normal_count
 

@@ -3,7 +3,13 @@
 # Detect major-event transitions so duration-based collector state is paused
 # and resumed at the same boundary as event-based statistics.
 
-execute unless score #stats_schema_version sgp.dummy matches 6 run return 0
+execute unless score #stats_schema_version sgp.dummy matches 7 run return 0
+
+# Refresh the UUID/name snapshot when a player first appears in this edition or
+# reconnects after their leave-game counter changes.
+execute as @a[scores={sgp.id=1..}] at @s \
+    unless score @s sgp.leave_seen = @s sgp.leave_game \
+        run function sgp.kits:stats_collector/player_identity/capture
 
 # Out-of-game deaths have no gameplay cleanup. Consume their independent
 # death marker, then clear the shared marker before it can block event resume.

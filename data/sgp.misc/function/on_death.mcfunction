@@ -12,7 +12,6 @@ scoreboard players set @s sgp.kit_id -1
 scoreboard players set @s sgp.duration_ability 1
 execute at @s run function sgp.kits:abilities/route_tick
 scoreboard players set @s sgp.cooldown_ability 0
-scoreboard players set @s sgp.cooldown_water_trident 0
 
 function sgp.kits:kit_tags/reset
 scoreboard players set @s sgp.kills_give_1 0

@@ -15,4 +15,4 @@ $execute as @a[dx=$(dx), dy=$(dy), dz=$(dz)] \
     if function sgp.world:lieu/check_exclusion_macro \
         run function sgp.world:lieu/leave {lieu:"$(lieu)"}
 
-$execute as @a[scores={sgp.lieu_$(lieu)=2}] unless entity @s[dx=$(dx), dy=$(dy), dz=$(dz)] run function sgp.world:lieu/leave {lieu:"$(lieu)"}
+$execute as @a[scores={sgp.lieu_$(lieu)=2..}] unless entity @s[dx=$(dx), dy=$(dy), dz=$(dz)] run function sgp.world:lieu/leave {lieu:"$(lieu)"}

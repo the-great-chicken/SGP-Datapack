@@ -16,7 +16,6 @@ scoreboard objectives remove sgp.peaceful_found
 scoreboard objectives remove sgp.cooldown_ability
 scoreboard objectives remove sgp.duration_ability
 scoreboard objectives remove sgp.trigger_repulsion
-scoreboard objectives remove sgp.cooldown_water_trident
 scoreboard objectives remove sgp.drop_any
 execute as @e[tag=sgp.marker,name="abilities_shulker",type=marker] run setblock ~ ~ ~ air
 scoreboard objectives remove sgp.current_attack_damage
@@ -54,18 +53,14 @@ scoreboard objectives remove sgp.elo_pending
 scoreboard objectives remove sgp.elo_encounters
 scoreboard objectives remove sgp.elo_deaths
 scoreboard objectives remove sgp.elo_deaths_seen
+scoreboard objectives remove sgp.leave_game
+scoreboard objectives remove sgp.leave_seen
 
 
 
 # ---------- Remove Teams ----------
 
 team remove sgp.Illusion
-
-
-
-# ---------- Clear Schedules ----------
-
-schedule clear sgp.kits:kit_tags/prefixes_check
 
 
 
@@ -78,6 +73,7 @@ data remove storage sgp.kits:stats death_positions
 data remove storage sgp.kits:stats ability_metadata
 data remove storage sgp.kits:stats elo_metadata
 data remove storage sgp.kits:stats elo_ratings
+data remove storage sgp.kits:stats players
 data remove storage sgp.kits:stats schema_version
 data remove storage sgp.kits:runtime elo_delta_lookup
 

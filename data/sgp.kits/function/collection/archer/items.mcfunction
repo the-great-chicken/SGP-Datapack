@@ -74,7 +74,7 @@ item replace entity @s armor.feet with leather_boots[ \
     custom_name={text:"Bottes en Cuir", color:green, italic:false, bold:true}, \
     lore=[ \
         {text:"---------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
         {text:""}, \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
@@ -89,7 +89,7 @@ item replace entity @s armor.feet with leather_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={protection:1, "sgp.kits:depth_strider_boosted":2, "sgp.kits:repulsion":1}, \
+    enchantments={protection:2, "sgp.kits:depth_strider_boosted":2, "sgp.kits:repulsion":1}, \
     dyed_color=9633536, \
     trim={ \
         pattern:"spire", \

@@ -4,7 +4,7 @@
 
 execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic { \
     nb:1, \
-    give:"arrow", \
+    give:"arrow 2", \
     give_2:'strider_spawn_egg[ \
         entity_data={\
             id:"minecraft:firework_rocket",\
@@ -18,7 +18,7 @@ execute as @a[tag=sgp.pyromane,scores={sgp.kills_give_1=1..}] run function sgp.k
         custom_name={text:"Explosifs", color:red, italic:false, bold:true} \
         ] 2', \
     actionbar:' \
-        {text:"+ 1 ➶ Flèche ", color:gray, bold:true}, \
+        {text:"+ 2 ➶ Flèche ", color:gray, bold:true}, \
         {text:"et 2 ☀ Explosifs !", color:red} \
         ', \
     width:373, \

@@ -31,13 +31,13 @@ item replace entity @s hotbar.1 with bow[ \
 
 # ---------- ARMOR ----------
 item replace entity @s armor.head with golden_helmet[ \
-    enchantments={protection:1, projectile_protection:2}, \
     custom_name={text:"Couronne", color:yellow, italic:false, bold:true}, \
     lore=[ \
-        {text:"------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"--------------", color:"#C0C0C0", italic:false}, \
+        {text:"🛡 Protection III", color:dark_aqua, italic:false}, \
         {text:"➹ Protection II", color:dark_blue, italic:false} \
         ], \
+    enchantments={protection:3, projectile_protection:2}, \
     trim={ \
         pattern:"ward", \
         material:"redstone" \
@@ -69,7 +69,7 @@ item replace entity @s armor.legs with golden_leggings[ \
 item replace entity @s armor.feet with golden_boots[ \
     custom_name={text:"Bottes Cérémoniales", color:yellow, italic:false, bold:true}, \
     lore=[ \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -78,7 +78,7 @@ item replace entity @s armor.feet with golden_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     enchantments={"sgp.kits:depth_strider_boosted":1}, \
     trim={ \

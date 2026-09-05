@@ -53,11 +53,11 @@ item replace entity @s armor.chest with golden_chestplate[ \
     custom_name={text:"Plastron en Or", color:dark_red, italic:false, bold:true}, \
     lore=[ \
         {text:"---------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
+        {text:"🛡 Protection III", color:dark_aqua, italic:false}, \
         {text:"➹ Protection II", color:dark_blue, italic:false}, \
         {text:"᠅ Épines III", color:dark_green, italic:false} \
         ], \
-    enchantments={protection:2, thorns:3, projectile_protection:2}, \
+    enchantments={protection:3, thorns:3, projectile_protection:2}, \
     trim={ \
         pattern:"vex", \
         material:"redstone" \
@@ -84,10 +84,10 @@ item replace entity @s armor.legs with leather_leggings[ \
 item replace entity @s armor.feet with leather_boots[ \
     custom_name={text:"Bottes en Cuir", color:dark_red, italic:false, bold:true}, \
     lore=[ \
-        {text:"----------------", color:"#C0C0C0", italic:false}, \
+        {text:"-----------------", color:"#C0C0C0", italic:false}, \
         {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -96,7 +96,7 @@ item replace entity @s armor.feet with leather_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     enchantments={protection:2, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \
@@ -135,7 +135,7 @@ item replace entity @s hotbar.4 with tipped_arrow[ \
             ] \
         }, \
     potion_duration_scale=1.0, \
-    tooltip_display= {hidden_components:["potion_contents"]}, \
+    tooltip_display={hidden_components:["potion_contents"]}, \
     item_model="sgp.kits:cancer/slowness" \
     ] 5
 
@@ -151,7 +151,7 @@ item replace entity @s hotbar.5 with splash_potion[ \
             {id:"speed", amplifier:1, duration:300} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
+    tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
     item_model="sgp.kits:cancer/speed", \
     max_stack_size=64 \
     ] 3
@@ -169,10 +169,15 @@ item replace entity @s hotbar.6 with splash_potion[ \
             {id:"jump_boost", amplifier:2, duration:600} \
             ] \
         }, \
-    tooltip_display= {hidden_components:["potion_contents","enchantments"]}, \
+    tooltip_display={hidden_components:["potion_contents","enchantments"]}, \
     item_model="sgp.kits:cancer/jump", \
     max_stack_size=64 \
     ] 3
+
+item replace entity @s hotbar.7 with tnt_minecart[ \
+    custom_name={text:"Explosif à Roulettes", color:red, italic:false, bold:true}, \
+    max_stack_size=64 \
+    ] 2
 
 
 # ---------- FOOD ----------

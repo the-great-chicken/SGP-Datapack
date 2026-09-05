@@ -2,3 +2,4 @@ nbtlib
 pandas 
 pyarrow
 plotly
+jsonschema

@@ -40,6 +40,9 @@ give @s trident[ \
 item replace entity @s armor.feet with chainmail_boots[ \
     custom_name={text:"Palmes", color:dark_aqua, italic:false, bold:true}, \
     lore=[ \
+        {text:"----------------", color:"#C0C0C0", italic:false}, \
+        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:""}, \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"⚡ ", color:yellow, italic:false}, \
@@ -54,7 +57,7 @@ item replace entity @s armor.feet with chainmail_boots[ \
             ], \
         {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
-    enchantments={"sgp.kits:depth_strider_boosted":25}, \
+    enchantments={protection:1, "sgp.kits:depth_strider_boosted":25}, \
     attribute_modifiers=[ \
         {type:"armor", amount:-1, id:"armor", operation:"add_multiplied_total", slot:armor} \
         ], \
@@ -71,5 +74,6 @@ item replace entity @s hotbar.1 with cooked_cod[ \
             {text:"Régénère jusqu'à 2,5", color:gray, italic:false}, \
             {text:"❤", color:red} \
             ] \
-        ] \
+        ], \
+    food={nutrition:6, saturation:6.0} \
     ] 64

@@ -6,7 +6,7 @@ execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
     run scoreboard objectives setdisplay sidebar sgp.plus_grande_streak
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 0 \
-    as @e[type=minecraft:arrow,tag=!smithed.entity,tag=!sgp.smoke_grenade] \
+    as @e[tag=!smithed.entity,tag=!sgp.smoke_grenade,type=arrow] \
         run function #bs.health:time_to_live {with:{time:120,unit:"t"}}
 
 execute if score #scoreboard_and_clearlag sgp.dummy matches 1 \
@@ -15,11 +15,27 @@ execute if score #scoreboard_and_clearlag sgp.dummy matches 1 \
 execute if score #scoreboard_and_clearlag sgp.dummy matches 2 \
     run scoreboard objectives setdisplay sidebar sgp.kd
 
+execute if score #scoreboard_and_clearlag sgp.dummy matches 3 \
+    if score #elo_display_available sgp.dummy matches 1 \
+        run scoreboard objectives setdisplay sidebar sgp.elo_display
 
+execute if score #scoreboard_and_clearlag sgp.dummy matches 3 \
+    unless score #elo_display_available sgp.dummy matches 1 \
+        run scoreboard objectives setdisplay sidebar sgp.plus_grande_streak
+
+execute if score #scoreboard_and_clearlag sgp.dummy matches 3 \
+    unless score #elo_display_available sgp.dummy matches 1 \
+        as @e[tag=!smithed.entity,tag=!sgp.smoke_grenade,type=arrow] \
+            run function #bs.health:time_to_live {with:{time:120,unit:"t"}}
 
 scoreboard players add #scoreboard_and_clearlag sgp.dummy 1
 
-execute if score #scoreboard_and_clearlag sgp.dummy matches 3 \
-    run scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
+execute if score #scoreboard_and_clearlag sgp.dummy matches 4 \
+    if score #elo_display_available sgp.dummy matches 1 \
+        run scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
+
+execute if score #scoreboard_and_clearlag sgp.dummy matches 4 \
+    unless score #elo_display_available sgp.dummy matches 1 \
+        run scoreboard players set #scoreboard_and_clearlag sgp.dummy 1
 
 schedule function sgp.misc:scoreboards/cycle_and_clearlag 136t

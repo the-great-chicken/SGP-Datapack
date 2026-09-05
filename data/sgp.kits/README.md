@@ -31,22 +31,3 @@ The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction
 
 <a id="note1">*</a> The Peaceful kit's interaction entity should have another name, like `choose_kit_peaceful` to avoid it being a random kit possibility.
 <a id="note2">**</a> There needs to be the same number of `choose_kit` for each kit, or else the random will be skewed.
-
-### Plugins Config
-
-We recommend adding these filters to Luckperms' notifications:
-```yml
-log-notify-filtered-descriptions:
-  - "meta setprefix 0 .*"
-  - "parent settrack kit .*"
-```
-
-Also, the workaround of using essential's `playerlist` command to update prefixes in the tab menu will spam the console, so you can use the ConsoleSpamFixReborn plugin with the following configuration:
-```yml
-Messages-To-Hide-Filter:
-  contains:
-  regex:
-    - '^default \:.*$'
-    - '^CONSOLE issued server command\: /playerlist $'
-    - '^Il y a [1-9]* joueurs en ligne sur [1-9]* au total\.$'
-```

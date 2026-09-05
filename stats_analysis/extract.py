@@ -5,6 +5,7 @@ import json
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import nbtlib
 import pandas as pd
@@ -12,6 +13,7 @@ import pandas as pd
 
 STATS_PATH = ("data", "contents", "stats")
 KITS_PATH = (*STATS_PATH, "kits_dict")
+PLAYERS_PATH = (*STATS_PATH, "players")
 SCHEMA_VERSION_PATH = (*STATS_PATH, "schema_version")
 ABILITY_METADATA_PATH = (*STATS_PATH, "ability_metadata")
 DAMAGE_CAUSE_NAMES_PATH = (*STATS_PATH, "damage_cause_names")
@@ -19,7 +21,7 @@ DEATH_POSITION_METADATA_PATH = (*STATS_PATH, "death_position_metadata")
 DEATH_POSITIONS_PATH = (*STATS_PATH, "death_positions")
 ELO_METADATA_PATH = (*STATS_PATH, "elo_metadata")
 ELO_RATINGS_PATH = (*STATS_PATH, "elo_ratings")
-SUPPORTED_SCHEMA_VERSION = 6
+SUPPORTED_SCHEMA_VERSION = 7
 DAMAGE_TENTHS_PER_HEART = 10
 DEATH_POSITION_KEY_SEPARATOR = ","
 
@@ -45,6 +47,11 @@ def get_nbt_path(nbt_file: nbtlib.File, path: tuple[str, ...]) -> Any:
 def get_kits_dict(nbt_file: nbtlib.File) -> Any:
     """Return the per-player kit statistics from command_storage.dat."""
     return get_nbt_path(nbt_file, KITS_PATH)
+
+
+def get_players(nbt_file: nbtlib.File) -> Any:
+    """Return the sgp.id-to-Minecraft-identity mapping."""
+    return get_nbt_path(nbt_file, PLAYERS_PATH)
 
 
 def get_schema_version(nbt_file: nbtlib.File) -> int:
@@ -88,6 +95,70 @@ def get_elo_metadata(nbt_file: nbtlib.File) -> Any:
 def get_elo_ratings(nbt_file: nbtlib.File) -> Any:
     """Return the current player-level Elo ratings."""
     return get_nbt_path(nbt_file, ELO_RATINGS_PATH)
+
+
+def minecraft_uuid_to_string(uuid_parts: Any, player_path: str) -> str:
+    """Convert Minecraft's four-signed-integer UUID form to a UUID string."""
+    parts = [int(part) for part in uuid_parts]
+
+    if len(parts) != 4:
+        raise ValueError(f"Expected four UUID integers at {player_path}.uuid")
+
+    uuid_value = 0
+    for part in parts:
+        uuid_value = (uuid_value << 32) | (part & 0xFFFFFFFF)
+
+    return str(UUID(int=uuid_value))
+
+
+def extract_players(players: Any) -> pd.DataFrame:
+    """Extract the sgp.id-to-Minecraft-identity mapping."""
+    if not hasattr(players, "items"):
+        raise ValueError("Expected players to be a compound")
+
+    rows: list[dict[str, Any]] = []
+    seen_uuids: set[str] = set()
+
+    for player_id, player_data in players.items():
+        player_path = f"players.{player_id}"
+
+        if not hasattr(player_data, "items"):
+            raise ValueError(f"Expected a player compound at {player_path}")
+
+        missing_fields = [
+            field for field in ["uuid", "nickname"] if field not in player_data
+        ]
+        if missing_fields:
+            raise ValueError(
+                f"Missing field(s) at {player_path}: "
+                + ", ".join(missing_fields)
+            )
+
+        minecraft_uuid = minecraft_uuid_to_string(
+            player_data["uuid"],
+            player_path,
+        )
+        if minecraft_uuid in seen_uuids:
+            raise ValueError(
+                f"Duplicate Minecraft UUID {minecraft_uuid} at {player_path}"
+            )
+        seen_uuids.add(minecraft_uuid)
+
+        rows.append(
+            {
+                "id": str(player_id),
+                "uuid": minecraft_uuid,
+                "nickname": str(player_data["nickname"]),
+            }
+        )
+
+    return pd.DataFrame(
+        rows,
+        columns=["id", "uuid", "nickname"],
+    ).sort_values(
+        "id",
+        key=lambda player_ids: player_ids.astype(int),
+    ).reset_index(drop=True)
 
 
 def extract_kills(kits_dict: Any) -> pd.DataFrame:
@@ -800,6 +871,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
     Columns:
         initial_rating
+        k_factor
+        rating_divisor
         metric_id
         metric_name
         metric_description
@@ -808,8 +881,25 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
         display_scale
     """
     metrics = get_elo_metric_definitions(elo_metadata)
-    if "initial_rating" not in elo_metadata:
-        raise ValueError("Missing Elo metadata field: initial_rating")
+    configuration_fields = (
+        "initial_rating",
+        "k_factor",
+        "rating_divisor",
+    )
+    missing_configuration_fields = [
+        field for field in configuration_fields if field not in elo_metadata
+    ]
+    if missing_configuration_fields:
+        raise ValueError(
+            "Missing Elo metadata field(s): "
+            + ", ".join(missing_configuration_fields)
+        )
+
+    configuration = {
+        "initial_rating": float(elo_metadata["initial_rating"]),
+        "k_factor": float(elo_metadata["k_factor"]),
+        "rating_divisor": float(elo_metadata["rating_divisor"]),
+    }
 
     rows: list[dict[str, Any]] = []
 
@@ -839,7 +929,7 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
 
         rows.append(
             {
-                "initial_rating": float(elo_metadata["initial_rating"]),
+                **configuration,
                 "metric_id": str(metric_id),
                 "metric_name": str(metric_data["name"]),
                 "metric_description": str(metric_data["description"]),
@@ -857,6 +947,8 @@ def extract_elo_metadata(elo_metadata: Any) -> pd.DataFrame:
             rows,
             columns=[
                 "initial_rating",
+                "k_factor",
+                "rating_divisor",
                 "metric_id",
                 "metric_name",
                 "metric_description",
@@ -973,6 +1065,7 @@ def extract(input_path: Path, output_dir: Path) -> None:
     nbt_file = nbtlib.load(input_path)
     schema_version = get_schema_version(nbt_file)
     kits_dict = get_kits_dict(nbt_file)
+    players_data = get_players(nbt_file)
     ability_metadata = get_ability_metadata(nbt_file)
     damage_cause_names = get_damage_cause_names(nbt_file)
     death_position_metadata = get_death_position_metadata(nbt_file)
@@ -981,6 +1074,7 @@ def extract(input_path: Path, output_dir: Path) -> None:
     elo_ratings = get_elo_ratings(nbt_file)
     damage_rows = list(iter_damage_received(kits_dict))
 
+    players = extract_players(players_data)
     kills = extract_kills(kits_dict)
     damage_received = extract_damage_received(damage_rows)
     abilities = extract_abilities(
@@ -1006,6 +1100,7 @@ def extract(input_path: Path, output_dir: Path) -> None:
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    players_path = output_dir / "players.parquet"
     kills_path = output_dir / "kills.parquet"
     damage_received_path = output_dir / "damage_received.parquet"
     abilities_path = output_dir / "abilities.parquet"
@@ -1019,6 +1114,7 @@ def extract(input_path: Path, output_dir: Path) -> None:
     elo_metadata_path = output_dir / "elo_metadata.parquet"
     elo_ratings_path = output_dir / "elo_ratings.parquet"
 
+    players.to_parquet(players_path, index=False)
     kills.to_parquet(kills_path, index=False)
     damage_received.to_parquet(damage_received_path, index=False)
     abilities.to_parquet(abilities_path, index=False)
@@ -1034,6 +1130,7 @@ def extract(input_path: Path, output_dir: Path) -> None:
     extracted_elo_ratings.to_parquet(elo_ratings_path, index=False)
 
     print(f"Schema:     {schema_version}")
+    print(f"Players:    {len(players):,} rows -> {players_path}")
     print(f"Kills:      {len(kills):,} rows -> {kills_path}")
     print(
         f"Damage:     {len(damage_received):,} rows -> {damage_received_path}"

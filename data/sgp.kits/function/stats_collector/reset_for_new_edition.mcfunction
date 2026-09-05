@@ -7,8 +7,9 @@
 
 # Clear every accumulated statistics branch and select the current schema.
 # Metadata is overwritten from its authoritative definitions during init.
-data modify storage sgp.kits:stats schema_version set value 6
+data modify storage sgp.kits:stats schema_version set value 7
 data modify storage sgp.kits:stats kits_dict set value {}
+data modify storage sgp.kits:stats players set value {}
 data modify storage sgp.kits:stats death_positions set value {}
 data modify storage sgp.kits:stats elo_ratings set value {}
 data remove storage sgp:macro stats
@@ -20,6 +21,7 @@ scoreboard players reset * sgp.streak_reset
 scoreboard players reset * sgp.morts
 scoreboard players reset * sgp.kd
 scoreboard players reset * sgp.plus_grande_streak
+scoreboard players reset * sgp.elo_display
 scoreboard players reset * sgp.kills
 scoreboard players reset * sgp.streak_en_cours
 scoreboard players reset * sgp.kills_give_1
@@ -59,9 +61,13 @@ scoreboard players reset #damage_received_delta sgp.dummy
 scoreboard players reset #damage_received_total sgp.dummy
 scoreboard players reset #death_position_total sgp.dummy
 scoreboard players reset #death_time sgp.dummy
+scoreboard players reset #elo_average_encounters sgp.dummy
 scoreboard players reset #elo_delta sgp.dummy
 scoreboard players reset #elo_difference sgp.dummy
 scoreboard players reset #elo_difference_negative sgp.dummy
+scoreboard players reset #elo_display_available sgp.dummy
+scoreboard players reset #elo_favorite_delta sgp.dummy
+scoreboard players reset #elo_k_factor sgp.dummy
 scoreboard players reset #elo_lookup_index sgp.dummy
 scoreboard players reset #last_pick_time sgp.dummy
 scoreboard players reset #nbr_kills_by_cause sgp.dummy

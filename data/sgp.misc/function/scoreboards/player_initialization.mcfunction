@@ -11,7 +11,6 @@ scoreboard players set @s sgp.archer_found 1
 scoreboard players set @s sgp.peaceful_found 1
 
 scoreboard players add @s sgp.cooldown_ability 0
-scoreboard players add @s sgp.cooldown_water_trident 0
 scoreboard players add @s sgp.pecking_timer 0
 
 function sgp.kits:stats_collector/elo/ensure_player
@@ -20,6 +19,8 @@ tag @s add sgp.initialize_lieux
 scoreboard players add @a[tag=sgp.initialize_lieux,limit=1] sgp.lieu_count 0
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/player_initialization with entity @s data
 tag @s remove sgp.initialize_lieux
+
+function sgp.misc:tab/player_initialization
 
 scoreboard players add @s sgp.teleporteur 0
 

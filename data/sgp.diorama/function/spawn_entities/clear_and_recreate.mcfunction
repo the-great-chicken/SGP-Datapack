@@ -3,6 +3,7 @@
 # Remove interaction entities present in the model, and create new updated ones
 
 function sgp.diorama:spawn_entities/clear_volume with entity @s data
+$data remove storage sgp:data misc.diorama.spawn_interactions.id_$(id)
 
 data remove storage sgp:data temp.spawns_list
 $data modify storage sgp:data temp.spawns_list set from storage sgp:data spawns[{id:$(id)}].list

@@ -6,7 +6,7 @@
         "deals_knockback": false
       },
       "minecraft:enchantments": {
-        "sgp.misc:left_click_detection": 1
+        "sgp.diorama:left_click_detection": 1
       }
     }
   },

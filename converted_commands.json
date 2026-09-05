@@ -73,7 +73,26 @@
                           "type": "argument",
                           "parser": "brigadier:integer",
                           "children": {
-                            "prefix": {
+                            "meta": {
+                              "type": "argument",
+                              "parser": "brigadier:string",
+                              "properties": {
+                                "type": "greedy"
+                              },
+                              "executable": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "setsuffix": {
+                      "type": "literal",
+                      "children": {
+                        "priority": {
+                          "type": "argument",
+                          "parser": "brigadier:integer",
+                          "children": {
+                            "meta": {
                               "type": "argument",
                               "parser": "brigadier:string",
                               "properties": {
@@ -94,8 +113,12 @@
         "track": {
           "type": "literal",
           "children": {
-            "kit": {
-              "type": "literal",
+            "track": {
+              "type": "argument",
+              "parser": "brigadier:string",
+              "properties": {
+                "type": "word"
+              },
               "children": {
                 "append": {
                   "type": "literal",

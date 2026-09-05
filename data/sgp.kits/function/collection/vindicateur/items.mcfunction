@@ -57,10 +57,10 @@ item replace entity @s armor.legs with leather_leggings[ \
 item replace entity @s armor.feet with leather_boots[ \
     custom_name={text:"Bottes en Cuir", color:dark_green, italic:false, bold:true}, \
     lore=[ \
-        {text:"----------------", color:"#C0C0C0", italic:false}, \
+        {text:"-----------------", color:"#C0C0C0", italic:false}, \
         {text:"᠅ Épines III", color:dark_green, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -69,7 +69,7 @@ item replace entity @s armor.feet with leather_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     enchantments={thorns:3, "sgp.kits:depth_strider_boosted":1}, \
     dyed_color=9533531, \

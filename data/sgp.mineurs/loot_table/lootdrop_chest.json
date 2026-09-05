@@ -1844,10 +1844,17 @@
       ],
       "functions": [
         {
-          "function": "minecraft:toggle_tooltips",
-          "toggles": {
-            "minecraft:potion_contents": false,
-            "minecraft:attribute_modifiers": false
+          "function": "minecraft:filtered",
+          "item_filter": {
+            "items": "minecraft:tipped_arrow"
+          },
+          "on_pass": {
+            "function": "minecraft:toggle_tooltips",
+            "toggles": {
+              "minecraft:potion_contents": false,
+              "minecraft:attribute_modifiers": false
+            },
+            "conditions": []
           }
         }
       ]

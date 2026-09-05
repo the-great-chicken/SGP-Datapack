@@ -8,3 +8,4 @@ function sgp.mineurs:lootdrop/clear_existing_ones
 function sgp.mineurs:smol/stop
 function sgp.mineurs:bounty/stop
 function sgp.mineurs:confinement/stop
+function sgp.mineurs:frenzy/stop

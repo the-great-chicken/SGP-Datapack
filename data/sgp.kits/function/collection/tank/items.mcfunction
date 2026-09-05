@@ -35,10 +35,10 @@ item replace entity @s armor.head with diamond_helmet[ \
     custom_name={text:"Casque en Diamant", color:dark_blue, italic:false, bold:true}, \
     lore=[ \
         {text:"------------------", color:"#C0C0C0", italic:false}, \
-        {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
+        {text:"🛡 Protection II", color:dark_aqua, italic:false}, \
         {text:"᠅ Épines I", color:dark_green, italic:false} \
         ], \
-    enchantments={protection:1, thorns:1}, \
+    enchantments={protection:2, thorns:1}, \
     trim={ \
         pattern:"sentry", \
         material:"netherite" \
@@ -86,7 +86,7 @@ item replace entity @s armor.feet with diamond_boots[ \
         {text:"🛡 Protection I", color:dark_aqua, italic:false}, \
         {text:"᠅ Épines I", color:dark_green, italic:false}, \
         {text:""}, \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false}, \
         [ \
             {text:"» ", color:yellow, italic:false}, \
             {text:"Tu n'es pas", color:white} \
@@ -95,7 +95,7 @@ item replace entity @s armor.feet with diamond_boots[ \
             {text:"ralenti(e) dans l'", color:white, italic:false}, \
             {text:"eau", color:"#55D5F0"} \
             ], \
-        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
+        {text:"≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", color:"#4040EA", italic:false} \
         ], \
     enchantments={protection:1, thorns:1, "sgp.kits:depth_strider_boosted":1}, \
     trim={ \

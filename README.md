@@ -55,7 +55,7 @@ The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction
 Each of these is optional (or can be present multiple times), depending on how you want to make your players' UX.
 
 - `spawn_tper` for each spawnpoint the players can choose, with the function `sgp.misc:interactions/tp_to_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>, article:<"à la"|"au"|...>, title:"<escaped_text_component>", id:1` <a href="#note1">⚠</a> <a href="#note2">⚠⚠</a>
-- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and no arg: `id: <int>`. <a href="#note3">⚠⚠⚠</a>
+- `spawn_randomizer`, with the function `sgp.misc:interactions/random_spawn` and arg: `id: <int>`. <a href="#note3">⚠⚠⚠</a>
 - `to_spawns`, with the function `sgp.misc:interactions/go_to_choose_spawn` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_cosms`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
 - `to_reception`, with the function `sgp.misc:interactions/simple_tp` and args: `x:<x>, y:<y>, z:<z>, yaw:<yaw>, pitch:<pitch>`
@@ -90,8 +90,8 @@ plugins-to-convert:
 - LuckPerms:
   - luckperms (user) <user>[api:players] <args>[api:greedy_string]
   - luckperms (creategroup|createtrack) <name>[brigadier:string]
-  - luckperms (group) <name>[brigadier:string] (meta) (setprefix) <priority>[brigadier:integer] <prefix>[api:greedy_string]
-  - luckperms (track) (kit) (append) <name>[brigadier:string]
+  - luckperms (group) <name>[brigadier:string] (meta) (setprefix|setsuffix) <priority>[brigadier:integer] <meta>[api:greedy_string]
+  - luckperms (track) <track>[brigadier:string] (append) <name>[brigadier:string]
 - TGCPlugin:
   - statuswarp <name>[brigadier:string] (enabled|disabled)
 - DiscordSRV-SGP-extension:
@@ -113,6 +113,27 @@ other-commands-to-convert:
 skip-sender-proxy:
 - LuckPerms
 ```
+
+We recommend adding these filters to Luckperms' notifications:
+```yml
+log-notify-filtered-descriptions:
+  - "meta setprefix 0 .*"
+  - "meta setsuffix 0 .*"
+  - "parent settrack kit .*"
+  - "parent settrack sgp-location .*"
+  - "parent cleartrack sgp-location"
+```
+
+Also, the workaround of using essential's `playerlist` command to update prefixes in the tab menu will spam the console, so you can use the ConsoleSpamFixReborn plugin with the following configuration:
+```yml
+Messages-To-Hide-Filter:
+  contains:
+  regex:
+    - '^default \:.*$'
+    - '^CONSOLE issued server command\: /playerlist $'
+    - '^Il y a [1-9]* joueurs en ligne sur [1-9]* au total\.$'
+```
+
 
 # Uninstallation
 

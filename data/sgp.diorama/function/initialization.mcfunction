@@ -3,6 +3,7 @@
 # ---------- Create Objectives ----------
 
 scoreboard objectives add sgp.anim_timer dummy
+scoreboard objectives add sgp.hover_time dummy
 
 
 
