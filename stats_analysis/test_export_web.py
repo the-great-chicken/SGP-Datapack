@@ -1,25 +1,30 @@
 from __future__ import annotations
 
+import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import nbtlib
 import pandas as pd
+from jsonschema import Draft202012Validator
 
 from export_web import (
-    WebExportError,
-    build_bundle,
+    StatisticsExportError,
+    build_snapshot,
     extract_statistics,
-    render_bundle,
+    render_snapshot,
 )
 
 
 PLAYER_ONE = "11111111-1111-4111-8111-111111111111"
 PLAYER_TWO = "22222222-2222-4222-8222-222222222222"
+SNAPSHOT_SCHEMA = json.loads(
+    (Path(__file__).parent / "statistics-snapshot.schema.json").read_text(encoding="utf-8")
+)
 
 
-class WebExportTests(unittest.TestCase):
+class StatisticsExportTests(unittest.TestCase):
     def test_extracts_schema_7_command_storage_without_the_report(self) -> None:
         with TemporaryDirectory() as directory:
             storage_path = Path(directory) / "command_storage.dat"
@@ -28,25 +33,31 @@ class WebExportTests(unittest.TestCase):
             ).save(storage_path)
 
             schema_version, statistics = extract_statistics(storage_path)
-            bundle = self.build_test_bundle(statistics)
+            snapshot = self.build_test_snapshot(statistics)
 
         self.assertEqual(schema_version, 7)
-        self.assertEqual(bundle["players"][0]["uuid"], PLAYER_ONE)
-        self.assertEqual(bundle["kills"][0]["count"], 1)
-        self.assertEqual(bundle["abilityMetrics"][0]["value"], 3.0)
-        self.assertEqual(bundle["elo"]["ratings"][0]["rating"], 1012.5)
+        self.assertEqual(snapshot["players"][0]["uuid"], PLAYER_ONE)
+        self.assertEqual(snapshot["kills"][0]["count"], 1)
+        self.assertEqual(snapshot["abilityMetrics"][0]["value"], 3.0)
+        self.assertEqual(snapshot["elo"]["ratings"][0]["rating"], 1012.5)
 
-    def test_builds_uuid_based_deterministic_bundle(self) -> None:
-        bundle = self.build_test_bundle()
+    def test_builds_uuid_based_deterministic_snapshot(self) -> None:
+        snapshot = self.build_test_snapshot()
+        Draft202012Validator(SNAPSHOT_SCHEMA).validate(snapshot)
 
-        self.assertEqual(bundle["schemaVersion"], 1)
-        self.assertEqual(bundle["edition"]["number"], 5)
-        self.assertEqual(bundle["kills"][0]["killerUuid"], PLAYER_ONE)
-        self.assertEqual(bundle["kills"][0]["victimUuid"], PLAYER_TWO)
-        self.assertIsNone(bundle["damageReceived"][0]["sourceUuid"])
-        self.assertEqual(bundle["abilityMetricDefinitions"][0]["name"], "Uses")
-        self.assertEqual(bundle["elo"]["ratings"][0]["ratedEncounters"], 4)
-        self.assertEqual(render_bundle(bundle), render_bundle(self.build_test_bundle()))
+        self.assertEqual(snapshot["schemaVersion"], 1)
+        self.assertEqual(snapshot["datapackRelease"], "dp-release-1")
+        self.assertNotIn("edition", snapshot)
+        self.assertNotIn("kitManifest", snapshot)
+        self.assertEqual(snapshot["kills"][0]["killerUuid"], PLAYER_ONE)
+        self.assertEqual(snapshot["kills"][0]["victimUuid"], PLAYER_TWO)
+        self.assertIsNone(snapshot["damageReceived"][0]["sourceUuid"])
+        self.assertEqual(snapshot["abilityMetricDefinitions"][0]["name"], "Uses")
+        self.assertEqual(snapshot["elo"]["ratings"][0]["ratedEncounters"], 4)
+        self.assertEqual(
+            render_snapshot(snapshot),
+            render_snapshot(self.build_test_snapshot()),
+        )
 
     def test_rejects_unknown_player_ids(self) -> None:
         statistics = make_statistics()
@@ -54,61 +65,26 @@ class WebExportTests(unittest.TestCase):
             [{"id": "99", "kit_id": 0, "total_time": 20, "nbr_picks": 1}]
         )
 
-        with self.assertRaisesRegex(WebExportError, "unknown sgp.id 99"):
-            self.build_test_bundle(statistics)
+        with self.assertRaisesRegex(StatisticsExportError, "unknown sgp.id 99"):
+            self.build_test_snapshot(statistics)
 
-    def test_rejects_ability_metadata_from_another_kit_snapshot(self) -> None:
-        manifest = make_kit_manifest()
-        manifest["kits"][0]["ability"]["path"] = "different"
+    def test_rejects_empty_datapack_release(self) -> None:
+        with self.assertRaisesRegex(StatisticsExportError, "must not be empty"):
+            build_snapshot(
+                datapack_release="",
+                statistics_schema_version=7,
+                statistics=make_statistics(),
+            )
 
-        with self.assertRaisesRegex(WebExportError, "does not match"):
-            self.build_test_bundle(kit_manifest=manifest)
-
-    def build_test_bundle(
+    def build_test_snapshot(
         self,
         statistics: dict[str, pd.DataFrame] | None = None,
-        kit_manifest: dict | None = None,
     ) -> dict:
-        return build_bundle(
-            edition_number=5,
-            edition_name="Cinquième édition",
-            status="published",
-            starts_at="2026-08-01T18:00:00+02:00",
-            ends_at="2026-08-01T22:00:00+02:00",
-            published_at="2026-08-02T10:00:00Z",
-            datapack_version="v5",
-            resource_pack_version="v5",
+        return build_snapshot(
+            datapack_release="dp-release-1",
             statistics_schema_version=7,
-            kit_manifest=kit_manifest or make_kit_manifest(),
             statistics=statistics or make_statistics(),
         )
-
-
-def make_kit_manifest() -> dict:
-    return {
-        "$schema": "../schemas/kit-manifest.schema.json",
-        "schemaVersion": 2,
-        "minecraftVersion": "26.1",
-        "dataPack": {"id": "sgp", "minFormat": 101.1, "maxFormat": 101.1},
-        "kits": [
-            {
-                "id": 0,
-                "key": "pigeon",
-                "name": "Pigeon",
-                "color": "dark_gray",
-                "icon": "P",
-                "ability": {
-                    "path": "pecking",
-                    "name": "Picorage",
-                    "description": "Attaque continuellement la cible.",
-                    "activationKeybind": "key.drop",
-                    "descriptionComponents": [{"text": "Attaque continuellement la cible."}],
-                },
-                "function": "sgp.kits:collection/pigeon/items",
-                "operations": [],
-            }
-        ],
-    }
 
 
 def make_statistics() -> dict[str, pd.DataFrame]:

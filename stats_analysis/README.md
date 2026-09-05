@@ -1,6 +1,6 @@
 # SGP statistics tooling
 
-The balance report and website publication are separate consumers of the same versioned statistics storage.
+The balance report and portable statistics snapshots are separate consumers of the same versioned statistics storage.
 
 ## Balance report
 
@@ -8,22 +8,18 @@ The balance report and website publication are separate consumers of the same ve
 2. Run `python extract.py` from this directory.
 3. Open `sgp_balance_report.ipynb` and run all cells.
 
-## Website edition export
+## Statistics snapshot
 
-First generate the current kit manifest from the `SGP-website` repository. That manifest snapshots the kit loadouts and the ability names and descriptions currently declared in `data/sgp.kits/function/initialization.mcfunction`.
-
-Then run the independent web exporter from this directory:
+Export the completed collector storage with the immutable release identifier of the datapack that produced it:
 
 ```powershell
-python export_web.py command_storage.dat --kit-manifest ..\..\..\..\..\SGP-website\data\kit-manifest.json --edition 5 --name "Cinquième édition" --starts-at 2026-08-01T18:00:00+02:00 --ends-at 2026-08-01T22:00:00+02:00 --datapack-version <version> --resource-pack-version <version>
+python export_web.py command_storage.dat --datapack-release <release> --output statistics-snapshot.json
 ```
 
-The result defaults to `edition-005.json`. It is a deterministic, versioned bundle containing the exact kit manifest and UUID-based players, kills, damage, picks, ability metrics, Elo ratings, damage causes and death positions for that edition. It does not generate or depend on the balance report.
+The deterministic output follows `statistics-snapshot.schema.json` and contains only the collector schema version plus UUID-based players, kills, damage, picks, ability metrics, Elo ratings, damage causes and death positions. It has no website publishing metadata and does not read kit or resource-pack data.
 
-Import the bundle from the `SGP-website` repository with:
+The `SGP-website` repository combines this snapshot with a kit manifest carrying the same datapack release, supplies edition metadata, validates the corresponding resource-pack release and performs the database import. A release mismatch is rejected before a database transaction starts.
 
 ```powershell
-npm run db:import-edition -- <path-to-edition-005.json>
+npm run db:import-edition -- <path-to-statistics-snapshot.json> --kit-manifest data/kit-manifest.json --edition 5
 ```
-
-Reimporting an edition number atomically replaces that edition instead of duplicating its rows.

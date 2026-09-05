@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "statistics-snapshot.schema.json",
+  "title": "SGP statistics snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "datapackRelease",
+    "statisticsSchemaVersion",
+    "players",
+    "damageCauses",
+    "kills",
+    "damageReceived",
+    "picks",
+    "abilityMetricDefinitions",
+    "abilityMetrics",
+    "deathPositions",
+    "elo"
+  ],
+  "properties": {
+    "$schema": { "const": "statistics-snapshot.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "datapackRelease": { "type": "string", "minLength": 1 },
+    "statisticsSchemaVersion": { "type": "integer", "minimum": 1 },
+    "players": { "type": "array", "items": { "$ref": "#/$defs/player" } },
+    "damageCauses": { "type": "array", "items": { "$ref": "#/$defs/damageCause" } },
+    "kills": { "type": "array", "items": { "$ref": "#/$defs/kill" } },
+    "damageReceived": { "type": "array", "items": { "$ref": "#/$defs/damage" } },
+    "picks": { "type": "array", "items": { "$ref": "#/$defs/pick" } },
+    "abilityMetricDefinitions": { "type": "array", "items": { "$ref": "#/$defs/abilityMetricDefinition" } },
+    "abilityMetrics": { "type": "array", "items": { "$ref": "#/$defs/abilityMetric" } },
+    "deathPositions": { "$ref": "#/$defs/deathPositions" },
+    "elo": { "$ref": "#/$defs/elo" }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "nullableUuid": {
+      "oneOf": [
+        { "$ref": "#/$defs/uuid" },
+        { "type": "null" }
+      ]
+    },
+    "resourceLocation": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+    },
+    "pathIdentifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "jsonValue": {
+      "oneOf": [
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/jsonValue" } }
+      ]
+    },
+    "player": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sgpId", "uuid", "minecraftName"],
+      "properties": {
+        "sgpId": { "type": "integer", "minimum": 1 },
+        "uuid": { "$ref": "#/$defs/uuid" },
+        "minecraftName": { "type": "string", "minLength": 1 }
+      }
+    },
+    "damageCause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "kill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["killerUuid", "killerKitId", "victimUuid", "victimKitId", "causeId", "count"],
+      "properties": {
+        "killerUuid": { "$ref": "#/$defs/nullableUuid" },
+        "killerKitId": { "type": "integer", "minimum": -1 },
+        "victimUuid": { "$ref": "#/$defs/nullableUuid" },
+        "victimKitId": { "type": "integer", "minimum": -1 },
+        "causeId": { "type": "integer" },
+        "count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "damage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetUuid", "targetKitId", "sourceUuid", "sourceKitId", "causeId", "amount"],
+      "properties": {
+        "targetUuid": { "$ref": "#/$defs/uuid" },
+        "targetKitId": { "type": "integer", "minimum": -1 },
+        "sourceUuid": { "$ref": "#/$defs/nullableUuid" },
+        "sourceKitId": { "type": "integer", "minimum": -1 },
+        "causeId": { "type": "integer" },
+        "amount": { "type": "number", "minimum": 0 }
+      }
+    },
+    "pick": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["playerUuid", "kitId", "totalTimeTicks", "count"],
+      "properties": {
+        "playerUuid": { "$ref": "#/$defs/uuid" },
+        "kitId": { "type": "integer", "minimum": -1 },
+        "totalTimeTicks": { "type": "integer", "minimum": 0 },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "abilityMetricSource": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "field"],
+          "properties": {
+            "type": { "const": "ability_field" },
+            "field": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "kitId", "causeIds", "excludeSelf"],
+          "properties": {
+            "type": { "const": "damage_received" },
+            "kitId": { "type": "integer", "minimum": 0 },
+            "causeIds": { "type": "array", "minItems": 1, "items": { "type": "integer" } },
+            "excludeSelf": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "abilityMetricDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kitId", "abilityPath", "metricId", "name", "description", "cooldownTicks", "durationTicks", "settings", "storedUnit", "displayUnit", "displayScale", "source"],
+      "properties": {
+        "kitId": { "type": "integer", "minimum": 0 },
+        "abilityPath": { "$ref": "#/$defs/pathIdentifier" },
+        "metricId": { "$ref": "#/$defs/pathIdentifier" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "cooldownTicks": { "type": ["integer", "null"], "minimum": 0 },
+        "durationTicks": { "type": ["integer", "null"], "minimum": 0 },
+        "settings": {
+          "oneOf": [
+            { "type": "object", "additionalProperties": { "$ref": "#/$defs/jsonValue" } },
+            { "type": "null" }
+          ]
+        },
+        "storedUnit": { "type": "string", "minLength": 1 },
+        "displayUnit": { "type": "string", "minLength": 1 },
+        "displayScale": { "type": "number", "exclusiveMinimum": 0 },
+        "source": { "$ref": "#/$defs/abilityMetricSource" }
+      }
+    },
+    "abilityMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["playerUuid", "kitId", "abilityPath", "metricId", "value"],
+      "properties": {
+        "playerUuid": { "$ref": "#/$defs/uuid" },
+        "kitId": { "type": "integer", "minimum": 0 },
+        "abilityPath": { "$ref": "#/$defs/pathIdentifier" },
+        "metricId": { "$ref": "#/$defs/pathIdentifier" },
+        "value": { "type": "number", "minimum": 0 }
+      }
+    },
+    "deathPositions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata", "entries"],
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["storedUnit", "displayUnit", "displayScale", "quantization", "positionReference"],
+          "properties": {
+            "storedUnit": { "type": "string", "minLength": 1 },
+            "displayUnit": { "type": "string", "minLength": 1 },
+            "displayScale": { "type": "number", "exclusiveMinimum": 0 },
+            "quantization": { "type": "string", "minLength": 1 },
+            "positionReference": { "type": "string", "minLength": 1 }
+          }
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["dimension", "x", "y", "z", "deaths"],
+            "properties": {
+              "dimension": { "$ref": "#/$defs/resourceLocation" },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" },
+              "deaths": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "elo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata", "ratings"],
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["initialRating", "kFactor", "ratingDivisor", "metrics"],
+          "properties": {
+            "initialRating": { "type": "number" },
+            "kFactor": { "type": "number", "exclusiveMinimum": 0 },
+            "ratingDivisor": { "type": "number", "exclusiveMinimum": 0 },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "name", "description", "storedUnit", "displayUnit", "displayScale"],
+                "properties": {
+                  "id": { "$ref": "#/$defs/pathIdentifier" },
+                  "name": { "type": "string", "minLength": 1 },
+                  "description": { "type": "string" },
+                  "storedUnit": { "type": "string", "minLength": 1 },
+                  "displayUnit": { "type": "string", "minLength": 1 },
+                  "displayScale": { "type": "number", "exclusiveMinimum": 0 }
+                }
+              }
+            }
+          }
+        },
+        "ratings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["playerUuid", "rating", "ratedEncounters"],
+            "properties": {
+              "playerUuid": { "$ref": "#/$defs/uuid" },
+              "rating": { "type": "number" },
+              "ratedEncounters": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  }
+}
