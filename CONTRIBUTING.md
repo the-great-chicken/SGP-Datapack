@@ -42,7 +42,9 @@ Do not call an integration function directly from core code, including from macr
 
 ### Tests
 
-Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/`, named after the behavior they check. The GitHub action discovers them automatically and runs them against the plugin-free core. Keep fixtures specific to that CI environment under `.github/packtest/data/`.
+Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep CI-specific fixtures under `.github/packtest/data/`.
+
+Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 
 Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage; a failed `assert` ends the test immediately, so later cleanup will not run. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
 

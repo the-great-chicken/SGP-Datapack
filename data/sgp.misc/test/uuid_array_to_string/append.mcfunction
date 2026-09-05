@@ -1,4 +1,4 @@
-#> sgp.misc:uuid_append
+#> sgp.misc:uuid_array_to_string/append
 #
 # Consecutive conversions append distinct UUIDs, preserve existing entries, and retain caller-provided object fields.
 

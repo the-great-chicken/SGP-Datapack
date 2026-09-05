@@ -1,4 +1,4 @@
-#> sgp.misc:uuid_signed_boundaries
+#> sgp.misc:uuid_array_to_string/signed_boundaries
 #
 # Convert signed 32-bit boundaries without losing their high bit or carrying sign state between integers.
 
