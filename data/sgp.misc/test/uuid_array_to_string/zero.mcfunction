@@ -1,4 +1,4 @@
-#> sgp.misc:uuid_zero
+#> sgp.misc:uuid_array_to_string/zero
 #
 # A zero UUID keeps all 32 digits and creates the requested destination list.
 

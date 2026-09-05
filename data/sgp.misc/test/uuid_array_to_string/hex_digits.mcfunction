@@ -1,4 +1,4 @@
-#> sgp.misc:uuid_hex_digits
+#> sgp.misc:uuid_array_to_string/hex_digits
 #
 # Preserve integer order, leading zeroes, lowercase hex digits, and UUID hyphens.
 

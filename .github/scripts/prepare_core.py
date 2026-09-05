@@ -110,7 +110,7 @@ def prepare(repository, server):
             shutil.copy2(child, target)
     shutil.copy2(repository / 'pack.mcmeta', pack / 'pack.mcmeta')
     validate(pack / 'data', core=True)
-    if not any((pack / 'data').glob('*/test/*.mcfunction')):
+    if not any((pack / 'data').glob('*/test/**/*.mcfunction')):
         raise ValueError('No core PackTest tests were found')
     # CI fixtures never become part of the production datapack.
     shutil.copytree(repository / '.github/packtest/data', pack / 'data', dirs_exist_ok=True)
