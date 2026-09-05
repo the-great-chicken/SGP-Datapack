@@ -34,6 +34,12 @@ Each fonction should be documented in the following way:
 ### World <-> Datapack separation
 Do NOT ever hardcode coordinates even if you're working on the official SGP server. Always reference markers instead.
 
+### Optional plugin integrations
+
+Plugin commands must stay inside one of the removable `sgp.integration.*` namespaces. Core functions call them only through tags in `sgp.hooks`, and every integration entry in those tags must use `"required": false`.
+
+Do not call an integration function directly from core code, including from macro strings or scheduled commands. If a change adds a plugin command, add an optional hook and keep the handler in the matching integration namespace. Run `python3 .github/scripts/prepare_core.py . <new-directory>` to check the boundaries without starting Minecraft.
+
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
 Pour les messages en français, il faut toujours tutoyer le joueur, et accorder avec `(e)` ou `/` les mots. Exemple: `"Tu es devenu(e) un(e) chasseur/euse !"`

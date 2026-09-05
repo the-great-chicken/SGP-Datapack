@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.discord:majeurs/common/spectator_join_1",
+      "required": false
+    }
+  ]
+}

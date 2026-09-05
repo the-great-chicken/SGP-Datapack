@@ -20,7 +20,7 @@ scoreboard players add @a[tag=sgp.initialize_lieux,limit=1] sgp.lieu_count 0
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/player_initialization with entity @s data
 tag @s remove sgp.initialize_lieux
 
-function sgp.misc:tab/player_initialization
+function #sgp.hooks:tab/player_initialization
 
 scoreboard players add @s sgp.teleporteur 0
 

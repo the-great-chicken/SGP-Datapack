@@ -39,9 +39,6 @@ scoreboard objectives add sgp.streak_en_cours minecraft.custom:minecraft.player_
 scoreboard objectives add sgp.dummy dummy
 scoreboard objectives add sgp.timer dummy
 
-scoreboard objectives add sgp.tab_dirty dummy
-scoreboard objectives add sgp.tab_candidate dummy
-scoreboard objectives add sgp.tab_applied dummy
 
 
 
@@ -83,7 +80,6 @@ scoreboard players set #scoreboard_and_clearlag sgp.dummy 0
 
 bossbar add sgp:lgp "a"
 forceload add 0 0
-function sgp.misc:tab/initialization
 
 
 

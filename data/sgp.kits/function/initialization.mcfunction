@@ -36,7 +36,6 @@ scoreboard objectives add sgp.kills_give_2 playerKillCount
 scoreboard objectives add sgp.kills_give_3 playerKillCount
 
 scoreboard objectives add sgp.kit_id dummy
-scoreboard objectives add sgp.kit_prefix_set dummy
 scoreboard objectives add sgp.reset_tags dummy
 
 scoreboard objectives add sgp.last_kill_count playerKillCount

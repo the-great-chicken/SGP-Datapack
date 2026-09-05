@@ -12,13 +12,19 @@ You can join the discord of the original SGP at https://www.discord.gg/FqGKSqPBb
 
 ## Required
 
-The [**Actionbar Mixer**](https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft) datapack is required.
-[**Bookshelf**](https://docs.mcbookshelf.dev/en/latest/) is also required.
+The [**Actionbar Mixer**](https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft) base datapack is required.
+[**Bookshelf Suite 4.0.1**](https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip) is also required.
 
 ## Optional
 
-You need [**CommandAPI**](https://commandapi.jorel.dev/) to use plugin commands in datapacks, as well as [**Luckperms**](https://luckperms.net/), the [**TGCPlugin**](https://github.com/the-great-chicken/TGC-Plugin-v2/tree/main) and [**DiscordSRV**](https://www.spigotmc.org/resources/discordsrv.18494/) + **_an add-on for the /move command_**.
-You can bypass these dependencies by removing every non-vanilla command from the datapack. The actions performed by these custom commands are independent from the rest of the datapack (making players glow, moving them from a voice channel to another...) so removing them shouldn't break anything.
+Plugin-backed features are split into removable namespaces. Keep only the integrations whose commands are available on your server:
+
+- `data/sgp.integration.discord/`: [**DiscordSRV**](https://www.spigotmc.org/resources/discordsrv.18494/) and the SGP extension that provides `/move`. Removing it disables automatic voice-channel movement.
+- `data/sgp.integration.tab/`: [**LuckPerms**](https://luckperms.net/) and Essentials, used for kit prefixes, location suffixes, and player-list refreshes. Removing it disables those tab-list features; core kits, location detection, and the location actionbar continue to work.
+- `data/sgp.integration.tgc/`: [**TGCPlugin**](https://github.com/the-great-chicken/TGC-Plugin-v2/tree/main), used for per-viewer glow behavior. Removing it disables that behavior.
+
+On a Bukkit-compatible server, [**CommandAPI**](https://commandapi.jorel.dev/) must expose the enabled integrations' commands to datapack functions. Remove an unwanted integration's complete directory; do not remove `data/sgp.hooks/`, which provides the core's optional entry points.
+
 We strongly recommend the Worldguard plugin, as some things in the datapack might have not been tested without it.
 For example tnt-based abilities will destroy your world, or poseidon's trident ability will place water that might flow under certain circumstances.
 
@@ -81,7 +87,7 @@ Each of these is optional (or can be present multiple times), depending on how y
 
 ### CommandAPI
 
-Change these settings in CommandAPI's config.yml:
+If you enable the plugin integrations, change these settings in CommandAPI's config.yml. Remove the blocks for integrations you did not install:
 ```yml
 skip-initial-datapack-reload: false
 hook-paper-reload: true
@@ -92,21 +98,14 @@ plugins-to-convert:
   - luckperms (creategroup|createtrack) <name>[brigadier:string]
   - luckperms (group) <name>[brigadier:string] (meta) (setprefix|setsuffix) <priority>[brigadier:integer] <meta>[api:greedy_string]
   - luckperms (track) <track>[brigadier:string] (append) <name>[brigadier:string]
-- TGCPlugin:
-  - statuswarp <name>[brigadier:string] (enabled|disabled)
 - DiscordSRV-SGP-extension:
   - move <player>[api:players] <channel>[api:greedy_string]
-- Citizens:
-  - npc (spawn|despawn)
-  - npc (select) <id>[brigadier:integer]
 - Essentials:
   - playerlist
 
 other-commands-to-convert:
   - glow add <player>[api:players] <entities>[api:entities]
   - glow add <player>[api:players] <entities>[api:entities] <color>[minecraft:color]
-  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer]
-  - glow time <player>[api:players] <entities>[api:entities] <duration>[brigadier:integer] <color>[minecraft:color]
   - glow remove <entities>[api:entities]
   - useglow (toggle)
 
@@ -137,4 +136,4 @@ Messages-To-Hide-Filter:
 
 # Uninstallation
 
-Run the `sgp.misc:uninstall` function, it will remove all the sgp objectives and non-usermade data
+Run the `sgp.misc:uninstall` function to remove SGP objectives and non-user-created datapack data.
