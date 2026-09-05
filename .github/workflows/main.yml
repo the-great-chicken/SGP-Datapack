@@ -4,7 +4,7 @@ env:
   # Make sure to update these links!
   TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/26.1.2/0.19.5/1.1.2/server/jar
   TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/uLkEd5dr/fabric-api-0.155.2%2B26.1.2.jar
-  TEST_PACKTEST: https://cdn.modrinth.com/data/XsKUhp45/versions/MGLOzSvz/packtest-2.5.0.jar
+  TEST_PACKTEST: https://cdn.discordapp.com/attachments/419522338917187595/1545699076719251496/packtest-2.5.0.jar?ex=6a9d17f1&is=6a9bc671&hm=724b96d028323ecccb7824017c5c99343f18fbbe3de461d4529568408002d380&
   TEST_CARDBOARD: https://cdn.modrinth.com/data/MLYQ9VGP/versions/mUfsbVn1/Cardboard-26.1.2.jar
   TEST_ICOMMON: https://cdn.modrinth.com/data/SVKv1SZo/versions/7UUgrDDA/iCommon-Fabric-bundle.jar
   TEST_COMMAND_API: https://cdn.modrinth.com/data/ExxvCi0y/versions/tVPSAZFC/CommandAPI-12.0.0-Paper.jar
@@ -25,21 +25,24 @@ jobs:
           java-version: '25'
       - name: Download and prepare files
         run: |
-          curl -o server.jar $TEST_FABRIC_SERVER
+          curl -fL --retry 3 -o server.jar "$TEST_FABRIC_SERVER"
+
           mkdir mods
-          curl -o mods/Cardboard.jar $TEST_CARDBOARD
-          curl -o mods/iCommon.jar $TEST_ICOMMON
-          curl -o mods/fabric-api.jar $TEST_FABRIC_API
-          curl -o mods/packtest.jar $TEST_PACKTEST
+          curl -fL --retry 3 -o mods/Cardboard.jar "$TEST_CARDBOARD"
+          curl -fL --retry 3 -o mods/iCommon.jar "$TEST_ICOMMON"
+          curl -fL --retry 3 -o mods/fabric-api.jar "$TEST_FABRIC_API"
+          curl -fL --retry 3 -o mods/packtest.jar "$TEST_PACKTEST"
+          curl -fL --retry 3 -o mods/LuckPerms.jar "$TEST_LUCKPERMS"
+
           mkdir plugins
-          curl -o plugins/CommandAPI.jar $TEST_COMMAND_API
-          curl -o plugins/Luckperms.jar $TEST_LUCKPERMS
-          curl -o plugins/TGCPlugin.jar $TEST_TGCPLUGIN
-          curl -o plugins/DiscordSRV.jar $TEST_DISCORDSRV
-          curl -o plugins/DiscordSRV-addon.jar $TEST_DISCORDSRV_ADDON
+          curl -fL --retry 3 -o plugins/CommandAPI.jar "$TEST_COMMAND_API"
+          curl -fL --retry 3 -o plugins/TGCPlugin.jar "$TEST_TGCPLUGIN"
+          curl -fL --retry 3 -o plugins/DiscordSRV.jar "$TEST_DISCORDSRV"
+          curl -fL --retry 3 -o plugins/DiscordSRV-addon.jar "$TEST_DISCORDSRV_ADDON"
+
           mkdir -p world/datapacks/SGP-Datapack
           cp -r data world/datapacks/SGP-Datapack/
           cp pack.mcmeta world/datapacks/SGP-Datapack/
       - name: Run tests
         run: |
-          java -Xmx2G -Dpacktest.auto -jar server.jar nogui
+          java -Xmx2G -Dpacktest.auto=dedicated -jar server.jar nogui
