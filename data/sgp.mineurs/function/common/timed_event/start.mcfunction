@@ -3,7 +3,8 @@
 #
 # Register a timed minor event and its independent remaining time.
 
-scoreboard players add #timed_events_active sgp.dummy 1
+$execute unless score #$(event)_active sgp.dummy matches 1 \
+    run scoreboard players add #timed_events_active sgp.dummy 1
 $scoreboard players set #$(event)_active sgp.dummy 1
 $scoreboard players set #$(event)_remaining sgp.timer $(duration)
 
