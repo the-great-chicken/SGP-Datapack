@@ -9,3 +9,4 @@ function sgp.mineurs:smol/stop
 function sgp.mineurs:bounty/stop
 function sgp.mineurs:confinement/stop
 function sgp.mineurs:frenzy/stop
+function sgp.mineurs:reflexes/stop

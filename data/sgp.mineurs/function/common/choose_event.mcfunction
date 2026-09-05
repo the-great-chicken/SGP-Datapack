@@ -9,9 +9,6 @@ $execute store result score #random_event_roll_$(nbr) sgp.dummy \
 
 $function sgp.mineurs:common/change_event_if_same {nbr:$(nbr)}
 
-$execute if score #random_event_roll_$(nbr) sgp.dummy matches 8.. \
-    run scoreboard players set #random_event_roll_$(nbr) sgp.dummy 1
-
 $execute if score #random_event_roll_$(nbr) sgp.dummy matches 1 run function sgp.mineurs:magic/start
 $execute if score #random_event_roll_$(nbr) sgp.dummy matches 2 run function sgp.mineurs:confinement/start
 $execute if score #random_event_roll_$(nbr) sgp.dummy matches 3 run function sgp.mineurs:swap/start

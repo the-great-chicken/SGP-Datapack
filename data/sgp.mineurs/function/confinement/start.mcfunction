@@ -8,6 +8,7 @@ title @a[tag=sgp.in_game] title {text:"CONFINEMENT!", color:gray, bold:true}
 execute at @e[type=marker,tag=sgp.marker,name="pvp_arena",limit=1] \
     run playsound sgp.mineurs:confinement/siren master @a[tag=sgp.in_game] ~ ~ ~ 100
 
+scoreboard players set #confines_secondes sgp.timer 0
 function sgp.mineurs:confinement/add_time_clock
 
 schedule function sgp.mineurs:confinement/running 1s
