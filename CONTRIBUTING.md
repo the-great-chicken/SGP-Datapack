@@ -40,6 +40,14 @@ Plugin commands must stay inside one of the removable `sgp.integration.*` namesp
 
 Do not call an integration function directly from core code, including from macro strings or scheduled commands. If a change adds a plugin command, add an optional hook and keep the handler in the matching integration namespace. Run `python3 .github/scripts/prepare_core.py . <new-directory>` to check the boundaries without starting Minecraft.
 
+### Tests
+
+Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/`, named after the behavior they check. The GitHub action discovers them automatically and runs them against the plugin-free core. Keep fixtures specific to that CI environment under `.github/packtest/data/`.
+
+Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage; a failed `assert` ends the test immediately, so later cleanup will not run. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
+
+Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.
+
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
 Pour les messages en français, il faut toujours tutoyer le joueur, et accorder avec `(e)` ou `/` les mots. Exemple: `"Tu es devenu(e) un(e) chasseur/euse !"`
