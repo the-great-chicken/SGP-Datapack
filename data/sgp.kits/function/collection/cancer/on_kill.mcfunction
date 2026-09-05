@@ -94,12 +94,12 @@ execute as @a[tag=sgp.cancer,scores={sgp.kills_give_2=2..}] run function sgp.kit
     }
 
 execute as @a[tag=sgp.cancer,scores={sgp.kills_give_3=3..}] run function sgp.kits:kills_give/basic { \
-    nb:1, \
+    nb:3, \
     give:'tnt_minecart[ \
         custom_name={text:"Explosif à Roulettes", color:red, italic:false, bold:true}, \
         max_stack_size=64 \
         ]', \
-    give_2:'', \
+    give_2:air, \
     actionbar:'{text:"+ 1 ☀ Explosif à Roulettes ", color:"red", bold:true}', \
     width:330, \
     }
