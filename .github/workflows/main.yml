@@ -8,8 +8,9 @@ env:
   TEST_CARDBOARD: https://cdn.modrinth.com/data/MLYQ9VGP/versions/mUfsbVn1/Cardboard-26.1.2.jar
   TEST_ICOMMON: https://cdn.modrinth.com/data/SVKv1SZo/versions/7UUgrDDA/iCommon-Fabric-bundle.jar
   TEST_COMMAND_API: https://cdn.modrinth.com/data/ExxvCi0y/versions/tVPSAZFC/CommandAPI-12.0.0-Paper.jar
+  TEST_PACKET_EVENTS: https://cdn.modrinth.com/data/HYKaKraK/versions/h0ncTpUP/packetevents-spigot-2.13.0.jar
   TEST_LUCKPERMS: https://cdn.modrinth.com/data/Vebnzrzj/versions/UHUghDkV/LuckPerms-Fabric-5.5.57.jar
-  TEST_TGCPLUGIN: https://cdn.discordapp.com/attachments/419522338917187595/1545386962666393620/TGCPlugin-26.1.2.jar?ex=6a9bf543&is=6a9aa3c3&hm=5f3e7df9f1a733518d05b047676edc0dfbde3534d8d270e10cc6a6011ca78b74&
+  TEST_TGCPLUGIN: https://cdn.discordapp.com/attachments/419522338917187595/1545715444248223777/TGCPlugin-26.1.2.jar?ex=6a9d272f&is=6a9bd5af&hm=3d3685578395d9b8b19ae1ea67a98c4dfaef34d1c6e293bc9039140f94b9e02f&
   TEST_DISCORDSRV: https://cdn.modrinth.com/data/UmLGoGij/versions/ATlquwiT/DiscordSRV-Build-1.30.5.jar
   TEST_DISCORDSRV_ADDON: https://cdn.discordapp.com/attachments/419522338917187595/1545386963039952967/DiscordSRV-SGP-extension.jar?ex=6a9bf543&is=6a9aa3c3&hm=0fd59767dbff2015be07b13df9b70f3c095041951a033d7d5e7b00a71d611ade&
 
@@ -36,6 +37,7 @@ jobs:
 
           mkdir plugins
           curl -fL --retry 3 -o plugins/CommandAPI.jar "$TEST_COMMAND_API"
+          curl -fL --retry 3 -o plugins/PacketEvents.jar "$TEST_PACKET_EVENTS"
           curl -fL --retry 3 -o plugins/TGCPlugin.jar "$TEST_TGCPLUGIN"
           curl -fL --retry 3 -o plugins/DiscordSRV.jar "$TEST_DISCORDSRV"
           curl -fL --retry 3 -o plugins/DiscordSRV-addon.jar "$TEST_DISCORDSRV_ADDON"
