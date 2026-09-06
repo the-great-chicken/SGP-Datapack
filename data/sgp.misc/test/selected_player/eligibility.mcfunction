@@ -1,5 +1,6 @@
 #> sgp.misc:selected_player/eligibility
 # @dummy
+# @environment sgp.ci:selected_player/eligibility
 #
 # Only active, non-peaceful players contribute to the count and can be selected.
 # Selecting a second role preserves the first role's tags.

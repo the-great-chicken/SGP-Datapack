@@ -5,6 +5,7 @@
 scoreboard objectives add sgp.reflexes_joueur trigger
 scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.share_item trigger
+scoreboard objectives add sgp.lootdrop dummy
 
 
 

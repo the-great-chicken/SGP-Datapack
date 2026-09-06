@@ -46,6 +46,10 @@ Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>
 
 Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 
+Tests that wait across ticks and change global event state need separate `@environment` IDs, with teardown for cleanup after failures. The Lootdrop CI fixture replaces its random loot table with a full chest of diamonds so inventory loss is deterministic.
+
+PackTest only auto-removes dummies on success and near the structure. Roster-sensitive tests use environment cleanup to disconnect leftover dummies; damage tests also wait for client-loading protection to expire.
+
 Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage; a failed `assert` ends the test immediately, so later cleanup will not run. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
 
 Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.

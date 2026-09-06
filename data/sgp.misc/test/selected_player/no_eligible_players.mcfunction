@@ -1,5 +1,6 @@
 #> sgp.misc:selected_player/no_eligible_players
 # @dummy
+# @environment sgp.ci:selected_player/no_eligible_players
 #
 # Neither an outsider nor a peaceful participant may be selected, even with a minimum of one.
 
