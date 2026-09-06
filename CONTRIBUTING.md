@@ -50,6 +50,8 @@ Tests that wait across ticks and change global event state need separate `@envir
 
 PackTest only auto-removes dummies on success and near the structure. Roster-sensitive tests use environment cleanup to disconnect leftover dummies; damage tests also wait for client-loading protection to expire.
 
+PackTest runs dummy interactions inside a command function, which defers loot advancement callbacks. Lootdrop's menu timing therefore needs playtesting; CI covers generation, close effects, restart cleanup, and sharing.
+
 Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage; a failed `assert` ends the test immediately, so later cleanup will not run. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
 
 Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.
