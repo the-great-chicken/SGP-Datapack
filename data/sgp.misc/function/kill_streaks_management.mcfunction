@@ -2,6 +2,9 @@
 # 
 # Updates the highest streak, resets it when the player dies
 
+# The periodic player initialization runs after this update.
+scoreboard players add @a[tag=sgp.in_game] sgp.plus_grande_streak 0
+
 execute as @a[tag=sgp.in_game] \
     if score @s sgp.streak_en_cours > @s sgp.plus_grande_streak \
         run scoreboard players operation @s sgp.plus_grande_streak = @s sgp.streak_en_cours
