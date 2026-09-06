@@ -1,10 +1,12 @@
 #> sgp.cosmetics:rewards/independent_claims
 # @dummy
-# @environment sgp.ci:cosmetic_rewards/independent_claims
+# @environment sgp.ci:cosmetic_rewards
 #
 # Different players can earn the same reward, and different trials maintain separate unlocks and counts.
 
 tag @s add sgp.peaceful
+scoreboard players set #nbr_players sgp.particle.smoke_unlocked 0
+scoreboard players set #nbr_players sgp.particle.marine_unlocked 0
 dummy RewardOther spawn
 tag RewardOther add sgp.peaceful
 scoreboard players set @s sgp.particle.smoke_unlocked 0

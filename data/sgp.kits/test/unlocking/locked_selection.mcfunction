@@ -1,6 +1,6 @@
 #> sgp.kits:unlocking/locked_selection
 # @dummy
-# @environment sgp.ci:unlocking/locked_selection
+# @environment sgp.ci:unlocking
 #
 # A locked kit gives its discovery hint and leaves the current kit and equipment intact.
 

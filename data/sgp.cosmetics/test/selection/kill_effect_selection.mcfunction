@@ -1,6 +1,6 @@
 #> sgp.cosmetics:selection/kill_effect_selection
 # @dummy
-# @environment sgp.ci:cosmetics/kill_effect_selection
+# @environment sgp.ci:cosmetics
 #
 # Kill-effect replacement is exclusive and cannot change the particle settings or equip a locked effect.
 

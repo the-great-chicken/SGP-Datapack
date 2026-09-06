@@ -1,6 +1,6 @@
 #> sgp.cosmetics:selection/particle_selection
 # @dummy
-# @environment sgp.ci:cosmetics/particle_selection
+# @environment sgp.ci:cosmetics
 #
 # A new particle replaces the old one; a locked choice preserves it and other cosmetic settings.
 

@@ -1,6 +1,6 @@
 #> sgp.cosmetics:rewards/first_claim
 # @dummy
-# @environment sgp.ci:cosmetic_rewards/first_claim
+# @environment sgp.ci:cosmetic_rewards
 #
 # Claiming saves the unlock and advances the existing completion count, without auto-equipping it.
 
@@ -16,7 +16,7 @@ assert chat ".*Tu viens de débloquer Cloak Smoke.*" @s
 assert chat ".*8e personne.*Tower Trial.*" @s
 assert entity @s[tag=sgp.particle.cloud,tag=sgp.intensity.light]
 assert not entity @s[tag=sgp.particle.smoke]
-execute store result score @s sgp.dummy if entity @e[type=firework_rocket]
+execute store result score @s sgp.dummy if entity @e[distance=..2,type=firework_rocket]
 assert score @s sgp.dummy matches 1
 
 # The earned unlock must actually be accepted by the cosmetic selection entry point.
