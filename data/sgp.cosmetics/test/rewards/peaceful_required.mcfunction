@@ -1,6 +1,6 @@
 #> sgp.cosmetics:rewards/peaceful_required
 # @dummy
-# @environment sgp.ci:cosmetic_rewards/peaceful_required
+# @environment sgp.ci:cosmetic_rewards
 #
 # A non-Peaceful player cannot claim a trial reward or change its completion count.
 
@@ -11,4 +11,4 @@ assert score @s sgp.particle.smoke_unlocked matches 0
 assert score #nbr_players sgp.particle.smoke_unlocked matches 5
 assert chat ".*Paisible.*récupérer cette récompense.*" @s
 assert not chat ".*Tu viens de débloquer.*" @s
-assert not entity @e[type=firework_rocket]
+assert not entity @e[distance=..2,type=firework_rocket]

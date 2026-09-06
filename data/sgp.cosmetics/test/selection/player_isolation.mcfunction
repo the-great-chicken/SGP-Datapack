@@ -1,6 +1,6 @@
 #> sgp.cosmetics:selection/player_isolation
 # @dummy
-# @environment sgp.ci:cosmetics/player_isolation
+# @environment sgp.ci:cosmetics
 #
 # One player's selections and another player's disable actions leave each other's cosmetics alone.
 

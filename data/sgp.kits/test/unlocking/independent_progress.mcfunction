@@ -1,6 +1,6 @@
 #> sgp.kits:unlocking/independent_progress
 # @dummy
-# @environment sgp.ci:unlocking/independent_progress
+# @environment sgp.ci:unlocking
 #
 # Discoveries belong to a player and a kit; one discovery cannot unlock or suppress another.
 

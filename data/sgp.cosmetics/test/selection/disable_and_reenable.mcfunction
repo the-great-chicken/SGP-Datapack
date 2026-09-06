@@ -1,6 +1,6 @@
 #> sgp.cosmetics:selection/disable_and_reenable
 # @dummy
-# @environment sgp.ci:cosmetics/disable_and_reenable
+# @environment sgp.ci:cosmetics
 #
 # Disabling affects only its category and preserves unlocks so the cosmetic can be equipped again.
 

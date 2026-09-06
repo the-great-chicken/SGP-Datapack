@@ -1,6 +1,6 @@
 #> sgp.kits:unlocking/first_discovery
 # @dummy
-# @environment sgp.ci:unlocking/first_discovery
+# @environment sgp.ci:unlocking
 #
 # A new discovery is saved and announced to participants without equipping the kit.
 
@@ -9,13 +9,13 @@ scoreboard players reset @s sgp.tank_found
 scoreboard players set @s sgp.kit_id 2
 tag @s add sgp.archer
 item replace entity @s weapon.mainhand with minecraft:diamond 7
-dummy UnlockObserver spawn
-tag UnlockObserver add sgp.in_game
+dummy UnlockFirstWatch spawn
+tag UnlockFirstWatch add sgp.in_game
 dummy UnlockOutside spawn
 function sgp.kits:unlocking/unlocking_kit {kit:"tank",kit_color:"gray",fw_color:8421504}
 assert score @s sgp.tank_found matches 1
 assert chat ".*a trouvé le kit tank.*" @s
-assert chat ".*a trouvé le kit tank.*" UnlockObserver
+assert chat ".*a trouvé le kit tank.*" UnlockFirstWatch
 assert not chat ".*a trouvé le kit tank.*" UnlockOutside
 assert score @s sgp.kit_id matches 2
 assert entity @s[tag=sgp.archer]

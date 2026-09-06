@@ -1,6 +1,6 @@
 #> sgp.cosmetics:selection/intensity_selection
 # @dummy
-# @environment sgp.ci:cosmetics/intensity_selection
+# @environment sgp.ci:cosmetics
 #
 # Intensity changes keep the particle and kill effect; a missing unlock cannot erase the current intensity.
 
