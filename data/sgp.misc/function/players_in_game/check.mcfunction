@@ -1,7 +1,9 @@
 #> sgp.misc:players_in_game/check
 # `{radius: int}`
 #
-# Players who are inside the radius have a tag, others don't
+# Players within the inclusive radius in the arena's dimension are in-game.
 
-$execute as @a[distance=..$(radius),tag=!sgp.in_game] run tag @s add sgp.in_game
-$execute as @a[distance=$(radius)..,tag=sgp.in_game] run function sgp.misc:players_in_game/leave
+$tag @a[distance=..$(radius)] add sgp.inside_arena
+execute as @a[tag=sgp.in_game,tag=!sgp.inside_arena] run function sgp.misc:players_in_game/leave
+tag @a[tag=sgp.inside_arena,tag=!sgp.in_game] add sgp.in_game
+tag @a[tag=sgp.inside_arena] remove sgp.inside_arena
