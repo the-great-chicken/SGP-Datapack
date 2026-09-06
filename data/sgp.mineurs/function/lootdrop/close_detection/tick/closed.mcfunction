@@ -23,6 +23,4 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true},
 
 particle minecraft:large_smoke ~ ~.5 ~ 0.2 0.2 0.2 0.02 1000
 
-tag @s remove sgp.opened_chest
-
-kill @e[limit=8,sort=nearest,name=lootdrop_beacon,type=text_display]
+function sgp.mineurs:lootdrop/clear_marker

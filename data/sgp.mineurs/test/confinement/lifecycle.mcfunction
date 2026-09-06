@@ -1,13 +1,18 @@
 #> sgp.mineurs:confinement/lifecycle
 # @dummy
+# @environment sgp.ci:confinement/lifecycle
 #
 # Allow fourteen safe seconds, begin exposure damage at fifteen, and end at 150 seconds.
 
 function sgp.ci:minor_events/reset_timer
 data modify storage sgp:data tests.confinement_lifecycle set value {}
-tag @s add sgp.in_game
 gamemode survival @s
 tp @s ~0.5 ~1 ~0.5
+fill ~-1 ~1 ~-1 ~1 ~3 ~1 air
+setblock ~ ~ ~ stone
+# Wait for the dummy client-loading protection to expire before checking damage.
+await delay 61t
+tag @s add sgp.in_game
 function sgp.mineurs:confinement/start
 function sgp.ci:minor_events/advance {function:"sgp.mineurs:confinement/running",ticks:14}
 execute store result storage sgp:data tests.confinement_lifecycle.grace int 1 run data get entity @s Health

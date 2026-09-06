@@ -1,5 +1,6 @@
 #> sgp.mineurs:bounty/cancel_and_empty
 # @dummy
+# @environment sgp.ci:bounty/cancel_and_empty
 #
 # Cancelling grants no survivor reward, and an empty eligible roster starts no timer.
 

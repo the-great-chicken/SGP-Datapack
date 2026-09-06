@@ -1,5 +1,6 @@
 #> sgp.mineurs:bounty/survivor
 # @dummy
+# @environment sgp.ci:bounty/survivor
 #
 # Only eligible players become wanted; surviving expiry clears the mark and grants a claimable reward.
 

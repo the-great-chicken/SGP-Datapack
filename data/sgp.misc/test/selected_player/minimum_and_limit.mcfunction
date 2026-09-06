@@ -1,5 +1,6 @@
 #> sgp.misc:selected_player/minimum_and_limit
 # @dummy
+# @environment sgp.ci:selected_player/minimum_and_limit
 #
 # Bounties select one plus a seventh of the eligible players, including the threshold at seven.
 # Small groups still get a seeker, and asking for more players than exist selects everyone available.

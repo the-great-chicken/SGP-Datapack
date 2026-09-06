@@ -1,5 +1,6 @@
 #> sgp.misc:selected_player/team_sizes
 # @dummy
+# @environment sgp.ci:selected_player/team_sizes
 #
 # Protect's half-team selection rounds down for odd groups and follows roster changes.
 

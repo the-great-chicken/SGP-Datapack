@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:players/cleanup",
+  "teardown": "sgp.ci:minor_events/cleanup_confinement"
+}
