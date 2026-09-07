@@ -4,7 +4,7 @@
 execute positioned ~ ~ ~ unless predicate sgp.misc:is_in_water \
     positioned ~ ~0.8 ~ unless predicate sgp.misc:is_in_water \
     positioned ~ ~-0.8 ~ unless predicate sgp.misc:is_in_water \
-    unless entity @e[tag=sgp.marker,name="temp_water",distance=..2] \
+    unless entity @e[tag=sgp.marker,name="temp_water",distance=..2,type=marker] \
     run return run execute if items entity @s weapon.mainhand *[enchantments~[{enchantments:"minecraft:riptide"}]] \
         run item modify entity @s weapon.mainhand sgp.kits:remove_riptide
 
