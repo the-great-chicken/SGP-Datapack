@@ -10,6 +10,7 @@ function sgp.kits:abilities/bats/hide/armor_item {slot:feet}
 
 # The helmet requires both the equippable stripping (for armor) and the item_model replacement (for blocks/items)
 item replace entity @s armor.head from entity @p[tag=sgp.processing] armor.head
+data modify entity @s equipment.head.components."minecraft:custom_data".hidden_armor set value 1b
 
 data modify entity @s equipment.head.components."minecraft:custom_data".backup_eq set from entity @s equipment.head.components."minecraft:equippable"
 data modify entity @s equipment.head.components."minecraft:equippable" merge value {slot:"head"}
