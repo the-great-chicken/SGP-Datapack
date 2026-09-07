@@ -42,7 +42,7 @@ Do not call an integration function directly from core code, including from macr
 
 ### Tests
 
-Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep CI-specific fixtures under `.github/packtest/data/`.
+Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep test fixtures under `tests/fixtures/data/`; the preparation script copies them into the CI datapack.
 
 Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 

@@ -113,7 +113,7 @@ def prepare(repository, server):
     if not any((pack / 'data').glob('*/test/**/*.mcfunction')):
         raise ValueError('No core PackTest tests were found')
     # CI fixtures never become part of the production datapack.
-    shutil.copytree(repository / '.github/packtest/data', pack / 'data', dirs_exist_ok=True)
+    shutil.copytree(repository / 'tests/fixtures/data', pack / 'data', dirs_exist_ok=True)
     validate(pack / 'data', core=True)
     (server / 'server.properties').write_text(
         'level-name=world\nfunction-permission-level=4\n', encoding='utf-8')
