@@ -6,8 +6,7 @@
 
 function sgp.ci:fangs_placement/fixture
 fill ~0 ~3 ~2 ~0 ~4 ~2 stone
-setblock ~0 ~2 ~3 air
-setblock ~0 ~0 ~3 stone
+fill ~0 ~1 ~3 ~0 ~2 ~3 air
 function sgp.ci:fangs_placement/cast {count:4,x:"~0.5",y:"~3",z:"~0.5",yaw:0}
 function sgp.ci:fangs_placement/expect_count {count:4}
 function sgp.ci:fangs_placement/expect {x:"~0.5",y:"~3",z:"~0.5"}
