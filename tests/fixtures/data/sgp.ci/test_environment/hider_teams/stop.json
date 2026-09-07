@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:hider_teams/setup",
+  "teardown": "sgp.ci:hider_teams/cleanup"
+}
