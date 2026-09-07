@@ -6,4 +6,4 @@ scoreboard players operation $px bs.in = @s bs.pos.x
 scoreboard players operation $py bs.in = @s bs.pos.y
 scoreboard players operation $pz bs.in = @s bs.pos.z
 
-execute positioned as @s as @e[predicate=bs.link:link_equal,type=mannequin,limit=3] run function sgp.kits:abilities/illusions/apply_offset
+execute positioned as @s as @e[predicate=bs.link:link_equal,limit=3,type=mannequin] run function sgp.kits:abilities/illusions/apply_offset
