@@ -1,6 +1,7 @@
 #> sgp.ci:protect/cleanup
 
 function #bs.schedule:cancel_all {with:{id:"major_event"}}
+kill @e[tag=sgp.protect.king_selector,type=interaction]
 kill @e[tag=sgp.ci.protect,type=marker]
 function sgp.ci:players/cleanup
 execute store result score #protect_phase sgp.dummy run data get storage sgp.ci:protect previous.phase

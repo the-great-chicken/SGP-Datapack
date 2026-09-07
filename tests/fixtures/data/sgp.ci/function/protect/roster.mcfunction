@@ -3,6 +3,7 @@
 
 execute as @a[tag=sgp.ci.protect_actor] run dummy @s leave
 function #bs.schedule:cancel_all {with:{id:"major_event"}}
+kill @e[tag=sgp.protect.king_selector,type=interaction]
 kill @e[tag=sgp.ci.protect,type=marker]
 scoreboard players set #protect_phase sgp.dummy 2
 scoreboard players set #rounds sgp.dummy 0
