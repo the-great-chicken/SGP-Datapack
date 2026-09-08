@@ -11,6 +11,10 @@ assert score #ci.protect.selectors sgp.dummy matches 1
 function sgp.majeurs:protect/close_king_selector {side:rouge}
 assert not entity @e[tag=sgp.protect.king_selector.rouge,distance=..40,type=interaction]
 assert entity @e[tag=sgp.protect.king_selector.bleu,distance=..40,type=interaction]
-execute as PrBlueKing run function sgp.majeurs:protect/select_king with entity @e[tag=sgp.protect.king_selector.bleu,limit=1,type=interaction] data.args
+assert score #protect_phase sgp.dummy matches 1
+assert score #king_bleu_chosen sgp.dummy matches 0
+assert entity @a[name=PrBlueKing,tag=sgp.major_participant,team=sgp.bleue]
+assert data entity @e[tag=sgp.protect.king_selector.bleu,distance=..40,limit=1,type=interaction] data.args{side:"bleu",team:"bleue",name:"Bleu",color:"dark_blue"}
+execute as PrBlueKing run function sgp.majeurs:protect/select_king with entity @e[tag=sgp.protect.king_selector.bleu,distance=..40,limit=1,type=interaction] data.args
 assert entity @a[name=PrBlueKing,tag=sgp.roi_bleu]
 assert score #king_rouge_chosen sgp.dummy matches 0

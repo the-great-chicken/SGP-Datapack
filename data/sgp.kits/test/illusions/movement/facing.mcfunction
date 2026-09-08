@@ -4,7 +4,9 @@
 #
 # Each decoy preserves the caster's pitch and faces its own side of the formation.
 
-await predicate sgp.ci:illusions_movement/area_loaded
+gamemode spectator @s
+tp @s 0 88 0
+await entity @s[predicate=sgp.ci:illusions_movement/area_loaded]
 execute positioned 0 80 0 run function sgp.ci:illusions_movement/fixture
 execute positioned 0 80 0 run tp @s ~10.5 ~1 ~8.5 30 25
 execute at @s run function sgp.kits:abilities/illusions/tick

@@ -4,7 +4,9 @@
 #
 # Updating one caster leaves the other caster's formation where it was.
 
-await predicate sgp.ci:illusions_movement/area_loaded
+gamemode spectator @s
+tp @s 0 88 0
+await entity @s[predicate=sgp.ci:illusions_movement/area_loaded]
 execute positioned 0 80 0 run function sgp.ci:illusions_movement/fixture
 dummy IllOther spawn
 tag IllOther add sgp.ci.illusion_actor
