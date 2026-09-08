@@ -3,3 +3,4 @@
 
 function sgp.ci:players/cleanup
 forceload add -16 -16 0 0
+# Keep the shared origin chunks loaded until this disposable CI server stops.

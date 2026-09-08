@@ -2,4 +2,4 @@
 
 function sgp.ci:perfect_accuracy/clear_projectiles
 function sgp.ci:players/cleanup
-forceload remove -16 -16 0 0
+kill @e[tag=sgp.ci.origin_ready,type=marker]

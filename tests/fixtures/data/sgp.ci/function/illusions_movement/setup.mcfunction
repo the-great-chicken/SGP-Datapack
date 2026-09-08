@@ -3,5 +3,5 @@
 # Each scenario has its own environment batch because the loading wait and fixed arena cannot be shared concurrently.
 
 function sgp.ci:players/cleanup
-schedule clear sgp.ci:illusions_movement/unload
-forceload add 0 0
+forceload add -16 -16 0 0
+# Keep the shared origin chunks loaded until this disposable CI server stops.
