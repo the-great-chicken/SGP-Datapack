@@ -5,6 +5,6 @@ function sgp.ci:illusions_movement/clear
 fill ~ ~1 ~ ~32 ~7 ~16 air
 fill ~ ~ ~ ~32 ~ ~16 stone
 tag @s add sgp.ci.illusion_actor
-gamemode creative @s
+gamemode survival @s
 tp @s ~8.5 ~1 ~8.5 0 0
 execute at @s run function sgp.ci:illusions_movement/formation {group:first}
