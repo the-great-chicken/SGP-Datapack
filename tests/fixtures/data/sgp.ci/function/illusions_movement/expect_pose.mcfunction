@@ -12,4 +12,5 @@ execute store result storage sgp.ci:illusions_movement pose_failure.state.player
 $execute store result storage sgp.ci:illusions_movement pose_failure.state.center_link int 1 run scoreboard players get @n[tag=sgp.ci.illusion_$(group),type=marker] bs.link.to
 $execute as @e[tag=sgp.ci.illusion_$(group),type=mannequin] run data modify storage sgp.ci:illusions_movement pose_failure.state.poses append from entity @s pose
 $execute as @e[tag=sgp.ci.illusion_$(group),type=mannequin] run data modify storage sgp.ci:illusions_movement pose_failure.state.health append from entity @s Health
-function sgp.ci:illusions_movement/pose_failure with storage sgp.ci:illusions_movement pose_failure
+function sgp.ci:illusions_movement/pose_failure
+assert score #ci.illusion.count sgp.dummy matches 3

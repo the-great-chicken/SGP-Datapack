@@ -10,6 +10,7 @@ env:
   TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/uLkEd5dr/fabric-api-0.155.2%2B26.1.2.jar
   TEST_PACKTEST: https://cdn.modrinth.com/data/XsKUhp45/versions/MGLOzSvz/packtest-2.5.0.jar
   TEST_BOOKSHELF: https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip
+  TEST_MIXER: https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.3.3/Actionbar-Mixer.v1.3.3.zip
 
 jobs:
   test:
@@ -23,6 +24,7 @@ jobs:
           java-version: '25'
       - name: Validate integration boundaries and prepare core
         run: |
+          python3 .github/scripts/test_ci_staging.py
           python3 .github/scripts/prepare_core.py . .packtest-server
       - name: Download test dependencies
         working-directory: .packtest-server
@@ -32,6 +34,8 @@ jobs:
           curl -fL --retry 3 -o mods/fabric-api.jar "$TEST_FABRIC_API"
           curl -fL --retry 3 -o mods/packtest.jar "$TEST_PACKTEST"
           curl -fL --retry 3 -o world/datapacks/bookshelf-suite.zip "$TEST_BOOKSHELF"
+          curl -fL --retry 3 -o actionbar-mixer.zip "$TEST_MIXER"
+          python3 ../.github/scripts/install_mixer.py . actionbar-mixer.zip
           unzip -tq mods/fabric-api.jar
           unzip -tq mods/packtest.jar
           unzip -tq world/datapacks/bookshelf-suite.zip

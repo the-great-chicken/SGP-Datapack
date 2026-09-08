@@ -1,4 +1,4 @@
 #> sgp.ci:illusions_movement/position_failure
-# Report the decoy and its actual position rather than an anonymous selector mismatch.
+# Print structured diagnostics; the caller owns the assertion.
 
-$fail "Illusion $(group)/$(direction): expected $(x) $(y) $(z) relative to 0 80 0; actual position $(actual)"
+tellraw @a [{text:"Illusion position mismatch: "},{nbt:"position_check",storage:"sgp.ci:illusions_movement"}]

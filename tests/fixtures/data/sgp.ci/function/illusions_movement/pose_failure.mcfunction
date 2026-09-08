@@ -1,4 +1,4 @@
 #> sgp.ci:illusions_movement/pose_failure
-# Keep the engine-observed state in the CI failure summary.
+# Print structured diagnostics; the caller owns the assertion.
 
-$fail Illusion $(group): expected three $(expected) decoys; observed $(state)
+tellraw @a [{text:"Illusion pose mismatch: "},{nbt:"pose_failure",storage:"sgp.ci:illusions_movement"}]

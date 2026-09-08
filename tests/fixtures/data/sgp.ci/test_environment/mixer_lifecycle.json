@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:mixer_lifecycle/setup",
+  "teardown": "sgp.ci:mixer_lifecycle/cleanup"
+}

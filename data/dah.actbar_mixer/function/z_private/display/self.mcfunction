@@ -4,6 +4,7 @@
 # This keeps Actionbar Mixer responsible for the normal actionbar content, but
 # prepends a zero-net-width HUD overlay before that content is rendered.
 
+scoreboard players set #test dah.actbar.calc 1
 execute if entity @s[tag=dah.actbar.pause] run return fail
 
 function sgp.misc:actionbar/hud/build

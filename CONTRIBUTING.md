@@ -46,6 +46,8 @@ Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>
 
 Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 
+CI installs pinned Actionbar Mixer resources beneath SGP's overrides. Fixture collisions are allowlisted in `prepare_core.py`; the deterministic Lootdrop override retains an unchanged production table at `sgp.ci:production/lootdrop_chest` for Minecraft to load and test. Failure diagnostics must be followed by an ordinary `assert`, never replace it.
+
 Share an `@environment` when tests can coexist, including after failures: setup and teardown run around the batch, not each test. Keep separate IDs for asynchronous global-state tests or tests requiring an isolated player roster. The Lootdrop CI fixture replaces its random loot table with a full chest of diamonds so inventory loss is deterministic.
 
 PackTest only auto-removes dummies on success and near the structure. Roster-sensitive tests use environment cleanup to disconnect leftover dummies; damage tests also wait for client-loading protection to expire.

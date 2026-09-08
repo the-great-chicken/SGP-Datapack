@@ -11,6 +11,11 @@ import re
 import shutil
 
 MODULES = ('sgp.integration.discord', 'sgp.integration.tab', 'sgp.integration.tgc')
+# Deterministic fixture -> unchanged production resource loaded under a validation ID.
+FIXTURE_COLLISIONS = {
+    'sgp.mineurs/loot_table/lootdrop_chest.json':
+        'sgp.ci/loot_table/production/lootdrop_chest.json',
+}
 PLUGIN_COMMAND = re.compile(
     r'(?:^\$?|\brun\s+)(?:[a-z0-9_.-]+:)?'
     r'(?:move|glow|useglow|statuswarp|luckperms|lp|playerlist|npc)\s*(?=$|[\s"}])'
@@ -91,6 +96,22 @@ def validate(data, core=False):
     print(f'Validated {len(files)} resources ({"core" if core else "available integrations"}).')
 
 
+def overlay_fixtures(production, fixtures):
+    files = [p for p in fixtures.rglob('*') if p.is_file()]
+    collisions = {p.relative_to(fixtures).as_posix() for p in files
+                  if (production / p.relative_to(fixtures)).exists()}
+    unexpected = collisions - FIXTURE_COLLISIONS.keys()
+    if unexpected:
+        raise ValueError(f'Unapproved fixture overrides: {sorted(unexpected)}')
+    for source in sorted(collisions):
+        destination = production / FIXTURE_COLLISIONS[source]
+        if destination.exists() or (fixtures / FIXTURE_COLLISIONS[source]).exists():
+            raise ValueError(f'Production validation resource already exists: {destination}')
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(production / source, destination)
+    shutil.copytree(fixtures, production, dirs_exist_ok=True)
+
+
 def prepare(repository, server):
     repository = repository.resolve()
     server = server.resolve()
@@ -113,7 +134,7 @@ def prepare(repository, server):
     if not any((pack / 'data').glob('*/test/**/*.mcfunction')):
         raise ValueError('No core PackTest tests were found')
     # CI fixtures never become part of the production datapack.
-    shutil.copytree(repository / 'tests/fixtures/data', pack / 'data', dirs_exist_ok=True)
+    overlay_fixtures(pack / 'data', repository / 'tests/fixtures/data')
     validate(pack / 'data', core=True)
     (server / 'server.properties').write_text(
         'level-name=world\nfunction-permission-level=4\n', encoding='utf-8')
