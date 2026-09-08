@@ -1,4 +1,4 @@
 #> sgp.ci:illusions_movement/position_failure
-# Print structured diagnostics; the caller owns the assertion.
+# {group, direction, x, y, z, actual}
 
-tellraw @a [{text:"Illusion position mismatch: "},{nbt:"position_check",storage:"sgp.ci:illusions_movement"}]
+$say Illusion position mismatch: group=$(group), direction=$(direction), expected=($(x), $(y), $(z)), actual=$(actual)

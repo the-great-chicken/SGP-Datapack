@@ -1,4 +1,5 @@
 #> sgp.ci:illusions_movement/pose_failure
-# Print structured diagnostics; the caller owns the assertion.
+# {group, expected, state}
+# Log diagnostics without interpolating NBT into a text component.
 
-tellraw @a [{text:"Illusion pose mismatch: "},{nbt:"pose_failure",storage:"sgp.ci:illusions_movement"}]
+$say Illusion pose mismatch: group=$(group), expected=$(expected), state=$(state)

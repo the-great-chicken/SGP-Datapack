@@ -54,7 +54,7 @@ PackTest only auto-removes dummies on success and near the structure. Roster-sen
 
 PackTest runs dummy interactions inside a command function, which defers loot advancement callbacks. Lootdrop's menu timing therefore needs playtesting; CI covers generation, close effects, restart cleanup, and sharing.
 
-Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage; a failed `assert` ends the test immediately, so later cleanup will not run. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
+Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage. PackTest can continue subsequent test lines after a failed assertion and overwrite its error; put synchronous phases in fixture functions so their first failed assertion aborts the phase. Use environment teardown for cleanup after failures. Keep synchronous setup, calls, and assertions together when using shared scratch state, and scope entity selectors to the test's entities and area.
 
 Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.
 

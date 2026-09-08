@@ -4,4 +4,4 @@
 
 $data modify storage sgp.ci:illusions_movement identity_check set value {uuid:"$(uuid)",entity:{}}
 $data modify storage sgp.ci:illusions_movement identity_check.entity set from entity $(uuid)
-tellraw @a [{text:"Illusion identity check: "},{nbt:"identity_check",storage:"sgp.ci:illusions_movement"}]
+function sgp.ci:illusions_movement/log_identity with storage sgp.ci:illusions_movement identity_check
