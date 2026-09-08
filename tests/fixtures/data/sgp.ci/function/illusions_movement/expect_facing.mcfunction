@@ -1,6 +1,8 @@
 #> sgp.ci:illusions_movement/expect_facing
 # {direction, yaw, pitch}
 
+$execute unless entity @e[tag=sgp.ci.illusion_first,tag=sgp.direction_$(direction),distance=..32,type=mannequin] run function sgp.ci:illusions_movement/inspect_decoy with storage sgp.ci:illusions_movement identities.first.$(direction)
+$assert entity @e[tag=sgp.ci.illusion_first,tag=sgp.direction_$(direction),distance=..32,type=mannequin]
 # Compare equivalent directions modulo one turn; Minecraft can retain yaw outside -180..180.
 $execute store result score #ci.illusion.yaw sgp.dummy run data get entity @n[tag=sgp.ci.illusion_first,tag=sgp.direction_$(direction),type=mannequin] Rotation[0] 1000
 $scoreboard players set #ci.illusion.expected_yaw sgp.dummy $(yaw)
