@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/combat/blue_victory
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/combat/blue_victory
 #
 # Eliminating the red king alone is insufficient; the last red defender's elimination awards blue and ends the round once.
 

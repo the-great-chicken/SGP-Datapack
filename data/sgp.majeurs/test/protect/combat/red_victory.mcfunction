@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/combat/red_victory
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/combat/red_victory
 #
 # The mirrored blue-team elimination awards red, including when king and defenders reach respawn together.
 

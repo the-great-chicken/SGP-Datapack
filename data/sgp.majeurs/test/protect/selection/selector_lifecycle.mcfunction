@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/selection/selector_lifecycle
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/selection/selector_lifecycle
 #
 # Rebuilding replaces the interaction target; closing red leaves blue selection available.
 

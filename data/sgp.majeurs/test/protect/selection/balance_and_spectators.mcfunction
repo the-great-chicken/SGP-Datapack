@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/selection/balance_and_spectators
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/selection/balance_and_spectators
 #
 # Odd and even participant rosters are balanced, and a spectator's existing team and position remain untouched.
 

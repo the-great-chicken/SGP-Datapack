@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/selection/blue_king
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/selection/blue_king
 #
 # The selector chooses one participant for its own team; repeated requests cannot replace the king or start combat early.
 

@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/combat/king_disconnect
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/combat/king_disconnect
 #
 # A disconnected king ends his team's respawn protection, but living teammates can keep fighting.
 

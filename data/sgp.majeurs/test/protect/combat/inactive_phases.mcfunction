@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/combat/inactive_phases
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/combat/inactive_phases
 #
 # The combat update must not eliminate players or apply the king aura before combat starts or after it is inactive.
 

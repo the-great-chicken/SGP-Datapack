@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/selection/denied_requests
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/selection/denied_requests
 #
 # Opponents, nonparticipants, and requests outside selection cannot claim the crown.
 

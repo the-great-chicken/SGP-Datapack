@@ -1,6 +1,6 @@
 #> sgp.majeurs:protect/combat/respawn_rules
 # @dummy
-# @environment sgp.ci:protect
+# @environment sgp.ci:protect/combat/respawn_rules
 #
 # Respawning is allowed while the king lives. After his death, only that team's players reaching the respawn area are eliminated.
 
