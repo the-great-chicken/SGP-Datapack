@@ -1,6 +1,6 @@
 #> sgp.kits:illusions/movement/facing
 # @dummy
-# @environment sgp.ci:illusions_movement
+# @environment sgp.ci:illusions_movement/facing
 #
 # Each decoy preserves the caster's pitch and faces its own side of the formation.
 

@@ -1,6 +1,6 @@
 #> sgp.kits:illusions/movement/player_isolation
 # @dummy
-# @environment sgp.ci:illusions_movement
+# @environment sgp.ci:illusions_movement/player_isolation
 #
 # Updating one caster leaves the other caster's formation where it was.
 

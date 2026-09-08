@@ -1,6 +1,6 @@
 #> sgp.kits:illusions/movement/vertical
 # @dummy
-# @environment sgp.ci:illusions_movement
+# @environment sgp.ci:illusions_movement/vertical
 #
 # Decoys follow a jump's height while retaining their horizontal formation.
 
