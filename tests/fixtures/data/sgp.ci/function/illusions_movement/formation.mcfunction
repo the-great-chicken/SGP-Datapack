@@ -13,3 +13,6 @@ execute as @e[tag=sgp.ci.illusion_new,distance=..0.1,type=marker] run scoreboard
 execute as @e[tag=sgp.ci.illusion_new,distance=..0.1,type=mannequin] run scoreboard players operation @s bs.link.to = #ci.illusion.owner bs.in
 tag @e[tag=sgp.ci.illusion_new,distance=..0.1,type=marker] remove sgp.ci.illusion_new
 tag @e[tag=sgp.ci.illusion_new,distance=..0.1,type=mannequin] remove sgp.ci.illusion_new
+
+$execute store result score #ci.illusion.created sgp.dummy if entity @e[tag=sgp.ci.illusion_$(group),distance=..0.1,type=mannequin]
+assert score #ci.illusion.created sgp.dummy matches 3

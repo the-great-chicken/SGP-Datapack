@@ -2,4 +2,5 @@
 
 function sgp.ci:illusions_movement/clear
 function sgp.ci:players/cleanup
-forceload remove 0 0 32 16
+# Let killed mannequins finish dying before their chunk can be saved and unloaded.
+schedule function sgp.ci:illusions_movement/unload 21t replace

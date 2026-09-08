@@ -1,65 +1,8 @@
 {
-  "condition": "minecraft:all_of",
-  "terms": [
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 0,
-      "offsetZ": 0,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
-    },
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 0,
-      "offsetZ": 16,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
-    },
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 16,
-      "offsetZ": 0,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
-    },
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 16,
-      "offsetZ": 16,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
-    },
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 32,
-      "offsetZ": 0,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
-    },
-    {
-      "condition": "minecraft:location_check",
-      "offsetX": 32,
-      "offsetZ": 16,
-      "predicate": {
-        "block": {
-          "blocks": "minecraft:air"
-        }
-      }
+  "condition": "minecraft:location_check",
+  "predicate": {
+    "block": {
+      "blocks": "minecraft:air"
     }
-  ]
+  }
 }
