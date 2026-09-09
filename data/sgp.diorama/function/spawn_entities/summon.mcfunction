@@ -20,11 +20,15 @@ execute store result score @s bs.rot.h run data get storage sgp:data temp.spawns
 execute store result score @s bs.rot.v run data get storage sgp:data temp.spawns_list[0].pitch 1000
 function #bs.position:set_rot {scale: 0.001}
 
+# Keep the exact parent even when several spawn buttons share a position.
+function #bs.id:give_suid
+scoreboard players operation $spawn_label_parent bs.in = @s bs.id
+
 # Not using `execute summon`, as the function with macro parameters could fail, leaving empty text displays behind
 execute at @s run summon text_display ~ ~ ~ {Tags:["sgp.spawn_tper_text","sgp.new"]}
 
 execute at @s as @e[tag=sgp.new,distance=..0.1,limit=1,type=text_display] \
     run function sgp.diorama:spawn_entities/set_text_name \
-        with entity @e[tag=sgp.spawn_tper,distance=..0.1,limit=1,type=interaction] data.args
+        with storage sgp:data temp.spawns_list[0]
 
 execute at @s run tag @e[tag=sgp.new,distance=..0.1,limit=1,type=text_display] remove sgp.new
