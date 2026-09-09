@@ -7,6 +7,8 @@ $execute positioned as @e[tag=sgp.predictor,limit=1,type=marker] run teleport @s
 
 scoreboard players set #ray_dist sgp.dummy 16000
 
+# Bookshelf 4.0.1 restarts its per-cast ID counter but retains entity IDs, allowing target collisions.
+scoreboard players reset * bs.raycast.id
 $execute positioned ~ ~0.6 ~ rotated $(rotation) 0 run function #bs.raycast:run {with:{max_distance:16, ignored_blocks:"#bs.hitbox:can_pass_through", entities:"!sgp.radiator", on_entry_point:"execute unless score $raycast.hit_flag bs.lambda matches -1 run scoreboard players operation #ray_dist sgp.dummy = $raycast.entry_distance bs.lambda", piercing: {entities: 50}, on_targeted_entity:"execute if entity @s[tag=!sgp.peaceful] at @s run function sgp.kits:abilities/rays/get_damaged"}}
 
 # Update scale (0.002 fixes the 0.5 base size) Bookshelf returns $raycast.entry_distance as (distance * 1000) inside its callback.
