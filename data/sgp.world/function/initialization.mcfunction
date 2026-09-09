@@ -8,6 +8,7 @@ execute unless score #tab_location_serial sgp.dummy matches -2147483648..2147483
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/initialization with entity @s data
 
 scoreboard objectives add sgp.teleporteur dummy
+scoreboard objectives add sgp.teleport_source dummy
 scoreboard objectives add sgp.lieu_count dummy
 
 

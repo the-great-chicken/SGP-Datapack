@@ -5,6 +5,7 @@
 execute as @e[type=marker,tag=sgp.marker,name="lieu"] run function sgp.world:lieu/uninstallation with entity @s data
 
 scoreboard objectives remove sgp.teleporteur
+scoreboard objectives remove sgp.teleport_source
 scoreboard objectives remove sgp.lieu_count
 
 # ---------- Remove Storages -----------
