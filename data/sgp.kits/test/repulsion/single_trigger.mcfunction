@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/single_trigger
+# @dummy
 # @environment sgp.ci:repulsion/single_trigger
 #
 # One trigger launches the wearer backward and clears the trigger.

@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/idle
+# @dummy
 # @environment sgp.ci:repulsion/idle
 #
 # Equipping the enchantment without triggering it does not launch its wearer.

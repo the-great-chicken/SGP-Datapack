@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/facing
+# @dummy
 # @environment sgp.ci:repulsion/facing
 #
 # Turning west makes the backward impulse point east.

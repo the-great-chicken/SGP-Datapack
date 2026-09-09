@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/unequipped
+# @dummy
 # @environment sgp.ci:repulsion/unequipped
 #
 # A trigger without enchanted equipment produces no impulse.

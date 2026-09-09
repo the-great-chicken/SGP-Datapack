@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/wearer_isolation
+# @dummy
 # @environment sgp.ci:repulsion/wearer_isolation
 #
 # Triggering one wearer leaves a nearby equipped wearer stationary.

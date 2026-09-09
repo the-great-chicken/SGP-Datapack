@@ -1,4 +1,5 @@
 #> sgp.kits:repulsion/rearm
+# @dummy
 # @environment sgp.ci:repulsion/rearm
 #
 # The wearer can trigger another impulse after the first trigger has been consumed.
