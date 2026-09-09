@@ -3,5 +3,5 @@
 #
 # Advance the real ability tick synchronously, without running unrelated world systems.
 
-$scoreboard players set @s sgp.dummy $(ticks)
+$scoreboard players set #ci.hud.remaining sgp.dummy $(ticks)
 function sgp.ci:cooldown_hud/step
