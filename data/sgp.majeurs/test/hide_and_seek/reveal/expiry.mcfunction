@@ -7,6 +7,6 @@
 
 function sgp.ci:hider_reveal/roster
 function sgp.majeurs:hide_and_seek/timer/glow
-assert entity @s[nbt={active_effects:[{id:"minecraft:glowing"}]}]
+function sgp.ci:hider_reveal/scenarios/expect_visible
 await delay 61t
-assert not entity @s[nbt={active_effects:[{id:"minecraft:glowing"}]}]
+function sgp.ci:hider_reveal/scenarios/expect_hidden

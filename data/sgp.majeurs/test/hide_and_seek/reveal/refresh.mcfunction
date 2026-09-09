@@ -6,10 +6,10 @@
 # Refreshing a reveal extends visibility from the latest reveal, then expires normally.
 
 function sgp.ci:hider_reveal/roster
-function sgp.majeurs:hide_and_seek/timer/glow
+function sgp.ci:hider_reveal/scenarios/refresh
 await delay 40t
-function sgp.majeurs:hide_and_seek/timer/glow
+function sgp.ci:hider_reveal/scenarios/refresh
 await delay 40t
-assert entity @s[nbt={active_effects:[{id:"minecraft:glowing"}]}]
+function sgp.ci:hider_reveal/scenarios/expect_visible
 await delay 21t
-assert not entity @s[nbt={active_effects:[{id:"minecraft:glowing"}]}]
+function sgp.ci:hider_reveal/scenarios/expect_hidden
