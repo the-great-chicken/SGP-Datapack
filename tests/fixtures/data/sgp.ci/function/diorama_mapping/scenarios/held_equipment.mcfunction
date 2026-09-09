@@ -1,7 +1,7 @@
 #> sgp.ci:diorama_mapping/scenarios/held_equipment
 
 function sgp.ci:diorama_mapping/fixture
-tp @s 16 80 16 0 0
+tp @s 16.0 80.0 16.0 0 0
 item replace entity @s weapon.mainhand with diamond_sword[damage=12,enchantments={sharpness:3},custom_data={ci_keep:7}]
 item replace entity @s weapon.offhand with shield[damage=4]
 scoreboard players set #mannequin_update_time sgp.dummy 4

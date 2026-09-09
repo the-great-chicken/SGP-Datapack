@@ -1,6 +1,6 @@
 #> sgp.ci:diorama_mapping/cleanup
 function sgp.ci:players/cleanup
-tp @e[tag=sgp.ci.mapping,type=mannequin] 8 -1000 8
+tp @e[tag=sgp.ci.mapping,type=mannequin] 8.0 -1000.0 8.0
 # Retire dying mannequins from the next scenario before reusing these fixture IDs.
 tag @e[tag=sgp.ci.mapping,type=mannequin] remove sgp.ci.mapping_first
 tag @e[tag=sgp.ci.mapping,type=mannequin] remove sgp.ci.mapping_other_map
