@@ -5,5 +5,5 @@
 # One trigger launches the wearer backward and clears the trigger.
 
 function sgp.ci:repulsion/scenarios/single_trigger/1
-await delay 3t
+await entity @e[tag=sgp.ci.repulsion,tag=!sgp.ci.repulsion_peer,scores={sgp.trigger_repulsion=0},type=husk]
 function sgp.ci:repulsion/scenarios/single_trigger/2

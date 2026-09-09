@@ -14,7 +14,7 @@ scoreboard players add #20_ticks sgp.dummy 1
 execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
 
 # Allocate stable player ids before any subsystem records player-linked state.
-execute as @a unless score @s sgp.id matches 1.. run function sgp.misc:player_id/allocate
+function sgp.misc:player_id/ensure
 
 # Expire actionbar segments before systems refresh the parts they still need.
 function sgp.misc:actionbar/tick
