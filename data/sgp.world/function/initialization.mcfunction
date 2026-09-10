@@ -17,8 +17,8 @@ scoreboard objectives add sgp.lieu_count dummy
 
 data remove storage sgp:data markers_lists.location
 execute as @e[tag=sgp.marker,name="lieu",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.location"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.location"}
 
 data remove storage sgp:data markers_lists.teleporter
 execute as @e[tag=sgp.marker,name="teleporter",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.teleporter"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.teleporter"}

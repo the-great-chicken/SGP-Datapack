@@ -5,7 +5,7 @@
 # Restarting Confinement gives a new grace period and still needs only one stop.
 
 function sgp.ci:minor_events/reset_timer
-data modify storage sgp:data tests.confinement_restart set value {}
+data modify storage sgp.ci:confinement restart set value {}
 gamemode survival @s
 tp @s ~0.5 ~1 ~0.5
 fill ~-1 ~1 ~-1 ~1 ~3 ~1 air
@@ -19,10 +19,10 @@ function sgp.ci:minor_events/advance {function:"sgp.mineurs:confinement/running"
 function sgp.mineurs:confinement/start
 setblock ~ ~2 ~ minecraft:air
 function sgp.ci:minor_events/advance {function:"sgp.mineurs:confinement/running",ticks:14}
-execute store result storage sgp:data tests.confinement_restart.health int 1 run data get entity @s Health
+execute store result storage sgp.ci:confinement restart.health int 1 run data get entity @s Health
 function sgp.mineurs:confinement/stop
-execute store result storage sgp:data tests.confinement_restart.active int 1 run scoreboard players get #timed_events_active sgp.dummy
+execute store result storage sgp.ci:confinement restart.active int 1 run scoreboard players get #timed_events_active sgp.dummy
 schedule clear sgp.misc:second
 
-assert data storage sgp:data tests.confinement_restart{health:20,active:0}
-data remove storage sgp:data tests.confinement_restart
+assert data storage sgp.ci:confinement restart{health:20,active:0}
+data remove storage sgp.ci:confinement restart

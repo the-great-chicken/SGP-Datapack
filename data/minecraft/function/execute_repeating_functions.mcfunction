@@ -73,16 +73,16 @@ execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/sho
 
 function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
 
 scoreboard players set @a sgp.ab.location 0
 scoreboard players set @a sgp.ab.location_width 0
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
 
 function #sgp.hooks:tab/tick
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
 
 execute as @a[tag=sgp.in_game,scores={sgp.reward=1..}] \
     run function sgp.mineurs:bounty/reward/trigger

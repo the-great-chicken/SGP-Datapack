@@ -14,20 +14,20 @@ experience set @s 4 points
 experience set ArenaOther 12 levels
 experience set ArenaOther 8 points
 function sgp.misc:players_in_game/macro {uuid:"0000007a-0000-0000-0000-000000000001"}
-execute store success storage sgp:data tests.arena_players.first_entered byte 1 if entity @s[tag=sgp.in_game]
-execute store success storage sgp:data tests.arena_players.other_entered byte 1 if entity @a[name=ArenaOther,tag=sgp.in_game]
+execute store success storage sgp.ci:players_in_game player_isolation.first_entered byte 1 if entity @s[tag=sgp.in_game]
+execute store success storage sgp.ci:players_in_game player_isolation.other_entered byte 1 if entity @a[name=ArenaOther,tag=sgp.in_game]
 
 tp @s ~6.5 ~1 ~0.5
 function sgp.misc:players_in_game/macro {uuid:"0000007a-0000-0000-0000-000000000001"}
-execute store success storage sgp:data tests.arena_players.first_remained byte 1 if entity @s[tag=sgp.in_game]
-execute store success storage sgp:data tests.arena_players.other_remained byte 1 if entity @a[name=ArenaOther,tag=sgp.in_game]
-execute store result storage sgp:data tests.arena_players.first_levels int 1 run experience query @s levels
-execute store result storage sgp:data tests.arena_players.first_points int 1 run experience query @s points
-execute store result storage sgp:data tests.arena_players.other_levels int 1 run experience query ArenaOther levels
-execute store result storage sgp:data tests.arena_players.other_points int 1 run experience query ArenaOther points
+execute store success storage sgp.ci:players_in_game player_isolation.first_remained byte 1 if entity @s[tag=sgp.in_game]
+execute store success storage sgp.ci:players_in_game player_isolation.other_remained byte 1 if entity @a[name=ArenaOther,tag=sgp.in_game]
+execute store result storage sgp.ci:players_in_game player_isolation.first_levels int 1 run experience query @s levels
+execute store result storage sgp.ci:players_in_game player_isolation.first_points int 1 run experience query @s points
+execute store result storage sgp.ci:players_in_game player_isolation.other_levels int 1 run experience query ArenaOther levels
+execute store result storage sgp.ci:players_in_game player_isolation.other_points int 1 run experience query ArenaOther points
 dummy ArenaOther leave
 kill @e[tag=sgp.test.arena_players,distance=..8,type=marker]
 tp @s ~0.5 ~1 ~0.5
 
-assert data storage sgp:data tests.arena_players{first_entered:1b,other_entered:1b,first_remained:0b,other_remained:1b,first_levels:0,first_points:0,other_levels:12,other_points:8}
-data remove storage sgp:data tests.arena_players
+assert data storage sgp.ci:players_in_game player_isolation{first_entered:1b,other_entered:1b,first_remained:0b,other_remained:1b,first_levels:0,first_points:0,other_levels:12,other_points:8}
+data remove storage sgp.ci:players_in_game player_isolation

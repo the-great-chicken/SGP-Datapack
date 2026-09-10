@@ -23,6 +23,14 @@ class StagingTests(unittest.TestCase):
         self.assertEqual((data / preserved).read_bytes(), (repo / 'data' / source).read_bytes())
         self.assertEqual((data / source).read_bytes(), (repo / 'tests/fixtures/data' / source).read_bytes())
 
+    def test_test_state_cannot_use_production_storage(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-storage-test-')) / 'data'
+        file = root / 'sgp.ci/function/bad.mcfunction'
+        file.parent.mkdir(parents=True)
+        file.write_text('data modify storage sgp:data tests.bad set value {}\n')
+        with self.assertRaisesRegex(ValueError, 'test-owned state must use sgp.ci storage'):
+            PREPARE['validate'](root)
+
     def test_unapproved_collision_fails_before_overwriting(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-collision-test-'))
         production, fixtures = root / 'production', root / 'fixtures'

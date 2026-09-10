@@ -5,7 +5,7 @@
 # Alternating between players preserves each player's progress and kit appearance in the shared render storage.
 
 function sgp.ci:cooldown_hud/prepare_player
-data modify storage sgp:data tests.hud_players set value {}
+data modify storage sgp.ci:cooldown_hud player_isolation set value {}
 tag @s add sgp.in_game
 scoreboard players set @s sgp.kit_id 2
 scoreboard players set @s sgp.cooldown_ability 41
@@ -18,18 +18,18 @@ function sgp.kits:abilities/tick
 function sgp.ci:cooldown_hud/advance {ticks:20}
 
 function sgp.misc:actionbar/hud/build
-data modify storage sgp:data tests.hud_players.first set from storage sgp:actionbar_hud overlay
+data modify storage sgp.ci:cooldown_hud player_isolation.first set from storage sgp:actionbar_hud overlay
 execute as HudIsolation run function sgp.misc:actionbar/hud/build
-data modify storage sgp:data tests.hud_players.second set from storage sgp:actionbar_hud overlay
+data modify storage sgp.ci:cooldown_hud player_isolation.second set from storage sgp:actionbar_hud overlay
 dummy HudIsolation leave
 
-assert data storage sgp:data tests.hud_players.first[0]
-assert data storage sgp:data tests.hud_players.second[0]
-data modify storage sgp:actionbar_hud overlay set from storage sgp:data tests.hud_players.first
+assert data storage sgp.ci:cooldown_hud player_isolation.first[0]
+assert data storage sgp.ci:cooldown_hud player_isolation.second[0]
+data modify storage sgp:actionbar_hud overlay set from storage sgp.ci:cooldown_hud player_isolation.first
 function sgp.ci:cooldown_hud/expect {kit:"archer",frame:10}
-data modify storage sgp:actionbar_hud overlay set from storage sgp:data tests.hud_players.second
+data modify storage sgp:actionbar_hud overlay set from storage sgp.ci:cooldown_hud player_isolation.second
 function sgp.ci:cooldown_hud/expect {kit:"pyromane",frame:5}
 
 function sgp.misc:actionbar/hud/build
 function sgp.ci:cooldown_hud/expect {kit:"archer",frame:10}
-data remove storage sgp:data tests.hud_players
+data remove storage sgp.ci:cooldown_hud player_isolation

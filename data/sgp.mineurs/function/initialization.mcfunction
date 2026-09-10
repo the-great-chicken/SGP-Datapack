@@ -33,4 +33,4 @@ data merge storage sgp:data {"mineurs":{}}
 
 data remove storage sgp:data markers_lists.lootdrop
 execute as @e[tag=sgp.marker,name="Lootdrop",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.lootdrop"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.lootdrop"}

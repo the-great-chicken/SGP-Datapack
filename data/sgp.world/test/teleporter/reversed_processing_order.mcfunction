@@ -6,9 +6,9 @@
 
 function sgp.ci:teleporter/fixture
 # Reverse the actual source list consumed by the production dispatcher.
-data modify storage sgp:data tests.teleporter.first set from storage sgp:data tests.teleporter.sources[0]
-data remove storage sgp:data tests.teleporter.sources[0]
-data modify storage sgp:data tests.teleporter.sources append from storage sgp:data tests.teleporter.first
+data modify storage sgp.ci:teleporter state.first set from storage sgp.ci:teleporter state.sources[0]
+data remove storage sgp.ci:teleporter state.sources[0]
+data modify storage sgp.ci:teleporter state.sources append from storage sgp.ci:teleporter state.first
 dummy PortalPeer spawn
 gamemode creative PortalPeer
 scoreboard players set PortalPeer sgp.teleporteur 0

@@ -103,7 +103,7 @@ data modify storage sgp:data const.hex set value ["0","1","2","3","4","5","6","7
     
 data remove storage sgp:data markers_lists.pvp_arena
 execute as @e[tag=sgp.marker,name="pvp_arena",limit=1,type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.pvp_arena"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.pvp_arena"}
 
 
 

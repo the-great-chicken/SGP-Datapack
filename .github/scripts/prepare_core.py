@@ -24,6 +24,8 @@ HOOK_CALL = re.compile(r'\bfunction\s+#(sgp\.hooks:[a-z0-9_./-]+)')
 FUNCTION_CALL = re.compile(r'\bfunction\s+(sgp\.integration\.[a-z]+:[a-z0-9_./-]+)(?![a-z0-9_./$(-])')
 OBSOLETE = ('sgp.misc:tab/', 'sgp.lore:npcs/', 'sgp.lore:sgp_3/',
             'sgp.kits:abilities/remove_perms', 'sgp.to_remove_perm')
+# Test-owned scratch/results belong to sgp.ci:*; sgp:data is production state.
+TEST_STATE_IN_PRODUCTION_STORAGE = re.compile(r'\bsgp:data\s+tests\b')
 
 
 def function_file(data, identifier, kind='function'):
@@ -79,6 +81,8 @@ def validate(data, core=False):
         for number, line in enumerate(text.splitlines(), 1):
             if line.lstrip().startswith('#'):
                 continue
+            if TEST_STATE_IN_PRODUCTION_STORAGE.search(line):
+                errors.append(f'{path}:{number}: test-owned state must use sgp.ci storage')
             if namespace not in MODULES and PLUGIN_COMMAND.search(line.strip()):
                 errors.append(f'{path}:{number}: plugin command outside an integration')
             for target in HOOK_CALL.findall(line):

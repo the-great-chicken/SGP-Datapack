@@ -2,4 +2,4 @@
 
 kill @e[tag=sgp.ci.teleporter,type=marker]
 function sgp.ci:players/cleanup
-data remove storage sgp:data tests.teleporter
+data remove storage sgp.ci:teleporter state

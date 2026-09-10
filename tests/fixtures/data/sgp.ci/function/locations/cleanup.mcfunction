@@ -10,7 +10,7 @@ execute if entity @e[tag=sgp.test.location_overlap,type=marker] run scoreboard o
 execute if entity @e[tag=sgp.test.location_overlap,type=marker] run scoreboard objectives remove sgp.lieu_test_overlap_b
 execute if entity @e[tag=sgp.test.location_bounds,type=marker] run scoreboard objectives remove sgp.lieu_test_bounds
 # player_isolation removes its marker before asserting, but keeps this scratch object until success.
-execute if data storage sgp:data tests.location_players run scoreboard objectives remove sgp.lieu_test_players
+execute if data storage sgp.ci:locations player_isolation run scoreboard objectives remove sgp.lieu_test_players
 
 kill @e[tag=sgp.test.location_visit,type=marker]
 kill @e[tag=sgp.test.location_exclusion,type=marker]
@@ -19,5 +19,5 @@ kill @e[tag=sgp.test.location_open,type=marker]
 kill @e[tag=sgp.test.location_overlap,type=marker]
 kill @e[tag=sgp.test.location_bounds,type=marker]
 kill @e[tag=sgp.test.location_players,type=marker]
-data remove storage sgp:data tests.location_players
+data remove storage sgp.ci:locations player_isolation
 function sgp.ci:players/cleanup

@@ -13,16 +13,16 @@ item replace entity @s weapon.mainhand with minecraft:diamond 7
 dummy KitDenyActor spawn
 team join sgp.hider KitDenyActor
 function sgp.kits:check_and_give {kit:"peaceful",kit_name:"Paisible",kit_color:"green",hint:"Already unlocked",hint_color:"white"}
-execute store result storage sgp:data tests.kit_denied.peaceful_kit int 1 run scoreboard players get @s sgp.kit_id
-execute store result storage sgp:data tests.kit_denied.peaceful_items int 1 run clear @s minecraft:diamond 0
-execute store result storage sgp:data tests.kit_denied.peaceful_cooldown int 1 run scoreboard players get @s sgp.cooldown_ability
+execute store result storage sgp.ci:selection_rules denied_selection.peaceful_kit int 1 run scoreboard players get @s sgp.kit_id
+execute store result storage sgp.ci:selection_rules denied_selection.peaceful_items int 1 run clear @s minecraft:diamond 0
+execute store result storage sgp.ci:selection_rules denied_selection.peaceful_cooldown int 1 run scoreboard players get @s sgp.cooldown_ability
 team leave KitDenyActor
 tag KitDenyActor add sgp.in_game
 tag KitDenyActor add sgp.roi_bleu
 function sgp.kits:check_and_give {kit:"roi",kit_name:"Roi",kit_color:"gold",hint:"Already unlocked",hint_color:"white"}
 dummy KitDenyActor leave
 
-assert data storage sgp:data tests.kit_denied{peaceful_kit:2,peaceful_items:7,peaceful_cooldown:37}
+assert data storage sgp.ci:selection_rules denied_selection{peaceful_kit:2,peaceful_items:7,peaceful_cooldown:37}
 assert chat ".*Le mode Paisible n'est pas disponible pendant les événements majeurs.*" @s
 assert chat ".*Le kit Roi n'est pas disponible pour cet event.*" @s
 assert not chat ".*Tu as obtenu le kit.*" @s
@@ -34,4 +34,4 @@ assert entity @s[tag=sgp.archer]
 assert not entity @s[tag=sgp.peaceful]
 assert not entity @s[tag=sgp.roi]
 function sgp.ci:kills_give/assert_count {item:"minecraft:diamond",count:7}
-data remove storage sgp:data tests.kit_denied
+data remove storage sgp.ci:selection_rules denied_selection
