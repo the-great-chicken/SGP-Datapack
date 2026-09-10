@@ -1,5 +1,6 @@
 #> sgp.world:locations/exclusion
 # @dummy
+# @environment sgp.ci:locations/exclusion
 #
 # Crossing an excluded area must not consume the discovery; it also leaves an already active location.
 

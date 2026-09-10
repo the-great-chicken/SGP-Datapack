@@ -1,5 +1,6 @@
 #> sgp.misc:kill_streaks/death_and_restart
 # @dummy
+# @environment sgp.ci:kill_streaks/death_and_restart
 #
 # A first streak ending before initialization still becomes a record; consuming the death allows the next streak to grow.
 

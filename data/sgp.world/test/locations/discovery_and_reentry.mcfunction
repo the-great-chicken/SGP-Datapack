@@ -1,5 +1,6 @@
 #> sgp.world:locations/discovery_and_reentry
 # @dummy
+# @environment sgp.ci:locations/discovery_and_reentry
 #
 # Discover a location once, keep it active while inside, leave it, and revisit without another discovery.
 

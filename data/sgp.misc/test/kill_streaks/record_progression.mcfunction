@@ -1,5 +1,6 @@
 #> sgp.misc:kill_streaks/record_progression
 # @dummy
+# @environment sgp.ci:kill_streaks/record_progression
 #
 # A new player's best starts at zero, increases with their streak, and never falls when later streaks are lower.
 

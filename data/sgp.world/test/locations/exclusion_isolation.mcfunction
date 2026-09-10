@@ -1,5 +1,6 @@
 #> sgp.world:locations/exclusion_isolation
 # @dummy
+# @environment sgp.ci:locations/exclusion_isolation
 #
 # An exclusion belongs to its own marker and must not leak into the next location scanned.
 

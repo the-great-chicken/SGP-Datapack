@@ -1,5 +1,6 @@
 #> sgp.world:locations/spatial_bounds
 # @dummy
+# @environment sgp.ci:locations/spatial_bounds
 #
 # Bounds are relative to the marker, support negative extents, and reject players outside each axis.
 

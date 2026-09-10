@@ -1,5 +1,6 @@
 #> sgp.world:locations/player_isolation
 # @dummy
+# @environment sgp.ci:locations/player_isolation
 #
 # One player's discovery or departure must not change another player's location state.
 

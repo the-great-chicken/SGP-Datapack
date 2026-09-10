@@ -1,5 +1,6 @@
 #> sgp.world:locations/overlap
 # @dummy
+# @environment sgp.ci:locations/overlap
 #
 # Overlapping locations count independently, and leaving one must preserve the other.
 
