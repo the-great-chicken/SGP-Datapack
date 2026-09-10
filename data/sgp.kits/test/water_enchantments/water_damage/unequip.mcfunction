@@ -4,8 +4,11 @@
 #
 # Removing the enchanted head stops refreshing its penalties even while the player remains in water.
 
-function sgp.ci:water_enchantments/scenarios/water_damage/unequip/1
+function sgp.ci:water_enchantments/fixture
+item replace entity @s armor.head with player_head[enchantments={"sgp.kits:water_damage":1}]
+function sgp.ci:water_enchantments/wet
 await delay 25t
-function sgp.ci:water_enchantments/scenarios/water_damage/unequip/2
+function sgp.ci:water_enchantments/expect_penalty
+item replace entity @s armor.head with air
 await delay 65t
-function sgp.ci:water_enchantments/scenarios/water_damage/unequip/3
+function sgp.ci:water_enchantments/expect_no_penalty
