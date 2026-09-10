@@ -1,4 +1,5 @@
 #> sgp.ci:kill_effects/expect_anvil
+# Require exactly one anvil effect at the victim and no firework alternative.
 
 execute store result score #ci.effects.count sgp.dummy if entity @e[tag=sgp.ci.kill_effect,type=falling_block]
 assert score #ci.effects.count sgp.dummy matches 1

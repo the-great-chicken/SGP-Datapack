@@ -1,4 +1,5 @@
 #> sgp.ci:repulsion/scenarios/rearm/2
+# Verify the first impulse, reverse the wearer, clear motion, and arm the second trigger.
 
 function sgp.ci:repulsion/expect_impulse {axis:2,range:"..-1"}
 execute as @e[tag=sgp.ci.repulsion,type=husk] at @s run tp @s ~ ~ ~ 180 0

@@ -1,4 +1,5 @@
 #> sgp.ci:cleave/prepare
+# Reset the caster and targets for one Cleave cast and verify everyone starts at full health.
 
 tp @s ~10.5 ~1 ~10.5 0 0
 tp @a[tag=sgp.ci.cleave_target] ~18.5 ~1 ~18.5

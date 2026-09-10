@@ -1,4 +1,5 @@
 #> sgp.ci:round_scheduling/setup
+# Stop stale scheduling and snapshot the current round count and per-event round limits.
 
 function sgp.ci:players/cleanup
 function sgp.majeurs:scheduler/stop

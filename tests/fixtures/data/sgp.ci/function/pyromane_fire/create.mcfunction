@@ -1,5 +1,6 @@
 #> sgp.ci:pyromane_fire/create
-# {owner, x}
+# `{owner: player id, x: coordinate}`
+#
 # Turn a detonating projectile into its lingering fire.
 
 $summon tnt $(x) ~1 ~0.5 {Tags:["sgp.ci.fire","sgp.tnt"],fuse:80s}

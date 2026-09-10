@@ -1,4 +1,5 @@
 #> sgp.ci:pyromane_fire/fixture
+# Reset fire fixtures and build the clear arena used for lingering-fire behavior.
 
 execute as @a[tag=sgp.ci.fire_actor] run dummy @s leave
 kill @e[tag=sgp.ci.fire,type=marker]

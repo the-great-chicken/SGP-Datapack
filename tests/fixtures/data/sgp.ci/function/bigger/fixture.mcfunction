@@ -1,4 +1,5 @@
 #> sgp.ci:bigger/fixture
+# Put the Tank actor in survival with the vanilla attribute baselines that Bigger modifies.
 
 gamemode survival @s
 tag @s add sgp.tank

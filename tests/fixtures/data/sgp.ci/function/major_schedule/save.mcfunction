@@ -1,4 +1,6 @@
 #> sgp.ci:major_schedule/save
+# `{event: pco|hide_and_seek|protect}`
+#
 # Save one event's configuration for batch teardown.
 
 $execute store result storage sgp.ci:major_schedule previous.$(event).hour int 1 run scoreboard players get #$(event)_hour sgp.dummy

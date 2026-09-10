@@ -1,5 +1,7 @@
 #> sgp.ci:illusions_movement/expect
-# {group, direction, x, y, z}
+# `{group: fixture group, direction: left|right|opposite, x, y, z: coordinate}`
+#
+# Locate one decoy by fixture group/direction and require its exact expected position.
 
 $execute unless entity @e[tag=sgp.ci.illusion_$(group),tag=sgp.direction_$(direction),distance=..32,type=mannequin] run function sgp.ci:illusions_movement/inspect_decoy with storage sgp.ci:illusions_movement identities.$(group).$(direction)
 $assert entity @e[tag=sgp.ci.illusion_$(group),tag=sgp.direction_$(direction),distance=..32,type=mannequin]

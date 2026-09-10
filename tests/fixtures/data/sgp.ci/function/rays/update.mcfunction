@@ -1,4 +1,5 @@
 #> sgp.ci:rays/update
+# Run one production Rays tick and verify transient radiator/predictor state is fully consumed.
 
 execute at @s run function sgp.kits:abilities/rays/tick
 assert not entity @s[tag=sgp.radiator]

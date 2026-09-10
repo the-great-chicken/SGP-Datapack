@@ -1,5 +1,6 @@
 #> sgp.ci:pco/expect_order
-# `{first, second}`
+# `{first, second: location id}`
+#
 # Compare ordered entries explicitly; NBT list matching alone ignores order.
 
 data modify storage sgp.ci:pco order set value {}

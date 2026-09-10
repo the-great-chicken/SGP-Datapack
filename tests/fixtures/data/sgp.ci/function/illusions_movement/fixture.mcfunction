@@ -1,4 +1,5 @@
 #> sgp.ci:illusions_movement/fixture
+# Reset illusion actors, prepare the arena, and create the first active three-decoy formation.
 
 execute as @a[tag=sgp.ci.illusion_actor] run dummy @s leave
 function sgp.ci:illusions_movement/clear

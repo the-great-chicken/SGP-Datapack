@@ -1,5 +1,7 @@
 #> sgp.ci:illusions_movement/expect_facing
-# {direction, yaw, pitch}
+# `{direction: left|right|opposite, yaw, pitch: degrees}`
+#
+# Check one directional decoy's normalized yaw and pitch.
 
 $execute unless entity @e[tag=sgp.ci.illusion_first,tag=sgp.direction_$(direction),distance=..32,type=mannequin] run function sgp.ci:illusions_movement/inspect_decoy with storage sgp.ci:illusions_movement identities.first.$(direction)
 $assert entity @e[tag=sgp.ci.illusion_first,tag=sgp.direction_$(direction),distance=..32,type=mannequin]

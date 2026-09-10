@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_mapping/cleanup
+# Remove mapping fixtures and restore the mannequin update interval saved by setup.
+
 function sgp.ci:players/cleanup
 tp @e[tag=sgp.ci.mapping,type=mannequin] 8.0 -1000.0 8.0
 # Retire dying mannequins from the next scenario before reusing these fixture IDs.

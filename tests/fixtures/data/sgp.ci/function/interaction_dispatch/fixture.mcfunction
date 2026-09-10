@@ -1,4 +1,5 @@
 #> sgp.ci:interaction_dispatch/fixture
+# Create two callback interactions with different payloads to test dispatch and recipient isolation.
 
 execute as @a[tag=sgp.ci.interaction_actor] run dummy @s leave
 kill @e[tag=sgp.ci.interaction,type=interaction]

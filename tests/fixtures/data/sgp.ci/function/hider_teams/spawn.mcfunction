@@ -1,5 +1,7 @@
 #> sgp.ci:hider_teams/spawn
-# `{number}`
+# `{number: positive int}`
+#
+# Recursively add numbered hider dummies until the requested fresh roster is complete.
 
 execute if score #ci.hs.remaining sgp.dummy matches ..0 run return 0
 $dummy HsGroup$(number) spawn

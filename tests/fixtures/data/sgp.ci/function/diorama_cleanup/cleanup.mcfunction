@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_cleanup/cleanup
+# Disconnect the owner and remove every mannequin/label created by the removal fixture.
+
 function sgp.ci:players/cleanup
 kill @e[tag=sgp.ci.removal,type=text_display]
 tp @e[tag=sgp.ci.removal,type=mannequin] ~ ~-1000 ~

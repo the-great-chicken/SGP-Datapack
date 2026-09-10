@@ -1,4 +1,5 @@
 #> sgp.ci:kit_cleanup/expect_empty
+# Require no selected kit, inventory/equipment, or active effects after kit cleanup.
 
 assert score @s sgp.kit_id matches -1
 assert not data entity @s Inventory[0]

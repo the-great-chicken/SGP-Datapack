@@ -1,4 +1,6 @@
 #> sgp.ci:protect/expect_dispatch
+# `{red, blue: nonnegative int}`
+#
 # Expected participant counts and destinations, independent of random membership.
 
 execute store result score #ci.protect.red sgp.dummy if entity @a[tag=sgp.major_participant,team=sgp.rouge]

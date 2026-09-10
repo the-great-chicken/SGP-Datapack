@@ -1,4 +1,5 @@
 #> sgp.ci:kit_cleanup/loadout
+# Seed a selected kit with attribute modifier, inventory/equipment, and effects that cleanup must remove.
 
 scoreboard players set @s sgp.kit_id 5
 attribute @s minecraft:step_height base set 0.6

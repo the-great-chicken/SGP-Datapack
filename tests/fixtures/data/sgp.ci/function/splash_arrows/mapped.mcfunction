@@ -1,5 +1,8 @@
 #> sgp.ci:splash_arrows/mapped
-# {potion, effect}
+# `{potion: potion id, effect: effect id}`
+#
+# Convert a mapped vanilla potion and require the resulting splash potion to contain the expected custom effect.
+
 function sgp.ci:splash_arrows/fixture
 $function sgp.ci:splash_arrows/create {contents:{potion:"$(potion)"}}
 function sgp.ci:splash_arrows/convert

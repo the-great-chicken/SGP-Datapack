@@ -1,4 +1,5 @@
 #> sgp.ci:death_cleanup/fixture
+# Seed transient combat, reward, inventory, and effect state that death cleanup must remove.
 
 scoreboard players set @s sgp.cooldown_ability 400
 scoreboard players set @s sgp.duration_ability 80

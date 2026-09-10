@@ -1,5 +1,6 @@
 #> sgp.ci:fangs_placement/expect
-# {x, y, z}
+# `{x, y, z: coordinate}`
+#
 # Check a fang's location and that the current caster owns it.
 
 $execute positioned $(x) $(y) $(z) run assert entity @e[tag=sgp.ci.fang,distance=..0.01,type=evoker_fangs]

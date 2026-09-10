@@ -1,4 +1,6 @@
 #> sgp.ci:major_schedule/expect
+# `{event: pco|hide_and_seek|protect, hour, announcement_hour: 0..23, minute, announcement_minute: 0..59, rounds: positive int}`
+#
 # Check the configured start, round limit, and the two-minute warning.
 
 $assert score #$(event)_hour sgp.dummy matches $(hour)

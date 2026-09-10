@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_hover/cache
+# Record the executing interaction UUID in the same production hover cache used by spawned buttons.
+
 function gu:generate
 data modify storage sgp.ci:diorama_hover entry set value {}
 data modify storage sgp.ci:diorama_hover entry.uuid set from storage gu:main out

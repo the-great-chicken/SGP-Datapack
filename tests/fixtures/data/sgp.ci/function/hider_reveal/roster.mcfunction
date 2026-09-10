@@ -1,4 +1,5 @@
 #> sgp.ci:hider_reveal/roster
+# Create one hider, one seeker, and one uninvolved player with their real team/roster tags.
 
 fill ~ ~ ~ ~8 ~ ~8 stone
 fill ~ ~1 ~ ~8 ~4 ~8 air

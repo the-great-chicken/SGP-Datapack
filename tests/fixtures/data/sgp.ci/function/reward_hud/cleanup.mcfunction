@@ -1,4 +1,5 @@
 #> sgp.ci:reward_hud/cleanup
+# Restore actionbar mixer state and the production reward-marker list saved by setup.
 
 function sgp.ci:mixer_lifecycle/cleanup
 data remove storage sgp:data markers_lists.location

@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_transition/fixture
+# Build a clear arena and assign the transitioning player the fixture identity expected by the animation.
+
 fill ~ ~1 ~ ~10 ~6 ~10 air
 fill ~ ~ ~ ~10 ~ ~10 stone
 gamemode survival @s

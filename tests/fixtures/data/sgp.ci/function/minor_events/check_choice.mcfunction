@@ -1,5 +1,5 @@
 #> sgp.ci:minor_events/check_choice
-# `{nbr, roll, first, second, previous_count, previous_first, previous_second, previous_third}`
+# `{nbr: 1..3, roll: 1..7, first, second: 0..7, previous_count: 0..3, previous_first, previous_second, previous_third: 0..7}`
 #
 # Resolve a controlled roll and check eligibility without locking in which replacement is chosen.
 

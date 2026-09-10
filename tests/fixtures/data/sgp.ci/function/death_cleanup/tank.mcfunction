@@ -1,4 +1,5 @@
 #> sgp.ci:death_cleanup/tank
+# Turn the actor into an active Tank with Bigger applied, so cleanup also covers kit-specific attributes.
 
 tag @s add sgp.tank
 scoreboard players set @s sgp.kit_id 5

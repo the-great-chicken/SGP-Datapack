@@ -1,4 +1,5 @@
 #> sgp.ci:protect/cleanup
+# Cancel Protect scheduling, remove fixture selectors/players, and restore all saved event counters.
 
 function #bs.schedule:cancel_all {with:{id:"major_event"}}
 kill @e[tag=sgp.protect.king_selector,type=interaction]

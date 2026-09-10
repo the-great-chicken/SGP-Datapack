@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_spawns/fixture
+# Seed map/model coordinates and two production spawn destinations for UI reconstruction.
+
 scoreboard players set #map_96003_x sgp.dummy 32000
 scoreboard players set #map_96003_y sgp.dummy 80000
 scoreboard players set #map_96003_z sgp.dummy 32000

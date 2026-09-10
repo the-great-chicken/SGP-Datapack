@@ -1,5 +1,7 @@
 #> sgp.ci:kd_projectiles/fire
-# {kd,kills,deaths}: a noncritical arrow with ten base damage and unit speed.
+# `{kd: K/D * 100, kills, deaths: nonnegative int}`
+#
+# Set the shooter's K/D inputs and launch one controlled noncritical projectile.
 
 $scoreboard players set @s sgp.kd $(kd)
 $scoreboard players set @s sgp.kills $(kills)

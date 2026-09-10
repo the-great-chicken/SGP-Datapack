@@ -1,5 +1,5 @@
 #> sgp.ci:kills_give/assert_count
-# `{item: string, count: int}`
+# `{item: item id, count: nonnegative int}`
 #
 # Count matching items across the player's inventory without removing any.
 

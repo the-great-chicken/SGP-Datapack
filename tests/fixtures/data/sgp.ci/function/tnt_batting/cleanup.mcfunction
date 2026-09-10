@@ -1,4 +1,5 @@
 #> sgp.ci:tnt_batting/cleanup
+# Remove batted TNT, disconnect players, and clear fixture owner state.
 
 kill @e[tag=sgp.ci.batted_tnt,type=tnt]
 kill @e[tag=sgp.ci.other_tnt,type=tnt]

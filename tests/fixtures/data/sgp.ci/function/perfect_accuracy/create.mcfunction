@@ -1,5 +1,6 @@
 #> sgp.ci:perfect_accuracy/create
-# {type, motion}
+# `{type: projectile entity type, motion: 3-double Motion list}`
+#
 # Create a projectile owned by the executing shooter, before its first physics tick.
 
 $execute store success score #ci.accuracy.summoned sgp.dummy run summon $(type) ~ ~2 ~ {Tags:["sgp.ci.accuracy","sgp.ci.accuracy_new"],Motion:$(motion)}

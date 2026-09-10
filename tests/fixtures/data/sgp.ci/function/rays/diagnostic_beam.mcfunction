@@ -1,4 +1,5 @@
 #> sgp.ci:rays/diagnostic_beam
+# Append the executing beam's transform/link metadata to the current damage diagnostic snapshot.
 
 data modify storage sgp.ci:rays beam set value {}
 data modify storage sgp.ci:rays beam.tags set from entity @s Tags

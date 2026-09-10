@@ -1,4 +1,5 @@
 #> sgp.ci:pco_targeting/fixture
+# Build the PCO targeting arena with one hunter and one visible prey on deterministic teams.
 
 fill ~ ~ ~ ~8 ~ ~8 stone
 fill ~ ~1 ~ ~8 ~5 ~8 air

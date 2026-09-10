@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_mapping/fixture
+# Create the map/model coordinate state, owner, and small mannequin used by mapping tests.
+
 kill @e[tag=sgp.ci.mapping_ready,type=marker]
 scoreboard players set #mannequin_update_time sgp.dummy 0
 scoreboard players set @s bs.id 94011

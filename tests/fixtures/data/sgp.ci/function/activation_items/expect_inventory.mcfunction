@@ -1,4 +1,6 @@
 #> sgp.ci:activation_items/expect_inventory
+# `{key: snapshot key}`
+#
 # A returned item must preserve all saved item components and counts.
 
 assert entity @s[nbt={Inventory:[{}]}]

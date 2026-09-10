@@ -1,4 +1,6 @@
 #> sgp.ci:assassinate_placement/expect
+# `{x, y, z: coordinate}`
+#
 # Check one landing pearl, one collision helper, and ownership by the assassin rather than the target.
 
 execute store result score #ci.assassinate.pearls sgp.dummy if entity @e[tag=sgp.ci.assassinate,distance=..24,type=ender_pearl]

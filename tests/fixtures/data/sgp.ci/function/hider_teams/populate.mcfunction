@@ -1,5 +1,6 @@
 #> sgp.ci:hider_teams/populate
-# `{count}`
+# `{count: nonnegative int}`
+#
 # Build a fresh roster; the test's observing dummy is not part of it.
 
 execute as @a[tag=sgp.ci.hider_actor] run dummy @s leave

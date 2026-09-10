@@ -1,4 +1,6 @@
 #> sgp.ci:bats_equipment/snapshot
+# `{key: snapshot key}`
+#
 # Capture inventory and equipment together, including empty equipment.
 
 $data modify storage sgp.ci:bats_equipment $(key) set value {}

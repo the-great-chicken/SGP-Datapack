@@ -1,4 +1,5 @@
 #> sgp.ci:repulsion/cleanup
+# Remove Repulsion targets, clear the fixed test room, and disconnect players.
 
 tp @e[tag=sgp.ci.repulsion,type=husk] ~ -1000 ~
 kill @e[tag=sgp.ci.repulsion,type=husk]

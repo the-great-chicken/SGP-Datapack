@@ -1,5 +1,7 @@
 #> sgp.ci:illusions_movement/expect_pose
-# {group, pose}
+# `{group: fixture group, pose: standing|crouching}`
+#
+# Require all three decoys in a fixture group to have the expected pose, with diagnostics on mismatch.
 
 $execute store result score #ci.illusion.count sgp.dummy if entity @e[tag=sgp.ci.illusion_$(group),nbt={pose:"$(pose)"},type=mannequin]
 execute if score #ci.illusion.count sgp.dummy matches 3 run return 1

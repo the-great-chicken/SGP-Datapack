@@ -1,4 +1,5 @@
 #> sgp.ci:experience_timer/setup
+# Save the shared second-timer state and disable timed events before the test batch.
 
 function sgp.ci:players/cleanup
 schedule clear sgp.misc:second

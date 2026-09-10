@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_mapping/giant_fixture
+# Extend the mapping fixture with a rectangular map and one giant mannequin.
+
 function sgp.ci:diorama_mapping/fixture
 # A rectangular 32-by-16 map; each axis must use its own half-width.
 scoreboard players set #map_94001_center_x sgp.dummy 32000

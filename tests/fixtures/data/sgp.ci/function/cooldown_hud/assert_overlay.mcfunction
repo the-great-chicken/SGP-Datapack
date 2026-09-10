@@ -1,5 +1,5 @@
 #> sgp.ci:cooldown_hud/assert_overlay
-# `{kit_icon: string, kit_color: color, frame: int}`
+# `{kit_icon: string, kit_color: text color, frame: int}`
 #
 # Assert the components consumed by the resource pack, without depending on cache scores or spacing glyphs.
 

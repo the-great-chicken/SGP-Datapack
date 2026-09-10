@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_cleanup/fixture
+# Create owned, differently-owned, and differently-mapped mannequin/label pairs to test selective removal.
+
 fill ~ ~1 ~ ~10 ~5 ~8 air
 fill ~ ~ ~ ~10 ~ ~8 stone
 gamemode survival @s

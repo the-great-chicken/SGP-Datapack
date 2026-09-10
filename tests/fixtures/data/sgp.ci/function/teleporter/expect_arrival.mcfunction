@@ -1,5 +1,7 @@
 #> sgp.ci:teleporter/expect_arrival
-# {destination,yaw,pitch}: check the destination, facing, and completed countdown.
+# `{destination: a|b, yaw, pitch: degrees}`
+#
+# Require arrival at the selected destination with its expected facing and a completed teleport countdown.
 
 $execute at @s run assert entity @e[tag=sgp.ci.destination_$(destination),distance=..0.01,type=marker]
 execute store result score #ci.portal.yaw sgp.dummy run data get entity @s Rotation[0]

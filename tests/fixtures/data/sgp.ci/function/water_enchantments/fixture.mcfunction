@@ -1,4 +1,5 @@
 #> sgp.ci:water_enchantments/fixture
+# Build adjacent dry and wading areas and reset the actor to vanilla movement baselines.
 
 fill ~ ~ ~ ~12 ~ ~8 stone
 fill ~ ~1 ~ ~12 ~5 ~8 air

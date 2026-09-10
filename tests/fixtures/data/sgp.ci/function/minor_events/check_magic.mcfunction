@@ -1,5 +1,5 @@
 #> sgp.ci:minor_events/check_magic
-# `{roll: int, effect: string, amplifier: int}`
+# `{roll: 1..18, effect: effect path, amplifier: nonnegative int}`
 #
 # Check the effect a selected spell gives, including strength and its two-minute duration.
 

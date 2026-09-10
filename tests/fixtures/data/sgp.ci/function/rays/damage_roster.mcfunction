@@ -1,4 +1,5 @@
 #> sgp.ci:rays/damage_roster
+# Extend the Rays fixture with near and far survival targets for damage falloff checks.
 
 function sgp.ci:rays/fixture
 dummy RayNear spawn

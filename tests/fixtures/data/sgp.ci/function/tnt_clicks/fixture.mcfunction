@@ -1,4 +1,5 @@
 #> sgp.ci:tnt_clicks/fixture
+# Create two independently linked TNT interaction pairs for click-routing and isolation checks.
 
 gamemode creative @s
 tp @s ~0.5 ~1 ~0.5 0 0

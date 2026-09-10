@@ -1,5 +1,6 @@
 #> sgp.ci:fangs_placement/cast
-# {count, x, y, z, yaw}
+# `{count: positive int, x, y, z: coordinate, yaw: degrees}`
+#
 # Request one line of fangs through the production terrain placement routine.
 
 $scoreboard players set #nbr_fangs sgp.dummy $(count)

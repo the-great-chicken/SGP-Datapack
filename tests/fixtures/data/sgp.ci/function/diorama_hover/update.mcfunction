@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_hover/update
+# Run one production hover update and verify temporary selection state cannot affect an unrelated label.
+
 assert entity @e[tag=sgp.ci.hover,distance=..16,type=marker]
 execute as @n[tag=sgp.ci.hover,distance=..16,type=marker] at @s run function sgp.diorama:hover/model {id:93001}
 assert not entity @e[tag=sgp.ci.hover,tag=sgp.hover_candidate,distance=..16,type=interaction]

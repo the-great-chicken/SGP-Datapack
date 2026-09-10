@@ -1,5 +1,4 @@
 #> sgp.ci:cooldown_hud/step
-#
 # Execute the remaining ability ticks requested by advance.
 
 function sgp.kits:abilities/tick

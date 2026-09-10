@@ -1,5 +1,5 @@
 #> sgp.ci:kd_buffs_and_debuffs/check
-# `{kills: int, deaths: int, kd: int, damage: int}`
+# `{kills, deaths: nonnegative int, kd: K/D * 100, damage: attack damage * 100}`
 #
 # Check the production calculation and total melee attack damage, scaled by 100.
 

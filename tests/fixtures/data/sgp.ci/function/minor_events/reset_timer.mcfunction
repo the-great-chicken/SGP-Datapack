@@ -1,5 +1,4 @@
 #> sgp.ci:minor_events/reset_timer
-#
 # Establish an idle shared clock for synchronous CI scenarios.
 
 scoreboard players set #timed_events_active sgp.dummy 0

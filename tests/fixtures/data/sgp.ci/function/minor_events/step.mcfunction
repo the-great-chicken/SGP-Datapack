@@ -1,5 +1,7 @@
 #> sgp.ci:minor_events/step
-# `{function: string}`
+# `{function: function id}`
+#
+# Run one synchronous event update and recurse until the requested simulated tick count is exhausted.
 
 $function $(function)
 scoreboard players remove #ci_minor_remaining sgp.dummy 1

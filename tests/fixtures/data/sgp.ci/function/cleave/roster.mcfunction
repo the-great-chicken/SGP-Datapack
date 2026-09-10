@@ -1,4 +1,5 @@
 #> sgp.ci:cleave/roster
+# Build the Cleave arena with one caster and four stationary test targets.
 
 fill ~ ~ ~ ~20 ~ ~20 stone
 fill ~ ~1 ~ ~20 ~5 ~20 air

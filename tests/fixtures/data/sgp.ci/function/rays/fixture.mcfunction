@@ -1,4 +1,5 @@
 #> sgp.ci:rays/fixture
+# Build the absolute Rays arena, create a survival caster identity, and seed the ability duration.
 
 fill -12 87 -12 28 87 28 stone
 fill -12 88 -12 28 92 28 air

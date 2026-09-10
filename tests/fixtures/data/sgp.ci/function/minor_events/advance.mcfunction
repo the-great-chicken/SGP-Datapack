@@ -1,5 +1,5 @@
 #> sgp.ci:minor_events/advance
-# `{function: string, ticks: int}`
+# `{function: function id, ticks: positive int}`
 #
 # Advance one event's real update function synchronously; ticks must be positive.
 

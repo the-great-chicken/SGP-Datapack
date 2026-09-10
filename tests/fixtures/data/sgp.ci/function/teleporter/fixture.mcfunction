@@ -1,4 +1,5 @@
 #> sgp.ci:teleporter/fixture
+# Create two portals and destinations, then build the same UUID source list consumed by production teleport processing.
 
 kill @e[tag=sgp.ci.teleporter,type=marker]
 fill ~ ~ ~ ~24 ~ ~6 stone

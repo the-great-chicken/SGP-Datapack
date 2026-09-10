@@ -1,5 +1,6 @@
 #> sgp.ci:perfect_accuracy/throw
-# {type}
+# `{type: ender_pearl|snowball|egg}`
+#
 # Fixed-speed throws ignore the original launch speed.
 
 $function sgp.ci:perfect_accuracy/create {type:$(type),motion:"[0.0,0.0,0.2]"}

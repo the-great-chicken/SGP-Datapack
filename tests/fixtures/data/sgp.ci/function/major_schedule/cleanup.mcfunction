@@ -1,4 +1,5 @@
 #> sgp.ci:major_schedule/cleanup
+# Restore all saved major-event schedule configuration and disconnect test players.
 
 function sgp.ci:players/cleanup
 function sgp.ci:major_schedule/restore {event:pco}

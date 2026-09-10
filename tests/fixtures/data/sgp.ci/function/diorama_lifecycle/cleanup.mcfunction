@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_lifecycle/cleanup
+# Remove lifecycle mannequins and passengers, including entities moved below the world during removal.
+
 function sgp.ci:players/cleanup
 execute as @e[tag=sgp.small_mannequin_96001,type=mannequin] on passengers run kill @s
 execute as @e[tag=sgp.giant_mannequin_96001,type=mannequin] on passengers run kill @s

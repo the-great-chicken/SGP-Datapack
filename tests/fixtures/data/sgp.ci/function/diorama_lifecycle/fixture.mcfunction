@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_lifecycle/fixture
+# Create one owner, playable-map marker, and model marker with the IDs needed for small/giant lifecycle checks.
+
 gamemode survival @s
 tp @s 60.0 81.0 60.0
 clear @s

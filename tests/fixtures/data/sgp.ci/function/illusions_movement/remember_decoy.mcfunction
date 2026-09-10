@@ -1,5 +1,6 @@
 #> sgp.ci:illusions_movement/remember_decoy
-# {group, direction}
+# `{group: fixture group, direction: left|right|opposite}`
+#
 # Keep the original identity so missing-tag diagnostics can still inspect the entity.
 
 function gu:generate

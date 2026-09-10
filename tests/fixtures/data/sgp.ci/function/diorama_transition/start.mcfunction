@@ -1,6 +1,8 @@
 #> sgp.ci:diorama_transition/start
-# {x, z, yaw, pitch}
+# `{x, z: coordinate, yaw, pitch: degrees}`
+#
 # Supply destination coordinates and the initial view exactly as the caller would, without collecting kit stats.
+
 $summon marker $(x) ~1 $(z) {Tags:["sgp.ci.transition_destination"]}
 assert entity @e[tag=sgp.ci.transition_destination,distance=..16,type=marker]
 $data modify storage sgp:macro diorama.scale_down_anim set value {yaw:$(yaw),pitch:$(pitch)}

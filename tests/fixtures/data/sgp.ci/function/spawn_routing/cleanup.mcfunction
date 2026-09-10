@@ -1,4 +1,5 @@
 #> sgp.ci:spawn_routing/cleanup
+# Remove routing markers/players and restore the production event state saved by setup.
 
 kill @e[tag=sgp.ci.spawn_routing,type=marker]
 function sgp.ci:players/cleanup

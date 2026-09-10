@@ -1,5 +1,6 @@
 #> sgp.ci:illusions_movement/formation
-# {group}
+# `{group: fixture group}`
+#
 # Establish an active cast's linked center and three decoys without starting stats collection.
 
 function #bs.id:give_suid

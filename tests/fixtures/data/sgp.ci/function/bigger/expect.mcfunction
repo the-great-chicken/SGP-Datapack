@@ -1,6 +1,8 @@
 #> sgp.ci:bigger/expect
+# `{scale, jump, reach, damage: score range (attribute * 100000)}`
+#
+# Compare all four effective Bigger attributes after scaling them for stable integer assertions.
 
-# {scale, jump, reach, damage}: attribute values multiplied by 100000, with rounding tolerance.
 execute store result score #ci.bigger.scale sgp.dummy run attribute @s minecraft:scale get 100000
 execute store result score #ci.bigger.jump sgp.dummy run attribute @s minecraft:jump_strength get 100000
 execute store result score #ci.bigger.reach sgp.dummy run attribute @s minecraft:entity_interaction_range get 100000

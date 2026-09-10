@@ -1,4 +1,5 @@
 #> sgp.ci:timer_overlap/cleanup
+# Clear shared timing work, disconnect players, and restore every global timer score exactly as setup found it.
 
 schedule clear sgp.misc:second
 function sgp.ci:players/cleanup

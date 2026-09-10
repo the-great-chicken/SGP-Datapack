@@ -1,5 +1,5 @@
 #> sgp.ci:cooldown_hud/expect
-# `{kit: kit path, frame: int}`
+# `{kit: kit id, frame: int}`
 #
 # Check the prepared overlay against the expected progress and canonical kit appearance.
 

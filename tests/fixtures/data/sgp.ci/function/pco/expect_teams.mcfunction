@@ -1,5 +1,6 @@
 #> sgp.ci:pco/expect_teams
-# `{total, min, max}`
+# `{total, min, max: nonnegative int}`
+#
 # Check team sizes without depending on random player assignments.
 
 execute store result score #ci.pco.poule sgp.dummy if entity @a[team=sgp.Poule]

@@ -1,5 +1,7 @@
 #> sgp.ci:hider_teams/expect_groups
-# `{g1, g2, g3, g4, g5}`: expected numbers of groups of each size.
+# `{g1, g2, g3, g4, g5: nonnegative int}`
+#
+# Check the resulting distribution of hider group sizes without depending on which players were grouped.
 
 assert not entity @a[team=sgp.hider,tag=sgp.ci.hider_actor,tag=!sgp.hider]
 scoreboard players set #ci.hs.g1 sgp.dummy 0

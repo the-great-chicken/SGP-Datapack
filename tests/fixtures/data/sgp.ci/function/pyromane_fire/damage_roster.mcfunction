@@ -1,4 +1,5 @@
 #> sgp.ci:pyromane_fire/damage_roster
+# Extend the base fire fixture with owner, near/edge/outside targets, and a peaceful-mode control.
 
 function sgp.ci:pyromane_fire/fixture
 dummy FireOwner spawn

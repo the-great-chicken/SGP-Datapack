@@ -1,4 +1,5 @@
 #> sgp.ci:experience_timer/cleanup
+# Clear the scheduled second tick, disconnect players, and restore global timer scores exactly as setup found them.
 
 schedule clear sgp.misc:second
 function sgp.ci:players/cleanup

@@ -1,5 +1,4 @@
 #> sgp.ci:rays/prepare_damage
-
 # Reset the arena and positions after the join-protection wait.
 fill -12 88 -12 28 92 28 air
 tp @s 8.5 88.0 8.5 0 0

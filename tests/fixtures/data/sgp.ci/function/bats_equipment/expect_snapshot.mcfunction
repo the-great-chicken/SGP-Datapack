@@ -1,4 +1,6 @@
 #> sgp.ci:bats_equipment/expect_snapshot
+# `{key: snapshot key}`
+#
 # Replacing identical NBT reports no modification; any item difference fails.
 
 function sgp.ci:bats_equipment/snapshot {key:actual}

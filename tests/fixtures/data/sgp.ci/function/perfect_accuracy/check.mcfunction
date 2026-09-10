@@ -1,5 +1,6 @@
 #> sgp.ci:perfect_accuracy/check
-# {x, y, z}
+# `{x, y, z: score range (Motion * 10000)}`
+#
 # Check each velocity component independently, allowing only the calculation's rounding error.
 
 execute store result score #ci.accuracy.x sgp.dummy run data get entity @s Motion[0] 10000

@@ -1,4 +1,5 @@
 #> sgp.ci:major_schedule/setup
+# Snapshot the three major-event schedules and current round count for failure-safe batch restoration.
 
 function sgp.ci:players/cleanup
 data modify storage sgp.ci:major_schedule previous set value {}

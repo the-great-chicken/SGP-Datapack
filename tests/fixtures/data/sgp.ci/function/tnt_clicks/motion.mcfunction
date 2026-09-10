@@ -1,6 +1,8 @@
 #> sgp.ci:tnt_clicks/motion
+# `{target: a|b, x, y, z: score range (Motion * 10000)}`
+#
+# Check the selected TNT charge's three velocity components at fixed-point precision.
 
-# {target,x,y,z}: velocity components scaled by 10000.
 $assert entity @e[tag=sgp.ci.click_tnt_$(target),type=tnt]
 $execute store result score #ci.click.x sgp.dummy run data get entity @e[tag=sgp.ci.click_tnt_$(target),limit=1,type=tnt] Motion[0] 10000
 $execute store result score #ci.click.y sgp.dummy run data get entity @e[tag=sgp.ci.click_tnt_$(target),limit=1,type=tnt] Motion[1] 10000

@@ -1,5 +1,5 @@
 #> sgp.ci:locations/scan
-# `{tag: string}`
+# `{tag: entity tag}`
 #
 # Run the location part of a tick using this test's markers and their real metadata.
 

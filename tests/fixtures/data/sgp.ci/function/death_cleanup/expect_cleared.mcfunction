@@ -1,4 +1,5 @@
 #> sgp.ci:death_cleanup/expect_cleared
+# Assert the death hook cleared kit state, rewards, inventory, and active effects.
 
 assert score @s sgp.kit_id matches -1
 assert score @s sgp.cooldown_ability matches 0

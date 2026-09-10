@@ -1,4 +1,5 @@
 #> sgp.ci:repulsion/fixture
+# Build the positioned Repulsion arena with one invulnerable enchanted wearer and an observer.
 
 fill ~ ~ ~ ~16 ~ ~16 stone
 fill ~ ~1 ~ ~16 ~5 ~16 air

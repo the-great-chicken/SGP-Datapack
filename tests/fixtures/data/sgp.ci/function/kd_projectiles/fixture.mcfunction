@@ -1,4 +1,5 @@
 #> sgp.ci:kd_projectiles/fixture
+# Create a survival shooter and a tick-verified stationary 40-health target with no armor.
 
 fill 0 160 0 16 160 16 stone
 fill 0 161 0 16 165 16 air

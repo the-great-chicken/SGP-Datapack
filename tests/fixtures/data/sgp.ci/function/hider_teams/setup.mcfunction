@@ -1,4 +1,5 @@
 #> sgp.ci:hider_teams/setup
+# Save Hide and Seek grouping/round state so the batch can mutate it without leaking into later tests.
 
 function sgp.ci:players/cleanup
 execute store result storage sgp.ci:hider_teams previous_selector int 1 run scoreboard players get #selector sgp.link_teams

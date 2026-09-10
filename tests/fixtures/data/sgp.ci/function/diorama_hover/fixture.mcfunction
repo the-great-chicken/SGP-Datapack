@@ -1,4 +1,6 @@
 #> sgp.ci:diorama_hover/fixture
+# Create two cached spawn buttons with linked labels plus an overlapping unrelated label.
+
 fill ~ ~1 ~ ~10 ~5 ~10 air
 fill ~ ~ ~ ~10 ~ ~10 stone
 gamemode survival @s

@@ -1,4 +1,5 @@
 #> sgp.ci:round_scheduling/cleanup
+# Stop round scheduling, clear unrelated fixture work, disconnect players, and restore optional round-limit scores.
 
 function sgp.majeurs:scheduler/stop
 schedule clear sgp.ci:round_scheduling/unrelated

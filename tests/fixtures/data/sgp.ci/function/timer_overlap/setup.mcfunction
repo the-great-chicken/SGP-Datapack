@@ -1,4 +1,6 @@
 #> sgp.ci:timer_overlap/setup
+# Snapshot all shared timed-event counters and reset them to an idle baseline.
+# This isolates overlap behavior from timers left by the surrounding world or another test.
 
 function sgp.ci:players/cleanup
 schedule clear sgp.misc:second

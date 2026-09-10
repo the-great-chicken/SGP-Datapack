@@ -1,4 +1,5 @@
 #> sgp.ci:protection/prepare
+# Reset both protected players, apply the Protection kit identity, and verify full starting health.
 
 clear @s
 clear ProtectPeer
