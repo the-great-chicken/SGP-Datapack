@@ -5,3 +5,5 @@ attribute @s minecraft:jump_strength modifier remove sgp:bigger
 attribute @s minecraft:entity_interaction_range modifier remove sgp:bigger
 attribute @s minecraft:attack_damage modifier remove sgp:bigger
 tag @s remove sgp.stats_tank_boost_active
+
+playsound event.mob_effect.bad_omen master @a ~ ~ ~ 1 1.5

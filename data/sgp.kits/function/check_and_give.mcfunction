@@ -13,4 +13,5 @@ $execute store result score #can_give sgp.dummy run function sgp.kits:can_give {
 execute unless score #can_give sgp.dummy matches 1.. run return 0
 
 $function sgp.kits:give {kit:$(kit)}
-$tellraw @s [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Tu as obtenu le kit ", color:aqua}, {text:"$(kit_name)", color:$(kit_color), bold:true}]
+$execute if data storage sgp:kits $(kit).ability_name run function sgp.kits:selection_message with storage sgp:kits $(kit)
+$execute unless data storage sgp:kits $(kit).ability_name run tellraw @s [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"Tu as obtenu le kit ", color:aqua}, {text:"$(kit_name)", color:$(kit_color), bold:true}]

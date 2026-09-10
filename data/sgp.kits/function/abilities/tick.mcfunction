@@ -1,5 +1,8 @@
 #> sgp.kits:abilities/tick
 
+execute as @a[tag=sgp.in_game,scores={sgp.cooldown_ability=1}] at @s \
+    run playsound minecraft:block.amethyst_block.resonate master @s ~ ~ ~ 5 1
+
 scoreboard players remove @a[tag=sgp.in_game,scores={sgp.cooldown_ability=1..}] sgp.cooldown_ability 1
 scoreboard players remove @a[tag=sgp.in_game,scores={sgp.duration_ability=1..}] sgp.duration_ability 1
 scoreboard players remove @a[scores={sgp.ability_result_window=1..}] sgp.ability_result_window 1

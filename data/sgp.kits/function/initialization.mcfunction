@@ -90,15 +90,16 @@ data merge storage sgp:kits {\
         {kit_id:10,kit_path:cancer,ability_path:bats}, \
         {kit_id:11,kit_path:poseidon,ability_path:water_trident} \
     ], \
-    eclaireur:{kit:eclaireur, kit_color:aqua, kit_name:"Éclaireur", kit_icon:""}, \
-    enderman:{kit:enderman, kit_color:dark_purple, kit_name:Enderman, kit_icon:""}, \
-    pigeon:{kit:pigeon, kit_color:dark_gray, kit_name:Pigeon, kit_icon:""}, \
-    poseidon:{kit:poseidon, kit_color:dark_aqua, kit_name:"Poséidon", kit_icon:""}, \
-    pyromane:{kit:pyromane, kit_color:gold, kit_name:Pyromane, kit_icon:""}, \
-    roi:{kit:roi, kit_color:yellow, kit_name:Roi, kit_icon:""}, tank:{kit:tank, kit_color:dark_blue, kit_name:Tank, kit_icon:""}, \
-    cancer:{kit:cancer, kit_color:dark_red, kit_name:Cancer, kit_icon:""}, \
-    alchimiste:{kit:alchimiste, kit_color:light_purple, kit_name:Alchimiste, kit_icon:""}, \
-    combattant:{kit:combattant, kit_color:white, kit_name:Combattant, kit_icon:""}, \
-    archer:{kit:archer, kit_color:green, kit_name:Archer, kit_icon:""}, \
-    vindicateur:{kit:vindicateur, kit_color:dark_green, kit_name:Vindicateur, kit_icon:""} \
+    eclaireur:{kit:eclaireur, kit_color:aqua, kit_name:"Éclaireur", kit_icon:"", ability_name:"Fumigène", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nLance une grenade dans la direction visée. À l’impact, elle produit un nuage beaucoup plus dense pour les autres joueurs que pour toi, permettant de masquer une fuite ou une attaque.",color:white}]}, \
+    enderman:{kit:enderman, kit_color:dark_purple, kit_name:Enderman, kit_icon:"", ability_name:"Rétribution", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nPendant quelques secondes, tu résistes aux dégâts du prochain coup reçu et te téléportes dans le dos de l’attaquant. Fonctionne aussi contre les projectiles !",color:white}]}, \
+    pigeon:{kit:pigeon, kit_color:dark_gray, kit_name:Pigeon, kit_icon:"", ability_name:"Picorage", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nEn visant un joueur à 4 blocs ou moins, tu l’attaques continuellement tant que tu gardes ton viseur sur lui.",color:white}]}, \
+    poseidon:{kit:poseidon, kit_color:dark_aqua, kit_name:"Poséidon", kit_icon:"", ability_name:"Cascade", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.use",color:yellow,bold:true},{text:" avec « Le Trident »\nHors de l’eau, utiliser « Le Trident » crée de l’eau temporaire et active Impulsion pour te propulser. Les tridents de lancer ne déclenchent pas cette capacité.",color:white}]}, \
+    pyromane:{kit:pyromane, kit_color:gold, kit_name:Pyromane, kit_icon:"", ability_name:"Missile", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nPose une TNT qui explose après 2 s et embrase la zone. Tous les joueurs peuvent frapper la TNT amorcée pour la propulser.",color:white}]}, \
+    roi:{kit:roi, kit_color:yellow, kit_name:Roi, kit_icon:"", ability_name:"Flamboyance", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nHuit rayons de 16 blocs partent autour de toi et suivent tes déplacements. Ils traversent les joueurs, sont bloqués par les murs et ignorent l’armure.",color:white}]}, \
+    tank:{kit:tank, kit_color:dark_blue, kit_name:Tank, kit_icon:"", ability_name:"Colosse", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nTu doubles de taille et frappes plus loin. Tes dégâts de mêlée sont également doublés.",color:white}]}, \
+    cancer:{kit:cancer, kit_color:dark_red, kit_name:Cancer, kit_icon:"", ability_name:"Surprise", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nTu deviens complètement invisible, et 10 chauves-souris t’entourent. Elles explosent près d’un joueur non-Cancer. Tu subis Faiblesse I pendant l’effet.",color:white}]}, \
+    alchimiste:{kit:alchimiste, kit_color:light_purple, kit_name:Alchimiste, kit_icon:"", ability_name:"Projections", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nTrois doubles portant ton apparence et ton équipement reproduisent tes déplacements dans des directions différentes. Ils peuvent être frappés et détruits.",color:white}]}, \
+    combattant:{kit:combattant, kit_color:white, kit_name:Combattant, kit_icon:"", ability_name:"Fendre", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nInflige 5 dégâts à tous les joueurs pris dans un large arc devant toi, jusqu’à 5 blocs.",color:white}]}, \
+    archer:{kit:archer, kit_color:green, kit_name:Archer, kit_icon:"", ability_name:"Escampette", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nTe projette vivement en arrière et décoche une flèche normale dans la direction visée. Sauter avec un bon timing permet d’aller plus haut et loin.",color:white}]}, \
+    vindicateur:{kit:vindicateur, kit_color:dark_green, kit_name:Vindicateur, kit_icon:"", ability_name:"Crocs", ability_hover:[{text:"Activation : ",color:gray},{keybind:"key.drop",color:yellow,bold:true},{text:"\nFait jaillir deux rangées de crocs sur environ 10 blocs devant toi. Elles suivent le relief et frappent les joueurs sur leur passage.",color:white}]} \
     }
