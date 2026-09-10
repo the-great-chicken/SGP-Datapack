@@ -1,9 +1,6 @@
 #> sgp.ci:tnt_clicks/cleanup
-# Remove TNT/interaction pairs, disconnect players, and clear click fixture state.
+# Clear click-record scratch after removing the shared TNT interaction pairs.
 
-kill @e[tag=sgp.ci.click_a,type=interaction]
-kill @e[tag=sgp.ci.click_b,type=interaction]
-kill @e[tag=sgp.ci.click_tnt_a,type=tnt]
-kill @e[tag=sgp.ci.click_tnt_b,type=tnt]
+function sgp.ci:tnt/interaction_pairs/clear
 data remove storage sgp.ci:tnt_clicks attack
 function sgp.ci:players/cleanup

@@ -33,5 +33,5 @@ assert score @s sgp.roi_found matches 1
 assert entity @s[tag=sgp.archer]
 assert not entity @s[tag=sgp.peaceful]
 assert not entity @s[tag=sgp.roi]
-function sgp.ci:kills_give/assert_count {item:"minecraft:diamond",count:7}
+function sgp.ci:inventory/expect_count {item:"minecraft:diamond",count:7}
 data remove storage sgp.ci:selection_rules denied_selection

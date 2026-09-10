@@ -4,7 +4,7 @@
 #
 # Two recorded clicks from different players reach their respective charges using each hitter's facing.
 
-function sgp.ci:tnt_clicks/fixture
+function sgp.ci:tnt/interaction_pairs/setup
 dummy TntHitter spawn
 gamemode creative TntHitter
 tp TntHitter ~0.5 ~1 ~1.5 90 0

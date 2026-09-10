@@ -35,7 +35,7 @@ dummy RewardIdle leave
 dummy RewardNoKit leave
 
 assert data storage sgp.ci:kills_give player_isolation{pyro_arrows:2,pyro_explosives:2,pyro_apples:0,idle:[],no_kit:[]}
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:3}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:0}
-function sgp.ci:kills_give/assert_count {item:"minecraft:strider_spawn_egg",count:0}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:3}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:0}
+function sgp.ci:inventory/expect_count {item:"minecraft:strider_spawn_egg",count:0}
 data remove storage sgp.ci:kills_give player_isolation

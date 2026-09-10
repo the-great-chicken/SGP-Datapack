@@ -11,6 +11,6 @@ execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/fixture
 function sgp.ci:repulsion/tick_probe
 await entity @e[tag=sgp.ci.repulsion,tag=!sgp.ci.repulsion_peer,nbt=!{active_effects:[{id:"minecraft:glowing"}]},type=husk]
 
-execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/scenarios/facing/1
+execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/phases/facing/arm_west
 await entity @e[tag=sgp.ci.repulsion,tag=!sgp.ci.repulsion_peer,scores={sgp.trigger_repulsion=0},type=husk]
-execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/scenarios/facing/2
+execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/expect_impulse {axis:0,range:"1.."}

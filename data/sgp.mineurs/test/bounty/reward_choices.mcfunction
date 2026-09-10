@@ -24,7 +24,7 @@ function sgp.mineurs:bounty/reward/trigger
 execute store success storage sgp.ci:bounty reward_choices.strength byte 1 if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{effects:{"minecraft:strength":{amplifier:0,duration:2400}}}}
 
 assert data storage sgp.ci:bounty reward_choices{reuse:0b,retry_duplicate:1b,max_health:26,retry_invalid:1b,strength:1b}
-function sgp.ci:kills_give/assert_count {item:"minecraft:totem_of_undying",count:1}
-function sgp.ci:kills_give/assert_count {item:"minecraft:enchanted_golden_apple",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:totem_of_undying",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:enchanted_golden_apple",count:1}
 assert score @s sgp.reward matches 0
 data remove storage sgp.ci:bounty reward_choices

@@ -14,29 +14,29 @@ assert not entity @s[nbt={Inventory:[{}]}]
 scoreboard players add @s sgp.kills_give_1 1
 scoreboard players add @s sgp.kills_give_2 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:3}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:0}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:3}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:0}
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:3}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:0}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:3}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:0}
 
 scoreboard players add @s sgp.kills_give_1 1
 scoreboard players add @s sgp.kills_give_2 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:6}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:6}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:1}
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:6}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:6}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:1}
 
 scoreboard players add @s sgp.kills_give_1 1
 scoreboard players add @s sgp.kills_give_2 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:9}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:9}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:1}
 
 scoreboard players add @s sgp.kills_give_1 1
 scoreboard players add @s sgp.kills_give_2 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:arrow",count:12}
-function sgp.ci:kills_give/assert_count {item:"minecraft:golden_apple",count:2}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:12}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:2}

@@ -4,7 +4,7 @@
 #
 # Another hitter can redirect the same charge using their own facing.
 
-function sgp.ci:tnt_clicks/fixture
+function sgp.ci:tnt/interaction_pairs/setup
 function sgp.ci:tnt_clicks/record {target:a}
 function sgp.ci:tnt_clicks/dispatch
 function sgp.ci:tnt_clicks/motion {target:a,x:"-20..20",y:"5980..6020",z:"6980..7020"}

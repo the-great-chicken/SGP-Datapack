@@ -20,6 +20,6 @@ assert not chat ".*a trouvé le kit tank.*" UnlockOutside
 assert score @s sgp.kit_id matches 2
 assert entity @s[tag=sgp.archer]
 assert not entity @s[tag=sgp.tank_voulu]
-function sgp.ci:kills_give/assert_count {item:"minecraft:diamond",count:7}
+function sgp.ci:inventory/expect_count {item:"minecraft:diamond",count:7}
 execute at @s store result score @s sgp.dummy if entity @e[distance=..2,type=firework_rocket]
 assert score @s sgp.dummy matches 1

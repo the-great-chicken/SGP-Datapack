@@ -12,13 +12,13 @@ assert not entity @s[nbt={Inventory:[{}]}]
 
 scoreboard players add @s sgp.kills_give_3 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:tnt_minecart",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:tnt_minecart",count:1}
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:tnt_minecart",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:tnt_minecart",count:1}
 
 scoreboard players add @s sgp.kills_give_3 2
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:tnt_minecart",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:tnt_minecart",count:1}
 scoreboard players add @s sgp.kills_give_3 1
 function sgp.kits:kills_give/check
-function sgp.ci:kills_give/assert_count {item:"minecraft:tnt_minecart",count:2}
+function sgp.ci:inventory/expect_count {item:"minecraft:tnt_minecart",count:2}

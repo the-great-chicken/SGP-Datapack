@@ -27,6 +27,6 @@ schedule clear sgp.misc:second
 assert data storage sgp.ci:bounty survivor{wanted:1b,glowing:1b,peaceful:0,outside:0,glowing_after:0b,claim:1b}
 assert not entity @s[tag=sgp.wanted]
 assert score #timed_events_active sgp.dummy matches 0
-function sgp.ci:kills_give/assert_count {item:"minecraft:totem_of_undying",count:1}
-function sgp.ci:kills_give/assert_count {item:"minecraft:enchanted_golden_apple",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:totem_of_undying",count:1}
+function sgp.ci:inventory/expect_count {item:"minecraft:enchanted_golden_apple",count:1}
 data remove storage sgp.ci:bounty survivor

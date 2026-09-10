@@ -12,4 +12,4 @@ function sgp.ci:repulsion/tick_probe
 await entity @e[tag=sgp.ci.repulsion,tag=!sgp.ci.repulsion_peer,nbt=!{active_effects:[{id:"minecraft:glowing"}]},type=husk]
 
 await delay 3t
-execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/scenarios/idle/2
+execute positioned 0.0 128.0 0.0 run function sgp.ci:repulsion/phases/idle/assert_stationary
