@@ -4,6 +4,7 @@
 #
 # Rewards display in slot order even when they arrive out of order.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function sgp.ci:reward_hud/fixture
 function sgp.misc:actionbar/reward {id:"sgp:reward_3",slot:3,text:'{text:"Third"}',width:30}

@@ -4,9 +4,11 @@
 #
 # Clearing one player's reward messages leaves another player's same-numbered slot active.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function sgp.ci:reward_hud/fixture
 dummy RewardPeer spawn
+execute as RewardPeer run function sgp.ci:actionbar_mixer/fresh_registration
 await score RewardPeer dah.actbar.UID matches 1..
 execute as RewardPeer run function sgp.ci:reward_hud/fixture
 function sgp.misc:actionbar/reward {id:"sgp:reward_1",slot:1,text:'{text:"Mine"}',width:30}

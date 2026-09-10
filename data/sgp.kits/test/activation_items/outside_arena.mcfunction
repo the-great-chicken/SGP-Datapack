@@ -1,6 +1,7 @@
 #> sgp.kits:activation_items/outside_arena
 # @dummy
-# @environment sgp.ci:activation_items
+# @environment sgp.ci:activation_items/outside_arena
+# @template sgp.ci:activation_items
 #
 # Outside the arena, dropping an item remains an ordinary drop and does not activate the equipped kit.
 

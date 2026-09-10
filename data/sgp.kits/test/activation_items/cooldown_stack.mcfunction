@@ -1,6 +1,7 @@
 #> sgp.kits:activation_items/cooldown_stack
 # @dummy
-# @environment sgp.ci:activation_items
+# @environment sgp.ci:activation_items/cooldown_stack
+# @template sgp.ci:activation_items
 #
 # A rejected activation returns one dropped item into its existing stack without restarting cooldown or applying the ability.
 

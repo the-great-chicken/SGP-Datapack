@@ -1,6 +1,7 @@
 #> sgp.kits:activation_items/poseidon
 # @dummy
-# @environment sgp.ci:activation_items
+# @environment sgp.ci:activation_items/poseidon
+# @template sgp.ci:activation_items
 #
 # Poseidon's dropped trident is returned, but dropping does not trigger its separate use-based ability or a generic cooldown warning.
 

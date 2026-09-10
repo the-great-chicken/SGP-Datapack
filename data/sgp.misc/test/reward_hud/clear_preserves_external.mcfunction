@@ -4,6 +4,7 @@
 #
 # Clearing the SGP HUD removes all reward slots while keeping another datapack's message.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function sgp.ci:reward_hud/fixture
 data modify storage dah:actbar new set value {id:"other:message",order:200,text:{text:"External"}}

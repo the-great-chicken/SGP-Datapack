@@ -1,6 +1,7 @@
 #> sgp.kits:activation_items/player_isolation
 # @dummy
-# @environment sgp.ci:activation_items
+# @environment sgp.ci:activation_items/player_isolation
+# @template sgp.ci:activation_items
 #
 # Two nearby drops return to their respective throwers, even when both exist before either request is handled.
 

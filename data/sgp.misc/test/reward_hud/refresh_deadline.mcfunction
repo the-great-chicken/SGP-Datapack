@@ -4,6 +4,7 @@
 #
 # Refreshing a slot replaces its text and gives the replacement a full lifetime.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function sgp.ci:reward_hud/fixture
 function sgp.misc:actionbar/reward {id:"sgp:reward_1",slot:1,text:'{text:"Original"}',width:30}

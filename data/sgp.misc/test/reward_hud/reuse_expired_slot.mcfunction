@@ -4,6 +4,7 @@
 #
 # A reward slot can be used again after expiry without resurrecting the old message.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function sgp.ci:reward_hud/fixture
 function sgp.misc:actionbar/reward {id:"sgp:reward_2",slot:2,text:'{text:"Old"}',width:30}

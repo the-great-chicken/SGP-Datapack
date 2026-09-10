@@ -4,6 +4,7 @@
 #
 # The real Mixer registers the player, replaces and expires rewards, and runs the SGP HUD override.
 
+function sgp.ci:actionbar_mixer/fresh_registration
 await score @s dah.actbar.UID matches 1..
 function dah.actbar_mixer:get_data
 assert data storage dah:actbar data[0].content[{id:"dah_actbar:ROOT_RESET"}]

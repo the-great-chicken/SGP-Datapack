@@ -1,4 +1,4 @@
 #> sgp.ci:activation_items/track_drops
-# Mark fixture drops for cleanup without changing their Thrower, Age, or ability-selection tags.
+# Mark only each activation actor's fresh drop for cleanup; never claim unrelated world items.
 
-tag @e[distance=..8,type=item] add sgp.ci.activation_item
+execute as @a[tag=sgp.ci.activation_actor] at @s run function sgp.ci:activation_items/track_drop with entity @s
