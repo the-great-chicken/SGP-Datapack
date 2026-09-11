@@ -29,6 +29,7 @@ jobs:
         run: |
           python3 .github/scripts/test_ci_staging.py
           python3 .github/scripts/prepare_core.py . .packtest-server
+          python3 .github/scripts/datapack_coverage.py instrument . .packtest-server
       - name: Download test dependencies
         working-directory: .packtest-server
         run: |
@@ -47,6 +48,17 @@ jobs:
         run: |
           set -o pipefail
           java -Xmx2G -Dpacktest.auto -Dpacktest.auto.annotations -jar server.jar nogui 2>&1 | tee console.log
+      - name: Report datapack coverage
+        if: always()
+        working-directory: .packtest-server
+        run: |
+          if [[ -f console.log ]]; then
+            python3 ../.github/scripts/datapack_coverage.py report .. .
+          else
+            echo "## Datapack test coverage" >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+            echo "Coverage was not collected because the PackTest server did not produce a console log." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Keep server logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -56,4 +68,7 @@ jobs:
             .packtest-server/console.log
             .packtest-server/logs/
             .packtest-server/crash-reports/
+            .packtest-server/datapack-coverage-map.json
+            .packtest-server/datapack-coverage.json
+            .packtest-server/datapack-coverage.md
           if-no-files-found: ignore

@@ -13,6 +13,7 @@ import zipfile
 SCRIPTS = Path(__file__).resolve().parent
 PREPARE = runpy.run_path(str(SCRIPTS / 'prepare_core.py'))
 MIXER = runpy.run_path(str(SCRIPTS / 'install_mixer.py'))
+COVERAGE = runpy.run_path(str(SCRIPTS / 'datapack_coverage.py'))
 
 
 class StagingTests(unittest.TestCase):
@@ -271,6 +272,75 @@ class StagingTests(unittest.TestCase):
         self.assertIn('scoreboard players reset @s dah.actbar.UID', helper)
         self.assertIn('advancement revoke @s only dah.actbar_mixer:new_player', helper)
         self.assertIn('$data remove storage dah:actbar data[{UID:$(stale_uid)}]', remover)
+
+
+    def test_datapack_coverage_instruments_only_staged_production_functions(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-coverage-test-'))
+        repo = root / 'repo'
+        server = root / 'server'
+        source_data = repo / 'data'
+        staged_data = server / 'world/datapacks/SGP-Datapack/data'
+
+        files = {
+            'example/function/alpha.mcfunction': 'say alpha\n',
+            'example/function/nested/beta.mcfunction': '$say $(message)\n',
+            'example/test/alpha.mcfunction': 'assert entity @s\n',
+            'sgp.integration.tab/function/only_in_full_pack.mcfunction': 'say integration\n',
+        }
+        for relative, content in files.items():
+            path = source_data / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding='utf-8')
+        for relative in ('example/function/alpha.mcfunction', 'example/function/nested/beta.mcfunction'):
+            source = source_data / relative
+            target = staged_data / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(source.read_text(encoding='utf-8'), encoding='utf-8')
+        fixture = staged_data / 'sgp.ci/function/helper.mcfunction'
+        fixture.parent.mkdir(parents=True, exist_ok=True)
+        fixture.write_text('say fixture\n', encoding='utf-8')
+        COVERAGE['instrument'](repo, server)
+
+        mapping = json.loads((server / COVERAGE['MAP_NAME']).read_text(encoding='utf-8'))
+        self.assertEqual([entry['resource'] for entry in mapping['functions']],
+                         ['example:alpha', 'example:nested/beta'])
+        self.assertEqual(mapping['tests_per_namespace']['example'], 1)
+        self.assertEqual((source_data / 'example/function/alpha.mcfunction').read_text(encoding='utf-8'),
+                         'say alpha\n')
+        self.assertIn('SGP_COVERAGE:000001',
+                      (staged_data / 'example/function/alpha.mcfunction').read_text(encoding='utf-8'))
+        self.assertIn('SGP_COVERAGE:000002',
+                      (staged_data / 'example/function/nested/beta.mcfunction').read_text(encoding='utf-8'))
+        self.assertNotIn('SGP_COVERAGE', fixture.read_text(encoding='utf-8'))
+        alpha = (staged_data / 'example/function/alpha.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('execute unless data storage sgp.ci:coverage c000001', alpha)
+        self.assertIn('data modify storage sgp.ci:coverage c000001 set value 1b', alpha)
+
+    def test_datapack_coverage_reports_metrics_per_namespace(self):
+        mapping = {
+            'schema_version': 1,
+            'metric': 'function_hit',
+            'tests_per_namespace': {'alpha': 3, 'beta': 2},
+            'functions': [
+                {'id': '000001', 'namespace': 'alpha', 'resource': 'alpha:a', 'path': 'data/alpha/function/a.mcfunction'},
+                {'id': '000002', 'namespace': 'alpha', 'resource': 'alpha:b', 'path': 'data/alpha/function/b.mcfunction'},
+                {'id': '000003', 'namespace': 'beta', 'resource': 'beta:c', 'path': 'data/beta/function/c.mcfunction'},
+            ],
+        }
+        report = COVERAGE['build_report'](mapping, {'000001', '000003'})
+        self.assertEqual(report['namespaces']['alpha'], {
+            'tests': 3, 'functions_hit': 1, 'functions_total': 2, 'coverage_percent': 50.0,
+        })
+        self.assertEqual(report['namespaces']['beta'], {
+            'tests': 2, 'functions_hit': 1, 'functions_total': 1, 'coverage_percent': 100.0,
+        })
+        self.assertEqual(report['total'], {
+            'tests': 5, 'functions_hit': 2, 'functions_total': 3, 'coverage_percent': 66.7,
+        })
+        markdown = COVERAGE['render_markdown'](report)
+        self.assertIn('| `alpha` | 3 | 1 | 2 | 50.0% |', markdown)
+        self.assertIn('| `beta` | 2 | 1 | 1 | 100.0% |', markdown)
+        self.assertEqual(report['uncovered_functions'], ['alpha:b'])
 
 
 if __name__ == '__main__':
