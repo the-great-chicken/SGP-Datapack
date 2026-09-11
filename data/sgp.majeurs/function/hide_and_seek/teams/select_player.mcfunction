@@ -1,4 +1,4 @@
-#> sgp.majeurs:hide_and_seek/teams/select_teams
+#> sgp.majeurs:hide_and_seek/teams/select_player
 #
 # select the teams for the hider
 

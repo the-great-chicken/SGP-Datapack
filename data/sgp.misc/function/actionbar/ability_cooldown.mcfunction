@@ -1,8 +1,8 @@
 #> sgp.misc:actionbar/ability_cooldown
 #
 # Shows or refreshes the main ability cooldown HUD overlay.
-# The value is displayed as a resource-pack glyph selected from the 20-step
-# progress-bar LUT, then injected by the Actionbar Mixer display override.
+# Cooldown progress is converted to a 0..20 frame index, then rendered as the
+# corresponding resource-pack glyph by the Actionbar Mixer display override.
 
 # Infer the max cooldown centrally when this HUD first appears.
 # Also re-infer it if the cooldown value increased since the last rendered tick,
@@ -17,7 +17,7 @@ execute if score @s sgp.cooldown_ability > @s sgp.ab.ability_cooldown_max run sc
 
 scoreboard players operation #sgp.ab.current sgp.dummy = @s sgp.cooldown_ability
 scoreboard players operation #sgp.ab.max sgp.dummy = @s sgp.ab.ability_cooldown_max
-function sgp.misc:actionbar/progress_bar/calculate
+function sgp.misc:actionbar/cooldown_frame/calculate
 scoreboard players operation @s sgp.ab.ability_cooldown_last_current = @s sgp.cooldown_ability
 
 # The HUD display override reads these scores each Actionbar Mixer render.

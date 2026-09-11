@@ -1,4 +1,4 @@
-#> sgp.mineurs:lootdrop/show_item/main_macro
+#> sgp.mineurs:lootdrop/show_item/chat_sent_macro
 # `{item_hover: item hover event}`
 # Read the name as a text component from storage, preserving strings and formatting.
 

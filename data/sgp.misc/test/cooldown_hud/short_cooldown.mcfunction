@@ -2,7 +2,7 @@
 # @dummy
 # @environment sgp.ci:cooldown_hud/short_cooldown
 #
-# A cooldown shorter than the twenty-frame bar still shows proportional progress and becomes full only when ready.
+# A cooldown shorter than twenty ticks still selects proportional HUD frames and reaches frame 20 only when ready.
 
 function sgp.ci:cooldown_hud/prepare_player
 tag @s add sgp.in_game

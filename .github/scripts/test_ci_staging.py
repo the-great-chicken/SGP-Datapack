@@ -26,6 +26,14 @@ class StagingTests(unittest.TestCase):
         self.assertEqual((data / preserved).read_bytes(), (repo / 'data' / source).read_bytes())
         self.assertEqual((data / source).read_bytes(), (repo / 'tests/fixtures/data' / source).read_bytes())
 
+    def test_function_header_must_match_resource_id(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-header-test-')) / 'data'
+        file = root / 'example/function/actual.mcfunction'
+        file.parent.mkdir(parents=True)
+        file.write_text('#> example:stale\nsay test\n')
+        with self.assertRaisesRegex(ValueError, 'function header example:stale != example:actual'):
+            PREPARE['validate'](root)
+
     def test_test_state_cannot_use_production_storage(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-storage-test-')) / 'data'
         file = root / 'sgp.ci/function/bad.mcfunction'

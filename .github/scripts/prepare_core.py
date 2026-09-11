@@ -23,7 +23,9 @@ PLUGIN_COMMAND = re.compile(
 HOOK_CALL = re.compile(r'\bfunction\s+#(sgp\.hooks:[a-z0-9_./-]+)')
 FUNCTION_CALL = re.compile(r'\bfunction\s+(sgp\.integration\.[a-z]+:[a-z0-9_./-]+)(?![a-z0-9_./$(-])')
 OBSOLETE = ('sgp.misc:tab/', 'sgp.lore:npcs/', 'sgp.lore:sgp_3/',
-            'sgp.kits:abilities/remove_perms', 'sgp.to_remove_perm')
+            'sgp.kits:abilities/remove_perms', 'sgp.to_remove_perm',
+            'sgp.misc:actionbar/progress_bar/',
+            'misc.actionbar.progress_bar.bars set value')
 # Test-owned scratch/results belong to sgp.ci:*; sgp:data is production state.
 TEST_STATE_IN_PRODUCTION_STORAGE = re.compile(r'\bsgp:data\s+tests\b')
 
@@ -78,6 +80,14 @@ def validate(data, core=False):
                 errors.append(f'{path}: obsolete reference {old}')
         if path.suffix != '.mcfunction':
             continue
+        relative = path.relative_to(data).parts
+        if len(relative) >= 3 and relative[1] == 'function':
+            match = re.search(r'^#>\s*(\S+)', text, re.MULTILINE)
+            if match:
+                name = Path(*relative[2:]).with_suffix('').as_posix()
+                expected = f'{relative[0]}:{name}'
+                if match.group(1) != expected:
+                    errors.append(f'{path}: function header {match.group(1)} != {expected}')
         for number, line in enumerate(text.splitlines(), 1):
             if line.lstrip().startswith('#'):
                 continue
