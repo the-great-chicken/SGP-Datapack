@@ -327,10 +327,52 @@ class StagingTests(unittest.TestCase):
             # storage helper for the public event function being exercised.
             if name == 'kill_attribution':
                 self.assertNotIn('function sgp.kits:stats_collector/save_kill_cause_stat', text)
+                self.assertIn('gamemode creative @s', text)
+                self.assertIn('dummy StatsVictim spawn', text)
+                self.assertIn('gamemode creative StatsVictim', text)
+                self.assertIn('gamemode survival StatsVictim', text)
+                self.assertIn('await delay 61t', text)
+                self.assertIn('effect give StatsVictim minecraft:instant_health 1 4 true', text)
+                self.assertNotIn('nbt={Health:', text)
+                self.assertIn('damage StatsVictim 1 minecraft:player_attack by @s', text)
+                self.assertLess(text.index('await delay 61t'), text.index('damage StatsVictim 1 minecraft:player_attack by @s'))
+                self.assertIn('execute as StatsVictim on attacker run tag @s add sgp.ci.stats_kill_attacker', text)
+                self.assertIn('assert entity @s[tag=sgp.ci.stats_kill_attacker]', text)
+                self.assertIn('scoreboard players set StatsVictim sgp.death_cause 100', text)
+                self.assertLess(text.index('damage StatsVictim 1 minecraft:player_attack by @s'),
+                                text.index('scoreboard players set StatsVictim sgp.death_cause 100'))
+                self.assertLess(text.index('scoreboard players set StatsVictim sgp.death_cause 100'),
+                                text.index('execute as StatsVictim run function sgp.kits:stats_collector/collect_kill_infos'))
+                self.assertIn('execute as StatsVictim run function sgp.kits:stats_collector/collect_kill_infos', text)
             if name == 'kit_pick':
                 self.assertNotIn('function sgp.kits:stats_collector/save_pick_start', text)
             if name == 'death_position':
                 self.assertNotIn('function sgp.kits:stats_collector/death_position/save', text)
+            if name == 'elo_real_death':
+                self.assertIn('gamemode creative @s', text)
+                self.assertIn('dummy StatsEloV spawn', text)
+                self.assertIn('gamemode creative StatsEloV', text)
+                self.assertIn('gamemode survival StatsEloV', text)
+                self.assertIn('await delay 61t', text)
+                self.assertIn('effect give StatsEloV minecraft:instant_health 1 4 true', text)
+                self.assertNotIn('nbt={Health:', text)
+                self.assertIn('damage StatsEloV 1 minecraft:player_attack by @s', text)
+                self.assertLess(text.index('await delay 61t'), text.index('damage StatsEloV 1 minecraft:player_attack by @s'))
+                self.assertIn('execute as StatsEloV on attacker run tag @s add sgp.ci.stats_elo_attacker', text)
+                self.assertIn('assert entity @s[tag=sgp.ci.stats_elo_attacker]', text)
+                self.assertIn('execute as StatsEloV run function sgp.kits:stats_collector/elo/on_real_death', text)
+
+            if name != 'death_position':
+                env = re.search(r'^# @environment (\S+)$', text, re.MULTILINE)
+                self.assertIsNotNone(env, name)
+                self.assertEqual(env.group(1), f'sgp.ci:stats_collector_guarded/entrypoints/{name}')
+                env_file = (repo / 'tests/fixtures/data/sgp.ci/test_environment/stats_collector_guarded/entrypoints'
+                            / f'{name}.json')
+                self.assertEqual(json.loads(env_file.read_text(encoding='utf-8')), {
+                    'type': 'minecraft:function',
+                    'setup': 'sgp.ci:stats_collector/guarded_setup',
+                    'teardown': 'sgp.ci:stats_collector/guarded_teardown',
+                })
 
     def test_death_cause_contract_is_exhaustive_and_unambiguous(self):
         repo = SCRIPTS.parent.parent
@@ -429,6 +471,70 @@ class StagingTests(unittest.TestCase):
             self.assertLess(text.index(retire_call), text.index(grace), path)
             self.assertLess(text.index(grace), text.index(gone), path)
             self.assertNotIn('await not entity @e[tag=sgp.ci.removal,type=mannequin]', text, path)
+
+    def test_kill_effect_no_attacker_avoids_loading_grace_exposure(self):
+        repo = SCRIPTS.parent.parent
+        path = repo / 'data/sgp.cosmetics/test/kill_effects/no_attacker.mcfunction'
+        text = path.read_text(encoding='utf-8')
+        self.assertIn('function sgp.ci:kill_effects/prepare', text)
+        self.assertNotIn('await delay 61t', text)
+        self.assertNotIn('function sgp.ci:kill_effects/record_attacker', text)
+
+    def test_ability_entrypoint_tests_use_public_router_and_isolated_environments(self):
+        repo = SCRIPTS.parent.parent
+        tests = repo / 'data/sgp.kits/test/ability_entrypoints'
+        expected = {
+            'assassinate': 'sgp.enderman',
+            'bigger': 'sgp.tank',
+            'cleave': 'sgp.combattant',
+            'rays': 'sgp.roi',
+            'smoke_grenade': 'sgp.eclaireur',
+            'pecking': 'sgp.pigeon',
+            'pecking_miss': 'sgp.pigeon',
+            'no_matching_kit': None,
+        }
+        paths = sorted(tests.glob('*.mcfunction'))
+        self.assertEqual([path.stem for path in paths], sorted(expected))
+
+        for path in paths:
+            text = path.read_text(encoding='utf-8')
+            self.assertIn('execute at @s run function sgp.kits:abilities/route_ability', text, path)
+            self.assertNotRegex(text, r'(?m)^function sgp\.kits:abilities/(?:assassinate|bigger|cleave|rays|smoke_grenade)/start(?: |$)')
+            tag = expected[path.stem]
+            if tag is not None:
+                self.assertIn(f'tag @s add {tag}', text, path)
+            env = re.search(r'^# @environment (\S+)$', text, re.MULTILINE)
+            self.assertIsNotNone(env, path)
+            self.assertEqual(env.group(1), f'sgp.ci:ability_entrypoints/{path.stem}')
+            env_file = (repo / 'tests/fixtures/data/sgp.ci/test_environment/ability_entrypoints'
+                        / f'{path.stem}.json')
+            self.assertEqual(json.loads(env_file.read_text(encoding='utf-8')), {
+                'type': 'minecraft:function',
+                'setup': 'sgp.ci:ability_entrypoints/setup',
+                'teardown': 'sgp.ci:ability_entrypoints/cleanup',
+            })
+
+        cleanup = (repo / 'tests/fixtures/data/sgp.ci/function/ability_entrypoints/cleanup.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('kill @e[tag=sgp.ci.ability_entrypoint]', cleanup)
+        for player_id in range(920001, 920007):
+            self.assertIn(f'data remove storage sgp.kits:stats kits_dict.{player_id}', cleanup)
+
+    def test_hide_and_seek_fixture_clears_all_schedule_chains_at_both_boundaries(self):
+        repo = SCRIPTS.parent.parent
+        expected = (
+            'schedule clear sgp.majeurs:hide_and_seek/_start',
+            'schedule clear sgp.majeurs:hide_and_seek/_stop',
+            'schedule clear sgp.majeurs:hide_and_seek/timer/hider',
+            'schedule clear sgp.majeurs:hide_and_seek/timer/seeker',
+            'schedule clear sgp.majeurs:hide_and_seek/timer/glow',
+            'schedule clear sgp.majeurs:hide_and_seek/timer/glow_announce',
+        )
+        for name in ('setup', 'cleanup'):
+            path = repo / 'tests/fixtures/data/sgp.ci/function/hider_teams' / f'{name}.mcfunction'
+            text = path.read_text(encoding='utf-8')
+            self.assertIn('function #bs.schedule:cancel_all {with:{id:"hide_and_seek"}}', text, path)
+            for command in expected:
+                self.assertIn(command, text, path)
 
     def test_datapack_coverage_instruments_only_staged_production_functions(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-coverage-test-'))

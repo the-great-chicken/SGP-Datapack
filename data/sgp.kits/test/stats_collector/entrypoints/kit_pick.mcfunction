@@ -1,6 +1,6 @@
 #> sgp.kits:stats_collector/entrypoints/kit_pick
 # @dummy
-# @environment sgp.ci:stats_collector_guarded
+# @environment sgp.ci:stats_collector_guarded/entrypoints/kit_pick
 #
 # Starting a real kit pick captures the current game tick and paused-tick baseline, while paused collection creates no new pick.
 

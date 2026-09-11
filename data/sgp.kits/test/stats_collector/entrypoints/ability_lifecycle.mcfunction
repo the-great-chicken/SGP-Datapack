@@ -1,6 +1,6 @@
 #> sgp.kits:stats_collector/entrypoints/ability_lifecycle
 # @dummy
-# @environment sgp.ci:stats_collector_guarded
+# @environment sgp.ci:stats_collector_guarded/entrypoints/ability_lifecycle
 #
 # Public ability telemetry opens one cast, counts each victim once, marks success once, and accumulates Tank boosted damage per hit.
 

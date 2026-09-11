@@ -5,7 +5,8 @@
 # A victim with no attacker produces no kill effect, even with a cosmetic selected.
 
 function sgp.ci:kill_effects/roster
-await delay 61t
+# This contract needs no damage. Run immediately, before unrelated world activity can
+# give the fresh victim an attacker and invalidate the premise.
 function sgp.ci:kill_effects/prepare
 tag EffectVictim add sgp.kill.anvil
 function sgp.ci:kill_effects/dispatch

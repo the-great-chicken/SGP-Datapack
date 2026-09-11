@@ -2,8 +2,12 @@
 # Cancel Hide and Seek scheduling, remove fixture players, and restore all saved round/timer scores.
 
 function #bs.schedule:cancel_all {with:{id:"hide_and_seek"}}
+schedule clear sgp.majeurs:hide_and_seek/_start
+schedule clear sgp.majeurs:hide_and_seek/_stop
 schedule clear sgp.majeurs:hide_and_seek/timer/hider
 schedule clear sgp.majeurs:hide_and_seek/timer/seeker
+schedule clear sgp.majeurs:hide_and_seek/timer/glow
+schedule clear sgp.majeurs:hide_and_seek/timer/glow_announce
 kill @e[tag=sgp.ci.hider_teams,type=marker]
 function sgp.ci:players/cleanup
 execute store result score #selector sgp.link_teams run data get storage sgp.ci:hider_teams previous_selector
