@@ -303,6 +303,35 @@ class StagingTests(unittest.TestCase):
         self.assertIn('if items entity @s $(slot) $(item)[enchantments~', enchantment_helper)
         self.assertIn('run clear @s $(item)[enchantments~', enchantment_count)
 
+    def test_stats_collector_entrypoints_exercise_public_boundaries(self):
+        repo = SCRIPTS.parent.parent
+        tests = repo / 'data/sgp.kits/test/stats_collector/entrypoints'
+        expected = {
+            'ability_lifecycle': [
+                'function sgp.kits:stats_collector/ability/start',
+                'function sgp.kits:stats_collector/ability/mark_affected',
+                'function sgp.kits:stats_collector/ability/mark_success',
+                'function sgp.kits:stats_collector/ability/tank_hit',
+            ],
+            'kill_attribution': ['function sgp.kits:stats_collector/collect_kill_infos'],
+            'kit_pick': ['function sgp.kits:stats_collector/collect_kit_pick_infos'],
+            'death_position': ['function sgp.kits:stats_collector/death_position/capture'],
+            'elo_real_death': ['function sgp.kits:stats_collector/elo/on_real_death'],
+        }
+        self.assertEqual({path.stem for path in tests.glob('*.mcfunction')}, set(expected))
+        for name, calls in expected.items():
+            text = (tests / f'{name}.mcfunction').read_text(encoding='utf-8')
+            for call in calls:
+                self.assertIn(call, text)
+            # These are integration contracts: they must not substitute the lower-level
+            # storage helper for the public event function being exercised.
+            if name == 'kill_attribution':
+                self.assertNotIn('function sgp.kits:stats_collector/save_kill_cause_stat', text)
+            if name == 'kit_pick':
+                self.assertNotIn('function sgp.kits:stats_collector/save_pick_start', text)
+            if name == 'death_position':
+                self.assertNotIn('function sgp.kits:stats_collector/death_position/save', text)
+
     def test_death_cause_contract_is_exhaustive_and_unambiguous(self):
         repo = SCRIPTS.parent.parent
         functions = repo / 'data/sgp.kits/function/stats_collector/death_cause'
