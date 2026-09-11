@@ -292,6 +292,9 @@ class StagingTests(unittest.TestCase):
             self.assertIn(f'assert entity @s[tag=sgp.{kit}_voulu', text, path)
             assertion_count = text.count('function sgp.ci:loadouts/expect_') + text.count('function sgp.ci:inventory/expect_count')
             self.assertGreaterEqual(assertion_count, 2, path)
+            # Default amplifier 0 is omitted from serialized active_effects NBT in the
+            # PackTest runtime; asserting amplifier:0b creates a false negative.
+            self.assertNotIn('amplifier:0b', text, path)
 
         slot_helper = (repo / 'tests/fixtures/data/sgp.ci/function/loadouts/expect_slot.mcfunction').read_text(encoding='utf-8')
         enchantment_helper = (repo / 'tests/fixtures/data/sgp.ci/function/loadouts/expect_enchantment.mcfunction').read_text(encoding='utf-8')
@@ -299,6 +302,104 @@ class StagingTests(unittest.TestCase):
         self.assertIn('if items entity @s $(slot) $(item)', slot_helper)
         self.assertIn('if items entity @s $(slot) $(item)[enchantments~', enchantment_helper)
         self.assertIn('run clear @s $(item)[enchantments~', enchantment_count)
+
+    def test_death_cause_contract_is_exhaustive_and_unambiguous(self):
+        repo = SCRIPTS.parent.parent
+        functions = repo / 'data/sgp.kits/function/stats_collector/death_cause'
+        advancements = repo / 'data/sgp.kits/advancement/death_cause'
+        tags = repo / 'data/sgp.kits/tags/damage_type/death_cause'
+
+        function_ids = {}
+        for path in sorted(functions.glob('*.mcfunction')):
+            text = path.read_text(encoding='utf-8')
+            match = re.search(r'scoreboard players set @s sgp\.death_cause (-?\d+)', text)
+            self.assertIsNotNone(match, path)
+            function_ids[path.stem] = int(match.group(1))
+            self.assertIn('function sgp.kits:stats_collector/collect_damage_received', text, path)
+
+        init = (repo / 'data/sgp.kits/function/stats_collector/init.mcfunction').read_text(encoding='utf-8')
+        match = re.search(r'damage_cause_names set value (\{[^\n]+\})', init)
+        self.assertIsNotNone(match)
+        metadata = {name: int(cause_id) for cause_id, name in json.loads(match.group(1)).items()}
+        self.assertEqual(function_ids, metadata)
+        self.assertEqual(sorted(cause_id for cause_id in function_ids.values() if cause_id < 100), list(range(29)))
+        self.assertEqual(sorted(cause_id for cause_id in function_ids.values() if cause_id >= 100), [100, 101, 102])
+
+        concrete_members = {}
+        for name in sorted(function_ids):
+            advancement = json.loads((advancements / f'{name}.json').read_text(encoding='utf-8'))
+            self.assertEqual(advancement['rewards']['function'],
+                             f'sgp.kits:stats_collector/death_cause/{name}')
+            condition = advancement['criteria']['track']['conditions']['damage']['type']['tags']
+            if name == 'unknown':
+                self.assertEqual(condition, [{'id': 'sgp.kits:death_cause/known', 'expected': False}])
+                continue
+            self.assertEqual(condition, [{'id': f'sgp.kits:death_cause/{name}', 'expected': True}])
+            tag = json.loads((tags / f'{name}.json').read_text(encoding='utf-8'))
+            for value in tag['values']:
+                if value.startswith('#'):
+                    continue
+                self.assertNotIn(value, concrete_members,
+                                 f'{value} classified by both {concrete_members.get(value)} and {name}')
+                concrete_members[value] = name
+
+        known = json.loads((tags / 'known.json').read_text(encoding='utf-8'))['values']
+        expected_known = {f'#sgp.kits:death_cause/{name}' for name in function_ids if name != 'unknown'}
+        self.assertEqual(set(known), expected_known)
+        self.assertEqual(len(known), len(expected_known))
+
+        runtime_tests = sorted((repo / 'data/sgp.kits/test/stats_collector/death_cause').glob('*.mcfunction'))
+        combined = '\n'.join(path.read_text(encoding='utf-8') for path in runtime_tests)
+        for name, cause_id in function_ids.items():
+            self.assertIn(f'function sgp.ci:death_cause/expect {{cause:"{name}",id:{cause_id}}}', combined)
+
+    def test_bats_empty_slots_are_guarded_before_component_mutation(self):
+        repo = SCRIPTS.parent.parent
+        held = repo / 'data/sgp.kits/function/abilities/bats/hide/held_item.mcfunction'
+        text = held.read_text(encoding='utf-8')
+        copied = '$item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)'
+        guard = 'execute unless data entity @s equipment.mainhand.id run return 0'
+        self.assertIn(copied, text)
+        self.assertIn(guard, text)
+        self.assertLess(text.index(copied), text.index(guard))
+        self.assertGreater(text.find('equipment.mainhand.components'), text.index(guard))
+
+        armor = repo / 'data/sgp.kits/function/abilities/bats/hide/armor_item.mcfunction'
+        text = armor.read_text(encoding='utf-8')
+        copied = '$item replace entity @s armor.$(slot) from entity @p[tag=sgp.processing] armor.$(slot)'
+        guard = '$execute unless data entity @s equipment.$(slot).id run return 0'
+        self.assertIn(copied, text)
+        self.assertIn(guard, text)
+        self.assertLess(text.index(copied), text.index(guard))
+        self.assertGreater(text.find('equipment.$(slot).components'), text.index(guard))
+
+        equipment = (repo / 'data/sgp.kits/function/abilities/bats/hide/equipment.mcfunction').read_text(encoding='utf-8')
+        head_mutations = [line.strip() for line in equipment.splitlines()
+                          if 'equipment.head.components' in line]
+        self.assertTrue(head_mutations)
+        self.assertTrue(all(line.startswith('execute if data entity @s equipment.head.id run ')
+                            for line in head_mutations))
+
+        restore = (repo / 'data/sgp.kits/function/abilities/bats/restore/held_item.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('execute unless data entity @s equipment.mainhand.id run return 0', restore)
+
+    def test_diorama_cleanup_waits_out_mannequin_dying_pose(self):
+        repo = SCRIPTS.parent.parent
+        retire = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_cleanup/retire.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('kill @e[tag=sgp.ci.removal,type=mannequin]', retire)
+        self.assertIn('tp @e[tag=sgp.ci.removal,type=mannequin] ~ ~-1000 ~', retire)
+        for name in ('death_cleanup', 'leave_giant', 'leave_small'):
+            path = repo / 'data/sgp.diorama/test/cleanup' / f'{name}.mcfunction'
+            text = path.read_text(encoding='utf-8')
+            retire_call = 'function sgp.ci:diorama_cleanup/retire'
+            grace = 'await delay 21t'
+            gone = 'assert not entity @e[tag=sgp.ci.removal,type=mannequin]'
+            self.assertIn(retire_call, text, path)
+            self.assertIn(grace, text, path)
+            self.assertIn(gone, text, path)
+            self.assertLess(text.index(retire_call), text.index(grace), path)
+            self.assertLess(text.index(grace), text.index(gone), path)
+            self.assertNotIn('await not entity @e[tag=sgp.ci.removal,type=mannequin]', text, path)
 
     def test_datapack_coverage_instruments_only_staged_production_functions(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-coverage-test-'))

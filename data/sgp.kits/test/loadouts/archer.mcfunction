@@ -15,4 +15,4 @@ function sgp.ci:loadouts/expect_enchantment {slot:"armor.head",item:"minecraft:l
 function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:1}
 function sgp.ci:inventory/expect_count {item:"minecraft:tipped_arrow",count:7}
 function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:3}
-assert entity @s[nbt={active_effects:[{id:"minecraft:speed",amplifier:0b}]}]
+assert entity @s[nbt={active_effects:[{id:"minecraft:speed"}]}]

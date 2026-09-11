@@ -14,4 +14,4 @@ function sgp.ci:loadouts/expect_enchantment {slot:"armor.head",item:"minecraft:p
 function sgp.ci:inventory/expect_count {item:"minecraft:ender_pearl",count:8}
 function sgp.ci:inventory/expect_count {item:"minecraft:splash_potion",count:1}
 function sgp.ci:inventory/expect_count {item:"minecraft:chorus_fruit",count:64}
-assert entity @s[nbt={active_effects:[{id:"minecraft:regeneration",amplifier:0b}]}]
+assert entity @s[nbt={active_effects:[{id:"minecraft:regeneration"}]}]
