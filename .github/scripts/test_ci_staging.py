@@ -153,6 +153,71 @@ class StagingTests(unittest.TestCase):
         self.assertIn(b'minecraft:air', raw)
         self.assertIn(b'\x09\x00\x06blocks\x0a' + struct.pack('>i', 9 * 5 * 5), raw)
 
+    def test_diorama_marker_tests_wait_for_owned_entities(self):
+        repo = SCRIPTS.parent.parent
+        owners = {
+            'moved_model': {'id_a': 96004, 'id_b': 96005, 'y': '80.0'},
+            'rectangular_dimensions': {'id_a': 96104, 'id_b': 96105, 'y': '96.0'},
+            'matching_ids': {'id_a': 96204, 'id_b': 96205, 'y': '112.0'},
+        }
+
+        fixture = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_markers/fixture.mcfunction').read_text(encoding='utf-8')
+        ready = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_markers/ready.mcfunction').read_text(encoding='utf-8')
+        setup = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_markers/setup.mcfunction').read_text(encoding='utf-8')
+        link = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_markers/link.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('sgp.ci.diorama_markers_$(owner)', fixture)
+        self.assertIn('id:$(id_a)', fixture)
+        self.assertIn('id:$(id_b)', fixture)
+        self.assertNotIn('sgp.ci.diorama_lifecycle', fixture)
+        self.assertIn('sgp.ci.diorama_markers_$(owner)', ready)
+        self.assertNotIn('sgp.ci.origin_ready', ready)
+        self.assertIn('forceload add 0 0 80 80', setup)
+        self.assertNotIn('players/cleanup', setup)
+        self.assertNotIn('diorama_lifecycle/cleanup', setup)
+        self.assertEqual(link.count('tag=sgp.ci.diorama_markers_$(owner)'), 6)
+
+        seen_ids = set()
+        seen_y = set()
+        roles = ('map_a', 'map_b', 'model_a', 'model_b')
+        for owner, params in owners.items():
+            test_file = repo / 'data/sgp.diorama/test/markers' / f'{owner}.mcfunction'
+            text = test_file.read_text(encoding='utf-8')
+            self.assertIn(f'# @environment sgp.ci:diorama_markers/{owner}', text)
+            self.assertIn(f'function sgp.ci:diorama_markers/ready {{owner:"{owner}"}}', text)
+            self.assertNotIn('sgp.ci:origin_arena/ready', text)
+            self.assertNotIn('sgp.ci.origin_ready', text)
+
+            fixture_call = (f'function sgp.ci:diorama_markers/fixture '
+                            f'{{owner:"{owner}",id_a:{params["id_a"]},id_b:{params["id_b"]},y:{params["y"]}}}')
+            link_call = f'function sgp.ci:diorama_markers/link {{owner:"{owner}"}}'
+            self.assertIn(fixture_call, text)
+            self.assertIn(link_call, text)
+            fixture_at = text.index(fixture_call)
+            link_at = text.index(link_call, fixture_at)
+            for role in roles:
+                wait = (f'await entity @e[tag=sgp.ci.diorama_markers_{owner},'
+                        f'tag=sgp.ci.markers_{role},type=marker]')
+                self.assertIn(wait, text[fixture_at:link_at])
+
+            env_file = (repo / 'tests/fixtures/data/sgp.ci/test_environment/diorama_markers'
+                        / f'{owner}.json')
+            self.assertEqual(json.loads(env_file.read_text(encoding='utf-8')), {
+                'type': 'minecraft:function',
+                'setup': 'sgp.ci:diorama_markers/setup',
+                'teardown': f'sgp.ci:diorama_markers/cleanup_{owner}',
+            })
+            cleanup = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_markers'
+                       / f'cleanup_{owner}.mcfunction').read_text(encoding='utf-8')
+            self.assertIn(f'kill @e[tag=sgp.ci.diorama_markers_{owner},type=marker]', cleanup)
+            self.assertNotIn('sgp.ci.diorama_lifecycle', cleanup)
+            self.assertNotIn('sgp.ci.origin_ready', cleanup)
+            self.assertNotIn('players/cleanup', cleanup)
+
+            self.assertTrue(seen_ids.isdisjoint({params['id_a'], params['id_b']}))
+            seen_ids.update({params['id_a'], params['id_b']})
+            self.assertNotIn(params['y'], seen_y)
+            seen_y.add(params['y'])
+
     def test_spawn_routing_tests_do_not_share_global_routing_state(self):
         repo = SCRIPTS.parent.parent
         tests = sorted((repo / 'data/sgp.misc/test/spawn_routing').glob('*.mcfunction'))
