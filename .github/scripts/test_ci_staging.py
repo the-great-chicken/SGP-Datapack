@@ -274,6 +274,32 @@ class StagingTests(unittest.TestCase):
         self.assertIn('$data remove storage dah:actbar data[{UID:$(stale_uid)}]', remover)
 
 
+    def test_loadout_contracts_cover_every_kit_collection(self):
+        repo = SCRIPTS.parent.parent
+        collection = repo / 'data/sgp.kits/function/collection'
+        expected = sorted(path.name for path in collection.iterdir()
+                          if path.is_dir() and (path / 'items.mcfunction').is_file()
+                          and (path / 'specifics.mcfunction').is_file())
+        tests = sorted((repo / 'data/sgp.kits/test/loadouts').glob('*.mcfunction'))
+        self.assertEqual([path.stem for path in tests], expected)
+
+        for path in tests:
+            kit = path.stem
+            text = path.read_text(encoding='utf-8')
+            self.assertIn('# @dummy', text, path)
+            self.assertIn(f'function sgp.kits:give {{kit:"{kit}"}}', text, path)
+            self.assertIn('assert score @s sgp.reset_tags matches 1', text, path)
+            self.assertIn(f'assert entity @s[tag=sgp.{kit}_voulu', text, path)
+            assertion_count = text.count('function sgp.ci:loadouts/expect_') + text.count('function sgp.ci:inventory/expect_count')
+            self.assertGreaterEqual(assertion_count, 2, path)
+
+        slot_helper = (repo / 'tests/fixtures/data/sgp.ci/function/loadouts/expect_slot.mcfunction').read_text(encoding='utf-8')
+        enchantment_helper = (repo / 'tests/fixtures/data/sgp.ci/function/loadouts/expect_enchantment.mcfunction').read_text(encoding='utf-8')
+        enchantment_count = (repo / 'tests/fixtures/data/sgp.ci/function/loadouts/expect_enchantment_count.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('if items entity @s $(slot) $(item)', slot_helper)
+        self.assertIn('if items entity @s $(slot) $(item)[enchantments~', enchantment_helper)
+        self.assertIn('run clear @s $(item)[enchantments~', enchantment_count)
+
     def test_datapack_coverage_instruments_only_staged_production_functions(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-coverage-test-'))
         repo = root / 'repo'
