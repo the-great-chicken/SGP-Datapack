@@ -1,6 +1,6 @@
 #> sgp.misc:spawn_routing/consecutive_players
 # @dummy
-# @environment sgp.ci:spawn_routing
+# @environment sgp.ci:spawn_routing/consecutive_players
 #
 # A later request uses its own destination list and moves only its requesting player.
 

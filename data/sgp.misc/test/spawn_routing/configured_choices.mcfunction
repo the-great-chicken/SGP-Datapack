@@ -1,6 +1,6 @@
 #> sgp.misc:spawn_routing/configured_choices
 # @dummy
-# @environment sgp.ci:spawn_routing
+# @environment sgp.ci:spawn_routing/configured_choices
 #
 # Repeated requests only use destinations from the supplied list, without mixing their coordinates and rotations.
 

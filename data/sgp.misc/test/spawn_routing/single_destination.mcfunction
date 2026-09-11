@@ -1,6 +1,6 @@
 #> sgp.misc:spawn_routing/single_destination
 # @dummy
-# @environment sgp.ci:spawn_routing
+# @environment sgp.ci:spawn_routing/single_destination
 #
 # A one-entry destination list preserves fractional position, facing, and the player's carried items.
 

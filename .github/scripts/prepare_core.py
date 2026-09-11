@@ -28,6 +28,10 @@ OBSOLETE = ('sgp.misc:tab/', 'sgp.lore:npcs/', 'sgp.lore:sgp_3/',
             'misc.actionbar.progress_bar.bars set value')
 # Test-owned scratch/results belong to sgp.ci:*; sgp:data is production state.
 TEST_STATE_IN_PRODUCTION_STORAGE = re.compile(r'\bsgp:data\s+tests\b')
+# Inline text components should never use the common `sgp.foo` typo for an SGP storage id.
+MALFORMED_SGP_STORAGE_COMPONENT = re.compile(r'\bstorage\s*:\s*"sgp\.')
+INCOMPLETE_STORAGE_REMOVE = re.compile(r'^\s*data remove storage \S+\s*$')
+DUMMY_SPAWN = re.compile(r'^\s*dummy\s+([^\s]+)\s+spawn(?:\s|$)')
 
 
 def function_file(data, identifier, kind='function'):
@@ -93,6 +97,13 @@ def validate(data, core=False):
                 continue
             if TEST_STATE_IN_PRODUCTION_STORAGE.search(line):
                 errors.append(f'{path}:{number}: test-owned state must use sgp.ci storage')
+            if MALFORMED_SGP_STORAGE_COMPONENT.search(line):
+                errors.append(f'{path}:{number}: malformed SGP storage component id (use sgp:<path>)')
+            if INCOMPLETE_STORAGE_REMOVE.match(line):
+                errors.append(f'{path}:{number}: data remove storage requires an NBT path')
+            dummy_spawn = DUMMY_SPAWN.match(line)
+            if dummy_spawn and (len(dummy_spawn.group(1)) > 16 or not re.fullmatch(r'[A-Za-z0-9_]+', dummy_spawn.group(1))):
+                errors.append(f'{path}:{number}: invalid dummy player name {dummy_spawn.group(1)!r} (must be 1-16 letters, digits, or underscores)')
             if namespace not in MODULES and PLUGIN_COMMAND.search(line.strip()):
                 errors.append(f'{path}:{number}: plugin command outside an integration')
             for target in HOOK_CALL.findall(line):

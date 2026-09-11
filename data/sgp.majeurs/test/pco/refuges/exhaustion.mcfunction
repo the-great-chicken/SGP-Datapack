@@ -20,7 +20,7 @@ function sgp.majeurs:pco/cabane/run_check_inside
 assert score @s sgp.temps_cabane_pco matches 0
 assert score @s sgp.temps_cabane_pco_secondes matches 0
 assert not entity @s[nbt={active_effects:[{id:"minecraft:resistance"}]}]
-assert entity @s[nbt={active_effects:[{id:"minecraft:wither"}]}]
+assert entity @s[nbt={active_effects:[{id:"minecraft:wither",amplifier:1b}]}]
 assert score PcoProtected sgp.temps_cabane_pco matches 95
 assert entity @a[name=PcoProtected,nbt={active_effects:[{id:"minecraft:resistance"}]}]
 
@@ -29,6 +29,8 @@ function sgp.majeurs:pco/cabane/run_check_inside
 function sgp.majeurs:pco/cabane/run_check_inside
 assert score @s sgp.temps_cabane_pco matches 0
 assert score @s sgp.temps_cabane_pco_secondes matches 0
+# Continued refuge checks keep the intended Wither II penalty active without creating allowance debt.
+assert entity @s[nbt={active_effects:[{id:"minecraft:wither",amplifier:1b}]}]
 
 # Less than one check's allowance and a first visit without a score both exhaust at zero.
 scoreboard players set @s sgp.temps_cabane_pco 2

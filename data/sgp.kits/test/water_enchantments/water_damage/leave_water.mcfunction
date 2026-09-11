@@ -7,7 +7,8 @@
 function sgp.ci:water_enchantments/fixture
 item replace entity @s armor.head with player_head[enchantments={"sgp.kits:water_damage":1}]
 function sgp.ci:water_enchantments/wet
-await delay 25t
+# Check while the minimum 1-second random effect duration is guaranteed to still be active.
+await delay 5t
 function sgp.ci:water_enchantments/expect_penalty
 function sgp.ci:water_enchantments/dry
 await delay 65t

@@ -1,6 +1,6 @@
 #> sgp.misc:spawn_routing/confinement_priority
 # @dummy
-# @environment sgp.ci:spawn_routing
+# @environment sgp.ci:spawn_routing/confinement_priority
 #
 # Confinement overrides normal and major-event spawns, and its expiry restores the appropriate route.
 

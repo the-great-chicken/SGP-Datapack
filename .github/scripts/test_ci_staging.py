@@ -42,6 +42,30 @@ class StagingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'test-owned state must use sgp.ci storage'):
             PREPARE['validate'](root)
 
+    def test_inline_sgp_storage_component_must_be_namespaced(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-text-storage-test-')) / 'data'
+        file = root / 'example/function/bad.mcfunction'
+        file.parent.mkdir(parents=True)
+        file.write_text('tellraw @a {storage:"sgp.text",nbt:"prefix",interpret:true}\n')
+        with self.assertRaisesRegex(ValueError, 'malformed SGP storage component id'):
+            PREPARE['validate'](root)
+
+    def test_data_remove_storage_requires_path(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-data-remove-test-')) / 'data'
+        file = root / 'sgp.ci/function/bad.mcfunction'
+        file.parent.mkdir(parents=True)
+        file.write_text('data remove storage sgp.ci:stats\n')
+        with self.assertRaisesRegex(ValueError, 'data remove storage requires an NBT path'):
+            PREPARE['validate'](root)
+
+    def test_dummy_spawn_name_must_fit_minecraft_username_rules(self):
+        root = Path(tempfile.mkdtemp(prefix='sgp-ci-dummy-name-test-')) / 'data'
+        file = root / 'sgp.ci/function/bad.mcfunction'
+        file.parent.mkdir(parents=True)
+        file.write_text('dummy ThisNameIsWayTooLong spawn\n')
+        with self.assertRaisesRegex(ValueError, 'invalid dummy player name'):
+            PREPARE['validate'](root)
+
     def test_unapproved_collision_fails_before_overwriting(self):
         root = Path(tempfile.mkdtemp(prefix='sgp-ci-collision-test-'))
         production, fixtures = root / 'production', root / 'fixtures'
@@ -128,6 +152,27 @@ class StagingTests(unittest.TestCase):
                       + struct.pack('>iii', 9, 5, 5), raw)
         self.assertIn(b'minecraft:air', raw)
         self.assertIn(b'\x09\x00\x06blocks\x0a' + struct.pack('>i', 9 * 5 * 5), raw)
+
+    def test_spawn_routing_tests_do_not_share_global_routing_state(self):
+        repo = SCRIPTS.parent.parent
+        tests = sorted((repo / 'data/sgp.misc/test/spawn_routing').glob('*.mcfunction'))
+        self.assertGreaterEqual(len(tests), 5)
+        environments = []
+        for path in tests:
+            text = path.read_text(encoding='utf-8')
+            match = re.search(r'^# @environment (\S+)$', text, re.MULTILINE)
+            self.assertIsNotNone(match, path)
+            expected = f'sgp.ci:spawn_routing/{path.stem}'
+            self.assertEqual(match.group(1), expected)
+            environments.append(expected)
+            env_file = repo / 'tests/fixtures/data/sgp.ci/test_environment/spawn_routing' / f'{path.stem}.json'
+            self.assertEqual(json.loads(env_file.read_text(encoding='utf-8')), {
+                'type': 'minecraft:function',
+                'setup': 'sgp.ci:spawn_routing/setup',
+                'teardown': 'sgp.ci:spawn_routing/cleanup',
+            })
+        self.assertEqual(len(environments), len(set(environments)))
+        self.assertFalse((repo / 'tests/fixtures/data/sgp.ci/test_environment/spawn_routing.json').exists())
 
     def test_protection_fixture_restores_health_after_login_wait(self):
         repo = SCRIPTS.parent.parent

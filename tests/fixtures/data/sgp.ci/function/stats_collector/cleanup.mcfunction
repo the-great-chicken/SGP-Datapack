@@ -3,7 +3,17 @@
 
 function sgp.ci:players/cleanup
 
-data remove storage sgp.ci:stats
+data remove storage sgp.ci:stats ability
+data remove storage sgp.ci:stats damage
+data remove storage sgp.ci:stats elo_apply
+data remove storage sgp.ci:stats elo_lookup
+data remove storage sgp.ci:stats elo_transfer
+data remove storage sgp.ci:stats identity
+data remove storage sgp.ci:stats kills
+data remove storage sgp.ci:stats pick_close
+data remove storage sgp.ci:stats positions
+data remove storage sgp:macro stats.current_player_identity
+data remove storage sgp:macro stats.current_elo_player
 
 data remove storage sgp.kits:stats kits_dict.910001
 data remove storage sgp.kits:stats kits_dict.910003

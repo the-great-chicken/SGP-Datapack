@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:minor_scheduler/setup",
+  "teardown": "sgp.ci:minor_scheduler/cleanup"
+}

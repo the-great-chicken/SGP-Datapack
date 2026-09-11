@@ -1,6 +1,6 @@
 #> sgp.misc:spawn_routing/protect_teams
 # @dummy
-# @environment sgp.ci:spawn_routing
+# @environment sgp.ci:spawn_routing/protect_teams
 #
 # Protect routes each team to its own spawn only once combat is active; selection must not fall through to a normal spawn.
 

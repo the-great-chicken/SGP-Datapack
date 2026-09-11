@@ -22,11 +22,18 @@ assert not entity @a[name=PcoRefugeOther,nbt={active_effects:[{id:"minecraft:res
 
 tp PcoRefugeOther ~0.5 ~1 ~0.5
 execute as PcoRefugeOther run function sgp.majeurs:pco/cabane/run_check_inside
+# Reset must clear an exhausted player's PCO penalty, not unrelated effects.
+scoreboard players set @s sgp.temps_cabane_pco 0
+function sgp.majeurs:pco/cabane/run_check_inside
+assert score @s sgp.temps_cabane_pco matches 0
+assert score @s sgp.temps_cabane_pco_secondes matches 0
+assert entity @s[nbt={active_effects:[{id:"minecraft:wither",amplifier:1b}]}]
 function sgp.majeurs:pco/reset_player_state
 assert not score @s sgp.temps_cabane_pco matches -2147483648..2147483647
 assert not score @s sgp.temps_cabane_pco_secondes matches -2147483648..2147483647
 assert not score @s sgp.ab.pco_cabane matches 1..
 assert not entity @s[nbt={active_effects:[{id:"minecraft:resistance"}]}]
+assert not entity @s[nbt={active_effects:[{id:"minecraft:wither"}]}]
 assert entity @s[nbt={active_effects:[{id:"minecraft:night_vision"}]}]
 assert score PcoRefugeOther sgp.temps_cabane_pco matches 95
 assert score PcoRefugeOther sgp.temps_cabane_pco_secondes matches 0
