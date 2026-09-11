@@ -121,6 +121,14 @@ class StagingTests(unittest.TestCase):
         self.assertIn(b'minecraft:air', raw)
         self.assertIn(b'\x09\x00\x06blocks\x0a' + struct.pack('>i', 9 * 5 * 5), raw)
 
+    def test_protection_fixture_restores_health_after_login_wait(self):
+        repo = SCRIPTS.parent.parent
+        prepare = (repo / 'tests/fixtures/data/sgp.ci/function/protection/prepare.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('effect give @s minecraft:instant_health 1 4 true', prepare)
+        self.assertIn('effect give ProtectPeer minecraft:instant_health 1 4 true', prepare)
+        self.assertLess(prepare.index('effect give @s minecraft:instant_health'),
+                        prepare.index('assert entity @s[nbt={Health:20.0f}]'))
+
     def test_mixer_uid_waits_require_fresh_uuid_registration(self):
         repo = SCRIPTS.parent.parent
         fresh_call = 'function sgp.ci:actionbar_mixer/fresh_registration'
