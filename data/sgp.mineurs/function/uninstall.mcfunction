@@ -6,6 +6,7 @@ scoreboard objectives remove sgp.reflexes_joueur
 scoreboard objectives remove sgp.reward
 scoreboard objectives remove sgp.share_item
 scoreboard objectives remove sgp.lootdrop
+scoreboard objectives remove sgp.bounty_gen
 
 
 

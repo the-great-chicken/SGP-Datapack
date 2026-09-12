@@ -6,6 +6,7 @@ scoreboard objectives add sgp.reflexes_joueur trigger
 scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.share_item trigger
 scoreboard objectives add sgp.lootdrop dummy
+scoreboard objectives add sgp.bounty_gen dummy
 
 
 
@@ -13,6 +14,7 @@ scoreboard objectives add sgp.lootdrop dummy
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
+scoreboard players add #generation sgp.bounty_gen 0
 
 
 

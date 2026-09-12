@@ -16,6 +16,10 @@ execute if score #10_ticks sgp.dummy matches 10.. run scoreboard players set #10
 # Allocate stable player ids before any subsystem records player-linked state.
 function sgp.misc:player_id/ensure
 
+# Repair persistent minor-event state when a player reconnects after the event ended.
+execute as @a[tag=sgp.wanted] run function sgp.mineurs:bounty/cleanup_stale
+execute as @a[tag=sgp.smol] unless score #smol_active sgp.dummy matches 1 run function sgp.mineurs:smol/cleanup_stale
+
 # Expire actionbar segments before systems refresh the parts they still need.
 function sgp.misc:actionbar/tick
 

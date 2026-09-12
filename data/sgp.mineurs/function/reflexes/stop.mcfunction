@@ -4,4 +4,4 @@
 
 schedule clear sgp.mineurs:reflexes/running
 tag @a[tag=sgp.reflexes_check] remove sgp.reflexes_check
-scoreboard players reset @a sgp.reflexes_joueur
+scoreboard players reset * sgp.reflexes_joueur

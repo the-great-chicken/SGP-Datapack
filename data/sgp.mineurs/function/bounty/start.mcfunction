@@ -1,5 +1,8 @@
 #> sgp.mineurs:bounty/start
 
+# Distinguish this run from stale wanted state retained by offline players.
+scoreboard players add #generation sgp.bounty_gen 1
+
 function sgp.misc:selected_player/main {div:7, tag:sgp.wanted, sign:'/', add:1}
 
 # Do not start an empty bounty when no non-peaceful player is eligible.

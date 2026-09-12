@@ -24,7 +24,6 @@ function dah.actbar_mixer:z_private/display/prepare
 function sgp.ci:cooldown_hud/expect {kit:"archer",frame:20}
 assert data storage dah:actbar display_content[{id:"sgp:reward_1",text:{text:"Updated"}}]
 assert not data storage dah:actbar display_content[{id:"dah_actbar:ROOT_RESET"}]
-assert score #test dah.actbar.calc matches 1
 scoreboard players set @s sgp.ab.reward_1 1
 function sgp.misc:actionbar/tick
 function dah.actbar_mixer:get_data

@@ -23,4 +23,3 @@ assert score RayNear sgp.dummy matches 19750
 execute as RayNear on attacker run tag @s add sgp.ci.ray_attacker
 assert entity @s[tag=sgp.ci.ray_attacker]
 assert entity @a[name=RayFar,nbt={Health:20.0f}]
-

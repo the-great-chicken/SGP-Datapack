@@ -2,6 +2,7 @@
 
 execute as @a \
     run attribute @s minecraft:scale modifier remove sgp.smol
+tag @a[tag=sgp.smol] remove sgp.smol
 
 schedule clear sgp.mineurs:smol/end
 function sgp.mineurs:common/timed_event/stop {event:"smol"}
