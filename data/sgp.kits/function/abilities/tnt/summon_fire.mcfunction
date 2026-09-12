@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/tnt/start_fire
+#> sgp.kits:abilities/tnt/summon_fire
 
 summon marker ~ ~ ~ {Tags:["sgp.marker", "sgp.fire_explosion", "sgp.new"]}
 scoreboard players set @n[tag=sgp.new,distance=..0.1,limit=1,type=marker] sgp.timer 100
@@ -10,4 +10,6 @@ execute if score #fire_explosion_roll sgp.dummy matches 10 run playsound sgp.kit
 
 tag @e[tag=sgp.new,distance=..0.1,type=marker] remove sgp.new
 
-kill @n[tag=sgp.tnt_interaction,distance=..5,limit=1,type=interaction]
+# Remove only the detonating charge's linked interaction.
+scoreboard players operation $link.to bs.in = @s bs.id
+kill @e[tag=sgp.tnt_interaction,predicate=bs.link:link_equal,distance=..5,type=interaction]

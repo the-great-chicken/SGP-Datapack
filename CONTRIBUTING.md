@@ -34,6 +34,30 @@ Each fonction should be documented in the following way:
 ### World <-> Datapack separation
 Do NOT ever hardcode coordinates even if you're working on the official SGP server. Always reference markers instead.
 
+### Optional plugin integrations
+
+Plugin commands must stay inside one of the removable `sgp.integration.*` namespaces. Core functions call them only through tags in `sgp.hooks`, and every integration entry in those tags must use `"required": false`.
+
+Do not call an integration function directly from core code, including from macro strings or scheduled commands. If a change adds a plugin command, add an optional hook and keep the handler in the matching integration namespace. Run `python3 .github/scripts/prepare_core.py . <new-directory>` to check the boundaries without starting Minecraft.
+
+### Tests
+
+Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep test fixtures under `tests/fixtures/data/`; the preparation script copies them into the CI datapack.
+
+Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
+
+CI installs pinned Actionbar Mixer resources beneath SGP's overrides. Fixture collisions are allowlisted in `prepare_core.py`; the deterministic Lootdrop override retains an unchanged production table at `sgp.ci:production/lootdrop_chest` for Minecraft to load and test. Failure diagnostics must be followed by an ordinary `assert`, never replace it.
+
+Share an `@environment` when tests can coexist, including after failures: setup and teardown run around the batch, not each test. Keep separate IDs for asynchronous global-state tests or tests requiring an isolated player roster. The Lootdrop CI fixture replaces its random loot table with a full chest of diamonds so inventory loss is deterministic.
+
+PackTest only auto-removes dummies on success and near the structure. Roster-sensitive tests use environment cleanup to disconnect leftover dummies; damage tests also wait for client-loading protection to expire.
+
+PackTest runs dummy interactions inside a command function, which defers loot advancement callbacks. Lootdrop's menu timing therefore needs playtesting; CI covers generation, close effects, restart cleanup, and sharing.
+
+Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage. PackTest stops executing subsequent test lines after a test fails or succeeds, so keep synchronous setup, calls, and assertions directly in the test when they form one readable scenario; use fixture functions only when they provide a real abstraction, shared behavior, parameterization, or execution context. Use environment teardown for cleanup that must happen after failures. Scope entity selectors to the test's entities and area. Keep test-owned scratch state under `sgp.ci:*`; do not store it under production `sgp:data` paths.
+
+Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.
+
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.
 Pour les messages en français, il faut toujours tutoyer le joueur, et accorder avec `(e)` ou `/` les mots. Exemple: `"Tu es devenu(e) un(e) chasseur/euse !"`

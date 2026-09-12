@@ -5,10 +5,7 @@ execute store result score @s sgp.duration_ability run data get storage sgp:data
 function sgp.kits:stats_collector/ability/start {kit_id:5,ability_path:"bigger"}
 tag @s add sgp.stats_tank_boost_active
 
-attribute @s minecraft:scale modifier add sgp:bigger 1 add_multiplied_base
-attribute @s minecraft:jump_strength modifier add sgp:bigger 0.25 add_multiplied_base
-attribute @s minecraft:entity_interaction_range modifier add sgp:bigger 0.5 add_multiplied_base
-attribute @s minecraft:attack_damage modifier add sgp:bigger 1 add_multiplied_total
+function sgp.kits:abilities/bigger/apply
 
 playsound entity.mooshroom.convert master @a ~ ~ ~ 1 1
 particle poof ~ ~2 ~ 0 1 0 0.4 100 force @a

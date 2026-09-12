@@ -6,3 +6,5 @@ tag @s add sgp.interacting
 execute as @e[tag=sgp.interaction,distance=..12,type=interaction] at @s \
     if function sgp.misc:interactions/is_my_target \
         run return run function sgp.misc:interactions/run_macro with entity @s data
+
+tag @s remove sgp.interacting

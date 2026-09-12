@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:actionbar_mixer/setup",
+  "teardown": "sgp.ci:actionbar_mixer/cleanup"
+}

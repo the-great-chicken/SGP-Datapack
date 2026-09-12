@@ -21,7 +21,4 @@ execute rotated ~ 0 run summon item_display ^ ^-0.5 ^3.5 {Tags:["sgp.giant_sweep
 
 execute rotated as @s as @e[tag=sgp.giant_sweep_new,distance=..5,type=item_display] run function sgp.kits:abilities/cleave/setup_display
 
-# Target all entities within 5 blocks and run the damage check on them
-tag @s add sgp.attacker
-execute as @a[tag=sgp.in_game,tag=!sgp.peaceful,distance=0.1..5] at @s run function sgp.kits:abilities/cleave/check
-tag @s remove sgp.attacker
+function sgp.kits:abilities/cleave/resolve_hits

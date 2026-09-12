@@ -5,6 +5,8 @@
 scoreboard objectives add sgp.reflexes_joueur trigger
 scoreboard objectives add sgp.reward trigger
 scoreboard objectives add sgp.share_item trigger
+scoreboard objectives add sgp.lootdrop dummy
+scoreboard objectives add sgp.bounty_gen dummy
 
 
 
@@ -12,6 +14,7 @@ scoreboard objectives add sgp.share_item trigger
 
 scoreboard players set #confines_ticks sgp.timer 0
 scoreboard players set #confines_secondes sgp.timer 0
+scoreboard players add #generation sgp.bounty_gen 0
 
 
 
@@ -32,4 +35,4 @@ data merge storage sgp:data {"mineurs":{}}
 
 data remove storage sgp:data markers_lists.lootdrop
 execute as @e[tag=sgp.marker,name="Lootdrop",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.lootdrop"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.lootdrop"}

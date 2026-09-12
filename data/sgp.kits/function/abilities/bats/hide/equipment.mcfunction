@@ -10,15 +10,16 @@ function sgp.kits:abilities/bats/hide/armor_item {slot:feet}
 
 # The helmet requires both the equippable stripping (for armor) and the item_model replacement (for blocks/items)
 item replace entity @s armor.head from entity @p[tag=sgp.processing] armor.head
+execute if data entity @s equipment.head.id run data modify entity @s equipment.head.components."minecraft:custom_data".hidden_armor set value 1b
 
-data modify entity @s equipment.head.components."minecraft:custom_data".backup_eq set from entity @s equipment.head.components."minecraft:equippable"
-data modify entity @s equipment.head.components."minecraft:equippable" merge value {slot:"head"}
-data remove entity @s equipment.head.components."minecraft:equippable".asset_id
+execute if data entity @s equipment.head.id run data modify entity @s equipment.head.components."minecraft:custom_data".backup_eq set from entity @s equipment.head.components."minecraft:equippable"
+execute if data entity @s equipment.head.id run data modify entity @s equipment.head.components."minecraft:equippable" merge value {slot:"head"}
+execute if data entity @s equipment.head.id run data remove entity @s equipment.head.components."minecraft:equippable".asset_id
 
-data modify entity @s equipment.head.components."minecraft:custom_data".backup_model set from entity @s equipment.head.components."minecraft:item_model"
-data modify entity @s equipment.head.components."minecraft:item_model" set value "sgp.kits:empty_model"
+execute if data entity @s equipment.head.id run data modify entity @s equipment.head.components."minecraft:custom_data".backup_model set from entity @s equipment.head.components."minecraft:item_model"
+execute if data entity @s equipment.head.id run data modify entity @s equipment.head.components."minecraft:item_model" set value "sgp.kits:empty_model"
 
-item replace entity @p[tag=sgp.processing] armor.head from entity @s armor.head
+execute if data entity @s equipment.head.id run item replace entity @p[tag=sgp.processing] armor.head from entity @s armor.head
 
 
 # --- HIDE HELD ITEMS (Mainhand, Offhand) ---

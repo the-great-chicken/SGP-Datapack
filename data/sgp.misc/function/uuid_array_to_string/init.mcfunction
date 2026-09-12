@@ -1,5 +1,5 @@
 #> sgp.misc:uuid_array_to_string/init
-# `{list_location: nbt path}`
+# `{list_location: resource location + path}`
 #
 # Convert the UUID array of the entity into its string version, and store it
 
@@ -23,4 +23,4 @@ function sgp.misc:uuid_array_to_string/process_int
 data modify storage sgp:data temp.obj.uuid set from storage sgp:data temp.string
 
 # Store the finished string at the specified location
-$data modify storage sgp:data $(list_location) append from storage sgp:data temp.obj
+$data modify storage $(list_location) append from storage sgp:data temp.obj

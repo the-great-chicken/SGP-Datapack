@@ -17,7 +17,7 @@ scoreboard players set #king_bleu_chosen sgp.dummy 0
 scoreboard players set #mort_roi_rouge_annoncee sgp.dummy 0
 scoreboard players set #mort_roi_bleue_annoncee sgp.dummy 0
 
-move @a[tag=sgp.major_participant] #Morts
+function #sgp.hooks:discord/majeurs/protect/_stop_1
 function sgp.majeurs:common/stop
 team empty sgp.rouge
 team empty sgp.bleue

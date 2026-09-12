@@ -4,7 +4,8 @@
 
 scoreboard players operation @s sgp.kd = @s sgp.kills
 scoreboard players operation @s sgp.kd *= 100 sgp.dummy
-scoreboard players operation @s sgp.kd /= @s sgp.morts
+# With no deaths yet, keep kills * 100 (equivalent to a divisor of one).
+execute if score @s sgp.morts matches 1.. run scoreboard players operation @s sgp.kd /= @s sgp.morts
 
 attribute @s attack_damage modifier remove kd
 

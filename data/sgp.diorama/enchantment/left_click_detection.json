@@ -20,7 +20,7 @@
       {
         "effect": {
           "type": "minecraft:run_function",
-          "function": "sgp.diorama:on_left_click"
+          "function": "sgp.diorama:left_click/on_left_click"
         }
       }
     ]

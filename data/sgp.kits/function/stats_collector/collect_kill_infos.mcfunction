@@ -25,13 +25,15 @@ data modify storage sgp:macro stats.current_kill_info.id_killer set value -1
 data modify storage sgp:macro stats.current_kill_info.kit_id_killer set value -1
 
 
-execute on attacker \
-    store result storage sgp:macro stats.current_kill_info.kit_id_killer int 1 \
-        run scoreboard players get @s sgp.kit_id
+execute on attacker if entity @s[type=minecraft:player] \
+    if score @s sgp.kit_id matches -2147483648..2147483647 \
+        store result storage sgp:macro stats.current_kill_info.kit_id_killer int 1 \
+            run scoreboard players get @s sgp.kit_id
 
-execute on attacker \
-    store result storage sgp:macro stats.current_kill_info.id_killer int 1 \
-        run scoreboard players get @s sgp.id
+execute on attacker if entity @s[type=minecraft:player] \
+    if score @s sgp.id matches -2147483648..2147483647 \
+        store result storage sgp:macro stats.current_kill_info.id_killer int 1 \
+            run scoreboard players get @s sgp.id
 
 
 function sgp.kits:stats_collector/save_kill_cause_stat with storage sgp:macro stats.current_kill_info

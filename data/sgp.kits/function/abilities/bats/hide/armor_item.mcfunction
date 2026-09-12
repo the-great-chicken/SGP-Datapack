@@ -5,6 +5,8 @@
 
 
 $item replace entity @s armor.$(slot) from entity @p[tag=sgp.processing] armor.$(slot)
+$execute unless data entity @s equipment.$(slot).id run return 0
+$data modify entity @s equipment.$(slot).components."minecraft:custom_data".hidden_armor set value 1b
 
 $data modify entity @s equipment.$(slot).components."minecraft:custom_data".backup_eq set from entity @s equipment.$(slot).components."minecraft:equippable"
 $data modify entity @s equipment.$(slot).components."minecraft:equippable" merge value {slot:"$(slot)"}

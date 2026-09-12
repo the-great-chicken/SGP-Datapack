@@ -1,6 +1,6 @@
 #> sgp.misc:actionbar/ability_cooldown_ready
 #
-# Keeps the ability HUD visible as a full bar while the player's main ability is ready.
+# Keeps the ability HUD visible on frame 20 while the player's main ability is ready.
 # This is intentionally separate from the live cooldown path so a new cooldown can
 # still re-infer its max value cleanly when it starts.
 

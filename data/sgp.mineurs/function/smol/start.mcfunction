@@ -3,7 +3,8 @@
 title @a[tag=sgp.in_game] title {text:"SMOL!", color:dark_blue, bold:true}
 tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"SMOL! ", color:dark_blue, bold:true},{text:"Le Canarchimage a divisé la taille de tout le monde par 2 !", color:blue}]
 
-execute as @a[tag=sgp.in_game] \
+tag @a[tag=sgp.in_game] add sgp.smol
+execute as @a[tag=sgp.smol] \
     run attribute @s minecraft:scale modifier add sgp.smol -0.5 add_multiplied_total
 
 function sgp.mineurs:common/timed_event/start {event:"smol", duration:150}

@@ -1,0 +1,174 @@
+"""Validate removable namespaces and prepare a fresh plugin-free PackTest server.
+
+Usage: python3 .github/scripts/prepare_core.py REPOSITORY NEW_SERVER_DIRECTORY
+Only NEW_SERVER_DIRECTORY is written. Existing targets are rejected.
+Uses only Python's standard library.
+"""
+from pathlib import Path
+import argparse
+import json
+import re
+import shutil
+
+MODULES = ('sgp.integration.discord', 'sgp.integration.tab', 'sgp.integration.tgc')
+# Deterministic fixture -> unchanged production resource loaded under a validation ID.
+FIXTURE_COLLISIONS = {
+    'sgp.mineurs/loot_table/lootdrop_chest.json':
+        'sgp.ci/loot_table/production/lootdrop_chest.json',
+}
+PLUGIN_COMMAND = re.compile(
+    r'(?:^\$?|\brun\s+)(?:[a-z0-9_.-]+:)?'
+    r'(?:move|glow|useglow|statuswarp|luckperms|lp|playerlist|npc)\s*(?=$|[\s"}])'
+)
+HOOK_CALL = re.compile(r'\bfunction\s+#(sgp\.hooks:[a-z0-9_./-]+)')
+FUNCTION_CALL = re.compile(r'\bfunction\s+(sgp\.integration\.[a-z]+:[a-z0-9_./-]+)(?![a-z0-9_./$(-])')
+OBSOLETE = ('sgp.misc:tab/', 'sgp.lore:npcs/', 'sgp.lore:sgp_3/',
+            'sgp.kits:abilities/remove_perms', 'sgp.to_remove_perm',
+            'sgp.misc:actionbar/progress_bar/',
+            'misc.actionbar.progress_bar.bars set value')
+# Test-owned scratch/results belong to sgp.ci:*; sgp:data is production state.
+TEST_STATE_IN_PRODUCTION_STORAGE = re.compile(r'\bsgp:data\s+tests\b')
+# Inline text components should never use the common `sgp.foo` typo for an SGP storage id.
+MALFORMED_SGP_STORAGE_COMPONENT = re.compile(r'\bstorage\s*:\s*"sgp\.')
+INCOMPLETE_STORAGE_REMOVE = re.compile(r'^\s*data remove storage \S+\s*$')
+DUMMY_SPAWN = re.compile(r'^\s*dummy\s+([^\s]+)\s+spawn(?:\s|$)')
+
+
+def function_file(data, identifier, kind='function'):
+    namespace, name = identifier.split(':', 1)
+    extension = '.mcfunction' if kind == 'function' else '.json'
+    return data / namespace / kind / (name + extension)
+
+
+def validate(data, core=False):
+    errors = []
+    files = [p for p in data.rglob('*') if p.is_file()]
+    for namespace in MODULES:
+        if core and (data / namespace).exists():
+            errors.append(f'Core still contains {namespace}')
+    for path in files:
+        namespace = path.relative_to(data).parts[0]
+        if path.suffix == '.json':
+            try:
+                document = json.loads(path.read_text(encoding='utf-8'))
+            except (ValueError, UnicodeError) as exc:
+                errors.append(f'{path}: invalid JSON: {exc}')
+                continue
+            if namespace == 'sgp.hooks' and 'tags/function' in path.as_posix():
+                for entry in document.get('values', []):
+                    if not isinstance(entry, dict) or entry.get('required') is not False:
+                        errors.append(f'{path}: integration references must be optional')
+                        continue
+                    target = entry.get('id', '')
+                    module = target.split(':')[0]
+                    if module not in MODULES:
+                        errors.append(f'{path}: unrecognized integration {target}')
+                    elif (data / module).exists() and not function_file(data, target).is_file():
+                        errors.append(f'{path}: installed integration lacks {target}')
+            def walk(value):
+                if isinstance(value, str) and value.lstrip('#').startswith('sgp.integration.'):
+                    if namespace not in MODULES and namespace != 'sgp.hooks':
+                        errors.append(f'{path}: core JSON references integration {value}')
+                elif isinstance(value, dict):
+                    for child in value.values():
+                        walk(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        walk(child)
+            walk(document)
+        if path.suffix not in ('.json', '.mcfunction'):
+            continue
+        text = path.read_text(encoding='utf-8')
+        for old in OBSOLETE:
+            if old in text:
+                errors.append(f'{path}: obsolete reference {old}')
+        if path.suffix != '.mcfunction':
+            continue
+        relative = path.relative_to(data).parts
+        if len(relative) >= 3 and relative[1] == 'function':
+            match = re.search(r'^#>\s*(\S+)', text, re.MULTILINE)
+            if match:
+                name = Path(*relative[2:]).with_suffix('').as_posix()
+                expected = f'{relative[0]}:{name}'
+                if match.group(1) != expected:
+                    errors.append(f'{path}: function header {match.group(1)} != {expected}')
+        for number, line in enumerate(text.splitlines(), 1):
+            if line.lstrip().startswith('#'):
+                continue
+            if TEST_STATE_IN_PRODUCTION_STORAGE.search(line):
+                errors.append(f'{path}:{number}: test-owned state must use sgp.ci storage')
+            if MALFORMED_SGP_STORAGE_COMPONENT.search(line):
+                errors.append(f'{path}:{number}: malformed SGP storage component id (use sgp:<path>)')
+            if INCOMPLETE_STORAGE_REMOVE.match(line):
+                errors.append(f'{path}:{number}: data remove storage requires an NBT path')
+            dummy_spawn = DUMMY_SPAWN.match(line)
+            if dummy_spawn and (len(dummy_spawn.group(1)) > 16 or not re.fullmatch(r'[A-Za-z0-9_]+', dummy_spawn.group(1))):
+                errors.append(f'{path}:{number}: invalid dummy player name {dummy_spawn.group(1)!r} (must be 1-16 letters, digits, or underscores)')
+            if namespace not in MODULES and PLUGIN_COMMAND.search(line.strip()):
+                errors.append(f'{path}:{number}: plugin command outside an integration')
+            for target in HOOK_CALL.findall(line):
+                if not function_file(data, target, 'tags/function').is_file():
+                    errors.append(f'{path}:{number}: absent core hook {target}')
+            for target in FUNCTION_CALL.findall(line):
+                if namespace not in MODULES:
+                    errors.append(f'{path}:{number}: core must call optional hooks: {target}')
+                elif target.split(':')[0] != namespace:
+                    errors.append(f'{path}:{number}: integration depends directly on another integration')
+                elif not function_file(data, target).is_file():
+                    errors.append(f'{path}:{number}: missing internal handler {target}')
+    if errors:
+        raise ValueError('\n'.join(errors))
+    print(f'Validated {len(files)} resources ({"core" if core else "available integrations"}).')
+
+
+def overlay_fixtures(production, fixtures):
+    files = [p for p in fixtures.rglob('*') if p.is_file()]
+    collisions = {p.relative_to(fixtures).as_posix() for p in files
+                  if (production / p.relative_to(fixtures)).exists()}
+    unexpected = collisions - FIXTURE_COLLISIONS.keys()
+    if unexpected:
+        raise ValueError(f'Unapproved fixture overrides: {sorted(unexpected)}')
+    for source in sorted(collisions):
+        destination = production / FIXTURE_COLLISIONS[source]
+        if destination.exists() or (fixtures / FIXTURE_COLLISIONS[source]).exists():
+            raise ValueError(f'Production validation resource already exists: {destination}')
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(production / source, destination)
+    shutil.copytree(fixtures, production, dirs_exist_ok=True)
+
+
+def prepare(repository, server):
+    repository = repository.resolve()
+    server = server.resolve()
+    if server.exists():
+        raise ValueError(f'Refusing to overwrite an existing server directory: {server}')
+    validate(repository / 'data')
+    pack = server / 'world/datapacks/SGP-Datapack'
+    pack.mkdir(parents=True)
+    (pack / 'data').mkdir()
+    for child in sorted((repository / 'data').iterdir()):
+        if child.name in MODULES:
+            continue
+        target = pack / 'data' / child.name
+        if child.is_dir():
+            shutil.copytree(child, target)
+        else:
+            shutil.copy2(child, target)
+    shutil.copy2(repository / 'pack.mcmeta', pack / 'pack.mcmeta')
+    validate(pack / 'data', core=True)
+    if not any((pack / 'data').glob('*/test/**/*.mcfunction')):
+        raise ValueError('No core PackTest tests were found')
+    # CI fixtures never become part of the production datapack.
+    overlay_fixtures(pack / 'data', repository / 'tests/fixtures/data')
+    validate(pack / 'data', core=True)
+    (server / 'server.properties').write_text(
+        'level-name=world\nfunction-permission-level=4\n', encoding='utf-8')
+    print(f'Prepared plugin-free server at {server}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('repository', type=Path)
+    parser.add_argument('server', type=Path)
+    args = parser.parse_args()
+    prepare(args.repository, args.server)

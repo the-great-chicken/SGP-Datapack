@@ -2,15 +2,10 @@
 #
 # Checks if a player died and summons the kill effect
 #
-# The kill effect is executed at the position of the death_reaper marker,
-# which is summoned at the player's exact death position
+# Execute the attacker's selected effect at the victim's position.
 
 advancement revoke @s only sgp.cosmetics:death
 
-execute at @s run summon minecraft:marker ~ ~ ~ {CustomName:"death_reaper", Tags:["sgp.marker"]}
-
-execute on attacker run function sgp.cosmetics:kill_effects/summon
+execute at @s on attacker run function sgp.cosmetics:kill_effects/summon
 
 scoreboard players set @a[tag=sgp.in_game] sgp.death_effect 0
-
-kill @e[type=marker,tag=sgp.marker,name="death_reaper",limit=1]

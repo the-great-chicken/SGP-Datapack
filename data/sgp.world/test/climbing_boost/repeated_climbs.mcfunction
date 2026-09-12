@@ -1,0 +1,17 @@
+#> sgp.world:climbing_boost/repeated_climbs
+# @dummy
+# @environment sgp.ci:climbing_boost
+#
+# Climbing can be entered repeatedly without accumulating gravity changes.
+
+function sgp.ci:climbing_boost/fixture
+function sgp.world:climbing_boost/add
+function sgp.world:climbing_boost/add
+function sgp.ci:climbing_boost/expect_gravity {range:"0"}
+function sgp.world:climbing_boost/remove
+function sgp.ci:climbing_boost/expect_gravity {range:"7999..8001"}
+function sgp.world:climbing_boost/add
+function sgp.ci:climbing_boost/expect_gravity {range:"0"}
+function sgp.world:climbing_boost/remove
+function sgp.ci:climbing_boost/expect_gravity {range:"7999..8001"}
+assert not entity @s[tag=sgp.climbing]

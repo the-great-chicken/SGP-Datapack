@@ -1,4 +1,4 @@
-#> abilities/bigger/tick
+#> sgp.kits:abilities/bigger/tick
 
 execute unless score @s sgp.duration_ability matches 1 run return 1
 

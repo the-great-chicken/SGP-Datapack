@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.discord:majeurs/hide_and_seek/role/set_seeker_1",
+      "required": false
+    }
+  ]
+}

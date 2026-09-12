@@ -1,4 +1,4 @@
-#> sgp:mineurs/choose_effect
+#> sgp.mineurs:magic/choose_effect
 # 
 # Checks the global #random_magic_roll score and passes the corresponding
 # potion effect parameters into the give_effect macro function.

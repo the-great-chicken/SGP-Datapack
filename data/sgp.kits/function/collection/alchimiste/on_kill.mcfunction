@@ -1,4 +1,4 @@
-#> sgp.kits:collection/achimiste/on_kill
+#> sgp.kits:collection/alchimiste/on_kill
 # 
 # Gives the Alchimiste kill rewards
 

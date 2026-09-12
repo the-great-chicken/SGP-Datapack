@@ -4,11 +4,15 @@
     "components": {
       "minecraft:piercing_weapon": {
         "deals_knockback": false
-      },
-      "minecraft:enchantments": {
-        "sgp.diorama:left_click_detection": 1
       }
     }
+  },
+  {
+    "function": "minecraft:set_enchantments",
+    "enchantments": {
+      "sgp.diorama:left_click_detection": 1
+    },
+    "add": false
   },
   {
     "function": "toggle_tooltips",
