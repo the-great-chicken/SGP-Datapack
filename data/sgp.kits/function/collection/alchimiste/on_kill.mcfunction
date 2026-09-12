@@ -2,7 +2,7 @@
 # 
 # Gives the Alchimiste kill rewards
 
-execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic {\
+execute if score @s sgp.kills_give_1 matches 1.. run function sgp.kits:kills_give/basic {\
     give: 'splash_potion[ \
         custom_name={text:"Potion de Soin", color:light_purple, italic:false, bold:true}, \
         lore=[ \
@@ -30,10 +30,10 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_1=1..}] run function sgp
         {text:"+ 2 ❤ Potions de Soin ", color:red, bold:true}, \
         {text:"et 3 ⚔ Potions de Dégâts !", color:dark_red} ', \
     width:584, \
-    nb:1 }
+    nb:1, threshold:1 }
 
-execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp.kits:kills_give/basic { \
-    nb:2, \
+execute if score @s sgp.kills_give_2 matches 2.. run function sgp.kits:kills_give/basic { \
+    nb:2, threshold:2, \
     give:'splash_potion[ \
         custom_name={text:"Potion de Cécité", color:light_purple, italic:false, bold:true}, \
         lore=[ \
@@ -53,3 +53,7 @@ execute as @a[tag=sgp.alchimiste,scores={sgp.kills_give_2=2..}] run function sgp
     actionbar:{text:"+ 1 👁 Potion de Cécité !", color:"#8B8589", bold:true}, \
     width:283, \
     }
+
+# Consume every earned payout, retaining progress toward the next one.
+execute if score @s sgp.kills_give_1 matches 1.. run return run function sgp.kits:collection/alchimiste/on_kill
+execute if score @s sgp.kills_give_2 matches 2.. run return run function sgp.kits:collection/alchimiste/on_kill

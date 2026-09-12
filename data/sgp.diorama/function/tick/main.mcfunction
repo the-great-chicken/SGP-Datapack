@@ -1,5 +1,7 @@
 #> sgp.diorama:tick/main
 
+execute as @a unless score @s sgp.diorama_leave_seen = @s sgp.leave_game run function sgp.diorama:player_initialization
+
 scoreboard players add #mannequin_update_time sgp.dummy 1
 
 tag @a remove sgp.around_model

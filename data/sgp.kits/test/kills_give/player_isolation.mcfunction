@@ -6,17 +6,17 @@
 
 data modify storage sgp.ci:kills_give player_isolation set value {}
 tag @s add sgp.combattant
-scoreboard players set @s sgp.kills_give_1 1
-scoreboard players set @s sgp.kills_give_2 1
-scoreboard players set @s sgp.kills_give_3 1
+scoreboard players set @s sgp.kills_give_1 2
+scoreboard players set @s sgp.kills_give_2 2
+scoreboard players set @s sgp.kills_give_3 2
 dummy RewardPyro spawn
 dummy RewardIdle spawn
 dummy RewardNoKit spawn
 tag RewardPyro add sgp.pyromane
 tag RewardIdle add sgp.combattant
-scoreboard players set RewardPyro sgp.kills_give_1 1
-scoreboard players set RewardPyro sgp.kills_give_2 1
-scoreboard players set RewardPyro sgp.kills_give_3 1
+scoreboard players set RewardPyro sgp.kills_give_1 4
+scoreboard players set RewardPyro sgp.kills_give_2 4
+scoreboard players set RewardPyro sgp.kills_give_3 4
 scoreboard players set RewardIdle sgp.kills_give_1 0
 scoreboard players set RewardIdle sgp.kills_give_2 0
 scoreboard players set RewardIdle sgp.kills_give_3 0
@@ -34,8 +34,8 @@ dummy RewardPyro leave
 dummy RewardIdle leave
 dummy RewardNoKit leave
 
-assert data storage sgp.ci:kills_give player_isolation{pyro_arrows:2,pyro_explosives:2,pyro_apples:0,idle:[],no_kit:[]}
-function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:3}
-function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:0}
+assert data storage sgp.ci:kills_give player_isolation{pyro_arrows:8,pyro_explosives:8,pyro_apples:1,idle:[],no_kit:[]}
+function sgp.ci:inventory/expect_count {item:"minecraft:arrow",count:6}
+function sgp.ci:inventory/expect_count {item:"minecraft:golden_apple",count:1}
 function sgp.ci:inventory/expect_count {item:"minecraft:strider_spawn_egg",count:0}
 data remove storage sgp.ci:kills_give player_isolation

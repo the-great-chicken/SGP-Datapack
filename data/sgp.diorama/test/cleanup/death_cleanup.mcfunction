@@ -9,9 +9,9 @@ tag CleanupOther add sgp.has_small_mannequin_95001
 tag CleanupOther add sgp.has_giant_mannequin_95001
 # Establish the diorama portion of on_death's context, without invoking stats collection.
 scoreboard players operation $link.to bs.in = @s bs.id
-tag @s add sgp.diorama_death_cleanup
+tag @s add sgp.diorama_cleanup
 function sgp.diorama:tick/update_mannequin/remove {id:95001}
-tag @s remove sgp.diorama_death_cleanup
+tag @s remove sgp.diorama_cleanup
 assert not entity @s[tag=sgp.has_small_mannequin_95001]
 assert not entity @s[tag=sgp.has_giant_mannequin_95001]
 assert entity @s[tag=sgp.has_small_mannequin_95002]

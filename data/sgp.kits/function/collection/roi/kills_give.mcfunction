@@ -28,4 +28,4 @@ function sgp.misc:actionbar/reward { \
         {text:"et 1,5 ❤ !", color:light_purple} \
         ] \
     }
-scoreboard players set @s sgp.kills_give_1 0
+scoreboard players remove @s sgp.kills_give_1 1

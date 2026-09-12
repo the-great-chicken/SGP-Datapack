@@ -10,6 +10,7 @@ scoreboard players set #restart_pick sgp.dummy 0
 execute store result score #restart_pick sgp.dummy \
     run function sgp.kits:stats_collector/pause_pick_as_player
 
+function sgp.kits:abilities/end_active
 function sgp.kits:clear
 
 $function sgp.kits:collection/$(kit)/items

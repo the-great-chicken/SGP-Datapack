@@ -2,8 +2,8 @@
 # 
 # Gives the Tank kill rewards
 
-execute as @a[tag=sgp.tank,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic { \
-    nb:1, \
+execute if score @s sgp.kills_give_1 matches 1.. run function sgp.kits:kills_give/basic { \
+    nb:1, threshold:1, \
     give:'golden_apple[ \
         custom_name={text:"Pomme d\'or", color:dark_blue, italic:false, bold:true}, \
         lore=[ \
@@ -37,8 +37,8 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_1=1..}] run function sgp.kits:
     width:391, \
     }
 
-execute as @a[tag=sgp.tank,scores={sgp.kills_give_2=3..}] run function sgp.kits:kills_give/basic { \
-    nb:2, \
+execute if score @s sgp.kills_give_2 matches 3.. run function sgp.kits:kills_give/basic { \
+    nb:2, threshold:3, \
     give:'potion[ \
         custom_name={text:"Potion du Maitre Tortue", color:dark_blue, italic:false, bold:true}, \
         lore=[ \
@@ -52,3 +52,7 @@ execute as @a[tag=sgp.tank,scores={sgp.kills_give_2=3..}] run function sgp.kits:
     actionbar:{text:"+ 1 🧪 Potion !", color:dark_blue, bold:true}, \
     width:164, \
     }
+
+# Consume every earned payout, retaining progress toward the next one.
+execute if score @s sgp.kills_give_1 matches 1.. run return run function sgp.kits:collection/tank/on_kill
+execute if score @s sgp.kills_give_2 matches 3.. run return run function sgp.kits:collection/tank/on_kill
