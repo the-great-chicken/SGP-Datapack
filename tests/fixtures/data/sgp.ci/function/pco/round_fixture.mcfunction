@@ -24,6 +24,7 @@ team join sgp.Canard PcoRoundCanard
 tp PcoRoundCanard ~15.5 ~1 ~3.5
 
 tag @a[tag=sgp.ci.pco_actor] add sgp.major_participant
+tag @a[tag=sgp.ci.pco_actor] add sgp.major.pco
 tag @a[tag=sgp.ci.pco_actor] add sgp.in_game
 gamemode creative @a[tag=sgp.ci.pco_actor]
 scoreboard players set @a[tag=sgp.ci.pco_actor] sgp.en_cage 0

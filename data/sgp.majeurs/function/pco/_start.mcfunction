@@ -12,6 +12,7 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true},
 function sgp.majeurs:common/start
 
 execute as @a run function sgp.majeurs:pco/reset_player_state
+tag @a[tag=sgp.major_participant] add sgp.major.pco
 
 function sgp.majeurs:pco/dispatch
 

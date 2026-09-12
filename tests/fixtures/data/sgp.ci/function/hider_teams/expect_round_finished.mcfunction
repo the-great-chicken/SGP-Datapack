@@ -5,6 +5,7 @@ assert score #rounds sgp.dummy matches 1
 assert not entity @a[team=sgp.hider]
 assert not entity @a[team=sgp.seeker]
 assert not entity @a[tag=sgp.ci.hider_actor,tag=sgp.major_participant]
+assert not entity @a[tag=sgp.ci.hider_actor,tag=sgp.major.hide_and_seek]
 assert not entity @a[tag=sgp.ci.hider_actor,tag=sgp.hider]
 assert not entity @a[tag=sgp.ci.hider_actor,tag=sgp.seeker]
 assert not entity @a[tag=sgp.ci.hider_actor,tag=sgp.seeker_waiting]

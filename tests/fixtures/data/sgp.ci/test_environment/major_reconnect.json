@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:major_reconnect/setup",
+  "teardown": "sgp.ci:major_reconnect/cleanup"
+}

@@ -6,6 +6,7 @@ execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
 
 tellraw @a[tag=sgp.in_game] [{text:"Lancement de l'événement Protéger le Roi...",color:gold,bold:true}]
 function sgp.majeurs:common/start
+tag @a[tag=sgp.major_participant] add sgp.major.protect
 
 scoreboard players set #protect_phase sgp.dummy 1
 

@@ -18,3 +18,6 @@ experience set @a[tag=sgp.major_spectator] 0 levels
 function #sgp.hooks:tgc/majeurs/common/stop_2
 tag @a remove sgp.major_participant
 tag @a remove sgp.major_spectator
+tag @a remove sgp.major.hide_and_seek
+tag @a remove sgp.major.protect
+tag @a remove sgp.major.pco

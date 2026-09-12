@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.tgc:majeurs/common/cleanup_stale_player",
+      "required": false
+    }
+  ]
+}

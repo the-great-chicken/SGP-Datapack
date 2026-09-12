@@ -21,6 +21,7 @@ assert score #pco_phase sgp.dummy matches 0
 assert score #rounds sgp.dummy matches 1
 function sgp.ci:pco/expect_teams {total:0,min:0,max:0}
 assert not entity @a[tag=sgp.ci.pco_actor,tag=sgp.major_participant]
+assert not entity @a[tag=sgp.ci.pco_actor,tag=sgp.major.pco]
 assert not entity @a[tag=sgp.ci.pco_actor,gamemode=!survival]
 assert block ~6 ~2 ~ air
 function sgp.majeurs:pco/running

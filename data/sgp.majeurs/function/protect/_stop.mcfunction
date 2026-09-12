@@ -7,8 +7,9 @@ execute unless score #protect_phase sgp.dummy matches 1..2 run return 0
 function sgp.majeurs:protect/close_king_selector {side:rouge}
 function sgp.majeurs:protect/close_king_selector {side:bleu}
 
-effect clear @a[tag=sgp.major_participant] minecraft:health_boost
-effect clear @a[tag=sgp.major_participant] minecraft:regeneration
+execute as @a[tag=sgp.major_participant] run function sgp.majeurs:protect/reset_player_state
+# Kings that were already eliminated are spectators; their role tags are still
+# Protect-owned and should not survive the round.
 tag @a remove sgp.roi_rouge
 tag @a remove sgp.roi_bleu
 

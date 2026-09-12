@@ -33,6 +33,10 @@ execute as @a[scores={sgp.just_died=1..}] run \
 execute as @a[tag=sgp.elo_touched] run \
     function sgp.kits:stats_collector/elo/apply_pending
 
+# Repair players who reconnect with state from an already-ended major event.
+# This must run after genuine-death collection but before synthetic cleanup.
+function sgp.majeurs:repair_reconnected_players
+
 # Consume delayed synthetic cleanup before a later event's death handler can.
 execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
     function sgp.misc:on_death

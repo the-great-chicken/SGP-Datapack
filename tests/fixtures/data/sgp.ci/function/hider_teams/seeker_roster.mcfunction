@@ -8,6 +8,7 @@ summon marker ~2.5 ~1 ~2.5 {CustomName:"spawn_seeker",Tags:["sgp.marker","sgp.ci
 summon marker ~4.5 ~1 ~2.5 {CustomName:"spawn_hider",Tags:["sgp.marker","sgp.ci.hider_teams"]}
 tag @s add sgp.ci.hider_actor
 tag @a[tag=sgp.ci.hider_actor] add sgp.major_participant
+tag @a[tag=sgp.ci.hider_actor] add sgp.major.hide_and_seek
 tag @a[tag=sgp.ci.hider_actor] add sgp.in_game
 gamemode creative @a[tag=sgp.ci.hider_actor]
 execute as @a[tag=sgp.ci.hider_actor] run attribute @s minecraft:movement_speed base set 0.1

@@ -30,6 +30,7 @@ tag PrBlueKing add sgp.ci.protect_actor
 tag PrBlueA add sgp.ci.protect_actor
 tag PrBlueB add sgp.ci.protect_actor
 tag @a[tag=sgp.ci.protect_actor] add sgp.major_participant
+tag @a[tag=sgp.ci.protect_actor] add sgp.major.protect
 team join sgp.rouge PrRedKing
 team join sgp.rouge PrRedA
 team join sgp.rouge PrRedB

@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.discord:majeurs/common/cleanup_stale_player",
+      "required": false
+    }
+  ]
+}

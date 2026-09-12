@@ -5,6 +5,9 @@
 function #sgp.hooks:tgc/majeurs/common/eliminate_1
 team leave @s
 tag @s remove sgp.major_participant
+tag @s remove sgp.major.hide_and_seek
+tag @s remove sgp.major.protect
+tag @s remove sgp.major.pco
 tag @s add sgp.major_spectator
 gamemode spectator @s
 function #bs.schedule:schedule {run:"tp @s @e[tag=sgp.marker,name='pvp_arena',limit=1,type=marker]",with:{id:"major_event",time:2,unit:"t"}}
