@@ -2,12 +2,8 @@
 #
 # Shared lobby boundary and retained-event tick entry point.
 
-# Recover stale round state when no event is active.
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] unless entity @a[tag=sgp.major_participant] run return 0
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run gamemode survival @a[tag=sgp.major_participant]
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run gamemode survival @a[tag=sgp.major_spectator]
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run tag @a[tag=sgp.major_spectator] remove sgp.major_participant
-execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run tag @a[tag=sgp.major_spectator] remove sgp.major_spectator
+# Reconnect repair already ran in the global tick before synthetic cleanup.
+# Nothing event-owned remains to do here when no event team is active.
 execute unless entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
 
 # Eliminate participants who leave, then admit new arrivals as spectators.

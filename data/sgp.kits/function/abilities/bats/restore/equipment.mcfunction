@@ -10,19 +10,7 @@ function sgp.kits:abilities/bats/restore/armor_item {slot:feet}
 
 
 # --- RESTORE HELMET (Head) ---
-item replace entity @s armor.head from entity @p[tag=sgp.processing] armor.head
-
-# Restore Armor model
-data remove entity @s equipment.head.components."minecraft:equippable"
-data modify entity @s equipment.head.components."minecraft:equippable" set from entity @s equipment.head.components."minecraft:custom_data".backup_eq
-data remove entity @s equipment.head.components."minecraft:custom_data".backup_eq
-
-# Restore 3D block/item model
-data remove entity @s equipment.head.components."minecraft:item_model"
-data modify entity @s equipment.head.components."minecraft:item_model" set from entity @s equipment.head.components."minecraft:custom_data".backup_model
-data remove entity @s equipment.head.components."minecraft:custom_data".backup_model
-
-item replace entity @p[tag=sgp.processing] armor.head from entity @s armor.head
+function sgp.kits:abilities/bats/restore/helmet
 
 
 # --- RESTORE HELD ITEMS (Mainhand, Offhand) ---

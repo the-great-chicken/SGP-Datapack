@@ -2,8 +2,8 @@
 # 
 # Gives the Poséidon kill rewards
 
-execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.kits:kills_give/basic { \
-    nb:1, \
+execute if score @s sgp.kills_give_1 matches 1.. run function sgp.kits:kills_give/basic { \
+    nb:1, threshold:1, \
     give:'trident[ \
         custom_name={text:"Trident", color:dark_aqua, italic:false, bold:true}, \
         lore=[ \
@@ -23,8 +23,8 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_1=1..}] run function sgp.k
     width:192, \
     }
 
-execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.kits:kills_give/basic { \
-    nb:2, \
+execute if score @s sgp.kills_give_2 matches 5.. run function sgp.kits:kills_give/basic { \
+    nb:2, threshold:5, \
     give:'enchanted_golden_apple[ \
         custom_name={text:"Pomme d\'or Enchantée", color:light_purple, italic:false, bold:true}, \
         lore=[ \
@@ -44,3 +44,7 @@ execute as @a[tag=sgp.poseidon,scores={sgp.kills_give_2=5..}] run function sgp.k
     actionbar:{text:"+ 1 ❤ Pomme d'or Enchantée !", color:light_purple, bold:true}, \
     width:354, \
     }
+
+# Consume every earned payout, retaining progress toward the next one.
+execute if score @s sgp.kills_give_1 matches 1.. run return run function sgp.kits:collection/poseidon/on_kill
+execute if score @s sgp.kills_give_2 matches 5.. run return run function sgp.kits:collection/poseidon/on_kill

@@ -23,7 +23,7 @@ schedule clear sgp.majeurs:hide_and_seek/timer/hider
 schedule clear sgp.majeurs:hide_and_seek/timer/glow
 schedule clear sgp.majeurs:hide_and_seek/timer/glow_announce
 
-move @a[tag=sgp.major_participant] #Morts
+function #sgp.hooks:discord/majeurs/hide_and_seek/_stop_1
 function sgp.majeurs:common/stop
 team empty sgp.hider
 team empty sgp.seeker

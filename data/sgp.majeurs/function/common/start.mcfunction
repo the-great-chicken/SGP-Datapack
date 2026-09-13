@@ -2,6 +2,10 @@
 #
 # Start the game.
 
+# A manually-started round must not inherit reconnect state before the regular
+# tick repair has had a chance to run.
+function sgp.majeurs:repair_reconnected_players
+
 gamemode survival @a[tag=sgp.major_spectator]
 tag @a remove sgp.major_participant
 tag @a remove sgp.major_spectator
@@ -15,5 +19,4 @@ function sgp.kits:stats_collector/pause_for_major_event
 team leave @a[tag=sgp.major_participant]
 execute as @a[tag=sgp.major_participant] run function sgp.misc:on_death
 function sgp.mineurs:_stop
-useglow toggle
-function sgp.lore:npcs/disable
+function #sgp.hooks:tgc/majeurs/common/start_1

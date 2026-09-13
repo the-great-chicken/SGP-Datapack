@@ -5,6 +5,7 @@
 execute if entity @a[predicate=sgp.majeurs:event_in_progress] run return 0
 
 function sgp.majeurs:common/start
+tag @a[tag=sgp.major_participant] add sgp.major.hide_and_seek
 
 # Select the seekers
 function sgp.misc:selected_player/main {div:10, tag:sgp.seeker, sign:"/", add:1}

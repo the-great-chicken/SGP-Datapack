@@ -1,4 +1,4 @@
-#> sgp.cosmetics:particles/manually_disable_intensity
+#> sgp.cosmetics:particles/disable_intensity
 # 
 # Remove the particle cloak weights tags from the player
 

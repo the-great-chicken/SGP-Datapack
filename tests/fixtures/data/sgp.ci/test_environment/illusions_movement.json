@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:illusions_movement/setup",
+  "teardown": "sgp.ci:illusions_movement/cleanup"
+}

@@ -48,9 +48,9 @@ execute if score @s sgp.kit_id matches 8 run data modify storage sgp:actionbar_h
 execute if score @s sgp.kit_id matches 1 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.1", font:"sgp.kits:space"}}
 execute if score @s sgp.kit_id matches 9 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.4", font:"sgp.kits:space"}}
 
-function sgp.misc:actionbar/hud/append_ability_bar with storage sgp:macro actionbar_hud.kit
+function sgp.misc:actionbar/hud/append_ability_icon with storage sgp:macro actionbar_hud.kit
 
-# Rewind by the static background advance so the filled frame starts on top.
+# Rewind by the static background advance so the cooldown frame starts on top.
 data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.n.15", font:"sgp.kits:space"}}
 execute if score @s sgp.kit_id matches 8 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.2", font:"sgp.kits:space"}}
 execute if score @s sgp.kit_id matches 5 run data modify storage sgp:actionbar_hud overlay append value {text:{translate:"sgp.kits.offset.p.1", font:"sgp.kits:space"}}
@@ -59,7 +59,7 @@ execute if score @s sgp.kit_id matches 4 run data modify storage sgp:actionbar_h
 
 # Draw the current cooldown HUD frame tinted to the player's kit color.
 execute store result storage sgp:macro actionbar_hud.index int 1 run scoreboard players get @s sgp.ab.hud_ability_fill
-data modify storage sgp:macro actionbar_hud.function set value "sgp.misc:actionbar/hud/prepare_ability_fill_bar"
+data modify storage sgp:macro actionbar_hud.function set value "sgp.misc:actionbar/hud/prepare_cooldown_frame"
 data modify storage sgp:macro actionbar_hud.list set value "sgp:data misc.actionbar.hud.ability_bars"
 function sgp.misc:run_with_dynamic_list_index with storage sgp:macro actionbar_hud
 

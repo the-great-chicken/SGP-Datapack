@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:stats_collector/cleanup",
+  "teardown": "sgp.ci:stats_collector/cleanup"
+}

@@ -1,7 +1,7 @@
 #> sgp.misc:loop_as_entity/init
-# `{list_location: nbt path, command: string}`
+# `{list_location: resource location + path, command: string}`
 
-$data modify storage sgp:data temp.loop_list set from storage sgp:data $(list_location)
+$data modify storage sgp:data temp.loop_list set from storage $(list_location)
 execute unless data storage sgp:data temp.loop_list[0] run return fail
 
 $data modify storage sgp:data temp.current_command set value "$(command)"

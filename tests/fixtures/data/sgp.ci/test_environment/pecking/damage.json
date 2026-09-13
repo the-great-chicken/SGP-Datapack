@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:pecking/setup",
+  "teardown": "sgp.ci:pecking/cleanup"
+}

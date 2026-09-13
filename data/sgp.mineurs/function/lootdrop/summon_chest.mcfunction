@@ -7,7 +7,7 @@
 # loot table: necessary for the close detection system.
 setblock ~ ~ ~ minecraft:trapped_chest{LootTable:"sgp.mineurs:lootdrop_chest"} replace
 
-item replace block ~ ~ ~ container.0 with air
+item replace block ~ ~ ~ container.0 from block ~ ~ ~ container.0
 
 data modify entity @s data.Items set from block ~ ~ ~ Items
 
@@ -15,9 +15,14 @@ setblock ~ ~ ~ air
 function sgp.mineurs:lootdrop/summon_chest_macro with entity @s data
 
 # Normalize y level position
+scoreboard players add #next sgp.lootdrop 1
+scoreboard players operation @s sgp.lootdrop = #next sgp.lootdrop
 summon marker ~ ~ ~ {Tags:["sgp.y_anchor"]}
 data modify entity @e[tag=sgp.y_anchor,limit=1,distance=..1,type=marker] Pos[1] set from entity @e[type=marker,tag=sgp.marker,name=pvp_arena,limit=1] Pos[1]
 execute at @e[tag=sgp.y_anchor,limit=1,type=marker] run function sgp.mineurs:lootdrop/summon_beacon with entity @e[type=marker,tag=sgp.marker,name=pvp_arena,limit=1] data
 kill @e[tag=sgp.y_anchor,limit=1,type=marker]
+
+scoreboard players operation @e[tag=sgp.lootdrop.new_beacon,type=text_display] sgp.lootdrop = @s sgp.lootdrop
+tag @e[tag=sgp.lootdrop.new_beacon,type=text_display] remove sgp.lootdrop.new_beacon
 
 tag @s remove sgp.glow_spawned

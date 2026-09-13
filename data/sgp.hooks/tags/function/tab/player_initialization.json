@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.tab:player_initialization",
+      "required": false
+    }
+  ]
+}

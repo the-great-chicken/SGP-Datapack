@@ -14,7 +14,7 @@ scoreboard players reset @s sgp.ab.reward_3
 scoreboard players reset @s sgp.ab.reward_3_width
 
 tag @s add sgp.ab.location_clear_target
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.misc:actionbar/location_clear_for_target with entity @s data"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.location", command:"run function sgp.misc:actionbar/location_clear_for_target with entity @s data"}
 tag @s remove sgp.ab.location_clear_target
 
 scoreboard players reset @s sgp.ab.location

@@ -139,28 +139,6 @@
         }
       }
     },
-    "statuswarp": {
-      "type": "literal",
-      "children": {
-        "name": {
-          "type": "argument",
-          "parser": "brigadier:string",
-          "properties": {
-            "type": "word"
-          },
-          "children": {
-            "enabled": {
-              "type": "literal",
-              "executable": true
-            },
-            "disabled": {
-              "type": "literal",
-              "executable": true
-            }
-          }
-        }
-      }
-    },
     "move": {
       "type": "literal",
       "children": {
@@ -178,29 +156,6 @@
               "properties": {
                 "type": "greedy"
               },
-              "executable": true
-            }
-          }
-        }
-      }
-    },
-    "npc": {
-      "type": "literal",
-      "children": {
-        "spawn": {
-          "type": "literal",
-          "executable": true
-        },
-        "despawn": {
-          "type": "literal",
-          "executable": true
-        },
-        "select": {
-          "type": "literal",
-          "children": {
-            "id": {
-              "type": "argument",
-              "parser": "brigadier:integer",
               "executable": true
             }
           }
@@ -240,43 +195,6 @@
                     }
                   },
                   "executable": true
-                }
-              }
-            }
-          }
-        },
-        "time": {
-          "type": "literal",
-          "children": {
-            "player": {
-              "type": "argument",
-              "parser": "minecraft:entity",
-              "properties": {
-                "amount": "multiple",
-                "type": "players"
-              },
-              "children": {
-                "entities": {
-                  "type": "argument",
-                  "parser": "minecraft:entity",
-                  "properties": {
-                    "amount": "multiple",
-                    "type": "entities"
-                  },
-                  "children": {
-                    "duration": {
-                      "type": "argument",
-                      "parser": "brigadier:integer",
-                      "children": {
-                        "color": {
-                          "type": "argument",
-                          "parser": "minecraft:color",
-                          "executable": true
-                        }
-                      },
-                      "executable": true
-                    }
-                  }
                 }
               }
             }

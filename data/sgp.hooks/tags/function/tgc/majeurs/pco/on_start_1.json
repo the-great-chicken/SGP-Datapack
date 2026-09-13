@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.tgc:majeurs/pco/on_start_1",
+      "required": false
+    }
+  ]
+}

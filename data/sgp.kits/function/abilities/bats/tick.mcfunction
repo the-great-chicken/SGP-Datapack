@@ -1,4 +1,4 @@
-#> abilities/bats/tick
+#> sgp.kits:abilities/bats/tick
 #
 # Only restore equipment of players whose ability just ended
 

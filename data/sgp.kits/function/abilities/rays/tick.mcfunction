@@ -39,7 +39,7 @@ execute as @e[tag=sgp.predictor,limit=1,type=marker] run function #bs.position:a
 
 # Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
 scoreboard players operation $link.to bs.in = @s bs.id
-execute as @e[predicate=bs.link:link_equal,limit=8,type=item_display] run function sgp.kits:abilities/rays/tick_children
+execute as @e[tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] run function sgp.kits:abilities/rays/tick_children
 
 kill @e[tag=sgp.predictor,limit=1,type=marker]
 

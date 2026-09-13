@@ -3,7 +3,7 @@
 # Puts the player's held item in the chat, for everyone to see
 # We use bookshelf to show the actual translated item name if it's a vanilla one
 
-scoreboard players reset @a[scores={sgp.share_item=1..}] sgp.share_item
+scoreboard players reset @s sgp.share_item
 
 data remove storage sgp:macro item_hover
 data remove storage sgp:macro item_name

@@ -49,3 +49,13 @@ The template to summon one is `/summon interaction ~ ~ ~ {Tags:["sgp.interaction
 TGCPlugin reads `function/initialization.mcfunction` on startup and datapack reload. Declare cosmetics on one line as `scoreboard objectives add sgp.<category>.<key>_unlocked dummy {"text":"Display name","color":"#123456"}`; names contain 1–100 characters, colors are six-digit hex, and declaration order controls display order. Website icons are extracted from the effect commands during content preparation.
 
 Each declaration needs a matching `api/equip/<category>/<key>.mcfunction` and an entry in the category's clear function. Equip hooks must check the player's unlock before changing tags and return 1 on success. Categories are `particle`, `intensity` and `kill`; keys use lowercase letters and underscores.
+
+## Plugin API
+
+Functions under `sgp.cosmetics:api/` are an external plugin contract.
+
+- `sgp.cosmetics:api/ready` returns the API version (`1`).
+- `sgp.cosmetics:api/equip/<category>/<key>` must be executed as a player. It returns `1` only when the cosmetic is unlocked and selected; rejected calls return `0` without replacing the current selection.
+- `sgp.cosmetics:api/unequip/<category>` must be executed as a player. It clears that category and returns `1` even if it was already empty; non-player callers return `0`.
+
+The supported categories are `particle`, `intensity`, and `kill`.

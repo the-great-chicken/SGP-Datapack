@@ -12,6 +12,7 @@ tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true},
 function sgp.majeurs:common/start
 
 execute as @a run function sgp.majeurs:pco/reset_player_state
+tag @a[tag=sgp.major_participant] add sgp.major.pco
 
 function sgp.majeurs:pco/dispatch
 
@@ -38,9 +39,7 @@ tp @a[team=sgp.Poule] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_poule_spawn
 tp @a[team=sgp.Canard] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_canard_spawn",limit=1,type=marker]
 tp @a[team=sgp.Oie] @e[tag=sgp.marker,tag=sgp.pco.active,name="pco_oie_spawn",limit=1,type=marker]
 
-move @a[team=sgp.Oie] #Oies
-move @a[team=sgp.Poule] #Poules
-move @a[team=sgp.Canard] #Canards
+function #sgp.hooks:discord/majeurs/pco/_start_1
 
 title @a[team=sgp.Oie] subtitle [{text:"Chassez les ", color:white, bold:true}, {text:"Poules", color:red}]
 title @a[team=sgp.Oie] title {text:"Oie", color:yellow, bold:true}

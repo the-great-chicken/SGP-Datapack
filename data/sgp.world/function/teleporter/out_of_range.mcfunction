@@ -4,4 +4,5 @@
 
 stopsound @s ambient block.portal.trigger
 scoreboard players set @s sgp.teleporteur 0
+scoreboard players reset @s sgp.teleport_source
 tag @s remove sgp.to_teleport

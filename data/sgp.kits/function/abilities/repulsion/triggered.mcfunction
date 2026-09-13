@@ -1,4 +1,4 @@
-#> sgp.kits:abilities/repulsion/started
+#> sgp.kits:abilities/repulsion/triggered
 #
 # We can't reset the scoreboard directly in the enchantment
 

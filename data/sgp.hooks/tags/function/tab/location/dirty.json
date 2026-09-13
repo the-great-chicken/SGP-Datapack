@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sgp.integration.tab:location/dirty",
+      "required": false
+    }
+  ]
+}

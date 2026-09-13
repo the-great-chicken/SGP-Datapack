@@ -3,6 +3,10 @@
 
 $item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)
 
+# Empty player slots copy no item into the armor stand. Do not create component data on
+# an absent stack: doing so produces an invalid equipment compound with no item id.
+execute unless data entity @s equipment.mainhand.id run return 0
+
 # Mark special items (they already have an item_model) vs vanilla items (no item_model)
 execute if data entity @s equipment.mainhand.components."minecraft:item_model" \
     run data modify entity @s equipment.mainhand.components."minecraft:custom_data".hidden_special set value 1b

@@ -7,4 +7,4 @@ $execute if score @s sgp.lieu_$(lieu) matches 0 run function sgp.world:lieu/firs
 $execute if score @s sgp.lieu_$(lieu) matches 0 run scoreboard players set @s sgp.lieu_$(lieu) 1
 
 $execute if score @s sgp.lieu_$(lieu) matches 1 run function sgp.world:lieu/second_time {lieu:"$(lieu)", lieu_propre:"$(lieu_propre)", couleur:"$(couleur)"}
-$execute if score @s sgp.lieu_$(lieu) matches 1 run function sgp.misc:tab/location/enter {lieu:"$(lieu)"}
+$execute if score @s sgp.lieu_$(lieu) matches 1 run function sgp.world:lieu/enter {lieu:"$(lieu)"}

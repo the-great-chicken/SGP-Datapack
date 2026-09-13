@@ -6,25 +6,9 @@ execute unless score @s sgp.synthetic_death matches 1.. \
     run function sgp.kits:stats_collector/collect_kill_infos
 function sgp.kits:stats_collector/pause_pick_as_player
 scoreboard players reset @s sgp.synthetic_death
-scoreboard players set @s sgp.kit_id -1
+function sgp.kits:cleanup_after_death
 
-# Reset ability
-scoreboard players set @s sgp.duration_ability 1
-execute at @s run function sgp.kits:abilities/route_tick
-scoreboard players set @s sgp.cooldown_ability 0
-
-function sgp.kits:kit_tags/reset
-scoreboard players set @s sgp.kills_give_1 0
-scoreboard players set @s sgp.kills_give_2 0
-scoreboard players set @s sgp.kills_give_3 0
-scoreboard players set @s sgp.just_died 0
-
-function sgp.kits:clear
-
-scoreboard players operation $link.to bs.in = @s bs.id
-tag @s add sgp.diorama_death_cleanup
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.playable_map", command:"run function sgp.diorama:tick/update_mannequin/remove with entity @s data"}
-tag @s remove sgp.diorama_death_cleanup
+function sgp.diorama:cleanup_player
 
 function sgp.mineurs:bounty/reward/reset
 execute if entity @s[tag=sgp.wanted] run function sgp.mineurs:bounty/leave_wanted

@@ -3,5 +3,4 @@
 # 
 # Teleports the player and do additional effects
 
-$execute as @a[tag=sgp.to_teleport,scores={sgp.teleporteur=60}] run tp @s $(x) $(y) $(z) $(yaw) $(pitch)
-execute as @a[tag=sgp.to_teleport,scores={sgp.teleporteur=60}] at @s run particle minecraft:reverse_portal ~ ~1 ~ 0 0 0 1 200 normal
+$execute as @a[tag=sgp.to_teleport,distance=..1,scores={sgp.teleporteur=60}] if score @s sgp.teleport_source = #teleport_source sgp.dummy run function sgp.world:teleporter/finish {x:$(x),y:$(y),z:$(z),yaw:$(yaw),pitch:$(pitch)}

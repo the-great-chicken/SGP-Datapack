@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:function",
+  "setup": "sgp.ci:minor_scheduler/player_count_setup",
+  "teardown": "sgp.ci:minor_scheduler/player_count_cleanup"
+}

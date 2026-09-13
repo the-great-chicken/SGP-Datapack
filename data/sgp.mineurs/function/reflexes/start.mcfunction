@@ -1,5 +1,7 @@
 #> sgp.mineurs:reflexes/start
 
+function sgp.mineurs:reflexes/stop
+
 title @a[tag=sgp.in_game] title {text:"REFLEXES!", color:dark_red, bold:true}
 tellraw @a[tag=sgp.in_game] [{storage:"sgp:text", nbt:"prefix", interpret:true}, {text:"REFLEXES ! ", bold:true, color:dark_red}, \
                             {text:"Le Canarchimage a lancé un sort ! Tu as 5 secondes pour cliquer ", color:red}, \

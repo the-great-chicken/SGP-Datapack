@@ -4,7 +4,7 @@ execute store result score @s sgp.cooldown_ability run data get storage sgp:data
 execute store result score @s sgp.duration_ability run data get storage sgp:data kits.ability_cooldowns.assassinate.duration
 function sgp.kits:stats_collector/ability/start {kit_id:9,ability_path:"assassinate"}
 
-scoreboard players reset @s sgp.damage_resisted
+scoreboard players set @s sgp.damage_resisted 0
 
 tag @s add sgp.assassin
 

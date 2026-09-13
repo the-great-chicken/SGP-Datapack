@@ -1,0 +1,21 @@
+#> sgp.kits:perfect_accuracy/trident_speed
+# @dummy
+# @environment sgp.ci:perfect_accuracy/trident_speed
+#
+# A trident keeps its measured launch speed rather than inheriting the fixed speed of thrown items.
+
+gamemode spectator @s
+tp @s 8.0 88.0 8.0 0 0
+await entity @s[predicate=sgp.ci:perfect_accuracy/area_loaded]
+function sgp.ci:origin_arena/ready
+await entity @e[tag=sgp.ci.origin_ready,x=8,y=88,z=8,distance=..1,type=marker]
+kill @e[tag=sgp.ci.origin_ready,type=marker]
+function sgp.ci:perfect_accuracy/clear_projectiles
+
+tp @s 8.0 88.0 8.0 0 0
+execute at @s run function sgp.ci:perfect_accuracy/create {type:trident,motion:"[3.0,4.0,0.0]"}
+assert entity @n[tag=sgp.ci.accuracy_new,x=8,y=88,z=8,distance=..3,type=trident]
+execute as @n[tag=sgp.ci.accuracy_new,x=8,y=88,z=8,distance=..3,type=trident] run function sgp.kits:projectile/reset_velocity
+assert entity @n[tag=sgp.ci.accuracy_new,x=8,y=88,z=8,distance=..3,type=trident]
+execute as @n[tag=sgp.ci.accuracy_new,x=8,y=88,z=8,distance=..3,type=trident] run function sgp.ci:perfect_accuracy/check {x:"-20..20",y:"-20..20",z:"49980..50020"}
+function sgp.ci:perfect_accuracy/clear_projectiles

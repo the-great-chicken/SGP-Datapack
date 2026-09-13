@@ -3,6 +3,7 @@
 # Remove wanted tag and send the reward message to the attacker
 
 execute on attacker run function sgp.mineurs:bounty/reward/message
+scoreboard players reset @s sgp.bounty_gen
 tag @s remove sgp.wanted
 
 execute unless entity @a[tag=sgp.wanted] run function sgp.mineurs:bounty/eliminated

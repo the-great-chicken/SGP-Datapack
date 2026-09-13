@@ -1,4 +1,4 @@
-#> function sgp.misc:loop_as_entity/recursion
+#> sgp.misc:loop_as_entity/recursion
 # `{uuid: entity uuid, command: "run kill @s"}`
 
 # 1. Run the dynamic command directly as the entity!

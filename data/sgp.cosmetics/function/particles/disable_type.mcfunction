@@ -1,4 +1,4 @@
-#> sgp.cosmetics:particles/manually_disable_type
+#> sgp.cosmetics:particles/disable_type
 # 
 # Removes the particle cloaks tags from the player
 

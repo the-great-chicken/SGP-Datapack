@@ -8,13 +8,17 @@ execute if score #even_tick sgp.dummy matches 0 run function even_tick_functions
 scoreboard players add #even_tick sgp.dummy 1
 execute if score #even_tick sgp.dummy matches 2.. run scoreboard players set #even_tick sgp.dummy 0
 
-# one game tick out of 20
-execute if score #20_ticks sgp.dummy matches 0 run function 20_ticks_functions
-scoreboard players add #20_ticks sgp.dummy 1
-execute if score #20_ticks sgp.dummy matches 10.. run scoreboard players set #20_ticks sgp.dummy 0
+# one game tick out of 10
+execute if score #10_ticks sgp.dummy matches 0 run function 10_ticks_functions
+scoreboard players add #10_ticks sgp.dummy 1
+execute if score #10_ticks sgp.dummy matches 10.. run scoreboard players set #10_ticks sgp.dummy 0
 
 # Allocate stable player ids before any subsystem records player-linked state.
-execute as @a unless score @s sgp.id matches 1.. run function sgp.misc:player_id/allocate
+function sgp.misc:player_id/ensure
+
+# Repair persistent minor-event state when a player reconnects after the event ended.
+execute as @a[tag=sgp.wanted] run function sgp.mineurs:bounty/cleanup_stale
+execute as @a[tag=sgp.smol] unless score #smol_active sgp.dummy matches 1 run function sgp.mineurs:smol/cleanup_stale
 
 # Expire actionbar segments before systems refresh the parts they still need.
 function sgp.misc:actionbar/tick
@@ -28,6 +32,10 @@ execute as @a[scores={sgp.just_died=1..}] run \
     function sgp.kits:stats_collector/on_real_death
 execute as @a[tag=sgp.elo_touched] run \
     function sgp.kits:stats_collector/elo/apply_pending
+
+# Repair players who reconnect with state from an already-ended major event.
+# This must run after genuine-death collection but before synthetic cleanup.
+function sgp.majeurs:repair_reconnected_players
 
 # Consume delayed synthetic cleanup before a later event's death handler can.
 execute as @a[scores={sgp.synthetic_death=1..,sgp.just_died=1..}] run \
@@ -73,16 +81,16 @@ execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/sho
 
 function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
 
 scoreboard players set @a sgp.ab.location 0
 scoreboard players set @a sgp.ab.location_width 0
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
 
-function sgp.misc:tab/tick
+function #sgp.hooks:tab/tick
 
-function sgp.misc:loop_as_entity/init {list_location:"markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
+function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.teleporter", command:"run function sgp.world:teleporter/run"}
 
 execute as @a[tag=sgp.in_game,scores={sgp.reward=1..}] \
     run function sgp.mineurs:bounty/reward/trigger

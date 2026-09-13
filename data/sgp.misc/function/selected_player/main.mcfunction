@@ -12,6 +12,9 @@ $scoreboard players set #add sgp.dummy $(add)
 $scoreboard players operation #nbr_joueurs sgp.dummy $(sign)= #div sgp.dummy
 scoreboard players operation #nbr_joueurs sgp.dummy += #add sgp.dummy
 
+# A group too small to contribute a player must not produce an invalid selector limit.
+execute if score #nbr_joueurs sgp.dummy matches ..0 run return 0
+
 execute store result storage sgp:data misc.selected_player.nbr int 1 run scoreboard players get #nbr_joueurs sgp.dummy
 $data modify storage sgp:data misc.selected_player.tag set value "$(tag)"
 

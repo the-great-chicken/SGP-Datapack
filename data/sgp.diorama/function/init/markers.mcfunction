@@ -13,11 +13,11 @@ execute as @e[tag=sgp.marker,name=playable_map_model,type=marker] \
 # Get UUID to be able to run as this marker every tick without having to resolve @e every time.
 data remove storage sgp:data markers_lists.playable_map_model
 execute as @e[tag=sgp.marker,name=playable_map_model,type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.playable_map_model"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.playable_map_model"}
 
 data remove storage sgp:data markers_lists.playable_map
 execute as @e[tag=sgp.marker,name=playable_map,type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"markers_lists.playable_map"}
+    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.playable_map"}
 
 
 # Define the maximum pushback (in blocks). Change this number to adjust how far away the giant stands!

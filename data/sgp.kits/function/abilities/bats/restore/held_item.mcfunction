@@ -3,6 +3,9 @@
 
 $item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)
 
+# An empty slot has no hidden item to restore. Keep the temporary armor stand stack absent.
+execute unless data entity @s equipment.mainhand.id run return 0
+
 # Check if the item has been hidden at all. If so, execute the restore logic.
 execute unless data entity @s equipment.mainhand.components."minecraft:custom_data".hidden_special unless data entity @s equipment.mainhand.components."minecraft:custom_data".hidden_vanilla run return 1
 

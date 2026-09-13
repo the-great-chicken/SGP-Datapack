@@ -33,7 +33,6 @@ scoreboard objectives remove sgp.kills_give_2
 scoreboard objectives remove sgp.kills_give_3
 
 scoreboard objectives remove sgp.kit_id
-scoreboard objectives remove sgp.kit_prefix_set
 scoreboard objectives remove sgp.reset_tags
 
 scoreboard objectives remove sgp.last_kill_count

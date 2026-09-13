@@ -1,0 +1,74 @@
+name: Datapack core tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/26.1.2/0.19.5/1.1.2/server/jar
+  TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/uLkEd5dr/fabric-api-0.155.2%2B26.1.2.jar
+  TEST_PACKTEST: https://github.com/the-great-chicken/packtest/releases/download/v2.5.0-tgc.1/packtest-2.5.0-tgc.1.jar
+  TEST_BOOKSHELF: https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip
+  TEST_MIXER: https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.3.3/Actionbar-Mixer.v1.3.3.zip
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Validate integration boundaries and prepare core
+        run: |
+          python3 .github/scripts/test_ci_staging.py
+          python3 .github/scripts/prepare_core.py . .packtest-server
+          python3 .github/scripts/datapack_coverage.py instrument . .packtest-server
+      - name: Download test dependencies
+        working-directory: .packtest-server
+        run: |
+          mkdir -p mods
+          curl -fL --retry 3 -o server.jar "$TEST_FABRIC_SERVER"
+          curl -fL --retry 3 -o mods/fabric-api.jar "$TEST_FABRIC_API"
+          curl -fL --retry 3 -o mods/packtest.jar "$TEST_PACKTEST"
+          curl -fL --retry 3 -o world/datapacks/bookshelf-suite.zip "$TEST_BOOKSHELF"
+          curl -fL --retry 3 -o actionbar-mixer.zip "$TEST_MIXER"
+          python3 ../.github/scripts/install_mixer.py . actionbar-mixer.zip
+          unzip -tq mods/fabric-api.jar
+          unzip -tq mods/packtest.jar
+          unzip -tq world/datapacks/bookshelf-suite.zip
+      - name: Run core tests
+        working-directory: .packtest-server
+        run: |
+          set -o pipefail
+          java -Xmx2G -Dpacktest.auto -Dpacktest.auto.annotations -jar server.jar nogui 2>&1 | tee console.log
+      - name: Report datapack coverage
+        if: always()
+        working-directory: .packtest-server
+        run: |
+          if [[ -f console.log ]]; then
+            python3 ../.github/scripts/datapack_coverage.py report .. .
+          else
+            echo "## Datapack test coverage" >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+            echo "Coverage was not collected because the PackTest server did not produce a console log." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Keep server logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: packtest-core-logs
+          path: |
+            .packtest-server/console.log
+            .packtest-server/logs/
+            .packtest-server/crash-reports/
+            .packtest-server/datapack-coverage-map.json
+            .packtest-server/datapack-coverage.json
+            .packtest-server/datapack-coverage.md
+          if-no-files-found: ignore
