@@ -2,7 +2,7 @@
   "description": "Left Click detection",
   "supported_items": [],
   "weight": 1,
-  "max_level": 1,
+  "max_level": 6,
   "min_cost": {
     "base": 0,
     "per_level_above_first": 0

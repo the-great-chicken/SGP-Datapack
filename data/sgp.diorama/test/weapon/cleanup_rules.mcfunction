@@ -4,6 +4,7 @@
 
 function sgp.ci:diorama_weapon/fixture
 item replace entity @s weapon.mainhand with stick
+data modify storage sgp.ci:diorama_weapon original set from entity @s Inventory
 function sgp.diorama:left_click/add_piercing_weapon
 function sgp.diorama:left_click/remove_piercing_weapon
 function sgp.ci:diorama_weapon/expect_piercing {present:1}
@@ -15,5 +16,6 @@ function sgp.ci:diorama_weapon/expect_piercing {present:1}
 tag @s remove sgp.around_model
 function sgp.diorama:left_click/remove_piercing_weapon
 function sgp.ci:diorama_weapon/expect_piercing {present:0}
+function sgp.ci:diorama_weapon/expect_saved {key:original}
 execute as WeaponOther run function sgp.ci:diorama_weapon/expect_piercing {present:1}
 dummy WeaponOther leave

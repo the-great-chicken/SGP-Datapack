@@ -34,3 +34,16 @@ scoreboard players reset #damage_received_delta sgp.dummy
 assert score @s sgp.ability_kind matches 5
 assert score @s sgp.ability_success matches 1
 assert data storage sgp.kits:stats kits_dict.910018.5.abilities.bigger{uses:1,successful_uses:1,boosted_melee_damage:500}
+
+# Assassinate must overwrite the shared metric scratch with a real zero when no
+# damage_resisted statistic was accumulated during the stance.
+data modify storage sgp.kits:stats kits_dict.910018.9.abilities.assassinate set value {uses:0,successful_uses:0,damage_resisted:0}
+function sgp.kits:abilities/assassinate/start
+assert score @s sgp.damage_resisted matches 0
+function sgp.kits:abilities/assassinate/trigger
+assert score #ability_metric_delta sgp.dummy matches 0
+assert data storage sgp.kits:stats kits_dict.910018.9.abilities.assassinate{uses:1,successful_uses:1,damage_resisted:0}
+assert not entity @s[tag=sgp.assassin]
+# trigger schedules a visual follow-up; retire that transient state inside this test.
+schedule clear sgp.kits:abilities/assassinate/rotate_delayed
+tag @s remove sgp.assassin_triggered

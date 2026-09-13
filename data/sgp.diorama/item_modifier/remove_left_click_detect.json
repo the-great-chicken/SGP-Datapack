@@ -1,6 +1,15 @@
-{
-  "function": "minecraft:set_components",
-  "components": {
-    "!minecraft:piercing_weapon": {}
+[
+  {
+    "function": "minecraft:set_components",
+    "components": {
+      "!minecraft:piercing_weapon": {}
+    }
+  },
+  {
+    "function": "minecraft:set_enchantments",
+    "enchantments": {
+      "sgp.diorama:left_click_detection": 0
+    },
+    "add": false
   }
-}
+]

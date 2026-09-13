@@ -12,8 +12,7 @@ execute at @s run function sgp.kits:abilities/route_ability
 
 function sgp.ci:ability_entrypoints/expect_timers {ability:"assassinate"}
 assert entity @s[tag=sgp.assassin,nbt={active_effects:[{id:"minecraft:resistance",amplifier:4b}]}]
-execute store success score #ci.ability.damage_resisted_present sgp.dummy if score @s sgp.damage_resisted = @s sgp.damage_resisted
-assert score #ci.ability.damage_resisted_present sgp.dummy matches 0
+assert score @s sgp.damage_resisted matches 0
 
 # Retire the transient state so this test never leaks a modifier/effect to teardown.
 function sgp.kits:abilities/assassinate/end

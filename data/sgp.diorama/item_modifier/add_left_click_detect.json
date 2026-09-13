@@ -13,11 +13,5 @@
       "sgp.diorama:left_click_detection": 1
     },
     "add": false
-  },
-  {
-    "function": "toggle_tooltips",
-    "toggles": {
-      "enchantments": false
-    }
   }
 ]

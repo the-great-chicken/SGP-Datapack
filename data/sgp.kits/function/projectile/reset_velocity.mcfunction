@@ -9,6 +9,7 @@ function #bs.vector:length
 
 # Override the speed for fixed-speed projectiles (Scale is 1000x)
 execute if entity @s[type=splash_potion] run scoreboard players set $vector.length bs.out 500
+execute if entity @s[type=lingering_potion] run scoreboard players set $vector.length bs.out 500
 execute if entity @s[type=ender_pearl] run scoreboard players set $vector.length bs.out 1500
 execute if entity @s[type=snowball] run scoreboard players set $vector.length bs.out 1500
 execute if entity @s[type=egg] run scoreboard players set $vector.length bs.out 1500
@@ -27,6 +28,7 @@ kill @e[tag=sgp.aim_vector,limit=1,x=-3,y=-3,z=-3,dx=9,dy=9,dz=9,type=marker]
 
 # If the projectile is a potion, make it shoot more upwards
 execute if entity @s[type=splash_potion] run scoreboard players operation #dir_y sgp.dummy += 300 sgp.dummy
+execute if entity @s[type=lingering_potion] run scoreboard players operation #dir_y sgp.dummy += 300 sgp.dummy
 
 # Multiply the directional vector by the original speed
 # Both values are scaled by 1000, so the result of multiplying them has a scale of 1,000,000
