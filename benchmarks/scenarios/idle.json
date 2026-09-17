@@ -1,0 +1,10 @@
+{
+  "name": "idle",
+  "description": "Initialized in-arena PackTest players doing no benchmark-generated actions.",
+  "setup": "sgp.bench:scenarios/idle/setup",
+  "tick": "sgp.bench:scenarios/idle/tick",
+  "teardown": "sgp.bench:scenarios/idle/teardown",
+  "parameters": {
+    "players": {"type": "int", "min": 0, "max": 40, "default": 40}
+  }
+}

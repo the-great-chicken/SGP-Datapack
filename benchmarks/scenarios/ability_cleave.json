@@ -1,0 +1,11 @@
+{
+  "name": "ability_cleave",
+  "description": "Initialized Combattant players drop an item together at a fixed cadence, exercising the normal PackTest drop -> ability route for Cleave.",
+  "setup": "sgp.bench:scenarios/ability_cleave/setup",
+  "tick": "sgp.bench:scenarios/ability_cleave/tick",
+  "teardown": "sgp.bench:scenarios/ability_cleave/teardown",
+  "parameters": {
+    "players": {"type": "int", "min": 0, "max": 40, "default": 40},
+    "period": {"type": "int", "min": 2, "max": 400, "default": 20}
+  }
+}
