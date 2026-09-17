@@ -1,0 +1,23 @@
+{
+  "name": "ability_water_trident",
+  "description": "Poseidon players repeatedly activate Water Trident; midway between casts they are moved out of the temporary water so production cleanup and Riptide removal happen naturally.",
+  "setup": "sgp.bench:scenarios/abilities/water_trident/setup",
+  "tick": "sgp.bench:scenarios/abilities/water_trident/tick",
+  "teardown": "sgp.bench:scenarios/abilities/water_trident/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 20,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "use_inputs": "#water_trident_use_inputs",
+    "waves": "#water_trident_waves"
+  }
+}

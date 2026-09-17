@@ -1,0 +1,23 @@
+{
+  "name": "ability_bats_detonating",
+  "description": "Cancer players repeatedly create bat swarms whose undetonated bats are benchmark-steered onto durable illusion targets, forcing the production scan and detonation path for every bat.",
+  "setup": "sgp.bench:scenarios/abilities/bats_detonating/setup",
+  "tick": "sgp.bench:scenarios/abilities/bats_detonating/tick",
+  "teardown": "sgp.bench:scenarios/abilities/bats_detonating/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 24,
+      "max": 400,
+      "default": 40
+    }
+  },
+  "counters": {
+    "drop_inputs": "#bats_detonate_inputs",
+    "waves": "#bats_detonate_waves"
+  }
+}

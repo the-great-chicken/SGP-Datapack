@@ -29,7 +29,7 @@ validate = _PREPARE_CORE.validate
 
 def load_scenarios(repository: Path):
     scenarios = {}
-    for path in sorted((repository / 'benchmarks/scenarios').glob('*.json')):
+    for path in sorted((repository / 'benchmarks/scenarios').rglob('*.json')):
         data = json.loads(path.read_text(encoding='utf-8'))
         required = {'name', 'description'}
         missing = required - data.keys()

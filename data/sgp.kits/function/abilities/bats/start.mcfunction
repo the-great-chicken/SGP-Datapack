@@ -20,6 +20,6 @@ execute summon armor_stand run function sgp.kits:abilities/bats/hide/equipment
 
 tag @s remove sgp.processing
 
-# Bats can only detonate after 1s (although if another cancer casted the ability earlier, the explosion check will already be running)
-# And I'm too lazy to fix this concurrency bug, it doesn't really matter
+# Bats can only detonate after 1s. Concurrent callbacks are safe because each
+# grenade bat is marked on its first detonation.
 schedule function sgp.kits:abilities/bats/check_for_explosion 1s append

@@ -1,0 +1,23 @@
+{
+  "name": "ability_assassinate_triggered",
+  "description": "Enderman players repeatedly arm Assassinate and take a sourced hit from a benchmark attacker; obstructed landing lanes force the real teleport-placement search through expensive fallbacks.",
+  "setup": "sgp.bench:scenarios/abilities/assassinate_triggered/setup",
+  "tick": "sgp.bench:scenarios/abilities/assassinate_triggered/tick",
+  "teardown": "sgp.bench:scenarios/abilities/assassinate_triggered/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 4,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "triggers": "#assassinate_triggers",
+    "waves": "#assassinate_trigger_waves"
+  }
+}

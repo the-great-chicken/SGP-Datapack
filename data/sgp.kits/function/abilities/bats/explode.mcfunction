@@ -2,6 +2,10 @@
 #
 # Executed as and at a grenade bat.
 
+# Same-tick scheduled scans must not detonate one bat more than once.
+execute if entity @s[tag=sgp.bat_detonated] run return 0
+tag @s add sgp.bat_detonated
+
 scoreboard players operation #damage_owner sgp.dummy = @s sgp.damage_owner
 scoreboard players operation #exploding_bat_cast sgp.dummy = @s sgp.ability_cast
 

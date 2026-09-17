@@ -1,0 +1,16 @@
+{
+  "name": "ability_illusions",
+  "description": "Alchimiste players: keeps Illusions active continuously, exercising the three mannequins, links, pose mirroring, and per-tick movement.",
+  "setup": "sgp.bench:scenarios/abilities/illusions/setup",
+  "tick": "sgp.bench:scenarios/abilities/illusions/tick",
+  "teardown": "sgp.bench:scenarios/abilities/illusions/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#illusions_player_ticks"
+  }
+}

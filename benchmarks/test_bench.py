@@ -88,9 +88,32 @@ class ScenarioTests(unittest.TestCase):
     def test_atomic_scenario_parameters(self):
         scenarios = bench.load_scenarios()
         self.assertIn('idle', scenarios)
-        self.assertIn('ability_cleave', scenarios)
-        self.assertIn('ability_rays', scenarios)
-        self.assertIn('ability_smoke_grenade', scenarios)
+        production_abilities = {
+            path.name
+            for path in (ROOT / 'data/sgp.kits/function/abilities').iterdir()
+            if path.is_dir()
+        }
+        expected_abilities = {f'ability_{name}' for name in production_abilities}
+        self.assertTrue(expected_abilities <= scenarios.keys())
+        # Base scenarios mirror the production ability directories, while
+        # state-dependent high-cost paths are represented by additional variants.
+        self.assertTrue(expected_abilities <= scenarios.keys())
+        self.assertTrue({
+            'ability_cooldown',
+            'ability_pecking_miss',
+            'ability_assassinate_triggered',
+            'ability_bats_detonating',
+            'ability_rays_dense',
+            'ability_fangs_rough_terrain',
+        } <= scenarios.keys())
+        self.assertTrue(
+            any(
+                path.parent != ROOT / 'benchmarks/scenarios'
+                for path in (ROOT / 'benchmarks/scenarios').rglob('*.json')
+                if json.loads(path.read_text(encoding='utf-8')).get('name') in expected_abilities
+            ),
+            'ability scenarios should exercise recursive scenario discovery',
+        )
         self.assertIn('kits_idle', scenarios)
         self.assertIn('melee', scenarios)
         self.assertIn('cosmetic_smoke', scenarios)
@@ -116,13 +139,14 @@ class ScenarioTests(unittest.TestCase):
             if 'components' in scenario:
                 continue
             fixture_text = []
+            entrypoint_dirs = set()
             for key in ('setup', 'tick', 'teardown'):
                 namespace, path = scenario[key].split(':', 1)
                 target = fixture_root / namespace / 'function' / f'{path}.mcfunction'
                 self.assertTrue(target.is_file(), f'missing {target}')
                 fixture_text.append(target.read_text(encoding='utf-8'))
-            scenario_dir = fixture_root / 'sgp.bench/function/scenarios' / scenario['name']
-            if scenario_dir.is_dir():
+                entrypoint_dirs.add(target.parent)
+            for scenario_dir in entrypoint_dirs:
                 fixture_text.extend(
                     path.read_text(encoding='utf-8')
                     for path in scenario_dir.glob('*.mcfunction')
@@ -144,6 +168,33 @@ class ScenarioTests(unittest.TestCase):
                 ('ability_cleave', 20, 21, 40, {'period': 20}),
             ],
         )
+
+    def test_four_players_per_kit_composition_covers_every_ability(self):
+        scenarios = bench.load_scenarios()
+        selected, params, plan = bench.resolve_plan(scenarios, 'abilities_4_per_kit')
+        self.assertEqual(selected['name'], 'abilities_4_per_kit')
+        self.assertEqual(params, {})
+        self.assertEqual(len(plan), 12)
+        self.assertEqual(bench.plan_total_players(plan), 48)
+        self.assertTrue(all(component.players == 4 for component in plan))
+        self.assertEqual(
+            {component.scenario for component in plan},
+            {
+                'ability_pecking',
+                'ability_cleave',
+                'ability_repulsion',
+                'ability_fangs_rough_terrain',
+                'ability_tnt',
+                'ability_bigger',
+                'ability_rays_dense',
+                'ability_smoke_grenade',
+                'ability_illusions',
+                'ability_assassinate_triggered',
+                'ability_bats_detonating',
+                'ability_water_trident',
+            },
+        )
+        self.assertEqual((plan[0].first, plan[-1].last), (1, 48))
 
     def test_composition_has_no_framework_player_cap(self):
         scenarios = bench.load_scenarios()
@@ -174,16 +225,16 @@ class ScenarioTests(unittest.TestCase):
             measurement_reset = (active / 'measurement_reset.mcfunction').read_text(encoding='utf-8')
         self.assertIn('function sgp.bench:scenarios/idle/setup {first:1,last:20,players:20}', setup)
         self.assertIn(
-            'function sgp.bench:scenarios/ability_cleave/setup '
+            'function sgp.bench:scenarios/abilities/cleave/setup '
             '{first:21,last:40,players:20,period:20}',
             setup,
         )
         self.assertIn(
-            'function sgp.bench:scenarios/ability_cleave/tick '
+            'function sgp.bench:scenarios/abilities/cleave/tick '
             '{first:21,last:40,players:20,period:20}',
             tick,
         )
-        self.assertTrue(teardown.index('ability_cleave/teardown') < teardown.index('idle/teardown'))
+        self.assertTrue(teardown.index('abilities/cleave/teardown') < teardown.index('idle/teardown'))
         self.assertIn('scoreboard players set #cleave_drop_inputs sgp.bench 0', measurement_reset)
         self.assertIn('scoreboard players set #cleave_waves sgp.bench 0', measurement_reset)
 
@@ -226,6 +277,42 @@ class ScenarioTests(unittest.TestCase):
             cleanup = (actors / 'cleanup.mcfunction').read_text(encoding='utf-8')
             self.assertNotIn('Bench73', cleanup)
 
+    def test_stateful_ability_stress_models_cover_expensive_paths(self):
+        fixtures = ROOT / 'benchmarks/fixtures/data/sgp.bench/function'
+
+        cleave_setup = (fixtures / 'scenarios/abilities/cleave/setup.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('18.5 81 -30.5', cleave_setup)
+        self.assertIn('18.5 81 -26.5', cleave_setup)
+        self.assertIn('knockback_resistance', cleave_setup)
+
+        water_fire = (fixtures / 'scenarios/abilities/water_trident/fire.mcfunction').read_text(encoding='utf-8')
+        water_tick = (fixtures / 'scenarios/abilities/water_trident/tick.mcfunction').read_text(encoding='utf-8')
+        self.assertNotIn('reset_water', water_fire)
+        self.assertNotIn('remove_riptide', water_fire)
+        self.assertIn('leave_water', water_tick)
+        self.assertIn('return_home', water_tick)
+
+        repulsion_tick = (fixtures / 'scenarios/abilities/repulsion/tick.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('sgp.bench.clock=12', repulsion_tick)
+        self.assertIn('reset_actor_position', repulsion_tick)
+
+        rough = (fixtures / 'terrain/vertical_stress_lane/build.mcfunction').read_text(encoding='utf-8')
+        self.assertGreaterEqual(rough.count('fill '), 5)
+        self.assertIn('stone_slab[type=bottom]', rough)
+
+    def test_same_tick_tnt_and_bat_detonations_are_idempotent(self):
+        tnt_dispatch = (ROOT / 'data/sgp.kits/function/abilities/tnt/explode_at.mcfunction').read_text(encoding='utf-8')
+        tnt_fire = (ROOT / 'data/sgp.kits/function/abilities/tnt/summon_fire.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('tag=!sgp.tnt_fire_spawned', tnt_dispatch)
+        self.assertIn('tag @s add sgp.tnt_fire_spawned', tnt_fire)
+
+        bat_scan = (ROOT / 'data/sgp.kits/function/abilities/bats/check_for_explosion.mcfunction').read_text(encoding='utf-8')
+        bat_explode = (ROOT / 'data/sgp.kits/function/abilities/bats/explode.mcfunction').read_text(encoding='utf-8')
+        self.assertIn('tag=!sgp.bat_detonated', bat_scan)
+        self.assertIn('tag @s add sgp.bat_detonated', bat_explode)
+        self.assertIn('tag=sgp.bat_detonated', bat_explode)
+
+
 class SuiteTests(unittest.TestCase):
     def test_basic_scaling_expands_to_eight_cases(self):
         _path, suite = bench.load_suite('basic_scaling')
@@ -246,6 +333,15 @@ class SuiteTests(unittest.TestCase):
         )
         self.assertTrue(all(case['runs'] == 5 for case in cases))
         self.assertTrue(all(case['warmup'] == 5.0 for case in cases))
+
+    def test_all_abilities_suite_covers_every_atomic_ability(self):
+        _path, suite = bench.load_suite('all_abilities')
+        scenarios = bench.load_scenarios()
+        cases = bench.expand_suite_cases(suite, scenarios)
+        expected = {name for name in scenarios if name.startswith('ability_')}
+        self.assertEqual(len(cases), 18)
+        self.assertEqual({case['scenario'] for case in cases}, expected)
+        self.assertTrue(all(case['players'] == 40 for case in cases))
 
     def test_matrix_is_cartesian_product(self):
         suite = {
@@ -272,6 +368,9 @@ class StagingTests(unittest.TestCase):
     def test_stage_is_plugin_free_and_contains_benchmark_overlay(self):
         with tempfile.TemporaryDirectory() as temporary:
             server = Path(temporary) / 'server'
+            staged_scenarios = self.prepare_bench.load_scenarios(ROOT)
+            self.assertIn('ability_water_trident', staged_scenarios)
+            self.assertIn('abilities_4_per_kit', staged_scenarios)
             self.prepare_bench.prepare(ROOT, server)
             self.assertTrue((server / '.sgp-benchmark-server').is_file())
             data = server / 'world/datapacks/SGP-Datapack/data'

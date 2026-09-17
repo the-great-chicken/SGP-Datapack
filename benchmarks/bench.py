@@ -160,7 +160,7 @@ def load_module(path: Path, name: str):
 
 def load_scenarios() -> dict[str, dict]:
     scenarios: dict[str, dict] = {}
-    for path in sorted((BENCHMARKS / 'scenarios').glob('*.json')):
+    for path in sorted((BENCHMARKS / 'scenarios').rglob('*.json')):
         data = json.loads(path.read_text(encoding='utf-8'))
         name = data.get('name')
         if not isinstance(name, str) or not name:
@@ -905,6 +905,7 @@ def source_fingerprint() -> str:
     digest = hashlib.sha256()
     files = list(benchmark_source_files())
     files.extend(path for path in (BENCHMARKS / 'scenarios').rglob('*') if path.is_file())
+    files.extend(path for path in (BENCHMARKS / 'suites').rglob('*') if path.is_file())
     files.extend([
         ROOT / 'pack.mcmeta',
         BENCHMARKS / 'config.json',
@@ -1051,7 +1052,7 @@ def compile_actor_pool(server: Path, players: int):
 
     # Minecraft's normal default is 20. Keep at least that value, but grow it
     # automatically with the resolved benchmark instead of imposing a harness cap.
-    set_server_property(server / 'server.properties', 'max-players', str(max(20, players)))
+    set_server_property(server / 'server.properties', 'max-players', str(max(20, players+1)))
 
 
 def compile_active_plan(server: Path, plan: list[PlanComponent]):
