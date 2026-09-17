@@ -19,6 +19,7 @@ import argparse
 import csv
 import hashlib
 import importlib.util
+import itertools
 import json
 import math
 import os
@@ -114,6 +115,7 @@ class PlanComponent:
     setup: str
     tick: str
     teardown: str
+    counters: dict[str, str]
 
     def as_dict(self) -> dict:
         return {
@@ -125,6 +127,7 @@ class PlanComponent:
             'setup': self.setup,
             'tick': self.tick,
             'teardown': self.teardown,
+            'counters': self.counters,
         }
 
 
@@ -182,6 +185,14 @@ def load_scenarios() -> dict[str, dict]:
     return scenarios
 
 
+def parameter_default(name: str, spec: dict) -> int:
+    if 'default' in spec:
+        return spec['default']
+    if name == 'players':
+        return int(CONFIG['default_players'])
+    raise BenchmarkError(f'Parameter {name!r} is missing a default')
+
+
 def validate_parameter_specs(scenario: dict):
     specs = scenario.get('parameters')
     if not isinstance(specs, dict) or 'players' not in specs:
@@ -189,18 +200,39 @@ def validate_parameter_specs(scenario: dict):
     for name, spec in specs.items():
         if not isinstance(spec, dict) or spec.get('type') != 'int':
             raise BenchmarkError(f'Scenario {scenario["name"]}: only int parameters are supported ({name})')
-        if not all(key in spec for key in ('min', 'max', 'default')):
-            raise BenchmarkError(f'Scenario {scenario["name"]}: incomplete parameter spec for {name}')
-        if not all(isinstance(spec[key], int) for key in ('min', 'max', 'default')):
-            raise BenchmarkError(f'Scenario {scenario["name"]}: parameter {name} bounds/default must be integers')
-        if not spec['min'] <= spec['default'] <= spec['max']:
+        if 'min' not in spec:
+            raise BenchmarkError(f'Scenario {scenario["name"]}: parameter {name} is missing min')
+        for key in ('min', 'max', 'default'):
+            if key in spec and not isinstance(spec[key], int):
+                raise BenchmarkError(f'Scenario {scenario["name"]}: parameter {name}.{key} must be an integer')
+        default = parameter_default(name, spec)
+        if default < spec['min'] or ('max' in spec and default > spec['max']):
             raise BenchmarkError(f'Scenario {scenario["name"]}: default for {name} is outside its range')
 
 
 def validate_scenario_graph(scenarios: dict[str, dict]):
+    counter_holders: dict[str, str] = {}
     for scenario in scenarios.values():
         if 'components' not in scenario:
             validate_parameter_specs(scenario)
+            counters = scenario.get('counters', {})
+            if not isinstance(counters, dict):
+                raise BenchmarkError(f'Scenario {scenario["name"]}: counters must be an object')
+            for counter_name, scoreholder in counters.items():
+                if not isinstance(counter_name, str) or not re.fullmatch(r'[a-z0-9_.-]+', counter_name):
+                    raise BenchmarkError(
+                        f'Scenario {scenario["name"]}: invalid counter name {counter_name!r}'
+                    )
+                if not isinstance(scoreholder, str) or not scoreholder.startswith('#') or len(scoreholder) > 40:
+                    raise BenchmarkError(
+                        f'Scenario {scenario["name"]}: counter {counter_name!r} must use a <=40-char # score holder'
+                    )
+                previous = counter_holders.get(scoreholder)
+                if previous is not None and previous != scenario['name']:
+                    raise BenchmarkError(
+                        f'Counter score holder {scoreholder!r} is shared by scenarios {previous!r} and {scenario["name"]!r}'
+                    )
+                counter_holders[scoreholder] = scenario['name']
             continue
         components = scenario['components']
         if not isinstance(components, list) or not components:
@@ -247,7 +279,7 @@ def parameter_values(scenario: dict, players: int | None = None,
                      overrides: dict[str, int] | None = None) -> dict[str, int]:
     validate_parameter_specs(scenario)
     specs = scenario['parameters']
-    values = {name: int(spec['default']) for name, spec in specs.items()}
+    values = {name: parameter_default(name, spec) for name, spec in specs.items()}
     if players is not None:
         values['players'] = players
     for name, value in (overrides or {}).items():
@@ -258,10 +290,12 @@ def parameter_values(scenario: dict, players: int | None = None,
         values[name] = value
     for name, spec in specs.items():
         value = values[name]
-        if not int(spec['min']) <= value <= int(spec['max']):
+        minimum = int(spec['min'])
+        maximum = int(spec['max']) if 'max' in spec else None
+        if value < minimum or (maximum is not None and value > maximum):
+            upper = str(maximum) if maximum is not None else 'unbounded'
             raise BenchmarkError(
-                f'{name}={value} is outside {spec["min"]}..{spec["max"]} '
-                f'for scenario {scenario["name"]}'
+                f'{name}={value} is outside {minimum}..{upper} for scenario {scenario["name"]}'
             )
     return values
 
@@ -295,6 +329,7 @@ def resolve_plan(scenarios: dict[str, dict], name: str, players: int | None = No
         plan.append(PlanComponent(
             scenario=scenario['name'], players=actor_count, first=first, last=last,
             parameters=params, setup=scenario['setup'], tick=scenario['tick'], teardown=scenario['teardown'],
+            counters=dict(scenario.get('counters', {})),
         ))
         cursor += actor_count
 
@@ -320,9 +355,6 @@ def resolve_plan(scenarios: dict[str, dict], name: str, players: int | None = No
             expand(child['scenario'], child, (*stack, scenario_name))
 
     expand(name)
-    total = sum(component.players for component in plan)
-    if total > 40:
-        raise BenchmarkError(f'Scenario {name!r} resolves to {total} players; PackTest benchmark pool maximum is 40')
     return selected, top_params, plan
 
 
@@ -691,7 +723,7 @@ def source_hint(name: str, command_index: dict[str, list[str]], function_index: 
     return ''
 
 
-def profile_to_dict(profile: ParsedProfile, counters: dict[str, int | None]) -> dict:
+def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
     return {
         'archive': profile.archive.name,
         'version': profile.version,
@@ -731,7 +763,7 @@ def format_number(value: float | int | None, digits: int = 2) -> str:
 
 
 def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warmup: float,
-                  profiles: list[ParsedProfile], counters: list[dict[str, int | None]],
+                  profiles: list[ParsedProfile], counters: list[dict],
                   plan: list[PlanComponent] | None = None):
     command_index, function_index = build_source_index()
     lines = [
@@ -756,15 +788,14 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             )
         lines += ['', '## Runs',
         '',
-        '| Run | Profile ticks | Tick median | Tick p95 | Tick max | commandFunctions | Driver ticks | Driver actions |',
-        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+        '| Run | Profile ticks | Tick median | Tick p95 | Tick max | commandFunctions | Driver ticks |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
     ]
     for i, (profile, count) in enumerate(zip(profiles, counters), 1):
         lines.append(
             f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.tick_median_ms)} ms | '
             f'{format_number(profile.tick_p95_ms)} ms | {format_number(profile.tick_max_ms)} ms | '
-            f'{format_number(profile.command_functions_percent)}% | {format_number(count.get("ticks"))} | '
-            f'{format_number(count.get("actions"))} |'
+            f'{format_number(profile.command_functions_percent)}% | {format_number(count.get("ticks"))} |'
         )
 
     command_values = [p.command_functions_percent for p in profiles if p.command_functions_percent is not None]
@@ -799,6 +830,24 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
                 f'- Median effective TPS during capture: **{median(tps_values):.2f}** '
                 f'(range {min(tps_values):.2f}–{max(tps_values):.2f}).'
             )
+
+    workload_names = sorted({
+        name
+        for count in counters
+        for name in (count.get('workload') or {})
+    })
+    if workload_names:
+        lines += ['', '## Workload counters', '', '| Counter | Median | Range |', '| --- | ---: | ---: |']
+        for name in workload_names:
+            values = [
+                count.get('workload', {}).get(name)
+                for count in counters
+                if isinstance(count.get('workload', {}).get(name), (int, float))
+            ]
+            if values:
+                lines.append(f'| `{name}` | {median(values):g} | {min(values):g}–{max(values):g} |')
+            else:
+                lines.append(f'| `{name}` | n/a | n/a |')
 
     grouped: dict[str, list[ProfileEntry]] = defaultdict(list)
     for profile in profiles:
@@ -840,7 +889,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
 
     lines += [
         '',
-        '> `Driver ticks/actions` are read immediately after Minecraft finishes writing the profile zip, '
+        '> Driver/workload counters are read immediately after Minecraft finishes writing the profile zip, '
         'so they can include a small tail after the exact `/perf` window. The profile tick span and profiler '
         'counts are the authoritative measured-window values.',
         '',
@@ -896,6 +945,115 @@ def plan_function_call(identifier: str, component: PlanComponent) -> str | None:
     return f'function {identifier} {{{serialized}}}'
 
 
+def actor_name(index: int) -> str:
+    return f'Bench{index:02d}'
+
+
+def actor_position(index: int) -> tuple[float, float, float]:
+    # Preserve the original 8-column layout while allowing as many rows as the
+    # selected workload requires. Individual scenarios may reposition actors.
+    zero_based = index - 1
+    return (-23.5 + (zero_based % 8) * 7.0, 81.0, -13.5 + (zero_based // 8) * 7.0)
+
+
+def set_server_property(path: Path, key: str, value: str):
+    lines = path.read_text(encoding='utf-8').splitlines() if path.is_file() else []
+    prefix = key + '='
+    replaced = False
+    output = []
+    for line in lines:
+        if line.startswith(prefix):
+            if not replaced:
+                output.append(prefix + value)
+                replaced = True
+        else:
+            output.append(line)
+    if not replaced:
+        output.append(prefix + value)
+    path.write_text('\n'.join(output) + '\n', encoding='utf-8')
+
+
+def previous_actor_count(server: Path, target: Path) -> int:
+    marker = server / '.sgp-benchmark-actor-count'
+    if marker.is_file():
+        try:
+            return max(0, int(marker.read_text(encoding='utf-8').strip()))
+        except ValueError:
+            pass
+    # Migration path for benchmark servers staged by older harness versions.
+    cleanup = target / 'cleanup.mcfunction'
+    if cleanup.is_file():
+        indices = [int(value) for value in re.findall(r'\bBench(\d+)\b', cleanup.read_text(encoding='utf-8'))]
+        if indices:
+            return max(indices)
+    return 0
+
+
+def compile_actor_pool(server: Path, players: int):
+    if players < 0:
+        raise BenchmarkError(f'Actor count must be non-negative, got {players}')
+
+    target = server / 'world/datapacks/SGP-Datapack/data/sgp.bench/function/actors'
+    target.mkdir(parents=True, exist_ok=True)
+    cleanup_players = max(players, previous_actor_count(server, target))
+
+    spawn = [
+        '#> sgp.bench:actors/spawn',
+        f'# Generated by benchmarks/bench.py for {players} actors.',
+        '',
+    ]
+    cleanup = [
+        '#> sgp.bench:actors/cleanup',
+        f'# Generated by benchmarks/bench.py for {players} actors.',
+        '',
+        'execute as @a[tag=sgp.bench.actor,scores={dah.actbar.UID=1..}] run function sgp.bench:actors/remove_mixer_registration',
+        '',
+    ]
+
+    for index in range(1, players + 1):
+        name = actor_name(index)
+        x, y, z = actor_position(index)
+        spawn += [
+            f'dummy {name} spawn',
+            f'execute if entity @a[name={name}] run tag {name} add sgp.bench.actor',
+            f'execute if entity @a[name={name}] run scoreboard players set {name} sgp.bench {index}',
+            f'execute if entity @a[name={name}] run scoreboard players set {name} sgp.id {index}',
+            f'execute if entity @a[name={name}] run tp {name} {x:g} {y:g} {z:g} 0 0',
+        ]
+
+    for index in range(1, cleanup_players + 1):
+        name = actor_name(index)
+        cleanup.append(f'execute if entity @a[name={name}] run dummy {name} leave')
+
+    spawn += [
+        '',
+        'gamemode survival @a[tag=sgp.bench.actor]',
+        'clear @a[tag=sgp.bench.actor]',
+        'effect clear @a[tag=sgp.bench.actor]',
+        'tag @a[tag=sgp.bench.actor] add sgp.in_game',
+        'execute as @a[tag=sgp.bench.actor] run function sgp.misc:scoreboards/player_initialization',
+    ]
+
+    if cleanup_players:
+        cleanup += ['', '# Clear scoreboard state that survives fake-player disconnects.']
+        cleanup += [f'scoreboard players reset {actor_name(index)}' for index in range(1, cleanup_players + 1)]
+        cleanup += ['', '# Clear benchmark-player rows from persistent production statistics.']
+        for index in range(1, cleanup_players + 1):
+            cleanup += [
+                f'data remove storage sgp.kits:stats players.{index}',
+                f'data remove storage sgp.kits:stats kits_dict.{index}',
+                f'data remove storage sgp.kits:stats elo_ratings.{index}',
+            ]
+
+    (target / 'spawn.mcfunction').write_text('\n'.join(spawn) + '\n', encoding='utf-8')
+    (target / 'cleanup.mcfunction').write_text('\n'.join(cleanup) + '\n', encoding='utf-8')
+    (server / '.sgp-benchmark-actor-count').write_text(f'{players}\n', encoding='utf-8')
+
+    # Minecraft's normal default is 20. Keep at least that value, but grow it
+    # automatically with the resolved benchmark instead of imposing a harness cap.
+    set_server_property(server / 'server.properties', 'max-players', str(max(20, players)))
+
+
 def compile_active_plan(server: Path, plan: list[PlanComponent]):
     target = server / 'world/datapacks/SGP-Datapack/data/sgp.bench/function/generated/active'
     target.mkdir(parents=True, exist_ok=True)
@@ -915,6 +1073,11 @@ def compile_active_plan(server: Path, plan: list[PlanComponent]):
         '# Generated by benchmarks/bench.py for this invocation.',
         '',
     ]
+    measurement_reset = [
+        '#> sgp.bench:generated/active/measurement_reset',
+        '# Generated by benchmarks/bench.py for this invocation.',
+        '',
+    ]
     for component in plan:
         setup_call = plan_function_call(component.setup, component)
         tick_call = plan_function_call(component.tick, component)
@@ -927,13 +1090,39 @@ def compile_active_plan(server: Path, plan: list[PlanComponent]):
         teardown_call = plan_function_call(component.teardown, component)
         if teardown_call:
             teardown.append(teardown_call)
+    for _label, scoreholder in plan_counter_specs(plan).items():
+        measurement_reset.append(f'scoreboard players set {scoreholder} sgp.bench 0')
 
-    for name, lines in (('setup', setup), ('tick', tick), ('teardown', teardown)):
+    for name, lines in (
+        ('setup', setup),
+        ('tick', tick),
+        ('teardown', teardown),
+        ('measurement_reset', measurement_reset),
+    ):
         (target / f'{name}.mcfunction').write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
 
 def plan_total_players(plan: list[PlanComponent]) -> int:
     return sum(component.players for component in plan)
+
+
+def plan_counter_specs(plan: list[PlanComponent]) -> dict[str, str]:
+    counters: dict[str, str] = {}
+    for component in plan:
+        for name, scoreholder in component.counters.items():
+            label = f'{component.scenario}.{name}'
+            previous = counters.get(label)
+            if previous is not None and previous != scoreholder:
+                raise BenchmarkError(f'Counter {label!r} resolves to multiple score holders')
+            counters[label] = scoreholder
+    return dict(sorted(counters.items()))
+
+
+def read_workload_counters(server: ServerProcess, plan: list[PlanComponent]) -> dict[str, int | None]:
+    return {
+        label: server.score(scoreholder)
+        for label, scoreholder in plan_counter_specs(plan).items()
+    }
 
 
 def copy_if_file(source: Path, destination: Path):
@@ -973,6 +1162,9 @@ def write_failure_bundle(result_dir: Path, metadata: dict, phase: str, exc: Exce
         target.mkdir(parents=True, exist_ok=True)
         for source in active.glob('*.mcfunction'):
             shutil.copy2(source, target / source.name)
+    actors = datapack_bench / 'actors'
+    for name in ('spawn.mcfunction', 'cleanup.mcfunction'):
+        copy_if_file(actors / name, diagnostics / 'generated-actors' / name)
 
     lines = [
         '# Benchmark failed',
@@ -1031,7 +1223,7 @@ def run_benchmark(args):
 
     server: ServerProcess | None = None
     profiles: list[ParsedProfile] = []
-    counters: list[dict[str, int | None]] = []
+    counters: list[dict] = []
     phase = 'preparing benchmark server'
     try:
         if not args.reuse_server:
@@ -1039,7 +1231,8 @@ def run_benchmark(args):
         elif not (server_dir / SERVER_MARKER).is_file() or not (server_dir / 'server.jar').is_file():
             raise BenchmarkError(f'--reuse-server was requested but {server_dir} is not prepared')
 
-        phase = 'compiling active scenario plan'
+        phase = 'compiling benchmark runtime'
+        compile_actor_pool(server_dir, total_players)
         compile_active_plan(server_dir, plan)
 
         server = ServerProcess(server_dir, args.java, args.heap)
@@ -1075,15 +1268,27 @@ def run_benchmark(args):
             server.send('perf start')
             profile_path = wait_for_new_profile(server_dir, previous, server, timeout=args.profile_timeout)
             server.send('scoreboard players set #enabled sgp.bench 0')
+
+            # Preserve the raw profile before post-capture validation so a failed
+            # workload still leaves the most useful diagnostic artifact behind.
+            destination = result_dir / f'run-{run_number:02d}.zip'
+            shutil.copy2(profile_path, destination)
+
+            server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
+            server.require_score('#actual_players', total_players)
+            workload = read_workload_counters(server, plan)
+            missing_counters = [name for name, value in workload.items() if value is None]
+            if missing_counters:
+                raise BenchmarkError(
+                    f'Workload counters were not readable after profiling: {", ".join(missing_counters)}'
+                )
             count = {
                 'ticks': server.score('#ticks'),
-                'actions': server.score('#actions'),
+                'workload': workload,
             }
             counters.append(count)
 
             phase = f'run {run_number}/{args.runs} parsing profile'
-            destination = result_dir / f'run-{run_number:02d}.zip'
-            shutil.copy2(profile_path, destination)
             parsed = parse_profile(destination)
             profiles.append(parsed)
             (result_dir / f'run-{run_number:02d}.json').write_text(
@@ -1125,6 +1330,226 @@ def run_benchmark(args):
 
     print(f'\nResults: {result_dir}')
     print(f'Summary: {result_dir / "summary.md"}')
+    return result_dir
+
+
+def load_suite(reference: str) -> tuple[Path, dict]:
+    direct = Path(reference)
+    if direct.is_file():
+        path = direct.resolve()
+    else:
+        path = (BENCHMARKS / 'suites' / f'{reference}.json').resolve()
+    if not path.is_file():
+        raise BenchmarkError(f'Unknown benchmark suite {reference!r}; expected {path}')
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except json.JSONDecodeError as exc:
+        raise BenchmarkError(f'{path}: invalid JSON: {exc}') from exc
+    if not isinstance(data, dict) or not isinstance(data.get('name'), str) or not data['name']:
+        raise BenchmarkError(f'{path}: suite name must be a non-empty string')
+    if not isinstance(data.get('description'), str):
+        raise BenchmarkError(f'{path}: suite description must be a string')
+    if not isinstance(data.get('benchmarks'), list) or not data['benchmarks']:
+        raise BenchmarkError(f'{path}: benchmarks must be a non-empty list')
+    defaults = data.get('defaults', {})
+    if not isinstance(defaults, dict):
+        raise BenchmarkError(f'{path}: defaults must be an object')
+    if 'runs' in defaults and (not isinstance(defaults['runs'], int) or defaults['runs'] < 1):
+        raise BenchmarkError(f'{path}: defaults.runs must be >= 1')
+    if 'warmup' in defaults and (not isinstance(defaults['warmup'], (int, float)) or defaults['warmup'] < 0):
+        raise BenchmarkError(f'{path}: defaults.warmup must be >= 0')
+    return path, data
+
+
+def expand_suite_cases(suite: dict, scenarios: dict[str, dict], runs_override: int | None = None,
+                       warmup_override: float | None = None) -> list[dict]:
+    defaults = suite.get('defaults', {})
+    cases: list[dict] = []
+    for entry_index, entry in enumerate(suite['benchmarks'], 1):
+        if not isinstance(entry, dict) or not isinstance(entry.get('scenario'), str):
+            raise BenchmarkError(f'Suite {suite["name"]}: benchmark {entry_index} must reference a scenario')
+        scenario_name = entry['scenario']
+        if scenario_name not in scenarios:
+            raise BenchmarkError(f'Suite {suite["name"]}: unknown scenario {scenario_name!r}')
+        fixed_players = entry.get('players')
+        if fixed_players is not None and not isinstance(fixed_players, int):
+            raise BenchmarkError(f'Suite {suite["name"]}: {scenario_name}.players must be an integer')
+        fixed_params = entry.get('parameters', {})
+        if not isinstance(fixed_params, dict) or any(
+            not isinstance(name, str) or not isinstance(value, int) for name, value in fixed_params.items()
+        ):
+            raise BenchmarkError(f'Suite {suite["name"]}: {scenario_name}.parameters must contain integers')
+        matrix = entry.get('matrix', {})
+        if not isinstance(matrix, dict):
+            raise BenchmarkError(f'Suite {suite["name"]}: {scenario_name}.matrix must be an object')
+        for name, values in matrix.items():
+            if not isinstance(name, str) or not isinstance(values, list) or not values or any(
+                not isinstance(value, int) for value in values
+            ):
+                raise BenchmarkError(
+                    f'Suite {suite["name"]}: matrix {scenario_name}.{name} must be a non-empty integer list'
+                )
+        if 'players' in matrix and fixed_players is not None:
+            raise BenchmarkError(f'Suite {suite["name"]}: {scenario_name} defines players both fixed and in matrix')
+        overlap = set(fixed_params) & set(matrix)
+        if overlap:
+            raise BenchmarkError(
+                f'Suite {suite["name"]}: {scenario_name} defines {sorted(overlap)} both fixed and in matrix'
+            )
+
+        keys = list(matrix)
+        products = itertools.product(*(matrix[key] for key in keys)) if keys else [()]
+        for values in products:
+            varied = dict(zip(keys, values))
+            players = varied.pop('players', fixed_players)
+            params = {**fixed_params, **varied}
+            raw_params = [f'{name}={value}' for name, value in params.items()]
+            # Reuse normal scenario validation, including composite restrictions and parameter bounds.
+            _selected, resolved_params, plan = resolve_plan(scenarios, scenario_name, players, raw_params)
+            case_runs = runs_override if runs_override is not None else entry.get('runs', defaults.get('runs', 5))
+            case_warmup = (
+                warmup_override if warmup_override is not None
+                else entry.get('warmup', defaults.get('warmup', 5.0))
+            )
+            if not isinstance(case_runs, int) or case_runs < 1:
+                raise BenchmarkError(f'Suite {suite["name"]}: runs must be >= 1 for {scenario_name}')
+            if not isinstance(case_warmup, (int, float)) or case_warmup < 0:
+                raise BenchmarkError(f'Suite {suite["name"]}: warmup must be >= 0 for {scenario_name}')
+            cases.append({
+                'scenario': scenario_name,
+                'players': players,
+                'parameters': params,
+                'resolved_parameters': resolved_params,
+                'total_players': plan_total_players(plan),
+                'runs': case_runs,
+                'warmup': float(case_warmup),
+            })
+    return cases
+
+
+def case_slug(case: dict) -> str:
+    parts = [case['scenario']]
+    if case.get('players') is not None:
+        parts.append(f'p{case["players"]}')
+    for name, value in sorted(case.get('parameters', {}).items()):
+        parts.append(f'{name}-{value}')
+    return re.sub(r'[^a-zA-Z0-9_.-]+', '-', '_'.join(parts)).strip('-') or 'case'
+
+
+def result_summary_metrics(result_dir: Path) -> dict:
+    metadata_path = result_dir / 'metadata.json'
+    if not metadata_path.is_file():
+        return {'status': 'failed'}
+    metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
+    if metadata.get('status') != 'complete':
+        return {'status': metadata.get('status', 'failed')}
+    _metadata, runs = load_result_directory(result_dir)
+    return {
+        'status': 'complete',
+        'tick_median_ms': nested_numeric_median(runs, 'tick_time_ms', 'median'),
+        'tick_p95_ms': nested_numeric_median(runs, 'tick_time_ms', 'p95'),
+        'command_functions_percent': numeric_median(runs, 'command_functions_percent'),
+        'workload_counters': workload_counter_medians(runs),
+    }
+
+
+def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
+    lines = [
+        f'# SGP benchmark suite: `{suite["name"]}`',
+        '',
+        suite['description'],
+        '',
+        '| # | Scenario | Players | Parameters | Runs | Tick median | Tick p95 | commandFunctions | Workload counters | Status | Result |',
+        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | --- | --- | --- |',
+    ]
+    for record in records:
+        metrics = record.get('metrics', {})
+        counters = metrics.get('workload_counters', {})
+        counter_text = ', '.join(f'{name}={value:g}' for name, value in sorted(counters.items())) or '—'
+        params = json.dumps(record['case'].get('parameters', {}), sort_keys=True, separators=(',', ':'))
+        status = metrics.get('status', record.get('status', 'failed'))
+        result_text = '—'
+        if record.get('result_dir'):
+            relative = Path(record['result_dir']).relative_to(suite_dir)
+            result_text = f'`{relative.as_posix()}`'
+        lines.append(
+            f'| {record["index"]} | `{record["case"]["scenario"]}` | {record["case"]["total_players"]} | '
+            f'`{params}` | {record["case"]["runs"]} | {format_number(metrics.get("tick_median_ms"), 3)} ms | '
+            f'{format_number(metrics.get("tick_p95_ms"), 3)} ms | '
+            f'{format_number(metrics.get("command_functions_percent"))}% | {counter_text} | {status} | {result_text} |'
+        )
+    lines.append('')
+    (suite_dir / 'summary.md').write_text('\n'.join(lines), encoding='utf-8')
+
+
+def run_suite(args):
+    suite_path, suite = load_suite(args.suite)
+    scenarios = load_scenarios()
+    cases = expand_suite_cases(suite, scenarios, args.runs, args.warmup)
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H.%M.%S.%f')[:-3]
+    suite_dir = args.results_dir.resolve() / f'{timestamp}_suite-{suite["name"]}'
+    suite_dir.mkdir(parents=True, exist_ok=False)
+    records: list[dict] = []
+    suite_metadata = {
+        'created_at': datetime.now().astimezone().isoformat(),
+        'name': suite['name'],
+        'description': suite['description'],
+        'suite_file': str(suite_path),
+        'source_sha256': source_fingerprint(),
+        'cases': cases,
+    }
+    (suite_dir / 'suite.json').write_text(json.dumps(suite_metadata, indent=2) + '\n', encoding='utf-8')
+
+    failed = 0
+    for index, case in enumerate(cases, 1):
+        print(f'\n=== Suite {suite["name"]}: case {index}/{len(cases)}: {case_slug(case)} ===')
+        case_root = suite_dir / f'{index:02d}_{case_slug(case)}'
+        child = argparse.Namespace(
+            scenario=case['scenario'],
+            players=case['players'],
+            param=[f'{name}={value}' for name, value in case['parameters'].items()],
+            runs=case['runs'],
+            warmup=case['warmup'],
+            java=args.java,
+            heap=args.heap,
+            server_dir=args.server_dir,
+            cache_dir=args.cache_dir,
+            results_dir=case_root,
+            reuse_server=False,
+            startup_timeout=args.startup_timeout,
+            profile_timeout=args.profile_timeout,
+        )
+        result_dir = None
+        error = None
+        try:
+            result_dir = run_benchmark(child)
+        except Exception as exc:
+            failed += 1
+            error = f'{type(exc).__name__}: {exc}'
+            if case_root.is_dir():
+                candidates = sorted(path for path in case_root.iterdir() if path.is_dir())
+                if candidates:
+                    result_dir = candidates[-1]
+        metrics = result_summary_metrics(result_dir) if result_dir is not None else {'status': 'failed'}
+        record = {
+            'index': index,
+            'case': case,
+            'result_dir': str(result_dir) if result_dir is not None else None,
+            'status': metrics.get('status', 'failed'),
+            'metrics': metrics,
+        }
+        if error:
+            record['error'] = error
+        records.append(record)
+        (suite_dir / 'suite-results.json').write_text(json.dumps(records, indent=2) + '\n', encoding='utf-8')
+        write_suite_summary(suite_dir, suite, records)
+
+    print(f'\nSuite results: {suite_dir}')
+    print(f'Suite summary: {suite_dir / "summary.md"}')
+    if failed:
+        raise BenchmarkError(f'{failed}/{len(cases)} suite cases failed; see {suite_dir / "summary.md"}')
+    return suite_dir
+
 
 def parse_archives(args):
     command_index, function_index = build_source_index()
@@ -1182,13 +1607,16 @@ def nested_numeric_median(runs: list[dict], outer: str, inner: str) -> float | N
     return float(median(values)) if values else None
 
 
-def counter_median(runs: list[dict], key: str) -> float | None:
-    values = []
+def workload_counter_medians(runs: list[dict]) -> dict[str, float]:
+    values: dict[str, list[float]] = defaultdict(list)
     for run in runs:
-        value = run.get('harness_counters_after_profile_write', {}).get(key)
-        if isinstance(value, (int, float)):
-            values.append(value)
-    return float(median(values)) if values else None
+        counters = run.get('harness_counters_after_profile_write', {}).get('workload', {})
+        if not isinstance(counters, dict):
+            continue
+        for name, value in counters.items():
+            if isinstance(name, str) and isinstance(value, (int, float)):
+                values[name].append(float(value))
+    return {name: float(median(items)) for name, items in values.items()}
 
 
 def entry_medians(runs: list[dict]) -> dict[str, tuple[float, int, float]]:
@@ -1246,8 +1674,8 @@ def compare_results(args):
     after_tps = numeric_median(after_runs, 'effective_tps')
     before_ticks = numeric_median(before_runs, 'tick_span')
     after_ticks = numeric_median(after_runs, 'tick_span')
-    before_actions = counter_median(before_runs, 'actions')
-    after_actions = counter_median(after_runs, 'actions')
+    before_workload = workload_counter_medians(before_runs)
+    after_workload = workload_counter_medians(after_runs)
 
     lines = [
         '# SGP benchmark comparison',
@@ -1289,10 +1717,16 @@ def compare_results(args):
         f'| Profile ticks | {format_number(before_ticks)} | {format_number(after_ticks)} | '
         f'{relative_change(before_ticks, after_ticks)} |'
     )
-    lines.append(
-        f'| Driver actions | {format_number(before_actions)} | {format_number(after_actions)} | '
-        f'{relative_change(before_actions, after_actions)} |'
-    )
+    if before_workload or after_workload:
+        lines += ['', '## Workload counters', '', '| Counter | Before median | After median | Change |',
+                  '| --- | ---: | ---: | ---: |']
+        for name in sorted(set(before_workload) | set(after_workload)):
+            before_value = before_workload.get(name)
+            after_value = after_workload.get(name)
+            lines.append(
+                f'| `{name}` | {format_number(before_value)} | {format_number(after_value)} | '
+                f'{relative_change(before_value, after_value)} |'
+            )
 
     before_entries = entry_medians(before_runs)
     after_entries = entry_medians(after_runs)
@@ -1333,7 +1767,7 @@ def compare_results(args):
     lines += [
         '',
         '> Treat small percentage changes as noise until they repeat across runs. Also check that profile ticks '
-        'and driver action counts are comparable before attributing a difference to a datapack change.',
+        'and workload counters are comparable before attributing a difference to a datapack change.',
         '',
     ]
     text = '\n'.join(lines)
@@ -1360,11 +1794,12 @@ def list_scenarios(_args):
                 suffix = f' ({", ".join(extras)})' if extras else ''
                 print(f'    - {component["scenario"]}{suffix}')
         else:
-            params = ', '.join(
-                f'{name}={spec["default"]} ({spec["min"]}..{spec["max"]})'
-                for name, spec in scenario['parameters'].items()
-            )
-            print(f'  parameters: {params}')
+            rendered = []
+            for name, spec in scenario['parameters'].items():
+                upper = spec.get('max')
+                range_text = f'{spec["min"]}..{upper}' if upper is not None else f'{spec["min"]}..'
+                rendered.append(f'{name}={parameter_default(name, spec)} ({range_text})')
+            print(f'  parameters: {", ".join(rendered)}')
 
 
 def prepare_command(args):
@@ -1399,6 +1834,19 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument('--profile-timeout', type=float, default=45.0)
     run_parser.set_defaults(func=run_benchmark)
 
+    suite_parser = subparsers.add_parser('suite', help='Run a JSON benchmark suite/matrix')
+    suite_parser.add_argument('suite', help='Suite name under benchmarks/suites/ or a JSON path')
+    suite_parser.add_argument('--runs', type=int, help='Override runs for every suite case')
+    suite_parser.add_argument('--warmup', type=float, help='Override warm-up seconds for every suite case')
+    suite_parser.add_argument('--java', default='java')
+    suite_parser.add_argument('--heap', default=CONFIG['heap'])
+    suite_parser.add_argument('--server-dir', type=Path, default=DEFAULT_SERVER)
+    suite_parser.add_argument('--cache-dir', type=Path, default=DEFAULT_CACHE)
+    suite_parser.add_argument('--results-dir', type=Path, default=DEFAULT_RESULTS)
+    suite_parser.add_argument('--startup-timeout', type=float, default=120.0)
+    suite_parser.add_argument('--profile-timeout', type=float, default=45.0)
+    suite_parser.set_defaults(func=run_suite)
+
     parse_parser = subparsers.add_parser('parse', help='Summarize one or more existing /perf zip files')
     parse_parser.add_argument('archives', nargs='+', type=Path)
     parse_parser.add_argument('--top', type=int, default=20)
@@ -1417,9 +1865,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if getattr(args, 'runs', 1) < 1:
+    runs = getattr(args, 'runs', 1)
+    warmup = getattr(args, 'warmup', 0)
+    if runs is not None and runs < 1:
         parser.error('--runs must be at least 1')
-    if getattr(args, 'warmup', 0) < 0:
+    if warmup is not None and warmup < 0:
         parser.error('--warmup cannot be negative')
     try:
         args.func(args)

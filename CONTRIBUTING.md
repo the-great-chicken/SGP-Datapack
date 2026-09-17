@@ -60,9 +60,7 @@ Do not run tests on the live Minecraft server. The preparation command above val
 
 ### Performance benchmarks
 
-Local datapack performance benchmarks use PackTest fake players and vanilla `/perf`. See [`benchmarks/README.md`](benchmarks/README.md) for the runner, scenario format, JSON workload composition, failure diagnostics, and result comparison workflow. Benchmark-only functions live under `benchmarks/fixtures/data/sgp.bench/` and are overlaid only into the staged benchmark datapack; do not add benchmark hooks to production `data/`.
-
-Add atomic workloads as scenario JSON plus benchmark-only mcfunctions. Combine existing workloads entirely in JSON; do not create one-off Python or mcfunction dispatchers for combinations. Clean up persistent storage that a scenario deliberately mutates.
+Local performance benchmarks live under `benchmarks/`; see [`benchmarks/README.md`](benchmarks/README.md). Keep benchmark-only functions under `benchmarks/fixtures/data/sgp.bench/` and compose existing workloads in JSON instead of adding one-off dispatchers.
 
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.

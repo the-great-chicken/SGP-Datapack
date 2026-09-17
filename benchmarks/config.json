@@ -8,5 +8,6 @@
     "mods/packtest.jar": "https://github.com/the-great-chicken/packtest/releases/download/v2.5.0-tgc.1/packtest-2.5.0-tgc.1.jar",
     "world/datapacks/bookshelf-suite.zip": "https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip",
     "actionbar-mixer.zip": "https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.3.3/Actionbar-Mixer.v1.3.3.zip"
-  }
+  },
+  "default_players": 40
 }

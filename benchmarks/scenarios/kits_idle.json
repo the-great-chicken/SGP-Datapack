@@ -1,0 +1,13 @@
+{
+  "name": "kits_idle",
+  "description": "Initialized players distributed across the twelve combat kits, with no benchmark-generated actions.",
+  "setup": "sgp.bench:scenarios/kits_idle/setup",
+  "tick": "sgp.bench:scenarios/kits_idle/tick",
+  "teardown": "sgp.bench:scenarios/kits_idle/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  }
+}

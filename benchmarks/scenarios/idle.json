@@ -5,6 +5,9 @@
   "tick": "sgp.bench:scenarios/idle/tick",
   "teardown": "sgp.bench:scenarios/idle/teardown",
   "parameters": {
-    "players": {"type": "int", "min": 0, "max": 40, "default": 40}
+    "players": {
+      "type": "int",
+      "min": 0
+    }
   }
 }

@@ -1,0 +1,16 @@
+{
+  "name": "ability_rays",
+  "description": "Roi players keep the Rays ability active continuously, exercising its linked displays and per-tick raycasts.",
+  "setup": "sgp.bench:scenarios/ability_rays/setup",
+  "tick": "sgp.bench:scenarios/ability_rays/tick",
+  "teardown": "sgp.bench:scenarios/ability_rays/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#rays_player_ticks"
+  }
+}

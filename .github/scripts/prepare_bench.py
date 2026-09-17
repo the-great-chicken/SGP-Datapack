@@ -65,10 +65,16 @@ def validate_parameter_specs(scenario):
     for name, spec in params.items():
         if not isinstance(spec, dict) or spec.get('type') != 'int':
             raise ValueError(f'Scenario {scenario["name"]}: only int parameters are supported ({name})')
-        if not all(key in spec for key in ('min', 'max', 'default')):
-            raise ValueError(f'Scenario {scenario["name"]}: incomplete parameter spec for {name}')
-        if not spec['min'] <= spec['default'] <= spec['max']:
-            raise ValueError(f'Scenario {scenario["name"]}: default for {name} is outside its range')
+        if 'min' not in spec:
+            raise ValueError(f'Scenario {scenario["name"]}: parameter {name} is missing min')
+        for key in ('min', 'max', 'default'):
+            if key in spec and not isinstance(spec[key], int):
+                raise ValueError(f'Scenario {scenario["name"]}: parameter {name}.{key} must be an integer')
+        if name != 'players' and 'default' not in spec:
+            raise ValueError(f'Scenario {scenario["name"]}: parameter {name} is missing default')
+        if 'default' in spec:
+            if spec['default'] < spec['min'] or ('max' in spec and spec['default'] > spec['max']):
+                raise ValueError(f'Scenario {scenario["name"]}: default for {name} is outside its range')
 
 
 def validate_scenarios(data: Path, scenarios):

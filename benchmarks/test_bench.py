@@ -89,6 +89,11 @@ class ScenarioTests(unittest.TestCase):
         scenarios = bench.load_scenarios()
         self.assertIn('idle', scenarios)
         self.assertIn('ability_cleave', scenarios)
+        self.assertIn('ability_rays', scenarios)
+        self.assertIn('ability_smoke_grenade', scenarios)
+        self.assertIn('kits_idle', scenarios)
+        self.assertIn('melee', scenarios)
+        self.assertIn('cosmetic_smoke', scenarios)
         self.assertNotIn('mixed', scenarios)
         selected, params, plan = bench.resolve_plan(
             scenarios, 'ability_cleave', players=12, raw_params=['period=30']
@@ -99,8 +104,32 @@ class ScenarioTests(unittest.TestCase):
         self.assertEqual(plan[0].scenario, 'ability_cleave')
         self.assertEqual((plan[0].first, plan[0].last), (1, 12))
         self.assertEqual(plan[0].parameters, {'period': 30})
-        with self.assertRaises(bench.BenchmarkError):
-            bench.resolve_plan(scenarios, 'idle', players=41)
+        _, params, plan = bench.resolve_plan(scenarios, 'idle', players=125)
+        self.assertEqual(params['players'], 125)
+        self.assertEqual(bench.plan_total_players(plan), 125)
+        self.assertEqual((plan[0].first, plan[0].last), (1, 125))
+
+    def test_atomic_entrypoints_and_declared_counters_exist(self):
+        scenarios = bench.load_scenarios()
+        fixture_root = ROOT / 'benchmarks/fixtures/data'
+        for scenario in scenarios.values():
+            if 'components' in scenario:
+                continue
+            fixture_text = []
+            for key in ('setup', 'tick', 'teardown'):
+                namespace, path = scenario[key].split(':', 1)
+                target = fixture_root / namespace / 'function' / f'{path}.mcfunction'
+                self.assertTrue(target.is_file(), f'missing {target}')
+                fixture_text.append(target.read_text(encoding='utf-8'))
+            scenario_dir = fixture_root / 'sgp.bench/function/scenarios' / scenario['name']
+            if scenario_dir.is_dir():
+                fixture_text.extend(
+                    path.read_text(encoding='utf-8')
+                    for path in scenario_dir.glob('*.mcfunction')
+                )
+            combined = '\n'.join(fixture_text)
+            for holder in scenario.get('counters', {}).values():
+                self.assertIn(holder, combined, f'{scenario["name"]} never writes declared counter {holder}')
 
     def test_json_composition_assigns_disjoint_actor_ranges(self):
         scenarios = bench.load_scenarios()
@@ -116,6 +145,22 @@ class ScenarioTests(unittest.TestCase):
             ],
         )
 
+    def test_composition_has_no_framework_player_cap(self):
+        scenarios = bench.load_scenarios()
+        composite = {
+            'name': 'large_composition',
+            'description': 'test',
+            'components': [
+                {'scenario': 'idle', 'players': 60},
+                {'scenario': 'ability_cleave', 'players': 65, 'parameters': {'period': 20}},
+            ],
+        }
+        scenarios = {**scenarios, 'large_composition': composite}
+        bench.validate_scenario_graph(scenarios)
+        _, _, plan = bench.resolve_plan(scenarios, 'large_composition')
+        self.assertEqual(bench.plan_total_players(plan), 125)
+        self.assertEqual((plan[1].first, plan[1].last), (61, 125))
+
     def test_compile_active_plan_uses_component_ranges(self):
         scenarios = bench.load_scenarios()
         _, _, plan = bench.resolve_plan(scenarios, 'idle_cleave')
@@ -126,6 +171,7 @@ class ScenarioTests(unittest.TestCase):
             setup = (active / 'setup.mcfunction').read_text(encoding='utf-8')
             tick = (active / 'tick.mcfunction').read_text(encoding='utf-8')
             teardown = (active / 'teardown.mcfunction').read_text(encoding='utf-8')
+            measurement_reset = (active / 'measurement_reset.mcfunction').read_text(encoding='utf-8')
         self.assertIn('function sgp.bench:scenarios/idle/setup {first:1,last:20,players:20}', setup)
         self.assertIn(
             'function sgp.bench:scenarios/ability_cleave/setup '
@@ -138,6 +184,84 @@ class ScenarioTests(unittest.TestCase):
             tick,
         )
         self.assertTrue(teardown.index('ability_cleave/teardown') < teardown.index('idle/teardown'))
+        self.assertIn('scoreboard players set #cleave_drop_inputs sgp.bench 0', measurement_reset)
+        self.assertIn('scoreboard players set #cleave_waves sgp.bench 0', measurement_reset)
+
+
+    def test_repeated_atomic_scenario_aggregates_same_counter(self):
+        scenarios = bench.load_scenarios()
+        composite = {
+            'name': 'two_cleave_groups',
+            'description': 'test',
+            'components': [
+                {'scenario': 'ability_cleave', 'players': 10, 'parameters': {'period': 10}},
+                {'scenario': 'ability_cleave', 'players': 10, 'parameters': {'period': 20}},
+            ],
+        }
+        scenarios = {**scenarios, 'two_cleave_groups': composite}
+        bench.validate_scenario_graph(scenarios)
+        _, _, plan = bench.resolve_plan(scenarios, 'two_cleave_groups')
+        self.assertEqual(bench.plan_counter_specs(plan), {
+            'ability_cleave.drop_inputs': '#cleave_drop_inputs',
+            'ability_cleave.waves': '#cleave_waves',
+        })
+
+
+    def test_actor_pool_resize_cleans_previous_larger_pool_once(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            server = Path(temporary)
+            actors = server / 'world/datapacks/SGP-Datapack/data/sgp.bench/function/actors'
+            actors.mkdir(parents=True)
+            (server / 'server.properties').write_text('level-name=world\n', encoding='utf-8')
+
+            bench.compile_actor_pool(server, 73)
+            bench.compile_actor_pool(server, 12)
+            cleanup = (actors / 'cleanup.mcfunction').read_text(encoding='utf-8')
+            spawn = (actors / 'spawn.mcfunction').read_text(encoding='utf-8')
+            self.assertIn('Bench73', cleanup)
+            self.assertNotIn('Bench13', spawn)
+            self.assertEqual((server / '.sgp-benchmark-actor-count').read_text().strip(), '12')
+
+            bench.compile_actor_pool(server, 12)
+            cleanup = (actors / 'cleanup.mcfunction').read_text(encoding='utf-8')
+            self.assertNotIn('Bench73', cleanup)
+
+class SuiteTests(unittest.TestCase):
+    def test_basic_scaling_expands_to_eight_cases(self):
+        _path, suite = bench.load_suite('basic_scaling')
+        cases = bench.expand_suite_cases(suite, bench.load_scenarios())
+        self.assertEqual(len(cases), 8)
+        self.assertEqual(
+            [(case['scenario'], case['players']) for case in cases[:4]],
+            [('idle', 1), ('idle', 10), ('idle', 20), ('idle', 40)],
+        )
+        self.assertEqual(
+            [(case['scenario'], case['players'], case['parameters']) for case in cases[4:]],
+            [
+                ('ability_cleave', 1, {'period': 20}),
+                ('ability_cleave', 10, {'period': 20}),
+                ('ability_cleave', 20, {'period': 20}),
+                ('ability_cleave', 40, {'period': 20}),
+            ],
+        )
+        self.assertTrue(all(case['runs'] == 5 for case in cases))
+        self.assertTrue(all(case['warmup'] == 5.0 for case in cases))
+
+    def test_matrix_is_cartesian_product(self):
+        suite = {
+            'name': 'cartesian',
+            'description': 'test',
+            'defaults': {'runs': 2, 'warmup': 1},
+            'benchmarks': [{
+                'scenario': 'ability_cleave',
+                'matrix': {'players': [10, 20], 'period': [10, 20]},
+            }],
+        }
+        cases = bench.expand_suite_cases(suite, bench.load_scenarios())
+        self.assertEqual(
+            [(case['players'], case['parameters']['period']) for case in cases],
+            [(10, 10), (10, 20), (20, 10), (20, 20)],
+        )
 
 
 class StagingTests(unittest.TestCase):
@@ -163,13 +287,20 @@ class StagingTests(unittest.TestCase):
             staged_loot = data / 'sgp.mineurs/loot_table/lootdrop_chest.json'
             self.assertEqual(staged_loot.read_bytes(), production_loot.read_bytes())
 
-            spawn = (data / 'sgp.bench/function/actors/spawn.mcfunction').read_text(encoding='utf-8')
-            cleanup = (data / 'sgp.bench/function/actors/cleanup.mcfunction').read_text(encoding='utf-8')
-            self.assertEqual(spawn.count(' sgp.id '), 40)
+            spawn_path = data / 'sgp.bench/function/actors/spawn.mcfunction'
+            cleanup_path = data / 'sgp.bench/function/actors/cleanup.mcfunction'
+            self.assertIn('Generated into the staged datapack', spawn_path.read_text(encoding='utf-8'))
+            self.assertIn('Generated into the staged datapack', cleanup_path.read_text(encoding='utf-8'))
+
+            bench.compile_actor_pool(server, 73)
+            spawn = spawn_path.read_text(encoding='utf-8')
+            cleanup = cleanup_path.read_text(encoding='utf-8')
+            self.assertEqual(spawn.count(' sgp.id '), 73)
             self.assertIn('scoreboard players set Bench01 sgp.id 1', spawn)
-            self.assertIn('scoreboard players set Bench40 sgp.id 40', spawn)
-            self.assertIn('scoreboard players reset Bench01\n', cleanup)
-            self.assertIn('data remove storage sgp.kits:stats kits_dict.40', cleanup)
+            self.assertIn('scoreboard players set Bench73 sgp.id 73', spawn)
+            self.assertNotIn('Bench74', spawn)
+            self.assertIn('scoreboard players reset Bench73\n', cleanup)
+            self.assertIn('data remove storage sgp.kits:stats kits_dict.73', cleanup)
             self.assertIn('sgp.bench:actors/remove_mixer_registration', cleanup)
             mixer_cleanup = (data / 'sgp.bench/function/actors/remove_mixer_uid.mcfunction').read_text(encoding='utf-8')
             self.assertIn('data remove storage dah:actbar', mixer_cleanup)
@@ -192,10 +323,15 @@ class StagingTests(unittest.TestCase):
             properties = (server / 'server.properties').read_text(encoding='utf-8')
             self.assertIn('level-type=minecraft:flat', properties)
             self.assertIn('spawn-monsters=false', properties)
+            self.assertIn('max-players=73', properties)
 
             placeholder = data / 'sgp.bench/function/generated/active/setup.mcfunction'
             self.assertTrue(placeholder.is_file())
             self.assertIn('#plan_ready', placeholder.read_text(encoding='utf-8'))
+            measurement_placeholder = data / 'sgp.bench/function/generated/active/measurement_reset.mcfunction'
+            self.assertTrue(measurement_placeholder.is_file())
+            measurement_reset = (data / 'sgp.bench/function/measurement_reset.mcfunction').read_text(encoding='utf-8')
+            self.assertIn('function sgp.bench:generated/active/measurement_reset', measurement_reset)
             self.assertFalse((data / 'sgp.bench/function/dispatch.mcfunction').exists())
 
 
@@ -245,7 +381,10 @@ class ComparisonTests(unittest.TestCase):
                 'effective_tps': 20.0,
                 'tick_time_ms': {'median': 4.0, 'p95': 8.0, 'max': 12.0},
                 'command_functions_percent': command_percent,
-                'harness_counters_after_profile_write': {'ticks': 201, 'actions': 0},
+                'harness_counters_after_profile_write': {
+                    'ticks': 201,
+                    'workload': {'ability_cleave.drop_inputs': 400, 'ability_cleave.waves': 10},
+                },
                 'command_function_entries': [{
                     'name': 'function minecraft:execute_repeating_functions',
                     'count': 200,
@@ -273,6 +412,7 @@ class ComparisonTests(unittest.TestCase):
             text = output.getvalue()
         self.assertIn('-2.000 pp (-25.0%)', text)
         self.assertIn('function minecraft:execute_repeating_functions', text)
+        self.assertIn('ability_cleave.drop_inputs', text)
 
 
 if __name__ == '__main__':

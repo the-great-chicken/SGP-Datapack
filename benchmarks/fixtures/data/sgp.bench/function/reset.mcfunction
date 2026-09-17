@@ -8,4 +8,3 @@ function sgp.bench:actors/cleanup
 kill @e[tag=sgp.bench.entity]
 scoreboard players set #players sgp.bench 0
 scoreboard players set #ticks sgp.bench 0
-scoreboard players set #actions sgp.bench 0
