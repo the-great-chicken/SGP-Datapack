@@ -1,6 +1,6 @@
 {
   "name": "all_abilities",
-  "description": "Runs every ability benchmark workload and variant once at 40 players, including the shared cooldown path.",
+  "description": "Runs every ability benchmark workload and variant once at 40 players, including TNT batting and the shared cooldown path.",
   "defaults": {
     "runs": 5,
     "warmup": 5
@@ -32,6 +32,10 @@
     },
     {
       "scenario": "ability_tnt",
+      "players": 40
+    },
+    {
+      "scenario": "ability_tnt_batting",
       "players": 40
     },
     {

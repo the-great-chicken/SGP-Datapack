@@ -73,6 +73,28 @@ Tick span: 200 ticks
         self.assertEqual(profile.entries[0].name, 'function minecraft:execute_repeating_functions')
         self.assertEqual(profile.entries[1].count, 8000)
 
+    def test_profile_wait_preserves_validated_snapshot(self):
+        class AliveProcess:
+            def __init__(self):
+                self.process = self
+
+            def poll(self):
+                return None
+
+        with tempfile.TemporaryDirectory() as temporary:
+            server = Path(temporary)
+            profile_dir = server / 'debug/profiling'
+            profile_dir.mkdir(parents=True)
+            source = self.make_profile(profile_dir)
+            destination = server / 'results/run-01.zip'
+            captured = bench.wait_for_new_profile(
+                server, set(), AliveProcess(), timeout=2.0, destination=destination
+            )
+            self.assertEqual(captured, destination)
+            source.unlink()
+            profile = bench.parse_profile(destination)
+        self.assertEqual(profile.tick_span, 200)
+
     def test_logical_commands_joins_continuations_and_ignores_macros(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / 'x.mcfunction'
@@ -105,6 +127,7 @@ class ScenarioTests(unittest.TestCase):
             'ability_bats_detonating',
             'ability_rays_dense',
             'ability_fangs_rough_terrain',
+            'ability_tnt_batting',
         } <= scenarios.keys())
         self.assertTrue(
             any(
@@ -157,6 +180,15 @@ class ScenarioTests(unittest.TestCase):
 
     def test_json_composition_assigns_disjoint_actor_ranges(self):
         scenarios = bench.load_scenarios()
+        scenarios = {**scenarios, 'idle_cleave': {
+            'name': 'idle_cleave',
+            'description': 'test composition',
+            'components': [
+                {'scenario': 'idle', 'players': 20},
+                {'scenario': 'ability_cleave', 'players': 20, 'parameters': {'period': 20}},
+            ],
+        }}
+        bench.validate_scenario_graph(scenarios)
         selected, params, plan = bench.resolve_plan(scenarios, 'idle_cleave')
         self.assertEqual(selected['name'], 'idle_cleave')
         self.assertEqual(params, {})
@@ -184,7 +216,7 @@ class ScenarioTests(unittest.TestCase):
                 'ability_cleave',
                 'ability_repulsion',
                 'ability_fangs_rough_terrain',
-                'ability_tnt',
+                'ability_tnt_batting',
                 'ability_bigger',
                 'ability_rays_dense',
                 'ability_smoke_grenade',
@@ -214,6 +246,15 @@ class ScenarioTests(unittest.TestCase):
 
     def test_compile_active_plan_uses_component_ranges(self):
         scenarios = bench.load_scenarios()
+        scenarios = {**scenarios, 'idle_cleave': {
+            'name': 'idle_cleave',
+            'description': 'test composition',
+            'components': [
+                {'scenario': 'idle', 'players': 20},
+                {'scenario': 'ability_cleave', 'players': 20, 'parameters': {'period': 20}},
+            ],
+        }}
+        bench.validate_scenario_graph(scenarios)
         _, _, plan = bench.resolve_plan(scenarios, 'idle_cleave')
         with tempfile.TemporaryDirectory() as temporary:
             server = Path(temporary)
@@ -334,12 +375,23 @@ class SuiteTests(unittest.TestCase):
         self.assertTrue(all(case['runs'] == 5 for case in cases))
         self.assertTrue(all(case['warmup'] == 5.0 for case in cases))
 
+    def test_tnt_batting_uses_real_packtest_attack_and_bedrock_arena(self):
+        batting = (
+            ROOT / 'benchmarks/fixtures/data/sgp.bench/function/scenarios/abilities/tnt_batting/bat.mcfunction'
+        ).read_text(encoding='utf-8')
+        setup = (
+            ROOT / 'benchmarks/fixtures/data/sgp.bench/function/fixture/setup.mcfunction'
+        ).read_text(encoding='utf-8')
+        self.assertIn('dummy @s attack @n[tag=sgp.tnt_interaction', batting)
+        self.assertIn('fill -32 80 -32 32 80 32 minecraft:bedrock', setup)
+        self.assertNotIn('fill -32 80 -32 32 80 32 minecraft:stone', setup)
+
     def test_all_abilities_suite_covers_every_atomic_ability(self):
         _path, suite = bench.load_suite('all_abilities')
         scenarios = bench.load_scenarios()
         cases = bench.expand_suite_cases(suite, scenarios)
         expected = {name for name in scenarios if name.startswith('ability_')}
-        self.assertEqual(len(cases), 18)
+        self.assertEqual(len(cases), 19)
         self.assertEqual({case['scenario'] for case in cases}, expected)
         self.assertTrue(all(case['players'] == 40 for case in cases))
 
@@ -422,7 +474,7 @@ class StagingTests(unittest.TestCase):
             properties = (server / 'server.properties').read_text(encoding='utf-8')
             self.assertIn('level-type=minecraft:flat', properties)
             self.assertIn('spawn-monsters=false', properties)
-            self.assertIn('max-players=73', properties)
+            self.assertIn('max-players=74', properties)
 
             placeholder = data / 'sgp.bench/function/generated/active/setup.mcfunction'
             self.assertTrue(placeholder.is_file())

@@ -7,14 +7,14 @@
 
 # Start from a deterministic void-over-floor strip.
 fill ~-1 ~ ~2 ~1 ~9 ~12 minecraft:air
-fill ~-1 ~-1 ~2 ~1 ~-1 ~12 minecraft:stone
+fill ~-1 ~-1 ~2 ~1 ~-1 ~12 minecraft:bedrock
 
 # Three tall landing columns. Their placement is chosen as a max-transition
 # pattern across the two production Fangs lane graphs, forcing 7/8 horizontal
 # transitions to climb or descend by many blocks.
-fill ~ ~ ~3.5 ~ ~6 ~3.5 minecraft:stone
-fill ~ ~ ~7.5 ~ ~6 ~7.5 minecraft:stone
-fill ~ ~ ~10.5 ~ ~5 ~10.5 minecraft:stone
+fill ~ ~ ~3.5 ~ ~6 ~3.5 minecraft:bedrock
+fill ~ ~ ~7.5 ~ ~6 ~7.5 minecraft:bedrock
+fill ~ ~ ~10.5 ~ ~5 ~10.5 minecraft:bedrock
 setblock ~ ~6 ~10.5 minecraft:stone_slab[type=bottom]
 
 # Low bottom-slab landings exercise the dedicated slab placement branch after

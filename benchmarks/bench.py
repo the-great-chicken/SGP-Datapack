@@ -18,6 +18,7 @@ from statistics import fmean, median
 import argparse
 import csv
 import hashlib
+import io
 import importlib.util
 import itertools
 import json
@@ -544,29 +545,50 @@ class ServerProcess:
         self.process = None
 
 
-def wait_for_new_profile(server: Path, previous: set[Path], process: ServerProcess, timeout: float = 45.0) -> Path:
+def wait_for_new_profile(server: Path, previous: set[Path], process: ServerProcess, timeout: float = 45.0,
+                         destination: Path | None = None) -> Path:
     directory = server / 'debug/profiling'
     deadline = time.monotonic() + timeout
     last_size: dict[Path, tuple[int, float]] = {}
     while time.monotonic() < deadline:
-        if process.process is None or process.process.poll() is not None:
-            raise BenchmarkError('Server exited while waiting for /perf output')
         if directory.is_dir():
-            for candidate in sorted(directory.glob('*.zip'), key=lambda path: path.stat().st_mtime):
-                resolved = candidate.resolve()
-                if resolved in previous:
+            candidates = []
+            for candidate in directory.glob('*.zip'):
+                try:
+                    candidates.append((candidate.stat().st_mtime, candidate))
+                except FileNotFoundError:
+                    # Windows can expose the profiler archive while Minecraft is
+                    # still finalizing/renaming it. Retry rather than returning a
+                    # path which may vanish before the caller can preserve it.
                     continue
-                size = candidate.stat().st_size
+            for _mtime, candidate in sorted(candidates):
+                try:
+                    resolved = candidate.resolve()
+                    if resolved in previous:
+                        continue
+                    size = candidate.stat().st_size
+                except FileNotFoundError:
+                    continue
                 old_size, since = last_size.get(resolved, (-1, time.monotonic()))
                 if size != old_size:
                     last_size[resolved] = (size, time.monotonic())
                 elif size > 0 and time.monotonic() - since >= 0.5:
                     try:
-                        with zipfile.ZipFile(candidate) as archive:
+                        # Read and validate one immutable snapshot. This closes the
+                        # race where the source path disappeared after validation
+                        # but before shutil.copy2() on Windows.
+                        data = candidate.read_bytes()
+                        with zipfile.ZipFile(io.BytesIO(data)) as archive:
                             archive.getinfo('server/profiling.txt')
+                        if destination is not None:
+                            destination.parent.mkdir(parents=True, exist_ok=True)
+                            destination.write_bytes(data)
+                            return destination
                         return candidate
-                    except (zipfile.BadZipFile, KeyError):
+                    except (FileNotFoundError, PermissionError, zipfile.BadZipFile, KeyError, OSError):
                         pass
+        if process.process is None or process.process.poll() is not None:
+            raise BenchmarkError('Server exited while waiting for /perf output')
         time.sleep(0.2)
     raise BenchmarkError(f'Timed out waiting for /perf zip in {directory}')
 
@@ -1267,13 +1289,14 @@ def run_benchmark(args):
             previous = {path.resolve() for path in profile_dir.glob('*.zip')} if profile_dir.is_dir() else set()
             print(f'Run {run_number}/{args.runs}: /perf')
             server.send('perf start')
-            profile_path = wait_for_new_profile(server_dir, previous, server, timeout=args.profile_timeout)
-            server.send('scoreboard players set #enabled sgp.bench 0')
-
-            # Preserve the raw profile before post-capture validation so a failed
-            # workload still leaves the most useful diagnostic artifact behind.
+            # Preserve the raw profile as part of the wait itself. Minecraft writes
+            # profiling archives asynchronously and, on Windows, a just-validated
+            # source path can briefly disappear before a separate copy operation.
             destination = result_dir / f'run-{run_number:02d}.zip'
-            shutil.copy2(profile_path, destination)
+            wait_for_new_profile(
+                server_dir, previous, server, timeout=args.profile_timeout, destination=destination
+            )
+            server.send('scoreboard players set #enabled sgp.bench 0')
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#actual_players', total_players)

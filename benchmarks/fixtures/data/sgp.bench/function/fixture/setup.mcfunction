@@ -13,7 +13,7 @@ time set noon
 weather clear
 difficulty normal
 setworldspawn 0 81 0
-fill -32 80 -32 32 80 32 minecraft:stone
+fill -32 80 -32 32 80 32 minecraft:bedrock
 
 kill @e[tag=sgp.bench.fixture,type=marker]
 summon marker 0 80 0 {CustomName:"pvp_arena",Tags:["sgp.marker","sgp.bench.fixture"],data:{radius:64}}

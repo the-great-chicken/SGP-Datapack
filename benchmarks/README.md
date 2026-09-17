@@ -32,13 +32,6 @@ Scenarios live anywhere under `benchmarks/scenarios/`; discovery is recursive, s
 }
 ```
 
-
-## Ability coverage
-
-Every production kit ability has at least one atomic scenario under `benchmarks/scenarios/abilities/`. Expensive state-dependent paths have explicit variants rather than being hidden inside one ambiguous workload: Pecking has far-lock and full-miss cases; Assassinate has armed and triggered cases; Bats has sustained-swarm and detonation cases; Rays has raycast-only and dense-piercing cases; Fangs has flat and reusable rough-terrain cases. Bigger benchmarks repeated start/end lifecycle work, Water Trident fakes only the leave/re-entry state transition, Repulsion resets actors after its real displacement measurement, and `ability_cooldown` isolates the shared cooldown/input path.
-
-`all_abilities` runs all of those ability workloads at 40 players each. `abilities_4_per_kit` remains a 48-player composition with four players on each of the twelve ability-bearing kits and selects the higher-load representative variant where one exists.
-
 ## Suites
 
 Suites in `benchmarks/suites/` expand matrices into benchmark runs. For example:
