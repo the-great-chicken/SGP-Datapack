@@ -43,6 +43,7 @@ DEFAULT_SERVER = ROOT / '.packtest-bench-server'
 DEFAULT_CACHE = ROOT / '.bench-cache'
 DEFAULT_RESULTS = BENCHMARKS / 'results'
 SERVER_MARKER = '.sgp-benchmark-server'
+INVALID_MARKER = '.sgp-benchmark-invalid'
 CONFIG = json.loads((BENCHMARKS / 'config.json').read_text(encoding='utf-8'))
 PROFILE_LINE = re.compile(
     r'^\[(?P<depth>\d+)]\s*(?:\|\s*)*'
@@ -57,6 +58,10 @@ FUNCTION_CALL = re.compile(r'\bfunction\s+([a-z0-9_.-]+:[a-z0-9_./-]+)')
 
 class BenchmarkError(RuntimeError):
     pass
+
+
+class BenchmarkInvalidError(BenchmarkError):
+    """The workload was interrupted or did not execute as requested."""
 
 
 @dataclass(frozen=True)
@@ -429,6 +434,22 @@ class ServerProcess:
         self._condition = threading.Condition()
         self._reader: threading.Thread | None = None
         self._log = None
+        self._health_index = 0
+        self._invalid_line: str | None = None
+
+    def check_health(self):
+        with self._condition:
+            while self._health_index < len(self.lines):
+                line = self.lines[self._health_index]
+                self._health_index += 1
+                if 'Command execution stopped due to limit' in line:
+                    self._invalid_line = self._invalid_line or line
+            if self._invalid_line is not None:
+                raise BenchmarkInvalidError(
+                    f'Minecraft interrupted the workload: {self._invalid_line}\n'
+                    'This invocation is invalid. Start a fresh benchmark with fewer players or an explicit '
+                    '--command-limit; do not reuse the interrupted world.'
+                )
 
     def start(self, timeout: float = 120.0):
         if not (self.server / 'server.jar').is_file():
@@ -474,6 +495,7 @@ class ServerProcess:
         index = start_at
         while True:
             with self._condition:
+                self.check_health()
                 while index < len(self.lines):
                     line = self.lines[index]
                     index += 1
@@ -496,11 +518,14 @@ class ServerProcess:
 
     def sleep_alive(self, seconds: float):
         deadline = time.monotonic() + seconds
+        self.check_health()
         while time.monotonic() < deadline:
+            self.check_health()
             if self.process is None or self.process.poll() is not None:
                 tail = '\n'.join(self.lines[-30:])
                 raise BenchmarkError(f'Minecraft server exited unexpectedly. Last output:\n{tail}')
             time.sleep(min(0.2, deadline - time.monotonic()))
+        self.check_health()
 
     def score(self, player: str, objective: str = 'sgp.bench', timeout: float = 5.0) -> int | None:
         before = len(self.lines)
@@ -508,6 +533,8 @@ class ServerProcess:
         pattern = re.compile(rf'{re.escape(player)} has (-?\d+) \[{re.escape(objective)}\]')
         try:
             line = self.wait_for(lambda item: pattern.search(item) is not None, timeout, start_at=before)
+        except BenchmarkInvalidError:
+            raise
         except BenchmarkError:
             return None
         match = pattern.search(line)
@@ -551,6 +578,7 @@ def wait_for_new_profile(server: Path, previous: set[Path], process: ServerProce
     deadline = time.monotonic() + timeout
     last_size: dict[Path, tuple[int, float]] = {}
     while time.monotonic() < deadline:
+        process.check_health()
         if directory.is_dir():
             candidates = []
             for candidate in directory.glob('*.zip'):
@@ -580,6 +608,7 @@ def wait_for_new_profile(server: Path, previous: set[Path], process: ServerProce
                         data = candidate.read_bytes()
                         with zipfile.ZipFile(io.BytesIO(data)) as archive:
                             archive.getinfo('server/profiling.txt')
+                        process.check_health()
                         if destination is not None:
                             destination.parent.mkdir(parents=True, exist_ok=True)
                             destination.write_bytes(data)
@@ -784,9 +813,87 @@ def format_number(value: float | int | None, digits: int = 2) -> str:
     return f'{value:.{digits}f}'
 
 
+def ray_player_count(plan: list[dict]) -> int:
+    return sum(component['players'] for component in plan
+               if component['scenario'] in {'ability_rays', 'ability_rays_dense'})
+
+
+def validate_ray_workload(run: dict, plan: list[dict]) -> dict:
+    players = ray_player_count(plan)
+    if not players:
+        return {}
+    ticks = run.get('tick_span')
+    if not isinstance(ticks, int) or ticks <= 0:
+        raise BenchmarkInvalidError('Cannot validate rays without a positive profile tick count')
+    entries = run.get('command_function_entries', [])
+    player_ticks = sum(entry['count'] for entry in entries
+                       if entry['name'] == 'execute tag @s remove sgp.radiator')
+    started = sum(entry['count'] for entry in entries
+                  if entry['name'] == 'execute scoreboard players set #ray_dist sgp.dummy 16000')
+    completed = sum(entry['count'] for entry in entries if entry['name'].startswith(
+        'execute execute store result entity @s transformation.left_rotation[3] '))
+    expected_players = players * ticks
+    expected_beams = expected_players * 8
+    if (player_ticks, started, completed) != (expected_players, expected_beams, expected_beams):
+        raise BenchmarkInvalidError(
+            f'Incomplete rays workload over {ticks} ticks: completed caster ticks {player_ticks}/{expected_players}, '
+            f'started beams {started}/{expected_beams}, completed beams {completed}/{expected_beams}. '
+            'Driver exposure counters do not prove that abilities completed.'
+        )
+    return {'ray_player_ticks': player_ticks, 'ray_beam_updates': completed}
+
+
+def require_ray_entities(server: ServerProcess, plan: list[dict], *, after_reset: bool = False):
+    players = ray_player_count(plan)
+    if players:
+        server.send('execute store result score #actual_rays sgp.bench if entity @e[tag=sgp.ray,type=item_display]')
+        expected = 0 if after_reset else players * 8
+        actual = server.score('#actual_rays')
+        if actual != expected:
+            raise BenchmarkInvalidError(f'Invalid rays entity count: expected {expected}, got {actual!r}')
+
+
+def validate_diorama_workload(run: dict, plan: list[dict]) -> dict:
+    players = sum(component['players'] for component in plan if component['scenario'] == 'diorama_giant')
+    if not players:
+        return {}
+    ticks = run.get('tick_span')
+    if not isinstance(ticks, int) or ticks <= 0:
+        raise BenchmarkInvalidError('Cannot validate Diorama without a positive profile tick count')
+    updates = sum(entry['count'] for entry in run.get('command_function_entries', [])
+                  if entry['name'] == 'execute scoreboard players set @s bs.ttl 100')
+    expected = players * ticks
+    if updates != expected:
+        raise BenchmarkInvalidError(
+            f'Incomplete Diorama workload over {ticks} ticks: mannequin updates {updates}/{expected}'
+        )
+    return {'diorama_mannequin_updates': updates}
+
+
+def require_diorama_entities(server: ServerProcess, plan: list[dict], *, after_reset: bool = False):
+    components = [component for component in plan if component['scenario'] == 'diorama_giant']
+    if not components:
+        return
+    expected = 0 if after_reset else sum(component['players'] for component in components)
+    server.send('execute positioned 0 121 0 store result score #actual_mannequins sgp.bench '
+                'if entity @e[tag=sgp.giant_mannequin_99001,distance=..256,type=mannequin]')
+    actual = server.score('#actual_mannequins')
+    if actual != expected:
+        raise BenchmarkInvalidError(f'Invalid Diorama mannequin count: expected {expected}, got {actual!r}')
+    if after_reset:
+        return
+    server.send('scoreboard players set #diorama_valid_owners sgp.bench 0')
+    for component in components:
+        server.send(f'execute as @a[tag=sgp.bench.actor,scores={{sgp.bench={component["first"]}..{component["last"]}}}] '
+                    'run function sgp.bench:scenarios/systems/diorama_giant/verify_owner')
+    owners = server.score('#diorama_valid_owners')
+    if owners != expected:
+        raise BenchmarkInvalidError(f'Invalid Diorama ownership: {owners!r}/{expected} players own exactly one mannequin')
+
+
 def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warmup: float,
                   profiles: list[ParsedProfile], counters: list[dict],
-                  plan: list[PlanComponent] | None = None):
+                  plan: list[PlanComponent] | None = None, command_limit: int = 65536):
     command_index, function_index = build_source_index()
     lines = [
         f'# SGP benchmark: `{scenario["name"]}`',
@@ -797,6 +904,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         f'- Total players: {plan_total_players(plan or [])}',
         f'- Runs: {len(profiles)}',
         f'- Warm-up: {warmup:g}s',
+        f'- Command sequence limit: {command_limit}',
         '- Profiler: vanilla dedicated-server `/perf`',
         '',
     ]
@@ -1217,6 +1325,7 @@ def run_benchmark(args):
     scenarios = load_scenarios()
     scenario, params, plan = resolve_plan(scenarios, args.scenario, args.players, args.param)
     total_players = plan_total_players(plan)
+    plan_data = [component.as_dict() for component in plan]
     server_dir = args.server_dir.resolve()
     cache_dir = args.cache_dir.resolve()
     results_root = args.results_dir.resolve()
@@ -1233,12 +1342,13 @@ def run_benchmark(args):
         'description': scenario['description'],
         'parameters': params,
         'total_players': total_players,
-        'plan': [component.as_dict() for component in plan],
+        'plan': plan_data,
         'runs': args.runs,
         'warmup_seconds': args.warmup,
         'minecraft_version': CONFIG['minecraft_version'],
         'java_expected': CONFIG['java_version'],
         'heap': args.heap,
+        'command_limit': args.command_limit,
         'git_commit': git_commit(),
         'source_sha256': source_fingerprint(),
     }
@@ -1253,6 +1363,8 @@ def run_benchmark(args):
             prepare_server(server_dir, cache_dir)
         elif not (server_dir / SERVER_MARKER).is_file() or not (server_dir / 'server.jar').is_file():
             raise BenchmarkError(f'--reuse-server was requested but {server_dir} is not prepared')
+        elif (server_dir / INVALID_MARKER).exists():
+            raise BenchmarkInvalidError('Refusing to reuse an interrupted benchmark world; omit --reuse-server')
 
         phase = 'compiling benchmark runtime'
         compile_actor_pool(server_dir, total_players)
@@ -1262,6 +1374,11 @@ def run_benchmark(args):
         phase = 'starting Minecraft server'
         print('Starting Minecraft server ...')
         server.start(timeout=args.startup_timeout)
+
+        phase = 'setting benchmark command limit'
+        server.send(f'gamerule minecraft:max_command_sequence_length {args.command_limit}')
+        server.send('execute store result score #command_limit sgp.bench run gamerule minecraft:max_command_sequence_length')
+        server.require_score('#command_limit', args.command_limit)
 
         phase = 'creating benchmark fixture'
         print('Server ready; creating benchmark fixture.')
@@ -1279,9 +1396,13 @@ def run_benchmark(args):
             server.require_score('#actual_players', total_players)
             server.require_score('#plan_ready', 1)
             server.require_score('#enabled', 1)
+            require_ray_entities(server, plan_data)
+            require_diorama_entities(server, plan_data)
 
             phase = f'run {run_number}/{args.runs} warm-up'
             server.sleep_alive(args.warmup)
+            require_ray_entities(server, plan_data)
+            require_diorama_entities(server, plan_data)
 
             phase = f'run {run_number}/{args.runs} profiling'
             server.send('function sgp.bench:measurement_reset')
@@ -1300,6 +1421,8 @@ def run_benchmark(args):
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#actual_players', total_players)
+            require_ray_entities(server, plan_data)
+            require_diorama_entities(server, plan_data)
             workload = read_workload_counters(server, plan)
             missing_counters = [name for name, value in workload.items() if value is None]
             if missing_counters:
@@ -1314,10 +1437,20 @@ def run_benchmark(args):
 
             phase = f'run {run_number}/{args.runs} parsing profile'
             parsed = parse_profile(destination)
-            profiles.append(parsed)
+            run_data = profile_to_dict(parsed, count)
             (result_dir / f'run-{run_number:02d}.json').write_text(
-                json.dumps(profile_to_dict(parsed, count), indent=2) + '\n', encoding='utf-8'
+                json.dumps(run_data, indent=2) + '\n', encoding='utf-8'
             )
+            phase = f'run {run_number}/{args.runs} validating completed workload'
+            validated = validate_ray_workload(run_data, plan_data)
+            validated.update(validate_diorama_workload(run_data, plan_data))
+            if validated:
+                run_data['validated_workload'] = validated
+                (result_dir / f'run-{run_number:02d}.json').write_text(
+                    json.dumps(run_data, indent=2) + '\n', encoding='utf-8'
+                )
+                print(f'Run {run_number}/{args.runs}: verified workload {validated}')
+            profiles.append(parsed)
             print(
                 f'Run {run_number}/{args.runs}: captured {parsed.tick_span or "?"} ticks, '
                 f'tick median={format_number(parsed.tick_median_ms, 3)} ms, '
@@ -1328,11 +1461,20 @@ def run_benchmark(args):
             phase = f'run {run_number}/{args.runs} teardown'
             server.send('function sgp.bench:reset')
             server.sleep_alive(0.5)
+            server.require_score('#plan_ready', 0)
+            server.require_score('#players', 0)
+            require_ray_entities(server, plan_data, after_reset=True)
+            require_diorama_entities(server, plan_data, after_reset=True)
 
         if not profiles:
             raise BenchmarkError('No profiles were captured')
+        phase = 'stopping Minecraft server'
+        server.stop()
+        server.check_health()
+        copy_if_file(server_dir / 'benchmark-console.log', result_dir / 'diagnostics/benchmark-console.log')
         phase = 'writing summary'
-        write_summary(result_dir, scenario, params, args.warmup, profiles, counters, plan=plan)
+        write_summary(result_dir, scenario, params, args.warmup, profiles, counters, plan=plan,
+                      command_limit=args.command_limit)
         mark_success(result_dir, metadata)
     except Exception as exc:
         stop_error = None
@@ -1342,15 +1484,14 @@ def run_benchmark(args):
             except Exception as stop_exc:  # Diagnostics should survive teardown failures too.
                 stop_error = stop_exc
         write_failure_bundle(result_dir, metadata, phase, exc, server_dir, server, plan)
+        if isinstance(exc, BenchmarkInvalidError) and (server_dir / SERVER_MARKER).is_file():
+            (server_dir / INVALID_MARKER).write_text(str(exc) + '\n', encoding='utf-8')
         if stop_error is not None:
             (result_dir / 'diagnostics/server-stop-error.txt').write_text(
                 f'{type(stop_error).__name__}: {stop_error}\n', encoding='utf-8'
             )
         print(f'Failure diagnostics: {result_dir}', file=sys.stderr)
         raise
-    else:
-        if server is not None:
-            server.stop()
 
     print(f'\nResults: {result_dir}')
     print(f'Summary: {result_dir / "summary.md"}')
@@ -1521,6 +1662,7 @@ def run_suite(args):
         'description': suite['description'],
         'suite_file': str(suite_path),
         'source_sha256': source_fingerprint(),
+        'command_limit': args.command_limit,
         'cases': cases,
     }
     (suite_dir / 'suite.json').write_text(json.dumps(suite_metadata, indent=2) + '\n', encoding='utf-8')
@@ -1537,6 +1679,7 @@ def run_suite(args):
             warmup=case['warmup'],
             java=args.java,
             heap=args.heap,
+            command_limit=args.command_limit,
             server_dir=args.server_dir,
             cache_dir=args.cache_dir,
             results_dir=case_root,
@@ -1679,11 +1822,19 @@ def relative_change(before: float | None, after: float | None) -> str:
 def compare_results(args):
     before_meta, before_runs = load_result_directory(args.before)
     after_meta, after_runs = load_result_directory(args.after)
-    before_identity = (before_meta.get('scenario'), before_meta.get('parameters'), before_meta.get('plan'))
-    after_identity = (after_meta.get('scenario'), after_meta.get('parameters'), after_meta.get('plan'))
+    for path, metadata, runs in ((args.before, before_meta, before_runs), (args.after, after_meta, after_runs)):
+        if metadata.get('status') != 'complete':
+            raise BenchmarkInvalidError(f'{path}: only complete benchmark invocations can be compared')
+        if len(runs) != metadata['runs']:
+            raise BenchmarkInvalidError(f'{path}: incomplete set of benchmark runs')
+        for run in runs:
+            validate_ray_workload(run, metadata['plan'])
+            validate_diorama_workload(run, metadata['plan'])
+    before_identity = (before_meta.get('scenario'), before_meta.get('parameters'), before_meta.get('plan'), before_meta.get('command_limit'))
+    after_identity = (after_meta.get('scenario'), after_meta.get('parameters'), after_meta.get('plan'), after_meta.get('command_limit'))
     if before_identity != after_identity and not args.allow_mismatch:
         raise BenchmarkError(
-            'Benchmark scenario/parameters do not match. Use --allow-mismatch only when that is intentional.\n'
+            'Benchmark scenario/parameters/command limits do not match. Use --allow-mismatch only when that is intentional.\n'
             f'Before: {before_identity}\nAfter:  {after_identity}'
         )
 
@@ -1711,6 +1862,7 @@ def compare_results(args):
         f'- Parameters before: `{json.dumps(before_meta.get("parameters"), sort_keys=True)}`',
         f'- Parameters after: `{json.dumps(after_meta.get("parameters"), sort_keys=True)}`',
         f'- Runs before/after: {len(before_runs)} / {len(after_runs)}',
+        f'- Command sequence limit before/after: {before_meta.get("command_limit")} / {after_meta.get("command_limit")}',
         '',
         '## Aggregate',
         '',
@@ -1758,6 +1910,8 @@ def compare_results(args):
     command_index, function_index = build_source_index()
     changes = []
     for name in set(before_entries) | set(after_entries):
+        if name in {'unspecified', 'minecraft:tick'}:
+            continue
         b_value, b_seen, b_count = before_entries.get(name, (0.0, 0, 0.0))
         a_value, a_seen, a_count = after_entries.get(name, (0.0, 0, 0.0))
         changes.append((abs(a_value - b_value), a_value - b_value, name, b_value, a_value,
@@ -1831,6 +1985,13 @@ def prepare_command(args):
     prepare_server(args.server_dir.resolve(), args.cache_dir.resolve())
 
 
+def command_limit_argument(value: str) -> int:
+    value = int(value)
+    if not 1 <= value <= 2147483647:
+        raise argparse.ArgumentTypeError('command limit must be between 1 and 2147483647')
+    return value
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest='command', required=True)
@@ -1851,6 +2012,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument('--warmup', type=float, default=5.0, help='Seconds of active workload before each /perf capture')
     run_parser.add_argument('--java', default='java')
     run_parser.add_argument('--heap', default=CONFIG['heap'])
+    run_parser.add_argument('--command-limit', type=command_limit_argument, default=65536,
+                            help='Explicit benchmark-world command sequence limit (default: 65536)')
     run_parser.add_argument('--server-dir', type=Path, default=DEFAULT_SERVER)
     run_parser.add_argument('--cache-dir', type=Path, default=DEFAULT_CACHE)
     run_parser.add_argument('--results-dir', type=Path, default=DEFAULT_RESULTS)
@@ -1865,6 +2028,8 @@ def build_parser() -> argparse.ArgumentParser:
     suite_parser.add_argument('--warmup', type=float, help='Override warm-up seconds for every suite case')
     suite_parser.add_argument('--java', default='java')
     suite_parser.add_argument('--heap', default=CONFIG['heap'])
+    suite_parser.add_argument('--command-limit', type=command_limit_argument, default=65536,
+                              help='Command sequence limit applied equally to all suite cases')
     suite_parser.add_argument('--server-dir', type=Path, default=DEFAULT_SERVER)
     suite_parser.add_argument('--cache-dir', type=Path, default=DEFAULT_CACHE)
     suite_parser.add_argument('--results-dir', type=Path, default=DEFAULT_RESULTS)

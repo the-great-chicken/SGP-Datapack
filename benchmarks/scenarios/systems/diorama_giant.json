@@ -1,6 +1,6 @@
 {
   "name": "diorama_giant",
-  "description": "Players stand in the Diorama model's outer shell so production code maintains one giant mannequin per player. Optional synthetic spawn buttons exercise the per-button hover scan against every nearby player.",
+  "description": "Players stand around the Diorama model's outer shell, facing away, with one giant mannequin per player. Optional spawn buttons exercise hover rejection when nobody is looking at the model.",
   "setup": "sgp.bench:scenarios/systems/diorama_giant/setup",
   "tick": "sgp.bench:scenarios/systems/diorama_giant/tick",
   "teardown": "sgp.bench:scenarios/systems/diorama_giant/teardown",

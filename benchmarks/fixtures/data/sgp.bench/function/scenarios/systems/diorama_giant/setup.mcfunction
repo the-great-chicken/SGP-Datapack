@@ -4,10 +4,8 @@
 # Build one complete synthetic Diorama through the production initialization
 # path. The playable map is 64x16x64 at (16,160,16); its 4x1x4 miniature is at
 # (0,121,0). Keeping both volumes above the normal benchmark arena isolates this
-# scenario from actors belonging to other composed workloads. Actors stand in the
-# model's outer shell at (-2.5,121,-2.5), which is outside the model but inside the production 4-block shell used for giant
-# mannequin ownership. A no-collision team prevents stacked fake players from
-# drifting out of the shell during long profiles.
+# scenario from actors belonging to other composed workloads. Actors are spread
+# around the model's outer shell; their giants' destinations stay loaded.
 
 scoreboard players set #diorama_enabled sgp.dummy 0
 scoreboard players set #mannequins_swing_enabled sgp.dummy 0
@@ -31,6 +29,7 @@ data remove storage sgp:data misc.diorama.spawn_interactions.id_99001
 $function sgp.bench:scenarios/systems/diorama_giant/seed_buttons {buttons:$(buttons)}
 
 fill -4 120 -4 8 120 8 minecraft:bedrock
+forceload add -64 -64 144 144
 summon marker 16 160 16 {Tags:["sgp.marker","sgp.bench.diorama"],CustomName:"playable_map",data:{id:99001,dx:64,dy:16,dz:64}}
 summon marker 0 121 0 {Tags:["sgp.marker","sgp.bench.diorama"],CustomName:"playable_map_model",data:{id:99001}}
 function sgp.diorama:init/markers
@@ -45,7 +44,10 @@ team remove sgpbenchdio
 team add sgpbenchdio
 team modify sgpbenchdio collisionRule never
 $team join sgpbenchdio @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}]
-$tp @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] -2.5 121 -2.5 180 0
+scoreboard players set #diorama_perimeter sgp.bench 40000
+scoreboard players set #diorama_edge sgp.bench 10000
+$scoreboard players set #diorama_players sgp.bench $(players)
+$execute as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] run function sgp.bench:scenarios/systems/diorama_giant/position {first:$(first)}
 $item replace entity @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] weapon.mainhand with diamond_sword[enchantments={sharpness:3},custom_data={sgp_bench_diorama:1b}]
 $item replace entity @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] weapon.offhand with shield[custom_data={sgp_bench_diorama:1b}]
 

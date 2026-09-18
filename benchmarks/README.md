@@ -15,6 +15,8 @@ python benchmarks/bench.py suite all_abilities
 
 Results are written under `benchmarks/results/`. Failed runs keep diagnostics there as well.
 
+Command-limit interruptions invalidate the invocation. For high-load measurements, explicitly set `--command-limit 1000000` on both comparison runs; the default remains 65536. Restart failed runs without `--reuse-server`.
+
 ## Compose scenarios
 
 Scenarios live anywhere under `benchmarks/scenarios/`; discovery is recursive, so group larger families in subfolders such as `benchmarks/scenarios/abilities/` and `benchmarks/scenarios/combinations/`. Scenario names remain global and must be unique. Compose scenarios by referencing those names in JSON:

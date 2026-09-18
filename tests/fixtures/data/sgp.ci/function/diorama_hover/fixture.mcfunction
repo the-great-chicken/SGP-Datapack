@@ -6,9 +6,9 @@ fill ~ ~ ~ ~10 ~ ~10 stone
 gamemode survival @s
 tp @s ~3.5 ~1 ~1.5 0 0
 tag @s add sgp.around_current_model
-summon marker ~1 ~1 ~1 {Tags:["sgp.ci.hover"],data:{id:93001}}
-summon interaction ~3.5 ~1 ~5.5 {Tags:["sgp.ci.hover","sgp.ci.hover_first"],width:1f,height:3f}
-summon interaction ~8.5 ~1 ~5.5 {Tags:["sgp.ci.hover","sgp.ci.hover_second"],width:1f,height:3f}
+summon marker ~1 ~1 ~1 {Tags:["sgp.ci.hover"],data:{id:93001,mdx:8,mdy:3,mdz:8}}
+summon interaction ~3.5 ~1 ~5.5 {Tags:["sgp.ci.hover","sgp.ci.hover_first","sgp.spawn_tper","sgp.spawn_tper_93001"],width:1f,height:3f}
+summon interaction ~8.5 ~1 ~5.5 {Tags:["sgp.ci.hover","sgp.ci.hover_second","sgp.spawn_tper","sgp.spawn_tper_93001"],width:1f,height:3f}
 scoreboard players set @e[tag=sgp.ci.hover_first,distance=..16,type=interaction] bs.id 93011
 scoreboard players set @e[tag=sgp.ci.hover_second,distance=..16,type=interaction] bs.id 93012
 scoreboard players set @e[tag=sgp.ci.hover,distance=..16,type=interaction] sgp.hover_time 0

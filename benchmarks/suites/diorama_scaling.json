@@ -1,6 +1,6 @@
 {
   "name": "diorama_scaling",
-  "description": "Scale giant-mannequin Diorama updates, and the same Diorama with a 16-button worst-case hover scan.",
+  "description": "Scale giant-mannequin Diorama updates, with and without 16 spawn buttons while players look away.",
   "defaults": {
     "runs": 5,
     "warmup": 5

@@ -6,4 +6,5 @@ data remove storage sgp:data misc.diorama
 
 scoreboard objectives remove sgp.anim_timer
 scoreboard objectives remove sgp.hover_time
+scoreboard objectives remove sgp.last_pose
 scoreboard objectives remove sgp.diorama_leave_seen

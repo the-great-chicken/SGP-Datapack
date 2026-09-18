@@ -8,6 +8,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 import bench
@@ -80,6 +81,9 @@ Tick span: 200 ticks
 
             def poll(self):
                 return None
+
+            def check_health(self):
+                pass
 
         with tempfile.TemporaryDirectory() as temporary:
             server = Path(temporary)
@@ -369,7 +373,7 @@ class ScenarioTests(unittest.TestCase):
         self.assertIn('scoreboard players set #diorama_enabled sgp.dummy 1', setup)
         self.assertIn('function sgp.diorama:tick/main', setup)
         self.assertIn('team modify sgpbenchdio collisionRule never', setup)
-        self.assertIn('-2.5 121 -2.5 180 0', setup)
+        self.assertIn('function sgp.bench:scenarios/systems/diorama_giant/position', setup)
         self.assertIn('summon marker 16 160 16', setup)
         self.assertIn('summon marker 0 121 0', setup)
         self.assertEqual(seed.count('.list append value'), 16)
@@ -434,18 +438,15 @@ class SuiteTests(unittest.TestCase):
     def test_diorama_scaling_separates_mannequin_and_hover_costs(self):
         _path, suite = bench.load_suite('diorama_scaling')
         cases = bench.expand_suite_cases(suite, bench.load_scenarios())
-        self.assertEqual(len(cases), 12)
+        self.assertEqual(len(cases), 8)
+        self.assertTrue(all(case['scenario'] == 'diorama_giant' for case in cases))
         self.assertEqual(
-            [(case['scenario'], case['players']) for case in cases[:4]],
-            [('idle', 1), ('idle', 10), ('idle', 20), ('idle', 40)],
+            [(case['players'], case['parameters']) for case in cases[:4]],
+            [(1, {'buttons': 0}), (8, {'buttons': 0}), (20, {'buttons': 0}), (50, {'buttons': 0})],
         )
         self.assertEqual(
-            [(case['players'], case['parameters']) for case in cases[4:8]],
-            [(1, {'buttons': 0}), (10, {'buttons': 0}), (20, {'buttons': 0}), (40, {'buttons': 0})],
-        )
-        self.assertEqual(
-            [(case['players'], case['parameters']) for case in cases[8:]],
-            [(1, {'buttons': 16}), (10, {'buttons': 16}), (20, {'buttons': 16}), (40, {'buttons': 16})],
+            [(case['players'], case['parameters']) for case in cases[4:]],
+            [(1, {'buttons': 16}), (8, {'buttons': 16}), (20, {'buttons': 16}), (50, {'buttons': 16})],
         )
 
     def test_matrix_is_cartesian_product(self):
@@ -578,6 +579,10 @@ class ComparisonTests(unittest.TestCase):
         (path / 'metadata.json').write_text(json.dumps({
             'scenario': 'idle',
             'parameters': {'players': 40},
+            'status': 'complete',
+            'runs': 3,
+            'plan': [],
+            'command_limit': 65536,
         }), encoding='utf-8')
         for i in range(1, 4):
             (path / f'run-{i:02d}.json').write_text(json.dumps({
@@ -617,6 +622,211 @@ class ComparisonTests(unittest.TestCase):
         self.assertIn('-2.000 pp (-25.0%)', text)
         self.assertIn('function minecraft:execute_repeating_functions', text)
         self.assertIn('ability_cleave.drop_inputs', text)
+
+
+class WorkloadIntegrityTests(unittest.TestCase):
+    limit_line = '[Server thread/INFO]: Command execution stopped due to limit (executed 65536 commands)'
+
+    def server(self):
+        return bench.ServerProcess(Path('unused'), 'unused-java', '2G')
+
+    def test_limit_failure_is_sticky_and_precedes_successful_response(self):
+        server = self.server()
+        server.lines.extend([self.limit_line, 'Done (1.0s)! For help, type help'])
+        for _ in range(2):
+            with self.assertRaisesRegex(bench.BenchmarkInvalidError, '65536'):
+                server.wait_for(lambda line: 'Done (' in line, 0, start_at=1)
+
+    def test_limit_arriving_after_an_earlier_health_check_is_detected(self):
+        server = self.server()
+        server.lines.append('normal output')
+        server.check_health()
+        server.lines.append(self.limit_line)
+        with self.assertRaises(bench.BenchmarkInvalidError):
+            server.sleep_alive(0)
+
+    def test_score_does_not_swallow_command_limit_failure(self):
+        server = self.server()
+        def respond(command):
+            server.lines.extend([self.limit_line, '#players has 40 [sgp.bench]'])
+        with patch.object(server, 'send', side_effect=respond):
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                server.score('#players')
+
+    def test_profile_wait_aborts_before_accepting_an_archive(self):
+        server = self.server()
+        server.lines.append(self.limit_line)
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                bench.wait_for_new_profile(Path(temporary), set(), server, timeout=1)
+
+    def ray_run(self, players=40, ticks=200):
+        return {
+            'tick_span': ticks,
+            'harness_counters_after_profile_write': {'workload': {'ability_rays.active_player_ticks': players*ticks}},
+            'command_function_entries': [
+                {'name': 'execute tag @s remove sgp.radiator', 'count': players*ticks},
+                {'name': 'execute scoreboard players set #ray_dist sgp.dummy 16000', 'count': players*ticks*8},
+                {'name': 'execute execute store result entity @s transformation.left_rotation[3] float 0.01 run scoreboard players remove @s sgp.timer 2', 'count': players*ticks*8},
+            ],
+        }
+
+    def test_complete_rays_profile_validates_all_composed_ray_players(self):
+        plan = [{'scenario': 'ability_rays', 'players': 25}, {'scenario': 'ability_rays_dense', 'players': 15},
+                {'scenario': 'idle', 'players': 10}]
+        self.assertEqual(bench.validate_ray_workload(self.ray_run(), plan),
+                         {'ray_player_ticks': 8000, 'ray_beam_updates': 64000})
+
+    def test_exposure_does_not_mask_missing_or_excess_completed_work(self):
+        plan = [{'scenario': 'ability_rays', 'players': 40}]
+        for entry_index, count in [(0, 2400), (1, 20600), (2, 20400), (2, 64001)]:
+            with self.subTest(entry_index=entry_index, count=count):
+                run = self.ray_run()
+                run['command_function_entries'][entry_index]['count'] = count
+                with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Incomplete rays workload'):
+                    bench.validate_ray_workload(run, plan)
+
+    def test_missing_ray_entries_or_tick_span_cannot_validate(self):
+        plan = [{'scenario': 'ability_rays', 'players': 40}]
+        for run in [{'tick_span': 200, 'command_function_entries': []}, self.ray_run(ticks=0)]:
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                bench.validate_ray_workload(run, plan)
+        self.assertEqual(bench.validate_ray_workload({}, [{'scenario': 'idle', 'players': 40}]), {})
+
+    def test_command_limit_is_explicit_for_runs_and_suites(self):
+        parser = bench.build_parser()
+        self.assertEqual(parser.parse_args(['run', 'ability_rays']).command_limit, 65536)
+        self.assertEqual(parser.parse_args(['run', 'ability_rays', '--command-limit', '1000000']).command_limit, 1000000)
+        self.assertEqual(parser.parse_args(['suite', 'all_abilities', '--command-limit', '1000000']).command_limit, 1000000)
+        for value in ['0', '-1', '2147483648']:
+            with self.assertRaises(bench.argparse.ArgumentTypeError):
+                bench.command_limit_argument(value)
+
+    def test_ray_entity_checks_reject_missing_beams_and_leftovers_after_reset(self):
+        server = self.server()
+        plan = [{'scenario': 'ability_rays', 'players': 40}]
+        with patch.object(server, 'send'), patch.object(server, 'score', return_value=320):
+            bench.require_ray_entities(server, plan)
+        with patch.object(server, 'send'), patch.object(server, 'score', return_value=0):
+            bench.require_ray_entities(server, plan, after_reset=True)
+        for actual, after_reset in [(104, False), (321, False), (1, True), (None, False)]:
+            with self.subTest(actual=actual, after_reset=after_reset), \
+                 patch.object(server, 'send'), patch.object(server, 'score', return_value=actual):
+                with self.assertRaises(bench.BenchmarkInvalidError):
+                    bench.require_ray_entities(server, plan, after_reset=after_reset)
+
+    def test_diorama_profile_requires_one_update_per_player_per_tick(self):
+        plan = [{'scenario': 'diorama_giant', 'players': 50}, {'scenario': 'idle', 'players': 10}]
+        run = {'tick_span': 201, 'command_function_entries': [
+            {'name': 'execute scoreboard players set @s bs.ttl 100', 'count': 10050},
+        ]}
+        self.assertEqual(bench.validate_diorama_workload(run, plan), {'diorama_mannequin_updates': 10050})
+        for count in [201, 0, 10049, 10051]:
+            run['command_function_entries'][0]['count'] = count
+            with self.subTest(count=count), self.assertRaises(bench.BenchmarkInvalidError):
+                bench.validate_diorama_workload(run, plan)
+        for run in [{'tick_span': 201}, {'tick_span': 0}, {}]:
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                bench.validate_diorama_workload(run, plan)
+        self.assertEqual(bench.validate_diorama_workload({}, [{'scenario': 'idle', 'players': 50}]), {})
+
+    def test_diorama_entity_checks_require_distinct_owners_and_complete_cleanup(self):
+        server = self.server()
+        plan = [{'scenario': 'diorama_giant', 'players': 50, 'first': 11, 'last': 60}]
+        with patch.object(server, 'send') as send, patch.object(server, 'score', side_effect=[50, 50]):
+            bench.require_diorama_entities(server, plan)
+            self.assertIn('sgp.bench=11..60', send.call_args_list[-1].args[0])
+        for values in [[1], [51], [None], [50, 1], [50, None]]:
+            with self.subTest(values=values), patch.object(server, 'send'), \
+                 patch.object(server, 'score', side_effect=values):
+                with self.assertRaises(bench.BenchmarkInvalidError):
+                    bench.require_diorama_entities(server, plan)
+        with patch.object(server, 'send'), patch.object(server, 'score', return_value=0):
+            bench.require_diorama_entities(server, plan, after_reset=True)
+        with patch.object(server, 'send'), patch.object(server, 'score', return_value=1):
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                bench.require_diorama_entities(server, plan, after_reset=True)
+
+    def test_comparison_rejects_reduced_diorama_workload_even_with_allow_mismatch(self):
+        helper = ComparisonTests()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            before, after = root/'before', root/'after'
+            helper.write_result(before, 8.0, 5.0)
+            helper.write_result(after, 6.0, 3.0)
+            path = after/'metadata.json'
+            metadata = json.loads(path.read_text())
+            metadata['plan'] = [{'scenario': 'diorama_giant', 'players': 50}]
+            path.write_text(json.dumps(metadata))
+            args = bench.build_parser().parse_args(['compare', str(before), str(after), '--allow-mismatch'])
+            with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Incomplete Diorama workload'):
+                bench.compare_results(args)
+
+    def test_interrupted_invocation_stops_and_preserves_failure_instead_of_continuing(self):
+        commands = []
+        limit_line = self.limit_line
+        class InterruptedServer(bench.ServerProcess):
+            def start(self, timeout):
+                pass
+
+            def send(self, command):
+                commands.append(command)
+                if command == 'function sgp.bench:start':
+                    self.lines.append(limit_line)
+
+            def require_score(self, player, expected, objective='sgp.bench'):
+                self.check_health()
+                return expected
+
+            def stop(self, force=False):
+                commands.append('stop')
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            args = bench.build_parser().parse_args([
+                'run', 'ability_rays', '--players', '40', '--runs', '5', '--command-limit', '1000000',
+                '--server-dir', str(root/'server'), '--results-dir', str(root/'results'),
+            ])
+            def prepare(server, cache):
+                server.mkdir()
+                (server/bench.SERVER_MARKER).write_text('benchmark')
+                (server/'server.jar').write_bytes(b'not launched')
+            with patch.object(bench, 'prepare_server', side_effect=prepare), \
+                 patch.object(bench, 'ServerProcess', InterruptedServer), \
+                 patch.object(bench, 'git_commit', return_value=None), \
+                 patch.object(bench, 'source_fingerprint', return_value='test-source'), \
+                 redirect_stdout(StringIO()):
+                with self.assertRaises(bench.BenchmarkInvalidError):
+                    bench.run_benchmark(args)
+            result = next((root/'results').iterdir())
+            metadata = json.loads((result/'metadata.json').read_text())
+            self.assertEqual(metadata['status'], 'failed')
+            self.assertEqual(metadata['command_limit'], 1000000)
+            self.assertTrue((result/'failure.json').is_file())
+            self.assertFalse((result/'summary.md').exists())
+            self.assertTrue((root/'server'/bench.INVALID_MARKER).is_file())
+            self.assertEqual(commands.count('function sgp.bench:start'), 1)
+            self.assertNotIn('perf start', commands)
+            self.assertEqual(commands[-1], 'stop')
+
+    def test_comparison_rejects_failed_incomplete_or_mismatched_results(self):
+        helper = ComparisonTests()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            before, after = root/'before', root/'after'
+            helper.write_result(before, 8.0, 5.0)
+            helper.write_result(after, 6.0, 3.0)
+            args = bench.build_parser().parse_args(['compare', str(before), str(after)])
+            path = after/'metadata.json'
+            original = json.loads(path.read_text())
+            for change in [{'status': 'failed'}, {'runs': 4}, {'command_limit': 1000000}]:
+                path.write_text(json.dumps({**original, **change}))
+                with self.assertRaises(bench.BenchmarkError):
+                    bench.compare_results(args)
+            path.write_text(json.dumps({**original, 'plan': [{'scenario': 'ability_rays', 'players': 40}]}))
+            args.allow_mismatch = True
+            with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Incomplete rays workload'):
+                bench.compare_results(args)
 
 
 if __name__ == '__main__':

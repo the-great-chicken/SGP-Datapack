@@ -12,6 +12,9 @@ function #bs.position:set_pos_and_rot {scale:0.001}
 # Reset the mannequins' timeout, bypassing bs' API for performance
 scoreboard players set @s bs.ttl 100
 
+execute if score @s sgp.last_pose = $pose sgp.dummy run return 0
+scoreboard players operation @s sgp.last_pose = $pose sgp.dummy
+
 execute if score $pose sgp.dummy matches 1 run return run data modify entity @s pose set value "crouching"
 execute if score $pose sgp.dummy matches 2 run return run data modify entity @s pose set value "swimming"
 execute if score $pose sgp.dummy matches 3 run return run data modify entity @s pose set value "fall_flying"
