@@ -11,8 +11,6 @@ python benchmarks/bench.py list
 python benchmarks/bench.py run idle --players 40 --runs 5
 python benchmarks/bench.py run ability_cleave --players 40 --param period=20 --runs 5
 python benchmarks/bench.py suite all_abilities
-python benchmarks/bench.py run abilities_4_per_kit --runs 5
-python benchmarks/bench.py suite basic_scaling
 ```
 
 Results are written under `benchmarks/results/`. Failed runs keep diagnostics there as well.

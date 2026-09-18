@@ -140,6 +140,7 @@ class ScenarioTests(unittest.TestCase):
         self.assertIn('kits_idle', scenarios)
         self.assertIn('melee', scenarios)
         self.assertIn('cosmetic_smoke', scenarios)
+        self.assertIn('diorama_giant', scenarios)
         self.assertNotIn('mixed', scenarios)
         selected, params, plan = bench.resolve_plan(
             scenarios, 'ability_cleave', players=12, raw_params=['period=30']
@@ -154,6 +155,16 @@ class ScenarioTests(unittest.TestCase):
         self.assertEqual(params['players'], 125)
         self.assertEqual(bench.plan_total_players(plan), 125)
         self.assertEqual((plan[0].first, plan[0].last), (1, 125))
+
+    def test_benchmark_macro_commands_are_prefixed(self):
+        fixture_root = ROOT / 'benchmarks/fixtures/data/sgp.bench/function'
+        failures = []
+        for path in fixture_root.rglob('*.mcfunction'):
+            for line_number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+                stripped = line.lstrip()
+                if '$(' in line and stripped and not stripped.startswith('#') and not line.startswith('$'):
+                    failures.append(f'{path.relative_to(ROOT)}:{line_number}: {line}')
+        self.assertEqual(failures, [], 'benchmark macro commands need a leading $')
 
     def test_atomic_entrypoints_and_declared_counters_exist(self):
         scenarios = bench.load_scenarios()
@@ -341,6 +352,31 @@ class ScenarioTests(unittest.TestCase):
         self.assertGreaterEqual(rough.count('fill '), 5)
         self.assertIn('stone_slab[type=bottom]', rough)
 
+    def test_diorama_giant_benchmark_uses_production_tick_and_hover_cache(self):
+        scenarios = bench.load_scenarios()
+        scenario = scenarios['diorama_giant']
+        self.assertEqual(scenario['parameters']['buttons']['default'], 16)
+        self.assertEqual(scenario['parameters']['buttons']['max'], 16)
+
+        fixtures = ROOT / 'benchmarks/fixtures/data/sgp.bench/function/scenarios/systems/diorama_giant'
+        setup = (fixtures / 'setup.mcfunction').read_text(encoding='utf-8')
+        seed = (fixtures / 'seed_buttons.mcfunction').read_text(encoding='utf-8')
+        tick_path = fixtures / 'tick.mcfunction'
+        teardown = (fixtures / 'teardown.mcfunction').read_text(encoding='utf-8')
+
+        self.assertIn('function sgp.diorama:init/markers', setup)
+        self.assertIn('function sgp.diorama:spawn_entities/clear_and_recreate', setup)
+        self.assertIn('scoreboard players set #diorama_enabled sgp.dummy 1', setup)
+        self.assertIn('function sgp.diorama:tick/main', setup)
+        self.assertIn('team modify sgpbenchdio collisionRule never', setup)
+        self.assertIn('-2.5 121 -2.5 180 0', setup)
+        self.assertIn('summon marker 16 160 16', setup)
+        self.assertIn('summon marker 0 121 0', setup)
+        self.assertEqual(seed.count('.list append value'), 16)
+        self.assertEqual(list(bench.logical_commands(tick_path)), [])
+        self.assertIn('scoreboard players set #diorama_enabled sgp.dummy 0', teardown)
+        self.assertIn('function sgp.diorama:cleanup_player', teardown)
+
     def test_same_tick_tnt_and_bat_detonations_are_idempotent(self):
         tnt_dispatch = (ROOT / 'data/sgp.kits/function/abilities/tnt/explode_at.mcfunction').read_text(encoding='utf-8')
         tnt_fire = (ROOT / 'data/sgp.kits/function/abilities/tnt/summon_fire.mcfunction').read_text(encoding='utf-8')
@@ -394,6 +430,23 @@ class SuiteTests(unittest.TestCase):
         self.assertEqual(len(cases), 19)
         self.assertEqual({case['scenario'] for case in cases}, expected)
         self.assertTrue(all(case['players'] == 40 for case in cases))
+
+    def test_diorama_scaling_separates_mannequin_and_hover_costs(self):
+        _path, suite = bench.load_suite('diorama_scaling')
+        cases = bench.expand_suite_cases(suite, bench.load_scenarios())
+        self.assertEqual(len(cases), 12)
+        self.assertEqual(
+            [(case['scenario'], case['players']) for case in cases[:4]],
+            [('idle', 1), ('idle', 10), ('idle', 20), ('idle', 40)],
+        )
+        self.assertEqual(
+            [(case['players'], case['parameters']) for case in cases[4:8]],
+            [(1, {'buttons': 0}), (10, {'buttons': 0}), (20, {'buttons': 0}), (40, {'buttons': 0})],
+        )
+        self.assertEqual(
+            [(case['players'], case['parameters']) for case in cases[8:]],
+            [(1, {'buttons': 16}), (10, {'buttons': 16}), (20, {'buttons': 16}), (40, {'buttons': 16})],
+        )
 
     def test_matrix_is_cartesian_product(self):
         suite = {

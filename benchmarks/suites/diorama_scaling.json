@@ -1,0 +1,20 @@
+{
+  "name": "diorama_scaling",
+  "description": "Scale giant-mannequin Diorama updates, and the same Diorama with a 16-button worst-case hover scan.",
+  "defaults": {
+    "runs": 5,
+    "warmup": 5
+  },
+  "benchmarks": [
+    {
+      "scenario": "diorama_giant",
+      "parameters": {"buttons": 0},
+      "matrix": {"players": [1, 8, 20, 50]}
+    },
+    {
+      "scenario": "diorama_giant",
+      "parameters": {"buttons": 16},
+      "matrix": {"players": [1, 8, 20, 50]}
+    }
+  ]
+}

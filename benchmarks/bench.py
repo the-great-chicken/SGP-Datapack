@@ -1495,7 +1495,8 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
         result_text = '—'
         if record.get('result_dir'):
             relative = Path(record['result_dir']).relative_to(suite_dir)
-            result_text = f'`{relative.as_posix()}`'
+            summary_path = relative / 'summary.md'
+            result_text = f'[summary.md]({summary_path.as_posix()})'
         lines.append(
             f'| {record["index"]} | `{record["case"]["scenario"]}` | {record["case"]["total_players"]} | '
             f'`{params}` | {record["case"]["runs"]} | {format_number(metrics.get("tick_median_ms"), 3)} ms | '
