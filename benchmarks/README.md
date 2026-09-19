@@ -15,7 +15,7 @@ python benchmarks/bench.py suite all_abilities
 
 Results are written under `benchmarks/results/`. Failed runs keep diagnostics there as well.
 
-Command-limit interruptions invalidate the invocation. For high-load measurements, explicitly set `--command-limit 1000000` on both comparison runs; the default remains 65536. Restart failed runs without `--reuse-server`.
+Without `--command-limit`, the runner starts at 65536. If the invocation hits only the command-sequence limit, it retries on fresh worlds, probes upward, and binary-searches until the passing limit is within 5% of the highest known failing value; it then reruns the requested benchmark at that limit. The selected value and calibration bounds are recorded in `summary.md` and `metadata.json`. Passing `--command-limit` disables auto-calibration. A limit failure cannot be auto-calibrated with `--reuse-server`, because an interrupted world is not safe to reuse.
 
 ## Compose scenarios
 

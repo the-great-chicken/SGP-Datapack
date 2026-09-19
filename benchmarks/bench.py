@@ -44,6 +44,9 @@ BENCHMARKS = ROOT / 'benchmarks'
 DEFAULT_SERVER = ROOT / '.packtest-bench-server'
 DEFAULT_CACHE = ROOT / '.bench-cache'
 DEFAULT_RESULTS = BENCHMARKS / 'results'
+DEFAULT_COMMAND_LIMIT = 65536
+MAX_COMMAND_LIMIT = 2147483647
+COMMAND_LIMIT_TOLERANCE = 0.1
 SERVER_MARKER = '.sgp-benchmark-server'
 INVALID_MARKER = '.sgp-benchmark-invalid'
 CONFIG = json.loads((BENCHMARKS / 'config.json').read_text(encoding='utf-8'))
@@ -64,6 +67,10 @@ class BenchmarkError(RuntimeError):
 
 class BenchmarkInvalidError(BenchmarkError):
     """The workload was interrupted or did not execute as requested."""
+
+
+class CommandLimitError(BenchmarkInvalidError):
+    """Minecraft stopped a command sequence because the configured limit was too low."""
 
 
 @dataclass(frozen=True)
@@ -373,11 +380,14 @@ class ServerProcess:
                 ):
                     self._invalid_line = self._invalid_line or line
             if self._invalid_line is not None:
+                if 'Command execution stopped due to limit' in self._invalid_line:
+                    raise CommandLimitError(
+                        f'Minecraft hit the command sequence limit: {self._invalid_line}\n'
+                        'This world is invalid and must not be reused.'
+                    )
                 raise BenchmarkInvalidError(
                     f'Minecraft reported an invalid benchmark state: {self._invalid_line}\n'
-                    'This invocation is invalid. Fix the load error, or if the command sequence limit was hit, '
-                    'start a fresh benchmark with fewer players or an explicit --command-limit. '
-                    'Do not reuse the invalid world.'
+                    'Fix the load error before benchmarking. Do not reuse the invalid world.'
                 )
 
     def start(self, timeout: float = 120.0):
@@ -930,9 +940,23 @@ def require_diorama_entities(server: ServerProcess, plan: list[dict], *, after_r
         raise BenchmarkInvalidError(f'Invalid Diorama ownership: {owners!r}/{expected} players own exactly one mannequin')
 
 
+
+def command_limit_summary(command_limit: int, calibration: dict | None) -> str:
+    if not calibration:
+        return f'- Command sequence limit: {command_limit} (explicit)'
+    if not calibration.get('calibrated'):
+        return f'- Command sequence limit: {command_limit} (automatic default; calibration not needed)'
+    failed = calibration.get('known_failing_limit')
+    gap = calibration.get('relative_gap_percent')
+    detail = f'; known failure at {failed}' if isinstance(failed, int) else ''
+    if isinstance(gap, (int, float)):
+        detail += f'; pass/fail gap {gap:.2f}%'
+    return f'- Command sequence limit: {command_limit} (auto-calibrated{detail})'
+
 def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warmup: float,
                   profiles: list[ParsedProfile], counters: list[dict],
-                  plan: list[PlanComponent] | None = None, command_limit: int = 65536):
+                  plan: list[PlanComponent] | None = None, command_limit: int = DEFAULT_COMMAND_LIMIT,
+                  command_limit_calibration: dict | None = None):
     command_index, function_index = build_source_index()
     lines = [
         f'# SGP benchmark: `{scenario["name"]}`',
@@ -943,7 +967,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         f'- Total players: {plan_total_players(plan or [])}',
         f'- Runs: {len(profiles)}',
         f'- Warm-up: {warmup:g}s',
-        f'- Command sequence limit: {command_limit}',
+        command_limit_summary(command_limit, command_limit_calibration),
         '- Profiler: vanilla dedicated-server `/perf`',
         '',
     ]
@@ -1394,7 +1418,7 @@ def mark_success(result_dir: Path, metadata: dict):
     (result_dir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
 
 
-def run_benchmark(args):
+def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure: bool = True):
     scenarios = load_scenarios()
     scenario, params, plan = resolve_plan(scenarios, args.scenario, args.players, args.param)
     total_players = plan_total_players(plan)
@@ -1422,9 +1446,13 @@ def run_benchmark(args):
         'java_expected': CONFIG['java_version'],
         'heap': args.heap,
         'command_limit': args.command_limit,
+        'command_limit_mode': getattr(args, 'command_limit_mode', 'explicit'),
         'git_commit': git_commit(),
         'source_sha256': source_fingerprint(),
     }
+    calibration = getattr(args, 'command_limit_calibration', None)
+    if calibration is not None:
+        metadata['command_limit_calibration'] = calibration
     (result_dir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
 
     server: ServerProcess | None = None
@@ -1548,7 +1576,7 @@ def run_benchmark(args):
         copy_if_file(server_dir / 'benchmark-console.log', result_dir / 'diagnostics/benchmark-console.log')
         phase = 'writing summary'
         write_summary(result_dir, scenario, params, args.warmup, profiles, counters, plan=plan,
-                      command_limit=args.command_limit)
+                      command_limit=args.command_limit, command_limit_calibration=calibration)
         mark_success(result_dir, metadata)
     except Exception as exc:
         stop_error = None
@@ -1564,12 +1592,200 @@ def run_benchmark(args):
             (result_dir / 'diagnostics/server-stop-error.txt').write_text(
                 f'{type(stop_error).__name__}: {stop_error}\n', encoding='utf-8'
             )
-        print(f'Failure diagnostics: {result_dir}', file=sys.stderr)
+        if announce_failure:
+            print(f'Failure diagnostics: {result_dir}', file=sys.stderr)
         raise
 
-    print(f'\nResults: {result_dir}')
-    print(f'Summary: {result_dir / "summary.md"}')
+    if announce_result:
+        print(f'\nResults: {result_dir}')
+        print(f'Summary: {result_dir / "summary.md"}')
     return result_dir
+
+
+def _copy_args(args, **updates) -> argparse.Namespace:
+    values = dict(vars(args))
+    values.update(updates)
+    return argparse.Namespace(**values)
+
+
+def _attempt_result_dir(results_root: Path) -> Path | None:
+    if not results_root.is_dir():
+        return None
+    candidates = [path for path in results_root.iterdir() if path.is_dir()]
+    return max(candidates, key=lambda path: path.stat().st_mtime_ns) if candidates else None
+
+
+def _promote_result(result_dir: Path, results_root: Path) -> Path:
+    results_root = results_root.resolve()
+    results_root.mkdir(parents=True, exist_ok=True)
+    target = results_root / result_dir.name
+    suffix = 2
+    while target.exists():
+        target = results_root / f'{result_dir.name}-{suffix}'
+        suffix += 1
+    shutil.move(str(result_dir), str(target))
+    return target
+
+
+def _calibration_gap_percent(failing: int, passing: int) -> float:
+    return (passing - failing) * 100.0 / failing
+
+
+def run_benchmark(args):
+    if args.command_limit is not None:
+        explicit = _copy_args(
+            args,
+            command_limit_mode='explicit',
+            command_limit_calibration=None,
+        )
+        return _run_benchmark_once(explicit)
+
+    real_results_root = args.results_dir.resolve()
+    real_results_root.mkdir(parents=True, exist_ok=True)
+    trials: list[dict] = []
+    attempt_number = 0
+
+    # Keep temporary profiles on the same filesystem as the final results so a
+    # successful invocation can be promoted with a rename instead of copying zips.
+    with tempfile.TemporaryDirectory(prefix='.sgp-command-limit-', dir=real_results_root) as temporary:
+        temporary_root = Path(temporary)
+
+        def attempt(limit: int, runs: int, purpose: str, *, reuse_server: bool,
+                    calibration: dict | None = None) -> tuple[bool, Path | None, CommandLimitError | None]:
+            nonlocal attempt_number
+            attempt_number += 1
+            trial_root = temporary_root / f'{attempt_number:02d}_{purpose}_{limit}'
+            trial_args = _copy_args(
+                args,
+                runs=runs,
+                command_limit=limit,
+                command_limit_mode='auto',
+                command_limit_calibration=calibration,
+                results_dir=trial_root,
+                reuse_server=reuse_server,
+            )
+            if purpose == 'probe':
+                print(f'Command-limit calibration: trying {limit} ...')
+            try:
+                result_dir = _run_benchmark_once(
+                    trial_args, announce_result=False, announce_failure=False
+                )
+            except CommandLimitError as exc:
+                trials.append({'limit': limit, 'runs': runs, 'purpose': purpose, 'status': 'failed'})
+                return False, _attempt_result_dir(trial_root), exc
+            except Exception:
+                failed_dir = _attempt_result_dir(trial_root)
+                if failed_dir is not None:
+                    promoted = _promote_result(failed_dir, real_results_root)
+                    print(f'Failure diagnostics: {promoted}', file=sys.stderr)
+                raise
+            trials.append({'limit': limit, 'runs': runs, 'purpose': purpose, 'status': 'passed'})
+            return True, result_dir, None
+
+        initial_calibration = {
+            'initial_limit': DEFAULT_COMMAND_LIMIT,
+            'selected_limit': DEFAULT_COMMAND_LIMIT,
+            'calibrated': False,
+        }
+        passed, result_dir, limit_error = attempt(
+            DEFAULT_COMMAND_LIMIT,
+            args.runs,
+            'initial',
+            reuse_server=args.reuse_server,
+            calibration=initial_calibration,
+        )
+        if passed:
+            assert result_dir is not None
+            promoted = _promote_result(result_dir, real_results_root)
+            print(f'\nResults: {promoted}')
+            print(f'Summary: {promoted / "summary.md"}')
+            return promoted
+
+        if args.reuse_server:
+            if result_dir is not None:
+                promoted = _promote_result(result_dir, real_results_root)
+                print(f'Failure diagnostics: {promoted}', file=sys.stderr)
+            raise BenchmarkError(
+                'Automatic command-limit calibration requires fresh worlds after a limit failure. '
+                'Rerun without --reuse-server, or pass an explicit --command-limit.'
+            ) from limit_error
+
+        print(
+            f'Default command sequence limit {DEFAULT_COMMAND_LIMIT} was exceeded; '
+            'calibrating on fresh benchmark worlds.'
+        )
+        known_failure = DEFAULT_COMMAND_LIMIT
+
+        def probe(limit: int) -> bool:
+            passed_probe, _result, _error = attempt(
+                limit, 1, 'probe', reuse_server=False, calibration=None
+            )
+            return passed_probe
+
+        def find_passing_bound(failing: int) -> tuple[int, int]:
+            passing = min(failing * 2, MAX_COMMAND_LIMIT)
+            if passing <= failing:
+                raise BenchmarkError(
+                    f'Benchmark still exceeds Minecraft command sequence limit {MAX_COMMAND_LIMIT}; '
+                    'cannot calibrate a passing value.'
+                )
+            while not probe(passing):
+                failing = passing
+                if passing == MAX_COMMAND_LIMIT:
+                    raise BenchmarkError(
+                        f'Benchmark still exceeds Minecraft command sequence limit {MAX_COMMAND_LIMIT}; '
+                        'cannot calibrate a passing value.'
+                    )
+                passing = min(passing * 2, MAX_COMMAND_LIMIT)
+
+            while (
+                passing - failing > 1
+                and _calibration_gap_percent(failing, passing) > COMMAND_LIMIT_TOLERANCE * 100.0
+            ):
+                candidate = (failing + passing) // 2
+                if probe(candidate):
+                    passing = candidate
+                else:
+                    failing = candidate
+            return failing, passing
+
+        while True:
+            known_failure, selected = find_passing_bound(known_failure)
+            gap = _calibration_gap_percent(known_failure, selected)
+            calibration = {
+                'initial_limit': DEFAULT_COMMAND_LIMIT,
+                'selected_limit': selected,
+                'known_failing_limit': known_failure,
+                'relative_gap_percent': gap,
+                'calibrated': True,
+                'probe_runs': 1,
+                'trials': list(trials),
+            }
+            print(
+                f'Command-limit calibration: selected {selected}; known failure {known_failure} '
+                f'({gap:.2f}% pass/fail gap). Running the requested {args.runs} run(s) from a fresh world.'
+            )
+            passed, result_dir, _limit_error = attempt(
+                selected,
+                args.runs,
+                'final',
+                reuse_server=False,
+                calibration=calibration,
+            )
+            if passed:
+                assert result_dir is not None
+                promoted = _promote_result(result_dir, real_results_root)
+                print(f'\nResults: {promoted}')
+                print(f'Summary: {promoted / "summary.md"}')
+                return promoted
+
+            # A one-run probe can miss a heavier tick that occurs in a longer invocation.
+            # Treat the full-run failure as a new lower bound and continue upward.
+            known_failure = selected
+            print(
+                f'Command-limit calibration: {selected} still failed during the full invocation; '
+                'continuing above that value.'
+            )
 
 
 def load_suite(reference: str) -> tuple[Path, dict]:
@@ -1688,6 +1904,8 @@ def result_summary_metrics(result_dir: Path) -> dict:
         'tick_median_ms': nested_numeric_median(runs, 'tick_time_ms', 'median'),
         'tick_p95_ms': nested_numeric_median(runs, 'tick_time_ms', 'p95'),
         'command_functions_percent': numeric_median(runs, 'command_functions_percent'),
+        'command_limit': metadata.get('command_limit'),
+        'command_limit_mode': metadata.get('command_limit_mode'),
         'workload_counters': workload_counter_medians(runs),
     }
 
@@ -1698,8 +1916,8 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
         '',
         suite['description'],
         '',
-        '| # | Scenario | Players | Parameters | Runs | Tick median | Tick p95 | commandFunctions | Workload counters | Status | Result |',
-        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | --- | --- | --- |',
+        '| # | Scenario | Players | Parameters | Runs | Command limit | Tick median | Tick p95 | commandFunctions | Workload counters | Status | Result |',
+        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |',
     ]
     for record in records:
         metrics = record.get('metrics', {})
@@ -1714,7 +1932,8 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
             result_text = f'[summary.md]({summary_path.as_posix()})'
         lines.append(
             f'| {record["index"]} | `{record["case"]["scenario"]}` | {record["case"]["total_players"]} | '
-            f'`{params}` | {record["case"]["runs"]} | {format_number(metrics.get("tick_median_ms"), 3)} ms | '
+            f'`{params}` | {record["case"]["runs"]} | {format_number(metrics.get("command_limit"), 0)} | '
+            f'{format_number(metrics.get("tick_median_ms"), 3)} ms | '
             f'{format_number(metrics.get("tick_p95_ms"), 3)} ms | '
             f'{format_number(metrics.get("command_functions_percent"))}% | {counter_text} | {status} | {result_text} |'
         )
@@ -1737,6 +1956,7 @@ def run_suite(args):
         'suite_file': str(suite_path),
         'source_sha256': source_fingerprint(),
         'command_limit': args.command_limit,
+        'command_limit_mode': 'auto' if args.command_limit is None else 'explicit',
         'cases': cases,
     }
     (suite_dir / 'suite.json').write_text(json.dumps(suite_metadata, indent=2) + '\n', encoding='utf-8')
@@ -2065,8 +2285,8 @@ def prepare_command(args):
 
 def command_limit_argument(value: str) -> int:
     value = int(value)
-    if not 1 <= value <= 2147483647:
-        raise argparse.ArgumentTypeError('command limit must be between 1 and 2147483647')
+    if not 1 <= value <= MAX_COMMAND_LIMIT:
+        raise argparse.ArgumentTypeError(f'command limit must be between 1 and {MAX_COMMAND_LIMIT}')
     return value
 
 
@@ -2090,8 +2310,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument('--warmup', type=float, default=5.0, help='Seconds of active workload before each /perf capture')
     run_parser.add_argument('--java', default='java')
     run_parser.add_argument('--heap', default=CONFIG['heap'])
-    run_parser.add_argument('--command-limit', type=command_limit_argument, default=65536,
-                            help='Explicit benchmark-world command sequence limit (default: 65536)')
+    run_parser.add_argument('--command-limit', type=command_limit_argument,
+                            help='Explicit benchmark-world command sequence limit; omitted = auto-calibrate on limit failure')
     run_parser.add_argument('--server-dir', type=Path, default=DEFAULT_SERVER)
     run_parser.add_argument('--cache-dir', type=Path, default=DEFAULT_CACHE)
     run_parser.add_argument('--results-dir', type=Path, default=DEFAULT_RESULTS)
@@ -2106,8 +2326,8 @@ def build_parser() -> argparse.ArgumentParser:
     suite_parser.add_argument('--warmup', type=float, help='Override warm-up seconds for every suite case')
     suite_parser.add_argument('--java', default='java')
     suite_parser.add_argument('--heap', default=CONFIG['heap'])
-    suite_parser.add_argument('--command-limit', type=command_limit_argument, default=65536,
-                              help='Command sequence limit applied equally to all suite cases')
+    suite_parser.add_argument('--command-limit', type=command_limit_argument,
+                              help='Explicit command sequence limit for all cases; omitted = auto-calibrate per case')
     suite_parser.add_argument('--server-dir', type=Path, default=DEFAULT_SERVER)
     suite_parser.add_argument('--cache-dir', type=Path, default=DEFAULT_CACHE)
     suite_parser.add_argument('--results-dir', type=Path, default=DEFAULT_RESULTS)
