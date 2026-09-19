@@ -15,7 +15,7 @@ python benchmarks/bench.py suite all_abilities
 
 Results are written under `benchmarks/results/`. Failed runs keep diagnostics there as well.
 
-Without `--command-limit`, the runner starts at 65536. If the invocation hits only the command-sequence limit, it retries on fresh worlds, probes upward, and binary-searches until the passing limit is within 5% of the highest known failing value; it then reruns the requested benchmark at that limit. The selected value and calibration bounds are recorded in `summary.md` and `metadata.json`. Passing `--command-limit` disables auto-calibration. A limit failure cannot be auto-calibrated with `--reuse-server`, because an interrupted world is not safe to reuse.
+Without `--command-limit`, the runner starts at 65536. If the invocation hits only the command-sequence limit, it retries on fresh worlds, probes upward, and binary-searches until the passing limit is within 10% of the highest known failing value; it then reruns the requested benchmark at that limit. The selected value and calibration bounds are recorded in `summary.md` and `metadata.json`. Passing `--command-limit` disables auto-calibration. A limit failure cannot be auto-calibrated with `--reuse-server`, because an interrupted world is not safe to reuse.
 
 ## Compose scenarios
 
@@ -71,6 +71,20 @@ Declare workload counters as score holders in the `sgp.bench` objective:
 ```
 
 They are reset before each `/perf` capture and included in summaries/comparisons.
+
+### Scenario-specific validation
+
+Keep scenario semantics out of the generic runner. If a workload needs live or post-profile integrity checks, declare a validator in the atomic scenario:
+
+```json
+"validators": ["rays"]
+```
+
+Implement the hook under `benchmarks/harness/validators/` and register it in `validators/base.py`. The runner only executes the generic validation lifecycle; it must not branch on scenario names. Most scenarios need no validator.
+
+## Harness architecture
+
+`benchmarks/bench.py` is only the stable CLI/compatibility facade. The implementation is split under `benchmarks/harness/` by responsibility: scenario resolution, staging, server control, runtime compilation, profiling, validation, calibration, reporting, comparison, and suites. Reusable repository staging lives under `sgp_tools/`; `.github/scripts/` are thin CLI wrappers around those modules.
 
 ## Compare or parse results
 

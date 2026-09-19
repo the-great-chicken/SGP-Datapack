@@ -1,0 +1,200 @@
+"""Benchmark summaries and source identity metadata."""
+from __future__ import annotations
+
+from collections import defaultdict
+from pathlib import Path
+from statistics import median
+import hashlib
+import json
+import subprocess
+
+from .models import ParsedProfile, PlanComponent, ProfileEntry
+from .profiler import benchmark_source_files, build_source_index, format_number, source_hint
+from .runtime import plan_total_players
+from .settings import BENCHMARKS, DEFAULT_COMMAND_LIMIT, ROOT
+
+def command_limit_summary(command_limit: int, calibration: dict | None) -> str:
+    if not calibration:
+        return f'- Command sequence limit: {command_limit} (explicit)'
+    if not calibration.get('calibrated'):
+        return f'- Command sequence limit: {command_limit} (automatic default; calibration not needed)'
+    failed = calibration.get('known_failing_limit')
+    gap = calibration.get('relative_gap_percent')
+    detail = f'; known failure at {failed}' if isinstance(failed, int) else ''
+    if isinstance(gap, (int, float)):
+        detail += f'; pass/fail gap {gap:.2f}%'
+    return f'- Command sequence limit: {command_limit} (auto-calibrated{detail})'
+
+
+def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warmup: float,
+                  profiles: list[ParsedProfile], counters: list[dict],
+                  plan: list[PlanComponent] | None = None, command_limit: int = DEFAULT_COMMAND_LIMIT,
+                  command_limit_calibration: dict | None = None):
+    command_index, function_index = build_source_index()
+    lines = [
+        f'# SGP benchmark: `{scenario["name"]}`',
+        '',
+        scenario['description'],
+        '',
+        f'- Parameters: `{json.dumps(params, sort_keys=True)}`',
+        f'- Total players: {plan_total_players(plan or [])}',
+        f'- Runs: {len(profiles)}',
+        f'- Warm-up: {warmup:g}s',
+        command_limit_summary(command_limit, command_limit_calibration),
+        '- Profiler: vanilla dedicated-server `/perf`',
+        '',
+    ]
+    if plan:
+        lines += ['## Workload plan', '']
+        for component in plan:
+            actor_range = 'none' if component.players == 0 else f'{component.first}..{component.last}'
+            lines.append(
+                f'- `{component.scenario}`: {component.players} players (actors {actor_range}), '
+                f'parameters `{json.dumps(component.parameters, sort_keys=True)}`'
+            )
+        lines += ['', '## Runs',
+        '',
+        '| Run | Profile ticks | Tick median | Tick p95 | Tick max | commandFunctions | Driver ticks |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+    ]
+    for i, (profile, count) in enumerate(zip(profiles, counters), 1):
+        lines.append(
+            f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.tick_median_ms)} ms | '
+            f'{format_number(profile.tick_p95_ms)} ms | {format_number(profile.tick_max_ms)} ms | '
+            f'{format_number(profile.command_functions_percent)}% | {format_number(count.get("ticks"))} |'
+        )
+
+    command_values = [p.command_functions_percent for p in profiles if p.command_functions_percent is not None]
+    tps_values = [p.effective_tps for p in profiles if p.effective_tps is not None]
+    tick_medians = [p.tick_median_ms for p in profiles if p.tick_median_ms is not None]
+    tick_p95s = [p.tick_p95_ms for p in profiles if p.tick_p95_ms is not None]
+    tick_maxes = [p.tick_max_ms for p in profiles if p.tick_max_ms is not None]
+    if command_values or tps_values or tick_medians or tick_p95s or tick_maxes:
+        lines += ['', '## Aggregate', '']
+        if tick_medians:
+            lines.append(
+                f'- Median run tick median: **{median(tick_medians):.3f} ms** '
+                f'(range {min(tick_medians):.3f}–{max(tick_medians):.3f} ms).'
+            )
+        if tick_p95s:
+            lines.append(
+                f'- Median run tick p95: **{median(tick_p95s):.3f} ms** '
+                f'(range {min(tick_p95s):.3f}–{max(tick_p95s):.3f} ms).'
+            )
+        if tick_maxes:
+            lines.append(
+                f'- Median run maximum tick: **{median(tick_maxes):.3f} ms** '
+                f'(range {min(tick_maxes):.3f}–{max(tick_maxes):.3f} ms).'
+            )
+        if command_values:
+            lines.append(
+                f'- Median `commandFunctions`: **{median(command_values):.2f}%** '
+                f'(range {min(command_values):.2f}–{max(command_values):.2f}%).'
+            )
+        if tps_values:
+            lines.append(
+                f'- Median effective TPS during capture: **{median(tps_values):.2f}** '
+                f'(range {min(tps_values):.2f}–{max(tps_values):.2f}).'
+            )
+
+    workload_names = sorted({
+        name
+        for count in counters
+        for name in (count.get('workload') or {})
+    })
+    if workload_names:
+        lines += ['', '## Workload counters', '', '| Counter | Median | Range |', '| --- | ---: | ---: |']
+        for name in workload_names:
+            values = [
+                count.get('workload', {}).get(name)
+                for count in counters
+                if isinstance(count.get('workload', {}).get(name), (int, float))
+            ]
+            if values:
+                lines.append(f'| `{name}` | {median(values):g} | {min(values):g}–{max(values):g} |')
+            else:
+                lines.append(f'| `{name}` | n/a | n/a |')
+
+    grouped: dict[str, list[ProfileEntry]] = defaultdict(list)
+    for profile in profiles:
+        # One value per name/run prevents recursive/repeated appearances from overweighting a run.
+        best_in_run: dict[str, ProfileEntry] = {}
+        for entry in profile.entries:
+            if entry.name in {'unspecified', 'minecraft:tick'}:
+                continue
+            previous = best_in_run.get(entry.name)
+            if previous is None or entry.global_percent > previous.global_percent:
+                best_in_run[entry.name] = entry
+        for name, entry in best_in_run.items():
+            grouped[name].append(entry)
+
+    ranked = []
+    for name, entries in grouped.items():
+        globals_ = [entry.global_percent for entry in entries]
+        ranked.append((median(globals_), name, entries))
+    ranked.sort(reverse=True)
+
+    lines += [
+        '',
+        '## Hottest `commandFunctions` entries',
+        '',
+        'Inclusive profiler entries can overlap (for example a `function ...` call and commands inside it). '
+        'Use this as a locator, not as values to add together.',
+        '',
+        '| Median global % | Seen | Median calls | Entry | Source hint |',
+        '| ---: | ---: | ---: | --- | --- |',
+    ]
+    for value, name, entries in ranked[:20]:
+        calls = median([entry.count for entry in entries])
+        hint = source_hint(name, command_index, function_index).replace('|', '\\|')
+        safe_name = name.replace('|', '\\|').replace('`', '\\`')
+        driver = ' **[driver]**' if 'sgp.bench' in name else ''
+        lines.append(
+            f'| {value:.3f}% | {len(entries)}/{len(profiles)} | {calls:g} | `{safe_name}`{driver} | {hint} |'
+        )
+
+    lines += [
+        '',
+        '> Driver/workload counters are read immediately after Minecraft finishes writing the profile zip, '
+        'so they can include a small tail after the exact `/perf` window. The profile tick span and profiler '
+        'counts are the authoritative measured-window values.',
+        '',
+        'Raw `/perf` archives and one parsed JSON file per run are kept next to this summary.',
+        '',
+    ]
+    (result_dir / 'summary.md').write_text('\n'.join(lines), encoding='utf-8')
+
+
+def source_fingerprint() -> str:
+    """Hash all source that can affect staging, execution, or validation."""
+    digest = hashlib.sha256()
+    files = list(benchmark_source_files())
+    files.extend(path for path in (BENCHMARKS / 'scenarios').rglob('*') if path.is_file())
+    files.extend(path for path in (BENCHMARKS / 'suites').rglob('*') if path.is_file())
+    files.extend(path for path in (BENCHMARKS / 'harness').rglob('*.py') if path.is_file())
+    files.extend(path for path in (ROOT / 'sgp_tools').rglob('*.py') if path.is_file())
+    files.extend([
+        ROOT / 'pack.mcmeta',
+        BENCHMARKS / 'config.json',
+        BENCHMARKS / 'bench.py',
+        ROOT / '.github/scripts/prepare_bench.py',
+        ROOT / '.github/scripts/prepare_core.py',
+        ROOT / '.github/scripts/install_mixer.py',
+    ])
+    for path in sorted(set(files), key=lambda item: item.relative_to(ROOT).as_posix()):
+        relative = path.relative_to(ROOT).as_posix().encode('utf-8')
+        digest.update(len(relative).to_bytes(4, 'big'))
+        digest.update(relative)
+        data = path.read_bytes()
+        digest.update(len(data).to_bytes(8, 'big'))
+        digest.update(data)
+    return digest.hexdigest()
+
+def git_commit() -> str | None:
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True, timeout=5
+        )
+        return result.stdout.strip() or None
+    except Exception:
+        return None
