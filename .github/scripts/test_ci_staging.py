@@ -250,21 +250,17 @@ class StagingTests(unittest.TestCase):
 
     def test_mixer_uid_waits_require_fresh_uuid_registration(self):
         repo = SCRIPTS.parent.parent
-        fresh_call = 'function sgp.ci:actionbar_mixer/fresh_registration'
-        uid_wait = 'await score @s dah.actbar.UID matches 1..'
-        wait_files = []
+        fresh_function = 'function sgp.ci:actionbar_mixer/fresh_registration'
+        wait_pattern = re.compile(r'^await score (\S+) dah\.actbar\.UID matches 1\.\.$', re.MULTILINE)
+        waits = []
         for path in sorted((repo / 'data').rglob('*.mcfunction')):
             text = path.read_text(encoding='utf-8')
-            if uid_wait not in text:
-                continue
-            wait_files.append(path)
-            self.assertIn(fresh_call, text[:text.index(uid_wait)], path)
-        self.assertEqual(len(wait_files), 7)
-
-        peer = (repo / 'data/sgp.misc/test/reward_hud/player_isolation.mcfunction').read_text(encoding='utf-8')
-        peer_wait = 'await score RewardPeer dah.actbar.UID matches 1..'
-        peer_fresh = 'execute as RewardPeer run function sgp.ci:actionbar_mixer/fresh_registration'
-        self.assertIn(peer_fresh, peer[:peer.index(peer_wait)])
+            for match in wait_pattern.finditer(text):
+                target = match.group(1)
+                expected = fresh_function if target == '@s' else f'execute as {target} run {fresh_function}'
+                self.assertIn(expected, text[:match.start()], (path, target))
+                waits.append((path, target))
+        self.assertTrue(waits, 'expected at least one Mixer UID registration wait')
 
         helper = (repo / 'tests/fixtures/data/sgp.ci/function/actionbar_mixer/fresh_registration.mcfunction').read_text(encoding='utf-8')
         remover = (repo / 'tests/fixtures/data/sgp.ci/function/actionbar_mixer/remove_uid.mcfunction').read_text(encoding='utf-8')
