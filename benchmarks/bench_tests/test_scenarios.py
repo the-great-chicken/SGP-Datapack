@@ -221,6 +221,14 @@ class ScenarioTests(unittest.TestCase):
             cleanup = (actors / 'cleanup.mcfunction').read_text(encoding='utf-8')
             self.assertNotIn('Bench73', cleanup)
 
+    def test_invalid_counter_declarations_are_rejected(self):
+        scenarios = bench.load_scenarios()
+        atomic_name = next(name for name, value in scenarios.items() if 'components' not in value)
+        invalid = {name: dict(value) for name, value in scenarios.items()}
+        invalid[atomic_name] = {**invalid[atomic_name], 'counters': {'bad counter': 'not-a-scoreholder'}}
+        with self.assertRaisesRegex(bench.BenchmarkError, 'invalid counter name'):
+            bench.validate_scenario_graph(invalid)
+
     def test_scenario_validators_are_data_driven_and_composition_safe(self):
         scenarios = bench.load_scenarios()
 

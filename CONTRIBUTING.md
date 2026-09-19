@@ -44,6 +44,8 @@ Do not call an integration function directly from core code, including from macr
 
 Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep test fixtures under `tests/fixtures/data/`; the preparation script copies them into the CI datapack.
 
+PackTest environment resources are generated during staging from `tests/packtest_environments.json`. Reuse a tree binding when a family shares setup/teardown, and add an exact binding only for a genuine exception; do not check generated `test_environment/*.json` files into `tests/fixtures`. Offline Python tests live under `tests/python/` and can be run with `python3 -m unittest discover -s tests/python -p 'test_*.py'`.
+
 Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 
 CI installs pinned Actionbar Mixer resources beneath SGP's overrides. Fixture collisions are allowlisted in `prepare_core.py`; the deterministic Lootdrop override retains an unchanged production table at `sgp.ci:production/lootdrop_chest` for Minecraft to load and test. Failure diagnostics must be followed by an ordinary `assert`, never replace it.

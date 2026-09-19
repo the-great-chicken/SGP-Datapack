@@ -1,1 +1,0 @@
-{"type": "minecraft:function", "setup": "sgp.ci:kd_projectiles/setup", "teardown": "sgp.ci:kd_projectiles/cleanup"}

@@ -1,1 +1,0 @@
-{"type":"minecraft:function","setup":"sgp.ci:timer_overlap/setup","teardown":"sgp.ci:timer_overlap/cleanup"}

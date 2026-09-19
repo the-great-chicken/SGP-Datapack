@@ -4,6 +4,8 @@ import json
 import re
 import shutil
 
+from .packtest import materialize_environments, validate_repository as validate_packtest
+
 MODULES = ('sgp.integration.discord', 'sgp.integration.tab', 'sgp.integration.tgc')
 # Deterministic fixture -> unchanged production resource loaded under a validation ID.
 FIXTURE_COLLISIONS = {
@@ -137,6 +139,7 @@ def prepare(repository, server):
     if server.exists():
         raise ValueError(f'Refusing to overwrite an existing server directory: {server}')
     validate(repository / 'data')
+    environments = validate_packtest(repository)
     pack = server / 'world/datapacks/SGP-Datapack'
     pack.mkdir(parents=True)
     (pack / 'data').mkdir()
@@ -154,6 +157,7 @@ def prepare(repository, server):
         raise ValueError('No core PackTest tests were found')
     # CI fixtures never become part of the production datapack.
     overlay_fixtures(pack / 'data', repository / 'tests/fixtures/data')
+    materialize_environments(repository, pack / 'data', environments)
     validate(pack / 'data', core=True)
     (server / 'server.properties').write_text(
         'level-name=world\nfunction-permission-level=4\n', encoding='utf-8')

@@ -1,1 +1,0 @@
-{"type": "minecraft:function", "setup": "sgp.ci:teleporter/cleanup", "teardown": "sgp.ci:teleporter/cleanup"}

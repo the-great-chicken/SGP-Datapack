@@ -1,5 +1,0 @@
-{
-  "type": "minecraft:function",
-  "setup": "sgp.ci:cosmetic_rewards/setup",
-  "teardown": "sgp.ci:cosmetic_rewards/cleanup"
-}
