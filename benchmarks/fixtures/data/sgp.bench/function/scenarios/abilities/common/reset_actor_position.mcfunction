@@ -14,9 +14,9 @@ scoreboard players operation @s bs.pos.z /= #bench_grid_width sgp.bench
 scoreboard players set #bench_grid_spacing sgp.bench 7000
 scoreboard players operation @s bs.pos.x *= #bench_grid_spacing sgp.bench
 scoreboard players operation @s bs.pos.z *= #bench_grid_spacing sgp.bench
-scoreboard players add @s bs.pos.x -23500
+scoreboard players remove @s bs.pos.x 23500
 scoreboard players set @s bs.pos.y 81000
-scoreboard players add @s bs.pos.z -13500
+scoreboard players remove @s bs.pos.z 13500
 
 function #bs.position:set_pos {scale:0.001}
 tp @s ~ ~ ~ 0 0

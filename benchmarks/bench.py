@@ -37,6 +37,8 @@ import urllib.parse
 import urllib.request
 import zipfile
 
+import scenario_validation
+
 ROOT = Path(__file__).resolve().parent.parent
 BENCHMARKS = ROOT / 'benchmarks'
 DEFAULT_SERVER = ROOT / '.packtest-bench-server'
@@ -165,107 +167,30 @@ def load_module(path: Path, name: str):
 
 
 def load_scenarios() -> dict[str, dict]:
-    scenarios: dict[str, dict] = {}
-    for path in sorted((BENCHMARKS / 'scenarios').rglob('*.json')):
-        data = json.loads(path.read_text(encoding='utf-8'))
-        name = data.get('name')
-        if not isinstance(name, str) or not name:
-            raise BenchmarkError(f'{path}: scenario name must be a non-empty string')
-        if path.stem != name:
-            raise BenchmarkError(f'{path}: filename must match scenario name {name!r}')
-        if name in scenarios:
-            raise BenchmarkError(f'{path}: duplicate scenario name {name!r}')
-        if not isinstance(data.get('description'), str):
-            raise BenchmarkError(f'{path}: missing description')
-        atomic = all(key in data for key in ('setup', 'tick', 'teardown', 'parameters'))
-        composite = 'components' in data
-        if atomic == composite:
-            raise BenchmarkError(
-                f'{path}: scenario must be exactly one of atomic '
-                '(setup/tick/teardown/parameters) or composite (components)'
-            )
-        scenarios[name] = data
-    if not scenarios:
-        raise BenchmarkError('No benchmark scenarios found')
+    scenarios = scenario_validation.load_scenarios(
+        BENCHMARKS / 'scenarios', error_type=BenchmarkError
+    )
     validate_scenario_graph(scenarios)
     return scenarios
 
 
 def parameter_default(name: str, spec: dict) -> int:
-    if 'default' in spec:
-        return spec['default']
-    if name == 'players':
-        return int(CONFIG['default_players'])
-    raise BenchmarkError(f'Parameter {name!r} is missing a default')
+    return scenario_validation.parameter_default(
+        name, spec, int(CONFIG['default_players']), error_type=BenchmarkError
+    )
 
 
 def validate_parameter_specs(scenario: dict):
-    specs = scenario.get('parameters')
-    if not isinstance(specs, dict) or 'players' not in specs:
-        raise BenchmarkError(f'Scenario {scenario["name"]}: parameters must include players')
-    for name, spec in specs.items():
-        if not isinstance(spec, dict) or spec.get('type') != 'int':
-            raise BenchmarkError(f'Scenario {scenario["name"]}: only int parameters are supported ({name})')
-        if 'min' not in spec:
-            raise BenchmarkError(f'Scenario {scenario["name"]}: parameter {name} is missing min')
-        for key in ('min', 'max', 'default'):
-            if key in spec and not isinstance(spec[key], int):
-                raise BenchmarkError(f'Scenario {scenario["name"]}: parameter {name}.{key} must be an integer')
-        default = parameter_default(name, spec)
-        if default < spec['min'] or ('max' in spec and default > spec['max']):
-            raise BenchmarkError(f'Scenario {scenario["name"]}: default for {name} is outside its range')
+    scenario_validation.validate_parameter_specs(
+        scenario, int(CONFIG['default_players']), error_type=BenchmarkError
+    )
 
 
 def validate_scenario_graph(scenarios: dict[str, dict]):
-    counter_holders: dict[str, str] = {}
-    for scenario in scenarios.values():
-        if 'components' not in scenario:
-            validate_parameter_specs(scenario)
-            counters = scenario.get('counters', {})
-            if not isinstance(counters, dict):
-                raise BenchmarkError(f'Scenario {scenario["name"]}: counters must be an object')
-            for counter_name, scoreholder in counters.items():
-                if not isinstance(counter_name, str) or not re.fullmatch(r'[a-z0-9_.-]+', counter_name):
-                    raise BenchmarkError(
-                        f'Scenario {scenario["name"]}: invalid counter name {counter_name!r}'
-                    )
-                if not isinstance(scoreholder, str) or not scoreholder.startswith('#') or len(scoreholder) > 40:
-                    raise BenchmarkError(
-                        f'Scenario {scenario["name"]}: counter {counter_name!r} must use a <=40-char # score holder'
-                    )
-                previous = counter_holders.get(scoreholder)
-                if previous is not None and previous != scenario['name']:
-                    raise BenchmarkError(
-                        f'Counter score holder {scoreholder!r} is shared by scenarios {previous!r} and {scenario["name"]!r}'
-                    )
-                counter_holders[scoreholder] = scenario['name']
-            continue
-        components = scenario['components']
-        if not isinstance(components, list) or not components:
-            raise BenchmarkError(f'Scenario {scenario["name"]}: components must be a non-empty list')
-        for index, component in enumerate(components, 1):
-            if not isinstance(component, dict) or not isinstance(component.get('scenario'), str):
-                raise BenchmarkError(f'Scenario {scenario["name"]}: component {index} must reference a scenario')
-            target = component['scenario']
-            if target not in scenarios:
-                raise BenchmarkError(f'Scenario {scenario["name"]}: unknown component scenario {target!r}')
-            if 'players' in component and (not isinstance(component['players'], int) or component['players'] < 0):
-                raise BenchmarkError(f'Scenario {scenario["name"]}: component {index} players must be >= 0')
-            overrides = component.get('parameters', {})
-            if not isinstance(overrides, dict) or any(not isinstance(value, int) for value in overrides.values()):
-                raise BenchmarkError(f'Scenario {scenario["name"]}: component {index} parameters must be integer values')
+    scenario_validation.validate_scenario_graph(
+        scenarios, int(CONFIG['default_players']), error_type=BenchmarkError
+    )
 
-    def visit(name: str, stack: tuple[str, ...]):
-        if name in stack:
-            raise BenchmarkError(f'Benchmark scenario composition cycle: {" -> ".join((*stack, name))}')
-        scenario = scenarios[name]
-        if 'components' not in scenario:
-            return
-        for component in scenario['components']:
-            visit(component['scenario'], (*stack, name))
-
-    for name in scenarios:
-        visit(name, ())
 
 
 def parse_raw_params(raw_params: list[str]) -> dict[str, int]:
@@ -304,7 +229,6 @@ def parameter_values(scenario: dict, players: int | None = None,
                 f'{name}={value} is outside {minimum}..{upper} for scenario {scenario["name"]}'
             )
     return values
-
 
 def validate_parameters(scenario: dict, players: int | None, raw_params: list[str]) -> dict[str, int]:
     if 'components' in scenario:
@@ -442,13 +366,18 @@ class ServerProcess:
             while self._health_index < len(self.lines):
                 line = self.lines[self._health_index]
                 self._health_index += 1
-                if 'Command execution stopped due to limit' in line:
+                if (
+                    'Command execution stopped due to limit' in line
+                    or 'Failed to load function ' in line
+                    or 'Failed to load function tag ' in line
+                ):
                     self._invalid_line = self._invalid_line or line
             if self._invalid_line is not None:
                 raise BenchmarkInvalidError(
-                    f'Minecraft interrupted the workload: {self._invalid_line}\n'
-                    'This invocation is invalid. Start a fresh benchmark with fewer players or an explicit '
-                    '--command-limit; do not reuse the interrupted world.'
+                    f'Minecraft reported an invalid benchmark state: {self._invalid_line}\n'
+                    'This invocation is invalid. Fix the load error, or if the command sequence limit was hit, '
+                    'start a fresh benchmark with fewer players or an explicit --command-limit. '
+                    'Do not reuse the invalid world.'
                 )
 
     def start(self, timeout: float = 120.0):
@@ -860,8 +789,10 @@ def validate_diorama_workload(run: dict, plan: list[dict]) -> dict:
     ticks = run.get('tick_span')
     if not isinstance(ticks, int) or ticks <= 0:
         raise BenchmarkInvalidError('Cannot validate Diorama without a positive profile tick count')
-    updates = sum(entry['count'] for entry in run.get('command_function_entries', [])
-                  if entry['name'] == 'execute scoreboard players set @s bs.ttl 100')
+    updates = sum(
+        entry['count'] for entry in run.get('command_function_entries', [])
+        if 'function sgp.diorama:tick/update_mannequin/apply_mannequin_pos' in entry.get('name', '')
+    )
     expected = players * ticks
     if updates != expected:
         raise BenchmarkInvalidError(
@@ -1104,20 +1035,14 @@ def set_server_property(path: Path, key: str, value: str):
     path.write_text('\n'.join(output) + '\n', encoding='utf-8')
 
 
-def previous_actor_count(server: Path, target: Path) -> int:
+def previous_actor_count(server: Path) -> int:
     marker = server / '.sgp-benchmark-actor-count'
-    if marker.is_file():
-        try:
-            return max(0, int(marker.read_text(encoding='utf-8').strip()))
-        except ValueError:
-            pass
-    # Migration path for benchmark servers staged by older harness versions.
-    cleanup = target / 'cleanup.mcfunction'
-    if cleanup.is_file():
-        indices = [int(value) for value in re.findall(r'\bBench(\d+)\b', cleanup.read_text(encoding='utf-8'))]
-        if indices:
-            return max(indices)
-    return 0
+    if not marker.is_file():
+        return 0
+    try:
+        return max(0, int(marker.read_text(encoding='utf-8').strip()))
+    except ValueError:
+        return 0
 
 
 def compile_actor_pool(server: Path, players: int):
@@ -1126,7 +1051,7 @@ def compile_actor_pool(server: Path, players: int):
 
     target = server / 'world/datapacks/SGP-Datapack/data/sgp.bench/function/actors'
     target.mkdir(parents=True, exist_ok=True)
-    cleanup_players = max(players, previous_actor_count(server, target))
+    cleanup_players = max(players, previous_actor_count(server))
 
     spawn = [
         '#> sgp.bench:actors/spawn',
@@ -1830,11 +1755,15 @@ def compare_results(args):
         for run in runs:
             validate_ray_workload(run, metadata['plan'])
             validate_diorama_workload(run, metadata['plan'])
-    before_identity = (before_meta.get('scenario'), before_meta.get('parameters'), before_meta.get('plan'), before_meta.get('command_limit'))
-    after_identity = (after_meta.get('scenario'), after_meta.get('parameters'), after_meta.get('plan'), after_meta.get('command_limit'))
+    identity_fields = (
+        'scenario', 'parameters', 'plan', 'command_limit',
+        'heap', 'warmup_seconds', 'minecraft_version',
+    )
+    before_identity = tuple((field, before_meta.get(field)) for field in identity_fields)
+    after_identity = tuple((field, after_meta.get(field)) for field in identity_fields)
     if before_identity != after_identity and not args.allow_mismatch:
         raise BenchmarkError(
-            'Benchmark scenario/parameters/command limits do not match. Use --allow-mismatch only when that is intentional.\n'
+            'Benchmark configurations do not match. Use --allow-mismatch only when that is intentional.\n'
             f'Before: {before_identity}\nAfter:  {after_identity}'
         )
 

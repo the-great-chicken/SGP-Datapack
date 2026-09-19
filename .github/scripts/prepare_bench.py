@@ -26,30 +26,29 @@ except Exception:
 MODULES = _PREPARE_CORE.MODULES
 validate = _PREPARE_CORE.validate
 
+_SCENARIO_SPEC = importlib.util.spec_from_file_location(
+    'sgp_benchmark_scenario_validation', SCRIPTS.parent.parent / 'benchmarks/scenario_validation.py'
+)
+if _SCENARIO_SPEC is None or _SCENARIO_SPEC.loader is None:
+    raise RuntimeError('Could not load benchmarks/scenario_validation.py')
+_SCENARIO_VALIDATION = importlib.util.module_from_spec(_SCENARIO_SPEC)
+sys.modules[_SCENARIO_SPEC.name] = _SCENARIO_VALIDATION
+try:
+    _SCENARIO_SPEC.loader.exec_module(_SCENARIO_VALIDATION)
+except Exception:
+    sys.modules.pop(_SCENARIO_SPEC.name, None)
+    raise
+
 
 def load_scenarios(repository: Path):
-    scenarios = {}
-    for path in sorted((repository / 'benchmarks/scenarios').rglob('*.json')):
-        data = json.loads(path.read_text(encoding='utf-8'))
-        required = {'name', 'description'}
-        missing = required - data.keys()
-        if missing:
-            raise ValueError(f'{path}: missing keys {sorted(missing)}')
-        name = data['name']
-        if path.stem != name:
-            raise ValueError(f'{path}: filename must match scenario name {name!r}')
-        if name in scenarios:
-            raise ValueError(f'{path}: duplicate scenario name {name!r}')
-        atomic = all(key in data for key in ('setup', 'tick', 'teardown', 'parameters'))
-        composite = 'components' in data
-        if atomic == composite:
-            raise ValueError(
-                f'{path}: scenario must be exactly one of atomic '
-                '(setup/tick/teardown/parameters) or composite (components)'
-            )
-        scenarios[name] = data
-    if not scenarios:
-        raise ValueError('No benchmark scenarios found')
+    scenarios = _SCENARIO_VALIDATION.load_scenarios(
+        repository / 'benchmarks/scenarios', error_type=ValueError
+    )
+    # Staging has no runner config dependency; use the repository default.
+    config = json.loads((repository / 'benchmarks/config.json').read_text(encoding='utf-8'))
+    _SCENARIO_VALIDATION.validate_scenario_graph(
+        scenarios, int(config['default_players']), error_type=ValueError
+    )
     return scenarios
 
 
@@ -58,62 +57,17 @@ def function_file(data: Path, identifier: str):
     return data / namespace / 'function' / f'{name}.mcfunction'
 
 
-def validate_parameter_specs(scenario):
-    params = scenario['parameters']
-    if not isinstance(params, dict) or 'players' not in params:
-        raise ValueError(f'Scenario {scenario["name"]}: parameters must include players')
-    for name, spec in params.items():
-        if not isinstance(spec, dict) or spec.get('type') != 'int':
-            raise ValueError(f'Scenario {scenario["name"]}: only int parameters are supported ({name})')
-        if 'min' not in spec:
-            raise ValueError(f'Scenario {scenario["name"]}: parameter {name} is missing min')
-        for key in ('min', 'max', 'default'):
-            if key in spec and not isinstance(spec[key], int):
-                raise ValueError(f'Scenario {scenario["name"]}: parameter {name}.{key} must be an integer')
-        if name != 'players' and 'default' not in spec:
-            raise ValueError(f'Scenario {scenario["name"]}: parameter {name} is missing default')
-        if 'default' in spec:
-            if spec['default'] < spec['min'] or ('max' in spec and spec['default'] > spec['max']):
-                raise ValueError(f'Scenario {scenario["name"]}: default for {name} is outside its range')
-
-
 def validate_scenarios(data: Path, scenarios):
+    # Graph/schema validation is shared with the runtime loader. This staging-only
+    # pass verifies that atomic entry points actually exist in the staged pack.
     for scenario in scenarios.values():
-        if 'components' not in scenario:
-            for key in ('setup', 'tick', 'teardown'):
-                path = function_file(data, scenario[key])
-                if not path.is_file():
-                    raise ValueError(f'Scenario {scenario["name"]}: missing {key} function {scenario[key]}')
-            validate_parameter_specs(scenario)
+        if 'components' in scenario:
             continue
+        for key in ('setup', 'tick', 'teardown'):
+            path = function_file(data, scenario[key])
+            if not path.is_file():
+                raise ValueError(f'Scenario {scenario["name"]}: missing {key} function {scenario[key]}')
 
-        components = scenario['components']
-        if not isinstance(components, list) or not components:
-            raise ValueError(f'Scenario {scenario["name"]}: components must be a non-empty list')
-        for index, component in enumerate(components, 1):
-            if not isinstance(component, dict) or 'scenario' not in component:
-                raise ValueError(f'Scenario {scenario["name"]}: component {index} must reference a scenario')
-            target = component['scenario']
-            if target not in scenarios:
-                raise ValueError(f'Scenario {scenario["name"]}: unknown component scenario {target!r}')
-            if 'players' in component and (not isinstance(component['players'], int) or component['players'] < 0):
-                raise ValueError(f'Scenario {scenario["name"]}: component {index} players must be >= 0')
-            overrides = component.get('parameters', {})
-            if not isinstance(overrides, dict) or any(not isinstance(value, int) for value in overrides.values()):
-                raise ValueError(f'Scenario {scenario["name"]}: component {index} parameters must be integer values')
-
-    def visit(name, stack):
-        if name in stack:
-            cycle = ' -> '.join((*stack, name))
-            raise ValueError(f'Benchmark scenario composition cycle: {cycle}')
-        scenario = scenarios[name]
-        if 'components' not in scenario:
-            return
-        for component in scenario['components']:
-            visit(component['scenario'], (*stack, name))
-
-    for name in scenarios:
-        visit(name, ())
 
 def append_tag_value(path: Path, value: str):
     document = json.loads(path.read_text(encoding='utf-8'))

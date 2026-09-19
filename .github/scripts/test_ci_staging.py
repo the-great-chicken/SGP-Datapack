@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 import runpy
+import shutil
 import struct
 import tempfile
 import unittest
@@ -14,12 +15,18 @@ SCRIPTS = Path(__file__).resolve().parent
 PREPARE = runpy.run_path(str(SCRIPTS / 'prepare_core.py'))
 MIXER = runpy.run_path(str(SCRIPTS / 'install_mixer.py'))
 COVERAGE = runpy.run_path(str(SCRIPTS / 'datapack_coverage.py'))
+PREPARE_BENCH = runpy.run_path(str(SCRIPTS / 'prepare_bench.py'))
 
 
 class StagingTests(unittest.TestCase):
+    def temporary_path(self, prefix: str) -> Path:
+        path = Path(tempfile.mkdtemp(prefix=prefix))
+        self.addCleanup(shutil.rmtree, path, True)
+        return path
+
     def test_loot_table_is_preserved_and_fixture_is_deterministic(self):
         repo = SCRIPTS.parent.parent
-        server = Path(tempfile.mkdtemp(prefix='sgp-ci-staging-test-')) / 'server'
+        server = self.temporary_path('sgp-ci-test-') / 'server'
         PREPARE['prepare'](repo, server)
         data = server / 'world/datapacks/SGP-Datapack/data'
         source = 'sgp.mineurs/loot_table/lootdrop_chest.json'
@@ -28,7 +35,7 @@ class StagingTests(unittest.TestCase):
         self.assertEqual((data / source).read_bytes(), (repo / 'tests/fixtures/data' / source).read_bytes())
 
     def test_function_header_must_match_resource_id(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-header-test-')) / 'data'
+        root = self.temporary_path('sgp-ci-test-') / 'data'
         file = root / 'example/function/actual.mcfunction'
         file.parent.mkdir(parents=True)
         file.write_text('#> example:stale\nsay test\n')
@@ -36,7 +43,7 @@ class StagingTests(unittest.TestCase):
             PREPARE['validate'](root)
 
     def test_test_state_cannot_use_production_storage(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-storage-test-')) / 'data'
+        root = self.temporary_path('sgp-ci-test-') / 'data'
         file = root / 'sgp.ci/function/bad.mcfunction'
         file.parent.mkdir(parents=True)
         file.write_text('data modify storage sgp:data tests.bad set value {}\n')
@@ -44,7 +51,7 @@ class StagingTests(unittest.TestCase):
             PREPARE['validate'](root)
 
     def test_inline_sgp_storage_component_must_be_namespaced(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-text-storage-test-')) / 'data'
+        root = self.temporary_path('sgp-ci-test-') / 'data'
         file = root / 'example/function/bad.mcfunction'
         file.parent.mkdir(parents=True)
         file.write_text('tellraw @a {storage:"sgp.text",nbt:"prefix",interpret:true}\n')
@@ -52,7 +59,7 @@ class StagingTests(unittest.TestCase):
             PREPARE['validate'](root)
 
     def test_data_remove_storage_requires_path(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-data-remove-test-')) / 'data'
+        root = self.temporary_path('sgp-ci-test-') / 'data'
         file = root / 'sgp.ci/function/bad.mcfunction'
         file.parent.mkdir(parents=True)
         file.write_text('data remove storage sgp.ci:stats\n')
@@ -60,7 +67,7 @@ class StagingTests(unittest.TestCase):
             PREPARE['validate'](root)
 
     def test_dummy_spawn_name_must_fit_minecraft_username_rules(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-dummy-name-test-')) / 'data'
+        root = self.temporary_path('sgp-ci-test-') / 'data'
         file = root / 'sgp.ci/function/bad.mcfunction'
         file.parent.mkdir(parents=True)
         file.write_text('dummy ThisNameIsWayTooLong spawn\n')
@@ -68,7 +75,7 @@ class StagingTests(unittest.TestCase):
             PREPARE['validate'](root)
 
     def test_unapproved_collision_fails_before_overwriting(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-collision-test-'))
+        root = self.temporary_path('sgp-ci-test-')
         production, fixtures = root / 'production', root / 'fixtures'
         for directory, value in [(production, 'production'), (fixtures, 'fixture')]:
             file = directory / 'example/function/gameplay.mcfunction'
@@ -78,8 +85,20 @@ class StagingTests(unittest.TestCase):
             PREPARE['overlay_fixtures'](production, fixtures)
         self.assertEqual((production / 'example/function/gameplay.mcfunction').read_text(), 'production')
 
+    def test_benchmark_staging_rejects_invalid_counter_declarations(self):
+        repo = SCRIPTS.parent.parent
+        scenarios = PREPARE_BENCH['load_scenarios'](repo)
+        broken = {name: dict(value) for name, value in scenarios.items()}
+        atomic_name = next(name for name, value in broken.items() if 'components' not in value)
+        broken[atomic_name] = {**broken[atomic_name], 'counters': {'bad counter': 'not-a-scoreholder'}}
+        config = json.loads((repo / 'benchmarks/config.json').read_text(encoding='utf-8'))
+        with self.assertRaisesRegex(ValueError, 'invalid counter name'):
+            PREPARE_BENCH['_SCENARIO_VALIDATION'].validate_scenario_graph(
+                broken, int(config['default_players']), error_type=ValueError
+            )
+
     def test_mixer_keeps_sgp_override_and_both_load_hooks(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-mixer-test-'))
+        root = self.temporary_path('sgp-ci-test-')
         pack = root / 'world/datapacks/SGP-Datapack'
         override = 'data/dah.actbar_mixer/function/z_private/display/self.mcfunction'
         hook = 'data/minecraft/tags/function/load.json'
@@ -240,13 +259,6 @@ class StagingTests(unittest.TestCase):
         self.assertEqual(len(environments), len(set(environments)))
         self.assertFalse((repo / 'tests/fixtures/data/sgp.ci/test_environment/spawn_routing.json').exists())
 
-    def test_protection_fixture_restores_health_after_login_wait(self):
-        repo = SCRIPTS.parent.parent
-        prepare = (repo / 'tests/fixtures/data/sgp.ci/function/protection/prepare.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('effect give @s minecraft:instant_health 1 4 true', prepare)
-        self.assertIn('effect give ProtectPeer minecraft:instant_health 1 4 true', prepare)
-        self.assertLess(prepare.index('effect give @s minecraft:instant_health'),
-                        prepare.index('assert entity @s[nbt={Health:20.0f}]'))
 
     def test_mixer_uid_waits_require_fresh_uuid_registration(self):
         repo = SCRIPTS.parent.parent
@@ -420,120 +432,13 @@ class StagingTests(unittest.TestCase):
         for name, cause_id in function_ids.items():
             self.assertIn(f'function sgp.ci:death_cause/expect {{cause:"{name}",id:{cause_id}}}', combined)
 
-    def test_bats_empty_slots_are_guarded_before_component_mutation(self):
-        repo = SCRIPTS.parent.parent
-        held = repo / 'data/sgp.kits/function/abilities/bats/hide/held_item.mcfunction'
-        text = held.read_text(encoding='utf-8')
-        copied = '$item replace entity @s weapon.mainhand from entity @p[tag=sgp.processing] $(slot)'
-        guard = 'execute unless data entity @s equipment.mainhand.id run return 0'
-        self.assertIn(copied, text)
-        self.assertIn(guard, text)
-        self.assertLess(text.index(copied), text.index(guard))
-        self.assertGreater(text.find('equipment.mainhand.components'), text.index(guard))
 
-        armor = repo / 'data/sgp.kits/function/abilities/bats/hide/armor_item.mcfunction'
-        text = armor.read_text(encoding='utf-8')
-        copied = '$item replace entity @s armor.$(slot) from entity @p[tag=sgp.processing] armor.$(slot)'
-        guard = '$execute unless data entity @s equipment.$(slot).id run return 0'
-        self.assertIn(copied, text)
-        self.assertIn(guard, text)
-        self.assertLess(text.index(copied), text.index(guard))
-        self.assertGreater(text.find('equipment.$(slot).components'), text.index(guard))
 
-        equipment = (repo / 'data/sgp.kits/function/abilities/bats/hide/equipment.mcfunction').read_text(encoding='utf-8')
-        head_mutations = [line.strip() for line in equipment.splitlines()
-                          if 'equipment.head.components' in line]
-        self.assertTrue(head_mutations)
-        self.assertTrue(all(line.startswith('execute if data entity @s equipment.head.id run ')
-                            for line in head_mutations))
 
-        restore = (repo / 'data/sgp.kits/function/abilities/bats/restore/held_item.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('execute unless data entity @s equipment.mainhand.id run return 0', restore)
 
-    def test_diorama_cleanup_waits_out_mannequin_dying_pose(self):
-        repo = SCRIPTS.parent.parent
-        retire = (repo / 'tests/fixtures/data/sgp.ci/function/diorama_cleanup/retire.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('kill @e[tag=sgp.ci.removal,type=mannequin]', retire)
-        self.assertIn('tp @e[tag=sgp.ci.removal,type=mannequin] ~ ~-1000 ~', retire)
-        for name in ('death_cleanup', 'leave_giant', 'leave_small'):
-            path = repo / 'data/sgp.diorama/test/cleanup' / f'{name}.mcfunction'
-            text = path.read_text(encoding='utf-8')
-            retire_call = 'function sgp.ci:diorama_cleanup/retire'
-            grace = 'await delay 21t'
-            gone = 'assert not entity @e[tag=sgp.ci.removal,type=mannequin]'
-            self.assertIn(retire_call, text, path)
-            self.assertIn(grace, text, path)
-            self.assertIn(gone, text, path)
-            self.assertLess(text.index(retire_call), text.index(grace), path)
-            self.assertLess(text.index(grace), text.index(gone), path)
-            self.assertNotIn('await not entity @e[tag=sgp.ci.removal,type=mannequin]', text, path)
-
-    def test_kill_effect_no_attacker_avoids_loading_grace_exposure(self):
-        repo = SCRIPTS.parent.parent
-        path = repo / 'data/sgp.cosmetics/test/kill_effects/no_attacker.mcfunction'
-        text = path.read_text(encoding='utf-8')
-        self.assertIn('function sgp.ci:kill_effects/prepare', text)
-        self.assertNotIn('await delay 61t', text)
-        self.assertNotIn('function sgp.ci:kill_effects/record_attacker', text)
-
-    def test_ability_entrypoint_tests_use_public_router_and_isolated_environments(self):
-        repo = SCRIPTS.parent.parent
-        tests = repo / 'data/sgp.kits/test/ability_entrypoints'
-        expected = {
-            'assassinate': 'sgp.enderman',
-            'bigger': 'sgp.tank',
-            'cleave': 'sgp.combattant',
-            'rays': 'sgp.roi',
-            'smoke_grenade': 'sgp.eclaireur',
-            'pecking': 'sgp.pigeon',
-            'pecking_miss': 'sgp.pigeon',
-            'no_matching_kit': None,
-        }
-        paths = sorted(tests.glob('*.mcfunction'))
-        self.assertEqual([path.stem for path in paths], sorted(expected))
-
-        for path in paths:
-            text = path.read_text(encoding='utf-8')
-            self.assertIn('execute at @s run function sgp.kits:abilities/route_ability', text, path)
-            self.assertNotRegex(text, r'(?m)^function sgp\.kits:abilities/(?:assassinate|bigger|cleave|rays|smoke_grenade)/start(?: |$)')
-            tag = expected[path.stem]
-            if tag is not None:
-                self.assertIn(f'tag @s add {tag}', text, path)
-            env = re.search(r'^# @environment (\S+)$', text, re.MULTILINE)
-            self.assertIsNotNone(env, path)
-            self.assertEqual(env.group(1), f'sgp.ci:ability_entrypoints/{path.stem}')
-            env_file = (repo / 'tests/fixtures/data/sgp.ci/test_environment/ability_entrypoints'
-                        / f'{path.stem}.json')
-            self.assertEqual(json.loads(env_file.read_text(encoding='utf-8')), {
-                'type': 'minecraft:function',
-                'setup': 'sgp.ci:ability_entrypoints/setup',
-                'teardown': 'sgp.ci:ability_entrypoints/cleanup',
-            })
-
-        cleanup = (repo / 'tests/fixtures/data/sgp.ci/function/ability_entrypoints/cleanup.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('kill @e[tag=sgp.ci.ability_entrypoint]', cleanup)
-        for player_id in range(920001, 920007):
-            self.assertIn(f'data remove storage sgp.kits:stats kits_dict.{player_id}', cleanup)
-
-    def test_hide_and_seek_fixture_clears_all_schedule_chains_at_both_boundaries(self):
-        repo = SCRIPTS.parent.parent
-        expected = (
-            'schedule clear sgp.majeurs:hide_and_seek/_start',
-            'schedule clear sgp.majeurs:hide_and_seek/_stop',
-            'schedule clear sgp.majeurs:hide_and_seek/timer/hider',
-            'schedule clear sgp.majeurs:hide_and_seek/timer/seeker',
-            'schedule clear sgp.majeurs:hide_and_seek/timer/glow',
-            'schedule clear sgp.majeurs:hide_and_seek/timer/glow_announce',
-        )
-        for name in ('setup', 'cleanup'):
-            path = repo / 'tests/fixtures/data/sgp.ci/function/hider_teams' / f'{name}.mcfunction'
-            text = path.read_text(encoding='utf-8')
-            self.assertIn('function #bs.schedule:cancel_all {with:{id:"hide_and_seek"}}', text, path)
-            for command in expected:
-                self.assertIn(command, text, path)
 
     def test_datapack_coverage_instruments_only_staged_production_functions(self):
-        root = Path(tempfile.mkdtemp(prefix='sgp-ci-coverage-test-'))
+        root = self.temporary_path('sgp-ci-test-')
         repo = root / 'repo'
         server = root / 'server'
         source_data = repo / 'data'

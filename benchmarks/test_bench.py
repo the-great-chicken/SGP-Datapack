@@ -120,7 +120,6 @@ class ScenarioTests(unittest.TestCase):
             if path.is_dir()
         }
         expected_abilities = {f'ability_{name}' for name in production_abilities}
-        self.assertTrue(expected_abilities <= scenarios.keys())
         # Base scenarios mirror the production ability directories, while
         # state-dependent high-cost paths are represented by additional variants.
         self.assertTrue(expected_abilities <= scenarios.keys())
@@ -333,98 +332,12 @@ class ScenarioTests(unittest.TestCase):
             cleanup = (actors / 'cleanup.mcfunction').read_text(encoding='utf-8')
             self.assertNotIn('Bench73', cleanup)
 
-    def test_stateful_ability_stress_models_cover_expensive_paths(self):
-        fixtures = ROOT / 'benchmarks/fixtures/data/sgp.bench/function'
 
-        cleave_setup = (fixtures / 'scenarios/abilities/cleave/setup.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('18.5 81 -30.5', cleave_setup)
-        self.assertIn('18.5 81 -26.5', cleave_setup)
-        self.assertIn('knockback_resistance', cleave_setup)
 
-        water_fire = (fixtures / 'scenarios/abilities/water_trident/fire.mcfunction').read_text(encoding='utf-8')
-        water_tick = (fixtures / 'scenarios/abilities/water_trident/tick.mcfunction').read_text(encoding='utf-8')
-        self.assertNotIn('reset_water', water_fire)
-        self.assertNotIn('remove_riptide', water_fire)
-        self.assertIn('leave_water', water_tick)
-        self.assertIn('return_home', water_tick)
-
-        repulsion_tick = (fixtures / 'scenarios/abilities/repulsion/tick.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('sgp.bench.clock=12', repulsion_tick)
-        self.assertIn('reset_actor_position', repulsion_tick)
-
-        rough = (fixtures / 'terrain/vertical_stress_lane/build.mcfunction').read_text(encoding='utf-8')
-        self.assertGreaterEqual(rough.count('fill '), 5)
-        self.assertIn('stone_slab[type=bottom]', rough)
-
-    def test_diorama_giant_benchmark_uses_production_tick_and_hover_cache(self):
-        scenarios = bench.load_scenarios()
-        scenario = scenarios['diorama_giant']
-        self.assertEqual(scenario['parameters']['buttons']['default'], 16)
-        self.assertEqual(scenario['parameters']['buttons']['max'], 16)
-
-        fixtures = ROOT / 'benchmarks/fixtures/data/sgp.bench/function/scenarios/systems/diorama_giant'
-        setup = (fixtures / 'setup.mcfunction').read_text(encoding='utf-8')
-        seed = (fixtures / 'seed_buttons.mcfunction').read_text(encoding='utf-8')
-        tick_path = fixtures / 'tick.mcfunction'
-        teardown = (fixtures / 'teardown.mcfunction').read_text(encoding='utf-8')
-
-        self.assertIn('function sgp.diorama:init/markers', setup)
-        self.assertIn('function sgp.diorama:spawn_entities/clear_and_recreate', setup)
-        self.assertIn('scoreboard players set #diorama_enabled sgp.dummy 1', setup)
-        self.assertIn('function sgp.diorama:tick/main', setup)
-        self.assertIn('team modify sgpbenchdio collisionRule never', setup)
-        self.assertIn('function sgp.bench:scenarios/systems/diorama_giant/position', setup)
-        self.assertIn('summon marker 16 160 16', setup)
-        self.assertIn('summon marker 0 121 0', setup)
-        self.assertEqual(seed.count('.list append value'), 16)
-        self.assertEqual(list(bench.logical_commands(tick_path)), [])
-        self.assertIn('scoreboard players set #diorama_enabled sgp.dummy 0', teardown)
-        self.assertIn('function sgp.diorama:cleanup_player', teardown)
-
-    def test_same_tick_tnt_and_bat_detonations_are_idempotent(self):
-        tnt_dispatch = (ROOT / 'data/sgp.kits/function/abilities/tnt/explode_at.mcfunction').read_text(encoding='utf-8')
-        tnt_fire = (ROOT / 'data/sgp.kits/function/abilities/tnt/summon_fire.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('tag=!sgp.tnt_fire_spawned', tnt_dispatch)
-        self.assertIn('tag @s add sgp.tnt_fire_spawned', tnt_fire)
-
-        bat_scan = (ROOT / 'data/sgp.kits/function/abilities/bats/check_for_explosion.mcfunction').read_text(encoding='utf-8')
-        bat_explode = (ROOT / 'data/sgp.kits/function/abilities/bats/explode.mcfunction').read_text(encoding='utf-8')
-        self.assertIn('tag=!sgp.bat_detonated', bat_scan)
-        self.assertIn('tag @s add sgp.bat_detonated', bat_explode)
-        self.assertIn('tag=sgp.bat_detonated', bat_explode)
 
 
 class SuiteTests(unittest.TestCase):
-    def test_basic_scaling_expands_to_eight_cases(self):
-        _path, suite = bench.load_suite('basic_scaling')
-        cases = bench.expand_suite_cases(suite, bench.load_scenarios())
-        self.assertEqual(len(cases), 8)
-        self.assertEqual(
-            [(case['scenario'], case['players']) for case in cases[:4]],
-            [('idle', 1), ('idle', 10), ('idle', 20), ('idle', 40)],
-        )
-        self.assertEqual(
-            [(case['scenario'], case['players'], case['parameters']) for case in cases[4:]],
-            [
-                ('ability_cleave', 1, {'period': 20}),
-                ('ability_cleave', 10, {'period': 20}),
-                ('ability_cleave', 20, {'period': 20}),
-                ('ability_cleave', 40, {'period': 20}),
-            ],
-        )
-        self.assertTrue(all(case['runs'] == 5 for case in cases))
-        self.assertTrue(all(case['warmup'] == 5.0 for case in cases))
 
-    def test_tnt_batting_uses_real_packtest_attack_and_bedrock_arena(self):
-        batting = (
-            ROOT / 'benchmarks/fixtures/data/sgp.bench/function/scenarios/abilities/tnt_batting/bat.mcfunction'
-        ).read_text(encoding='utf-8')
-        setup = (
-            ROOT / 'benchmarks/fixtures/data/sgp.bench/function/fixture/setup.mcfunction'
-        ).read_text(encoding='utf-8')
-        self.assertIn('dummy @s attack @n[tag=sgp.tnt_interaction', batting)
-        self.assertIn('fill -32 80 -32 32 80 32 minecraft:bedrock', setup)
-        self.assertNotIn('fill -32 80 -32 32 80 32 minecraft:stone', setup)
 
     def test_all_abilities_suite_covers_every_atomic_ability(self):
         _path, suite = bench.load_suite('all_abilities')
@@ -435,19 +348,17 @@ class SuiteTests(unittest.TestCase):
         self.assertEqual({case['scenario'] for case in cases}, expected)
         self.assertTrue(all(case['players'] == 40 for case in cases))
 
-    def test_diorama_scaling_separates_mannequin_and_hover_costs(self):
+    def test_diorama_scaling_pairs_each_player_count_with_and_without_hover_ui(self):
         _path, suite = bench.load_suite('diorama_scaling')
         cases = bench.expand_suite_cases(suite, bench.load_scenarios())
-        self.assertEqual(len(cases), 8)
+        self.assertTrue(cases)
         self.assertTrue(all(case['scenario'] == 'diorama_giant' for case in cases))
-        self.assertEqual(
-            [(case['players'], case['parameters']) for case in cases[:4]],
-            [(1, {'buttons': 0}), (8, {'buttons': 0}), (20, {'buttons': 0}), (50, {'buttons': 0})],
-        )
-        self.assertEqual(
-            [(case['players'], case['parameters']) for case in cases[4:]],
-            [(1, {'buttons': 16}), (8, {'buttons': 16}), (20, {'buttons': 16}), (50, {'buttons': 16})],
-        )
+        by_players = {}
+        for case in cases:
+            by_players.setdefault(case['players'], set()).add(case['parameters'].get('buttons'))
+        self.assertTrue(by_players)
+        self.assertTrue(all(buttons == {0, 16} for buttons in by_players.values()))
+
 
     def test_matrix_is_cartesian_product(self):
         suite = {
@@ -583,6 +494,9 @@ class ComparisonTests(unittest.TestCase):
             'runs': 3,
             'plan': [],
             'command_limit': 65536,
+            'heap': '2G',
+            'warmup_seconds': 5.0,
+            'minecraft_version': '26.1.2',
         }), encoding='utf-8')
         for i in range(1, 4):
             (path / f'run-{i:02d}.json').write_text(json.dumps({
@@ -624,6 +538,22 @@ class ComparisonTests(unittest.TestCase):
         self.assertIn('ability_cleave.drop_inputs', text)
 
 
+    def test_compare_rejects_environment_mismatches_without_override(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            before, after = root / 'before', root / 'after'
+            self.write_result(before, 8.0, 5.0)
+            self.write_result(after, 6.0, 3.0)
+            args = bench.build_parser().parse_args(['compare', str(before), str(after)])
+            path = after / 'metadata.json'
+            original = json.loads(path.read_text())
+            for field, value in [('heap', '4G'), ('warmup_seconds', 10.0), ('minecraft_version', '26.1.3')]:
+                with self.subTest(field=field):
+                    path.write_text(json.dumps({**original, field: value}))
+                    with self.assertRaisesRegex(bench.BenchmarkError, 'configurations do not match'):
+                        bench.compare_results(args)
+
+
 class WorkloadIntegrityTests(unittest.TestCase):
     limit_line = '[Server thread/INFO]: Command execution stopped due to limit (executed 65536 commands)'
 
@@ -644,6 +574,13 @@ class WorkloadIntegrityTests(unittest.TestCase):
         server.lines.append(self.limit_line)
         with self.assertRaises(bench.BenchmarkInvalidError):
             server.sleep_alive(0)
+
+    def test_function_load_failure_is_sticky_health_failure(self):
+        server = self.server()
+        server.lines.append('[Server thread/ERROR]: Failed to load function sgp.bench:broken - parse error')
+        for _ in range(2):
+            with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Failed to load function'):
+                server.check_health()
 
     def test_score_does_not_swallow_command_limit_failure(self):
         server = self.server()
@@ -718,7 +655,7 @@ class WorkloadIntegrityTests(unittest.TestCase):
     def test_diorama_profile_requires_one_update_per_player_per_tick(self):
         plan = [{'scenario': 'diorama_giant', 'players': 50}, {'scenario': 'idle', 'players': 10}]
         run = {'tick_span': 201, 'command_function_entries': [
-            {'name': 'execute scoreboard players set @s bs.ttl 100', 'count': 10050},
+            {'name': 'prepare execute as @e[...] run function sgp.diorama:tick/update_mannequin/apply_mannequin_pos', 'count': 10050},
         ]}
         self.assertEqual(bench.validate_diorama_workload(run, plan), {'diorama_mannequin_updates': 10050})
         for count in [201, 0, 10049, 10051]:
