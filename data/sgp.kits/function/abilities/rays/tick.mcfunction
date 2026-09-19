@@ -28,14 +28,10 @@ execute store result storage sgp:rays prediction.x double 0.001 run scoreboard p
 execute store result storage sgp:rays prediction.y double 0.001 run scoreboard players get @s sgp.dy
 execute store result storage sgp:rays prediction.z double 0.001 run scoreboard players get @s sgp.dz
 
-# Only players participate in entity collision checks; the caster is excluded.
-tag @a[tag=!sgp.radiator] add sgp.ray_target
-
-# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
+# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type.
+# The linked-child dispatcher also skips entity collision entirely when no damageable player is nearby.
 scoreboard players operation $link.to bs.in = @s bs.id
-execute as @e[distance=..10,tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] run function sgp.kits:abilities/rays/tick_children
-
-tag @a[tag=sgp.ray_target] remove sgp.ray_target
+function sgp.kits:abilities/rays/tick_linked_children
 
 playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 

@@ -11,7 +11,8 @@ from .models import ParsedProfile
 from .profiler import format_number, parse_profile, profile_to_dict, wait_for_new_profile
 from .reporting import git_commit, source_fingerprint, write_summary
 from .runtime import (compile_active_plan, compile_actor_pool, plan_total_players,
-                      read_workload_counters, wait_for_actor_chunks_loaded)
+                      read_workload_counters, require_actor_in_game,
+                      wait_for_actor_chunks_loaded)
 from .scenarios import load_scenarios, resolve_plan
 from .server import ServerProcess
 from .settings import CONFIG, INVALID_MARKER, SERVER_MARKER
@@ -99,12 +100,14 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             wait_for_actor_chunks_loaded(server, total_players, args.startup_timeout)
             server.send('function sgp.bench:generated/active/setup')
             server.require_score('#plan_ready', 1)
+            require_actor_in_game(server, total_players)
             run_live_validators(server, plan, validators=validators)
             server.send('function sgp.bench:start')
             server.require_score('#enabled', 1)
 
             phase = f'run {run_number}/{args.runs} warm-up'
             server.sleep_alive(args.warmup)
+            require_actor_in_game(server, total_players)
             run_live_validators(server, plan, validators=validators)
 
             phase = f'run {run_number}/{args.runs} profiling'
@@ -124,6 +127,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#actual_players', total_players)
+            require_actor_in_game(server, total_players)
             live_validation = run_live_validators(server, plan, validators=validators)
             workload = read_workload_counters(server, plan)
             missing_counters = [name for name, value in workload.items() if value is None]

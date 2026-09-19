@@ -24,6 +24,7 @@ class RunnerIntegrityTests(unittest.TestCase):
             def score(self, player, objective='sgp.bench', timeout=5.0):
                 return {
                     '#actor_chunks_loaded': 1,
+                    '#actual_in_game': 40,
                     '#actual_rays': 320,
                     '#ray_with_link': 320,
                     '#ray_valid_owners': 40,
@@ -61,7 +62,25 @@ class RunnerIntegrityTests(unittest.TestCase):
             readiness_check = next(i for i, command in enumerate(commands) if '#actor_chunks_loaded' in command)
             scenario_setup = commands.index('function sgp.bench:generated/active/setup')
             self.assertLess(readiness_check, scenario_setup)
+            in_game_check = next(i for i, command in enumerate(commands) if '#actual_in_game' in command)
             initial_ray_check = next(i for i, command in enumerate(commands) if '#actual_rays' in command)
+            self.assertLess(in_game_check, initial_ray_check)
             self.assertLess(initial_ray_check, commands.index('function sgp.bench:start'))
             self.assertNotIn('perf start', commands)
             self.assertEqual(commands[-1], 'stop')
+
+    def test_actor_in_game_invariant_rejects_partial_membership(self):
+        server = self.server()
+        commands = []
+        with patch.object(server, 'send', side_effect=commands.append), \
+             patch.object(server, 'score', return_value=39):
+            with self.assertRaisesRegex(
+                bench.BenchmarkInvalidError,
+                'expected 40 actors to remain sgp.in_game, got 39',
+            ):
+                benchmark_runner.require_actor_in_game(server, 40)
+
+        self.assertEqual(commands, [
+            'execute store result score #actual_in_game sgp.bench '
+            'if entity @a[tag=sgp.bench.actor,tag=sgp.in_game]'
+        ])

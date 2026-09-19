@@ -73,6 +73,23 @@ def wait_for_actor_chunks_loaded(server: ServerProcess, players: int, timeout: f
         server.sleep_alive(min(0.1, remaining))
 
 
+def require_actor_in_game(server: ServerProcess, players: int) -> int:
+    """Require every benchmark actor to remain in the production in-game set."""
+    server.send(
+        'execute store result score #actual_in_game sgp.bench '
+        'if entity @a[tag=sgp.bench.actor,tag=sgp.in_game]'
+    )
+    actual = server.score('#actual_in_game')
+    if actual is None:
+        raise BenchmarkError('Could not read benchmark sgp.in_game actor count')
+    if actual != players:
+        raise BenchmarkInvalidError(
+            'Benchmark actor invariant failed: '
+            f'expected {players} actors to remain sgp.in_game, got {actual}'
+        )
+    return actual
+
+
 def set_server_property(path: Path, key: str, value: str):
     lines = path.read_text(encoding='utf-8').splitlines() if path.is_file() else []
     prefix = key + '='

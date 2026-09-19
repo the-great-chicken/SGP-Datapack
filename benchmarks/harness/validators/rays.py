@@ -64,10 +64,8 @@ def _reset_ray_validation_state(server: ServerProcess):
     # leaking the final actor's predicate inputs into subsequent server work.
     for player, objective in (
         ('$link.to', 'bs.in'),
-        ('$id.suid', 'bs.in'),
         ('#ray_owner_id', 'sgp.bench'),
         ('#ray_linked', 'sgp.bench'),
-        ('#ray_id_matches', 'sgp.bench'),
         ('#ray_valid_owners', 'sgp.bench'),
         ('#ray_owned_by_actors', 'sgp.bench'),
     ):
@@ -75,29 +73,33 @@ def _reset_ray_validation_state(server: ServerProcess):
 
 
 def _run_ray_owner_validation(server: ServerProcess, plan: list[dict]):
+    server.send('tag @e[tag=sgp.ray,type=item_display] remove sgp.bench.ray_owned')
     server.send('scoreboard players set #ray_valid_owners sgp.bench 0')
-    server.send('scoreboard players set #ray_owned_by_actors sgp.bench 0')
     for first, last in ray_actor_ranges(plan):
         server.send(
             'execute as @a[tag=sgp.bench.actor,'
             f'scores={{sgp.bench={first}..{last}}}] '
             'run function sgp.bench:scenarios/abilities/rays/verify_owner'
         )
+    server.send(
+        'execute store result score #ray_owned_by_actors sgp.bench '
+        'if entity @e[tag=sgp.ray,tag=sgp.bench.ray_owned,type=item_display]'
+    )
+    server.send('tag @e[tag=sgp.ray,tag=sgp.bench.ray_owned,type=item_display] remove sgp.bench.ray_owned')
 
 
 def _ray_owner_failure_details(server: ServerProcess, plan: list[dict]) -> list[str]:
     bad: list[str] = []
     for index in ray_actor_indices(plan):
         name = actor_name(index)
-        for scoreholder in ('#ray_owner_id', '#ray_linked', '#ray_id_matches'):
+        for scoreholder in ('#ray_owner_id', '#ray_linked'):
             server.send(f'scoreboard players set {scoreholder} sgp.bench -1')
         server.send(f'execute as {name} run function sgp.bench:scenarios/abilities/rays/verify_owner')
         linked = server.score('#ray_linked')
-        id_matches = server.score('#ray_id_matches')
-        if linked == 8 and id_matches == 1:
+        if linked == 8:
             continue
         bs_id = server.score('#ray_owner_id')
-        bad.append(f'{name}(bs.id={bs_id!r}, linked={linked!r}, id_matches={id_matches!r})')
+        bad.append(f'{name}(bs.id={bs_id!r}, linked={linked!r})')
     return bad
 
 

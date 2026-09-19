@@ -49,8 +49,8 @@ class RaysValidatorTests(unittest.TestCase):
         }
         current = {'actor': None}
         state = {
-            'Bench01': {'bs.id': 101, 'linked': 8, 'id_matches': 1},
-            'Bench02': {'bs.id': 102, 'linked': 8, 'id_matches': 1},
+            'Bench01': {'bs.id': 101, 'linked': 8},
+            'Bench02': {'bs.id': 102, 'linked': 8},
         }
 
         def send(command):
@@ -63,8 +63,6 @@ class RaysValidatorTests(unittest.TestCase):
                 return aggregate[player]
             if actor is not None and player == '#ray_linked':
                 return state[actor]['linked']
-            if actor is not None and player == '#ray_id_matches':
-                return state[actor]['id_matches']
             if actor is not None and player == '#ray_owner_id':
                 return state[actor]['bs.id']
             return None
@@ -76,6 +74,8 @@ class RaysValidatorTests(unittest.TestCase):
             })
             commands = [call.args[0] for call in send_mock.call_args_list]
             self.assertTrue(any('scores={sgp.bench=1..2}' in command and 'verify_owner' in command
+                                for command in commands))
+            self.assertTrue(any('tag=sgp.bench.ray_owned' in command and '#ray_owned_by_actors' in command
                                 for command in commands))
             self.assertFalse(any(command.startswith('execute as Bench') for command in commands))
             self.assertEqual([call.args[0] for call in score_mock.call_args_list], [
@@ -89,7 +89,7 @@ class RaysValidatorTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 bench.BenchmarkInvalidError,
                 r'rays with any link 16/16, rays owned by benchmark actors 8/16, valid owners 1/2.*'
-                r'Bench02\(bs.id=102, linked=0, id_matches=1\)',
+                r'Bench02\(bs.id=102, linked=0\)',
             ):
                 bench.require_ray_entities(server, plan)
 

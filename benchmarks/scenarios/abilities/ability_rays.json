@@ -1,6 +1,6 @@
 {
   "name": "ability_rays",
-  "description": "Roi players: keeps Rays active continuously, exercising linked displays and per-tick raycasts.",
+  "description": "Roi players keep Rays active in isolated cells across stacked planes, exercising linked displays and the block-only raycast fast path without target collisions.",
   "validators": [
     "rays"
   ],
@@ -10,7 +10,8 @@
   "parameters": {
     "players": {
       "type": "int",
-      "min": 0
+      "min": 0,
+      "max": 80
     }
   },
   "counters": {

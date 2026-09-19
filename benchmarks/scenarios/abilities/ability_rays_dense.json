@@ -1,6 +1,6 @@
 {
   "name": "ability_rays_dense",
-  "description": "Roi players keep Rays active on a tightly spaced line, making east/west beams pierce many real players and execute the full damage/title/particle callback path.",
+  "description": "Roi players keep Rays active on a one-block-spaced line, making east/west beams pierce many real players and execute the full damage/title/particle callback path.",
   "validators": [
     "rays"
   ],

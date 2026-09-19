@@ -64,6 +64,10 @@ Restrict the scenario to its assigned actors with:
 @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}]
 ```
 
+Benchmark actors must remain `sgp.in_game` throughout scenario setup, warm-up, and profiling. The generic runner validates this automatically. Scenario setup may reposition actors, but positions must remain inside the synthetic `pvp_arena` according to the same production arena-membership logic used during normal gameplay.
+
+When a scenario moves an actor and then uses relative coordinates, remember that moving `@s` does not move the command execution position. Use `at @s` before later `~ ~ ~` coordinates when they are meant to be relative to the actor's new position.
+
 Declare workload counters as score holders in the `sgp.bench` objective:
 
 ```json
