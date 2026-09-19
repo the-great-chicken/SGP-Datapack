@@ -1,0 +1,23 @@
+{
+  "name": "ability_repulsion",
+  "description": "Archer players repeatedly trigger Repulsion through the normal drop interaction; after the real delayed displacement measurement, actors are reset before the next cast.",
+  "setup": "sgp.bench:scenarios/abilities/repulsion/setup",
+  "tick": "sgp.bench:scenarios/abilities/repulsion/tick",
+  "teardown": "sgp.bench:scenarios/abilities/repulsion/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 20,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "drop_inputs": "#repulsion_drop_inputs",
+    "waves": "#repulsion_waves"
+  }
+}

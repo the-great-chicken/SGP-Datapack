@@ -25,9 +25,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-      - name: Validate integration boundaries and prepare core
+      - name: Run offline Python tests and prepare core
         run: |
-          python3 .github/scripts/test_ci_staging.py
+          python3 -m unittest discover -s tests/python -p 'test_*.py'
+          python3 benchmarks/test_bench.py
           python3 .github/scripts/prepare_core.py . .packtest-server
           python3 .github/scripts/datapack_coverage.py instrument . .packtest-server
       - name: Download test dependencies

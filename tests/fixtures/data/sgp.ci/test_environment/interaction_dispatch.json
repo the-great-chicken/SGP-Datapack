@@ -1,1 +1,0 @@
-{"type":"minecraft:function","setup":"sgp.ci:players/cleanup","teardown":"sgp.ci:interaction_dispatch/cleanup"}

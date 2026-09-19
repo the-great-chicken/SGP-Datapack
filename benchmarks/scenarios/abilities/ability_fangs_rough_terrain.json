@@ -1,0 +1,23 @@
+{
+  "name": "ability_fangs_rough_terrain",
+  "description": "Vindicateur players repeatedly cast Fangs from one shared reusable vertical-stress lane with tall columns, deep drops, and bottom slabs, maximizing recursive terrain placement work.",
+  "setup": "sgp.bench:scenarios/abilities/fangs_rough/setup",
+  "tick": "sgp.bench:scenarios/abilities/fangs_rough/tick",
+  "teardown": "sgp.bench:scenarios/abilities/fangs_rough/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 2,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "drop_inputs": "#fangs_rough_inputs",
+    "waves": "#fangs_rough_waves"
+  }
+}

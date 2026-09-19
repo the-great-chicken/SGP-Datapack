@@ -1,0 +1,23 @@
+{
+  "name": "ability_tnt",
+  "description": "Pyromane players: Repeatedly triggers TNT through PackTest's normal drop interaction, including fuse, interaction, explosion, and lingering fire work.",
+  "setup": "sgp.bench:scenarios/abilities/tnt/setup",
+  "tick": "sgp.bench:scenarios/abilities/tnt/tick",
+  "teardown": "sgp.bench:scenarios/abilities/tnt/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 5,
+      "max": 400,
+      "default": 40
+    }
+  },
+  "counters": {
+    "drop_inputs": "#tnt_drop_inputs",
+    "waves": "#tnt_waves"
+  }
+}

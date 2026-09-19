@@ -1,0 +1,22 @@
+{
+  "name": "ability_cooldown",
+  "description": "Shared cooldown path: Combattant actors repeatedly attempt the normal drop input while held on a long cooldown, exercising decrement, HUD, give-back, and cooldown-warning work without starting an ability.",
+  "setup": "sgp.bench:scenarios/abilities/cooldown/setup",
+  "tick": "sgp.bench:scenarios/abilities/cooldown/tick",
+  "teardown": "sgp.bench:scenarios/abilities/cooldown/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 1,
+      "max": 400,
+      "default": 1
+    }
+  },
+  "counters": {
+    "drop_inputs": "#cooldown_drop_inputs"
+  }
+}

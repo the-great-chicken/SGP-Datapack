@@ -1,0 +1,13 @@
+{
+  "minecraft_version": "26.1.2",
+  "java_version": 25,
+  "heap": "2G",
+  "dependencies": {
+    "server.jar": "https://meta.fabricmc.net/v2/versions/loader/26.1.2/0.19.5/1.1.2/server/jar",
+    "mods/fabric-api.jar": "https://cdn.modrinth.com/data/P7dR8mSH/versions/uLkEd5dr/fabric-api-0.155.2%2B26.1.2.jar",
+    "mods/packtest.jar": "https://github.com/the-great-chicken/packtest/releases/download/v2.5.0-tgc.1/packtest-2.5.0-tgc.1.jar",
+    "world/datapacks/bookshelf-suite.zip": "https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip",
+    "actionbar-mixer.zip": "https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.3.3/Actionbar-Mixer.v1.3.3.zip"
+  },
+  "default_players": 40
+}

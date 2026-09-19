@@ -1,1 +1,0 @@
-{"type":"minecraft:function","setup":"sgp.ci:round_scheduling/setup","teardown":"sgp.ci:round_scheduling/cleanup"}

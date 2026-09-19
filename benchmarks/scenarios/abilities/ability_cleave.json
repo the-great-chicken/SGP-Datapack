@@ -1,0 +1,23 @@
+{
+  "name": "ability_cleave",
+  "description": "Combattant players: repeatedly triggers Cleave into a dense opposing stack so every cast exercises many real cone checks and damage callbacks.",
+  "setup": "sgp.bench:scenarios/abilities/cleave/setup",
+  "tick": "sgp.bench:scenarios/abilities/cleave/tick",
+  "teardown": "sgp.bench:scenarios/abilities/cleave/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 1
+    },
+    "period": {
+      "type": "int",
+      "min": 2,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "drop_inputs": "#cleave_drop_inputs",
+    "waves": "#cleave_waves"
+  }
+}

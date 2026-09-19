@@ -1,0 +1,19 @@
+{
+  "name": "ability_rays",
+  "description": "Roi players: keeps Rays active continuously, exercising linked displays and per-tick raycasts.",
+  "validators": [
+    "rays"
+  ],
+  "setup": "sgp.bench:scenarios/abilities/rays/setup",
+  "tick": "sgp.bench:scenarios/abilities/rays/tick",
+  "teardown": "sgp.bench:scenarios/abilities/rays/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#rays_player_ticks"
+  }
+}

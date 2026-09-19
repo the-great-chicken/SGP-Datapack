@@ -1,0 +1,19 @@
+{
+  "name": "ability_rays_dense",
+  "description": "Roi players keep Rays active on a tightly spaced line, making east/west beams pierce many real players and execute the full damage/title/particle callback path.",
+  "validators": [
+    "rays"
+  ],
+  "setup": "sgp.bench:scenarios/abilities/rays_dense/setup",
+  "tick": "sgp.bench:scenarios/abilities/rays_dense/tick",
+  "teardown": "sgp.bench:scenarios/abilities/rays_dense/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#rays_dense_player_ticks"
+  }
+}

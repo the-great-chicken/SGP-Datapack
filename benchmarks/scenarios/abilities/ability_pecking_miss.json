@@ -1,0 +1,23 @@
+{
+  "name": "ability_pecking_miss",
+  "description": "Pigeon players repeatedly attempt Pecking with no eligible targets, exhausting the entire thick-ray acquisition search on every input.",
+  "setup": "sgp.bench:scenarios/abilities/pecking_miss/setup",
+  "tick": "sgp.bench:scenarios/abilities/pecking_miss/tick",
+  "teardown": "sgp.bench:scenarios/abilities/pecking_miss/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 2,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "drop_inputs": "#peck_miss_inputs",
+    "waves": "#peck_miss_waves"
+  }
+}

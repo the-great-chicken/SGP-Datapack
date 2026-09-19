@@ -1,5 +1,0 @@
-{
-  "type": "minecraft:function",
-  "setup": "sgp.ci:unlocking/cleanup",
-  "teardown": "sgp.ci:unlocking/cleanup"
-}

@@ -1,0 +1,22 @@
+{
+  "name": "diorama_giant",
+  "description": "Players stand around the Diorama model's outer shell, facing away, with one giant mannequin per player. Optional spawn buttons exercise hover rejection when nobody is looking at the model.",
+  "validators": [
+    "diorama"
+  ],
+  "setup": "sgp.bench:scenarios/systems/diorama_giant/setup",
+  "tick": "sgp.bench:scenarios/systems/diorama_giant/tick",
+  "teardown": "sgp.bench:scenarios/systems/diorama_giant/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 1
+    },
+    "buttons": {
+      "type": "int",
+      "min": 0,
+      "max": 16,
+      "default": 16
+    }
+  }
+}

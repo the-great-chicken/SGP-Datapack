@@ -1,5 +1,8 @@
 #> sgp.kits:abilities/tnt/summon_fire
 
+# Make global same-tick detonation dispatch idempotent.
+tag @s add sgp.tnt_fire_spawned
+
 summon marker ~ ~ ~ {Tags:["sgp.marker", "sgp.fire_explosion", "sgp.new"]}
 scoreboard players set @n[tag=sgp.new,distance=..0.1,limit=1,type=marker] sgp.timer 100
 scoreboard players operation @n[tag=sgp.new,distance=..0.1,limit=1,type=marker] sgp.damage_owner = @s sgp.damage_owner

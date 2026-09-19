@@ -1,0 +1,16 @@
+{
+  "name": "ability_pecking",
+  "description": "Pigeon players keep a successful Pecking lock at 4.8 blocks, making target acquisition run almost its full thick-ray search before repeated real damage.",
+  "setup": "sgp.bench:scenarios/abilities/pecking/setup",
+  "tick": "sgp.bench:scenarios/abilities/pecking/tick",
+  "teardown": "sgp.bench:scenarios/abilities/pecking/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#pecking_player_ticks"
+  }
+}

@@ -1,1 +1,0 @@
-{"type":"minecraft:function","setup":"sgp.ci:diorama_lifecycle/setup","teardown":"sgp.ci:diorama_lifecycle/cleanup"}

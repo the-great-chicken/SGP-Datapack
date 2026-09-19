@@ -44,6 +44,8 @@ Do not call an integration function directly from core code, including from macr
 
 Add [PackTest](https://github.com/misode/packtest) tests under `data/<namespace>/test/<subsystem>/`, named after the behavior they check. CI discovers tests recursively and runs them against the plugin-free core. Keep test fixtures under `tests/fixtures/data/`; the preparation script copies them into the CI datapack.
 
+PackTest environment resources are generated during staging from `tests/packtest_environments.json`. Reuse a tree binding when a family shares setup/teardown, and add an exact binding only for a genuine exception; do not check generated `test_environment/*.json` files into `tests/fixtures`. Offline Python tests live under `tests/python/` and can be run with `python3 -m unittest discover -s tests/python -p 'test_*.py'`.
+
 Test files do not support `\` line continuations. Put directives such as `# @dummy` in the initial comment block, before any blank line or command.
 
 CI installs pinned Actionbar Mixer resources beneath SGP's overrides. Fixture collisions are allowlisted in `prepare_core.py`; the deterministic Lootdrop override retains an unchanged production table at `sgp.ci:production/lootdrop_chest` for Minecraft to load and test. Failure diagnostics must be followed by an ordinary `assert`, never replace it.
@@ -57,6 +59,10 @@ PackTest runs dummy interactions inside a command function, which defers loot ad
 Call the production entry point and assert its observable results with explicit expected values. Use test-specific tags and storage paths, and establish each test's inputs independently. Tests share scoreboards and storage. PackTest stops executing subsequent test lines after a test fails or succeeds, so keep synchronous setup, calls, and assertions directly in the test when they form one readable scenario; use fixture functions only when they provide a real abstraction, shared behavior, parameterization, or execution context. Use environment teardown for cleanup that must happen after failures. Scope entity selectors to the test's entities and area. Keep test-owned scratch state under `sgp.ci:*`; do not store it under production `sgp:data` paths.
 
 Do not run tests on the live Minecraft server. The preparation command above validates resources and stages a fresh CI copy without starting Minecraft; gameplay assertions are checked by the GitHub action.
+
+### Performance benchmarks
+
+Local performance benchmarks live under `benchmarks/`; see [`benchmarks/README.md`](benchmarks/README.md). Keep benchmark-only functions under `benchmarks/fixtures/data/sgp.bench/` and compose existing workloads in JSON instead of adding one-off dispatchers.
 
 ### Language
 The datapack is mainly written by French speakers for French speakers, but all new code should be written in English to prepare for future internationalization.

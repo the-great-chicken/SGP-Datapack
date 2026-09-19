@@ -1,0 +1,23 @@
+{
+  "name": "ability_smoke_grenade",
+  "description": "Eclaireur players: Repeatedly triggers Smoke Grenade through PackTest's normal drop interaction.",
+  "setup": "sgp.bench:scenarios/abilities/smoke_grenade/setup",
+  "tick": "sgp.bench:scenarios/abilities/smoke_grenade/tick",
+  "teardown": "sgp.bench:scenarios/abilities/smoke_grenade/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 5,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "drop_inputs": "#smoke_grenade_drop_inputs",
+    "waves": "#smoke_grenade_waves"
+  }
+}

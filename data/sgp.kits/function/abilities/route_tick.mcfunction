@@ -1,6 +1,7 @@
 #> sgp.kits:abilities/route_tick
 #
 # Kits who are not here have an ability without a duration
+# Executed at and as the player
 
 execute if entity @s[tag=sgp.alchimiste] run return run function sgp.kits:abilities/illusions/tick
 execute if entity @s[tag=sgp.cancer] run return run function sgp.kits:abilities/bats/tick

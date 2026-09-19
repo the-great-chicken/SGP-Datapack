@@ -1,0 +1,30 @@
+{
+  "name": "ability_tnt_batting",
+  "description": "Pyromane players synchronously cast TNT and bat each linked charge once through PackTest left-click input, exercising the Bookshelf interaction dispatch and TNT knockback path before detonation.",
+  "setup": "sgp.bench:scenarios/abilities/tnt_batting/setup",
+  "tick": "sgp.bench:scenarios/abilities/tnt_batting/tick",
+  "teardown": "sgp.bench:scenarios/abilities/tnt_batting/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 10,
+      "max": 400,
+      "default": 40
+    },
+    "bat_delay": {
+      "type": "int",
+      "min": 1,
+      "max": 9,
+      "default": 4
+    }
+  },
+  "counters": {
+    "drop_inputs": "#tnt_bat_drops",
+    "waves": "#tnt_bat_waves",
+    "bat_inputs": "#tnt_bat_inputs"
+  }
+}
