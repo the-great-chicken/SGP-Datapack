@@ -459,7 +459,9 @@ class ServerProcess:
     def score(self, player: str, objective: str = 'sgp.bench', timeout: float = 5.0) -> int | None:
         before = len(self.lines)
         self.send(f'scoreboard players get {player} {objective}')
-        pattern = re.compile(rf'{re.escape(player)} has (-?\d+) \[{re.escape(objective)}\]')
+        # Minecraft prints the objective's display name in brackets, which may
+        # differ from its internal command name (for example bs.id -> BS ID).
+        pattern = re.compile(rf'(?:^|\s){re.escape(player)} has (-?\d+)(?:\s|$)')
         try:
             line = self.wait_for(lambda item: pattern.search(item) is not None, timeout, start_at=before)
         except BenchmarkInvalidError:
@@ -748,38 +750,144 @@ def ray_player_count(plan: list[dict]) -> int:
 
 
 def validate_ray_workload(run: dict, plan: list[dict]) -> dict:
+    """Require semantic Rays validation recorded by the live server checks.
+
+    Profiler command strings are intentionally not used here: baseline and optimized
+    implementations are allowed to perform the same workload differently.
+    """
     players = ray_player_count(plan)
     if not players:
         return {}
     ticks = run.get('tick_span')
     if not isinstance(ticks, int) or ticks <= 0:
-        raise BenchmarkInvalidError('Cannot validate rays without a positive profile tick count')
-    entries = run.get('command_function_entries', [])
-    player_ticks = sum(entry['count'] for entry in entries
-                       if entry['name'] == 'execute tag @s remove sgp.radiator')
-    started = sum(entry['count'] for entry in entries
-                  if entry['name'] == 'execute scoreboard players set #ray_dist sgp.dummy 16000')
-    completed = sum(entry['count'] for entry in entries if entry['name'].startswith(
-        'execute execute store result entity @s transformation.left_rotation[3] '))
-    expected_players = players * ticks
-    expected_beams = expected_players * 8
-    if (player_ticks, started, completed) != (expected_players, expected_beams, expected_beams):
+        raise BenchmarkInvalidError('Rays run is missing a positive profile tick count')
+    validated = run.get('validated_workload')
+    expected = {
+        'ray_players': players,
+        'ray_entities': players * 8,
+        'ray_valid_owners': players,
+    }
+    if not isinstance(validated, dict) or any(validated.get(key) != value for key, value in expected.items()):
         raise BenchmarkInvalidError(
-            f'Incomplete rays workload over {ticks} ticks: completed caster ticks {player_ticks}/{expected_players}, '
-            f'started beams {started}/{expected_beams}, completed beams {completed}/{expected_beams}. '
-            'Driver exposure counters do not prove that abilities completed.'
+            'Rays run is missing a complete semantic ownership validation; '
+            'rerun it with the current benchmark harness.'
         )
-    return {'ray_player_ticks': player_ticks, 'ray_beam_updates': completed}
+    return expected
 
 
-def require_ray_entities(server: ServerProcess, plan: list[dict], *, after_reset: bool = False):
+def ray_actor_ranges(plan: list[dict]) -> list[tuple[int, int]]:
+    ranges: list[tuple[int, int]] = []
+    for component in plan:
+        if component['scenario'] not in {'ability_rays', 'ability_rays_dense'}:
+            continue
+        first = component.get('first')
+        last = component.get('last')
+        if not isinstance(first, int) or not isinstance(last, int) or last < first:
+            raise BenchmarkError('Resolved Rays plan is missing a valid actor range')
+        ranges.append((first, last))
+    return ranges
+
+
+def ray_actor_indices(plan: list[dict]) -> list[int]:
+    indices: list[int] = []
+    for first, last in ray_actor_ranges(plan):
+        indices.extend(range(first, last + 1))
+    return sorted(set(indices))
+
+
+def _reset_ray_validation_state(server: ServerProcess):
+    # Bookshelf predicates use shared input scores. Keep benchmark validation from
+    # leaking the final actor's predicate inputs into subsequent server work.
+    for player, objective in (
+        ('$link.to', 'bs.in'),
+        ('$id.suid', 'bs.in'),
+        ('#ray_owner_id', 'sgp.bench'),
+        ('#ray_linked', 'sgp.bench'),
+        ('#ray_id_matches', 'sgp.bench'),
+        ('#ray_valid_owners', 'sgp.bench'),
+        ('#ray_owned_by_actors', 'sgp.bench'),
+    ):
+        server.send(f'scoreboard players reset {player} {objective}')
+
+
+def _run_ray_owner_validation(server: ServerProcess, plan: list[dict]):
+    server.send('scoreboard players set #ray_valid_owners sgp.bench 0')
+    server.send('scoreboard players set #ray_owned_by_actors sgp.bench 0')
+    for first, last in ray_actor_ranges(plan):
+        server.send(
+            'execute as @a[tag=sgp.bench.actor,'
+            f'scores={{sgp.bench={first}..{last}}}] '
+            'run function sgp.bench:scenarios/abilities/rays/verify_owner'
+        )
+
+
+def _ray_owner_failure_details(server: ServerProcess, plan: list[dict]) -> list[str]:
+    bad: list[str] = []
+    for index in ray_actor_indices(plan):
+        name = actor_name(index)
+        for scoreholder in ('#ray_owner_id', '#ray_linked', '#ray_id_matches'):
+            server.send(f'scoreboard players set {scoreholder} sgp.bench -1')
+        server.send(f'execute as {name} run function sgp.bench:scenarios/abilities/rays/verify_owner')
+        linked = server.score('#ray_linked')
+        id_matches = server.score('#ray_id_matches')
+        if linked == 8 and id_matches == 1:
+            continue
+        bs_id = server.score('#ray_owner_id')
+        bad.append(f'{name}(bs.id={bs_id!r}, linked={linked!r}, id_matches={id_matches!r})')
+    return bad
+
+
+def require_ray_entities(server: ServerProcess, plan: list[dict], *, after_reset: bool = False) -> dict:
     players = ray_player_count(plan)
-    if players:
-        server.send('execute store result score #actual_rays sgp.bench if entity @e[tag=sgp.ray,type=item_display]')
-        expected = 0 if after_reset else players * 8
-        actual = server.score('#actual_rays')
+    if not players:
+        return {}
+
+    server.send('execute store result score #actual_rays sgp.bench if entity @e[tag=sgp.ray,type=item_display]')
+    actual = server.score('#actual_rays')
+    expected = 0 if after_reset else players * 8
+    if after_reset:
         if actual != expected:
-            raise BenchmarkInvalidError(f'Invalid rays entity count: expected {expected}, got {actual!r}')
+            raise BenchmarkInvalidError(f'Invalid rays entity count after reset: expected 0, got {actual!r}')
+        return {}
+
+    server.send(
+        'execute store result score #ray_with_link sgp.bench '
+        'if entity @e[tag=sgp.ray,predicate=bs.link:has_link,type=item_display]'
+    )
+    with_link = server.score('#ray_with_link')
+    _run_ray_owner_validation(server, plan)
+    valid_owners = server.score('#ray_valid_owners')
+    owned_by_actors = server.score('#ray_owned_by_actors')
+
+    valid = (
+        actual == expected
+        and with_link == expected
+        and owned_by_actors == expected
+        and valid_owners == players
+    )
+    if valid:
+        _reset_ray_validation_state(server)
+        return {
+            'ray_players': players,
+            'ray_entities': actual,
+            'ray_valid_owners': valid_owners,
+        }
+
+    # Per-actor console queries are intentionally failure-only. The normal path
+    # stays in-server so validation cannot distort warm-up by waiting on dozens of
+    # command responses.
+    bad = _ray_owner_failure_details(server, plan)
+    _reset_ray_validation_state(server)
+    details = '; '.join(bad[:12])
+    if len(bad) > 12:
+        details += f'; ... {len(bad) - 12} more'
+    suffix = f' Broken owners: {details}.' if details else ''
+    raise BenchmarkInvalidError(
+        f'Invalid rays ownership: total rays {actual!r}/{expected}, '
+        f'rays with any link {with_link!r}/{expected}, '
+        f'rays owned by benchmark actors {owned_by_actors!r}/{expected}, '
+        f'valid owners {valid_owners!r}/{players}.{suffix}'
+    )
 
 
 def validate_diorama_workload(run: dict, plan: list[dict]) -> dict:
@@ -1016,6 +1124,46 @@ def actor_position(index: int) -> tuple[float, float, float]:
     # selected workload requires. Individual scenarios may reposition actors.
     zero_based = index - 1
     return (-23.5 + (zero_based % 8) * 7.0, 81.0, -13.5 + (zero_based // 8) * 7.0)
+
+
+def actor_chunk_probe_positions(players: int) -> list[tuple[int, int, int]]:
+    """One block position per chunk occupied by the generated actor grid."""
+    chunks: set[tuple[int, int]] = set()
+    y = 81
+    for index in range(1, players + 1):
+        x, actor_y, z = actor_position(index)
+        chunks.add((math.floor(x) // 16, math.floor(z) // 16))
+        y = math.floor(actor_y)
+    return [(chunk_x * 16, y, chunk_z * 16) for chunk_x, chunk_z in sorted(chunks)]
+
+
+def wait_for_actor_chunks_loaded(server: ServerProcess, players: int, timeout: float):
+    """Wait until actor chunks are fully entity-ticking before scenario setup.
+
+    Actors are teleported into the synthetic grid immediately after spawning.
+    Position-based entity selectors can miss entities in chunks that are still
+    loading, so scenario setup must not run until those chunks are fully loaded.
+    """
+    probes = actor_chunk_probe_positions(players)
+    if not probes:
+        return
+
+    conditions = ' '.join(f'if loaded {x} {y} {z}' for x, y, z in probes)
+    deadline = time.monotonic() + timeout
+    while True:
+        server.send(
+            'execute store success score #actor_chunks_loaded sgp.bench '
+            f'{conditions}'
+        )
+        if server.score('#actor_chunks_loaded') == 1:
+            server.send('scoreboard players reset #actor_chunks_loaded sgp.bench')
+            return
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise BenchmarkInvalidError(
+                f'Timed out waiting for {len(probes)} benchmark actor chunks to become fully loaded'
+            )
+        server.sleep_alive(min(0.1, remaining))
 
 
 def set_server_property(path: Path, key: str, value: str):
@@ -1314,15 +1462,16 @@ def run_benchmark(args):
             phase = f'run {run_number}/{args.runs} setup'
             print(f'Run {run_number}/{args.runs}: setup')
             server.send(f'function sgp.bench:prepare {{players:{total_players}}}')
-            server.send('function sgp.bench:generated/active/setup')
-            server.send('function sgp.bench:start')
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#players', total_players)
             server.require_score('#actual_players', total_players)
+            wait_for_actor_chunks_loaded(server, total_players, args.startup_timeout)
+            server.send('function sgp.bench:generated/active/setup')
             server.require_score('#plan_ready', 1)
-            server.require_score('#enabled', 1)
             require_ray_entities(server, plan_data)
             require_diorama_entities(server, plan_data)
+            server.send('function sgp.bench:start')
+            server.require_score('#enabled', 1)
 
             phase = f'run {run_number}/{args.runs} warm-up'
             server.sleep_alive(args.warmup)
@@ -1346,7 +1495,7 @@ def run_benchmark(args):
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#actual_players', total_players)
-            require_ray_entities(server, plan_data)
+            ray_validation = require_ray_entities(server, plan_data)
             require_diorama_entities(server, plan_data)
             workload = read_workload_counters(server, plan)
             missing_counters = [name for name, value in workload.items() if value is None]
@@ -1367,7 +1516,7 @@ def run_benchmark(args):
                 json.dumps(run_data, indent=2) + '\n', encoding='utf-8'
             )
             phase = f'run {run_number}/{args.runs} validating completed workload'
-            validated = validate_ray_workload(run_data, plan_data)
+            validated = dict(ray_validation)
             validated.update(validate_diorama_workload(run_data, plan_data))
             if validated:
                 run_data['validated_workload'] = validated

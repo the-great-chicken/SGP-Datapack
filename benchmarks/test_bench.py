@@ -590,6 +590,14 @@ class WorkloadIntegrityTests(unittest.TestCase):
             with self.assertRaises(bench.BenchmarkInvalidError):
                 server.score('#players')
 
+    def test_score_accepts_objective_display_name(self):
+        server = self.server()
+        def respond(command):
+            self.assertEqual(command, 'scoreboard players get Bench01 bs.id')
+            server.lines.append('[Server thread/INFO]: Bench01 has 17 [BS ID]')
+        with patch.object(server, 'send', side_effect=respond):
+            self.assertEqual(server.score('Bench01', 'bs.id', timeout=0.1), 17)
+
     def test_profile_wait_aborts_before_accepting_an_archive(self):
         server = self.server()
         server.lines.append(self.limit_line)
@@ -597,37 +605,36 @@ class WorkloadIntegrityTests(unittest.TestCase):
             with self.assertRaises(bench.BenchmarkInvalidError):
                 bench.wait_for_new_profile(Path(temporary), set(), server, timeout=1)
 
-    def ray_run(self, players=40, ticks=200):
-        return {
-            'tick_span': ticks,
-            'harness_counters_after_profile_write': {'workload': {'ability_rays.active_player_ticks': players*ticks}},
-            'command_function_entries': [
-                {'name': 'execute tag @s remove sgp.radiator', 'count': players*ticks},
-                {'name': 'execute scoreboard players set #ray_dist sgp.dummy 16000', 'count': players*ticks*8},
-                {'name': 'execute execute store result entity @s transformation.left_rotation[3] float 0.01 run scoreboard players remove @s sgp.timer 2', 'count': players*ticks*8},
-            ],
+    def test_recorded_rays_validation_is_semantic_not_profiler_text(self):
+        plan = [{'scenario': 'ability_rays', 'players': 25}, {'scenario': 'ability_rays_dense', 'players': 15}]
+        run = {
+            'tick_span': 108,
+            'validated_workload': {
+                'ray_players': 40,
+                'ray_entities': 320,
+                'ray_valid_owners': 40,
+            },
+            'command_function_entries': [{'name': 'completely different optimized implementation', 'count': 1}],
         }
+        self.assertEqual(bench.validate_ray_workload(run, plan), run['validated_workload'])
 
-    def test_complete_rays_profile_validates_all_composed_ray_players(self):
-        plan = [{'scenario': 'ability_rays', 'players': 25}, {'scenario': 'ability_rays_dense', 'players': 15},
-                {'scenario': 'idle', 'players': 10}]
-        self.assertEqual(bench.validate_ray_workload(self.ray_run(), plan),
-                         {'ray_player_ticks': 8000, 'ray_beam_updates': 64000})
-
-    def test_exposure_does_not_mask_missing_or_excess_completed_work(self):
+    def test_old_or_incomplete_rays_results_cannot_be_compared_as_valid(self):
         plan = [{'scenario': 'ability_rays', 'players': 40}]
-        for entry_index, count in [(0, 2400), (1, 20600), (2, 20400), (2, 64001)]:
-            with self.subTest(entry_index=entry_index, count=count):
-                run = self.ray_run()
-                run['command_function_entries'][entry_index]['count'] = count
-                with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Incomplete rays workload'):
+        for validated in [None, {}, {'ray_players': 40, 'ray_entities': 288, 'ray_valid_owners': 36}]:
+            with self.subTest(validated=validated):
+                run = {'tick_span': 108}
+                if validated is not None:
+                    run['validated_workload'] = validated
+                with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'semantic ownership validation'):
                     bench.validate_ray_workload(run, plan)
 
-    def test_missing_ray_entries_or_tick_span_cannot_validate(self):
+    def test_rays_validation_requires_a_real_profile_window(self):
         plan = [{'scenario': 'ability_rays', 'players': 40}]
-        for run in [{'tick_span': 200, 'command_function_entries': []}, self.ray_run(ticks=0)]:
-            with self.assertRaises(bench.BenchmarkInvalidError):
-                bench.validate_ray_workload(run, plan)
+        run = {'validated_workload': {'ray_players': 40, 'ray_entities': 320, 'ray_valid_owners': 40}}
+        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'positive profile tick count'):
+            bench.validate_ray_workload(run, plan)
+
+    def test_rays_validation_is_a_noop_for_non_rays_workloads(self):
         self.assertEqual(bench.validate_ray_workload({}, [{'scenario': 'idle', 'players': 40}]), {})
 
     def test_command_limit_is_explicit_for_runs_and_suites(self):
@@ -639,18 +646,91 @@ class WorkloadIntegrityTests(unittest.TestCase):
             with self.assertRaises(bench.argparse.ArgumentTypeError):
                 bench.command_limit_argument(value)
 
-    def test_ray_entity_checks_reject_missing_beams_and_leftovers_after_reset(self):
+    def test_actor_chunk_readiness_waits_for_all_generated_actor_chunks(self):
         server = self.server()
-        plan = [{'scenario': 'ability_rays', 'players': 40}]
-        with patch.object(server, 'send'), patch.object(server, 'score', return_value=320):
-            bench.require_ray_entities(server, plan)
+        observed = []
+        scores = iter([0, 1])
+
+        def send(command):
+            observed.append(command)
+
+        with patch.object(server, 'send', side_effect=send), \
+             patch.object(server, 'score', side_effect=lambda player, objective='sgp.bench', timeout=5.0: next(scores)), \
+             patch.object(server, 'sleep_alive') as sleep_alive:
+            bench.wait_for_actor_chunks_loaded(server, 40, timeout=1.0)
+
+        readiness = [command for command in observed if command.startswith(
+            'execute store success score #actor_chunks_loaded sgp.bench '
+        )]
+        self.assertEqual(len(readiness), 2)
+        # Forty actors occupy four X chunks and two Z chunks in the generated grid.
+        self.assertEqual(readiness[0].count('if loaded '), 8)
+        self.assertIn('if loaded -32 81 -16', readiness[0])
+        self.assertIn('if loaded 16 81 0', readiness[0])
+        self.assertEqual(observed[-1], 'scoreboard players reset #actor_chunks_loaded sgp.bench')
+        sleep_alive.assert_called_once()
+
+    def test_ray_entity_checks_use_aggregate_fast_path_and_diagnose_failures(self):
+        server = self.server()
+        plan = [{'scenario': 'ability_rays', 'players': 2, 'first': 1, 'last': 2}]
+
+        aggregate = {
+            '#actual_rays': 16,
+            '#ray_with_link': 16,
+            '#ray_valid_owners': 2,
+            '#ray_owned_by_actors': 16,
+        }
+        current = {'actor': None}
+        state = {
+            'Bench01': {'bs.id': 101, 'linked': 8, 'id_matches': 1},
+            'Bench02': {'bs.id': 102, 'linked': 8, 'id_matches': 1},
+        }
+
+        def send(command):
+            if command.startswith('execute as Bench') and 'verify_owner' in command:
+                current['actor'] = command.split()[2]
+
+        def score(player, objective='sgp.bench', timeout=5.0):
+            actor = current['actor']
+            if actor is None and player in aggregate:
+                return aggregate[player]
+            if actor is not None and player == '#ray_linked':
+                return state[actor]['linked']
+            if actor is not None and player == '#ray_id_matches':
+                return state[actor]['id_matches']
+            if actor is not None and player == '#ray_owner_id':
+                return state[actor]['bs.id']
+            return None
+
+        with patch.object(server, 'send', side_effect=send) as send_mock, \
+             patch.object(server, 'score', side_effect=score) as score_mock:
+            self.assertEqual(bench.require_ray_entities(server, plan), {
+                'ray_players': 2, 'ray_entities': 16, 'ray_valid_owners': 2,
+            })
+            commands = [call.args[0] for call in send_mock.call_args_list]
+            self.assertTrue(any('scores={sgp.bench=1..2}' in command and 'verify_owner' in command
+                                for command in commands))
+            self.assertFalse(any(command.startswith('execute as Bench') for command in commands))
+            self.assertEqual([call.args[0] for call in score_mock.call_args_list], [
+                '#actual_rays', '#ray_with_link', '#ray_valid_owners', '#ray_owned_by_actors',
+            ])
+
+        aggregate.update({'#ray_valid_owners': 1, '#ray_owned_by_actors': 8})
+        state['Bench02']['linked'] = 0
+        current['actor'] = None
+        with patch.object(server, 'send', side_effect=send), patch.object(server, 'score', side_effect=score):
+            with self.assertRaisesRegex(
+                bench.BenchmarkInvalidError,
+                r'rays with any link 16/16, rays owned by benchmark actors 8/16, valid owners 1/2.*'
+                r'Bench02\(bs.id=102, linked=0, id_matches=1\)',
+            ):
+                bench.require_ray_entities(server, plan)
+
         with patch.object(server, 'send'), patch.object(server, 'score', return_value=0):
-            bench.require_ray_entities(server, plan, after_reset=True)
-        for actual, after_reset in [(104, False), (321, False), (1, True), (None, False)]:
-            with self.subTest(actual=actual, after_reset=after_reset), \
-                 patch.object(server, 'send'), patch.object(server, 'score', return_value=actual):
-                with self.assertRaises(bench.BenchmarkInvalidError):
-                    bench.require_ray_entities(server, plan, after_reset=after_reset)
+            self.assertEqual(bench.require_ray_entities(server, plan, after_reset=True), {})
+        with patch.object(server, 'send'), patch.object(server, 'score', return_value=1):
+            with self.assertRaises(bench.BenchmarkInvalidError):
+                bench.require_ray_entities(server, plan, after_reset=True)
 
     def test_diorama_profile_requires_one_update_per_player_per_tick(self):
         plan = [{'scenario': 'diorama_giant', 'players': 50}, {'scenario': 'idle', 'players': 10}]
@@ -715,6 +795,15 @@ class WorkloadIntegrityTests(unittest.TestCase):
                 self.check_health()
                 return expected
 
+            def score(self, player, objective='sgp.bench', timeout=5.0):
+                return {
+                    '#actor_chunks_loaded': 1,
+                    '#actual_rays': 320,
+                    '#ray_with_link': 320,
+                    '#ray_valid_owners': 40,
+                    '#ray_owned_by_actors': 320,
+                }.get(player)
+
             def stop(self, force=False):
                 commands.append('stop')
 
@@ -743,6 +832,11 @@ class WorkloadIntegrityTests(unittest.TestCase):
             self.assertFalse((result/'summary.md').exists())
             self.assertTrue((root/'server'/bench.INVALID_MARKER).is_file())
             self.assertEqual(commands.count('function sgp.bench:start'), 1)
+            readiness_check = next(i for i, command in enumerate(commands) if '#actor_chunks_loaded' in command)
+            scenario_setup = commands.index('function sgp.bench:generated/active/setup')
+            self.assertLess(readiness_check, scenario_setup)
+            initial_ray_check = next(i for i, command in enumerate(commands) if '#actual_rays' in command)
+            self.assertLess(initial_ray_check, commands.index('function sgp.bench:start'))
             self.assertNotIn('perf start', commands)
             self.assertEqual(commands[-1], 'stop')
 
@@ -762,7 +856,7 @@ class WorkloadIntegrityTests(unittest.TestCase):
                     bench.compare_results(args)
             path.write_text(json.dumps({**original, 'plan': [{'scenario': 'ability_rays', 'players': 40}]}))
             args.allow_mismatch = True
-            with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'Incomplete rays workload'):
+            with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'semantic ownership validation'):
                 bench.compare_results(args)
 
 
