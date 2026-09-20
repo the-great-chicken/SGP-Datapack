@@ -10,8 +10,9 @@ summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt", "sgp.new"]}
 
 # Native TNT ownership makes the explosion's causing entity the caster.
 # The checks are just to avoid accidents in dev env.
+function sgp.misc:player_uuid/to_macro
 execute unless entity @s[gamemode=creative] run \
-    data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
+    data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from storage sgp:macro owner.uuid
 
 # The TNT is gone by the time its lingering fire deals damage, so also carry the stable player id.
 scoreboard players operation @n[tag=sgp.new,distance=..2,limit=1,type=tnt] sgp.damage_owner = @s sgp.id

@@ -12,21 +12,26 @@ execute if score @s sgp.duration_ability matches 1 run return run function sgp.k
 # Not using bookshelf, to have a "thick" ray cuz else it's too hard, and desyncs are too frequent
 tag @s add sgp.source_peck
 
-execute positioned ^ ^ ^1.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^1.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^1.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+# The probes below reach at most 4 blocks ahead plus a 1-block radius: skip all of them when nobody is that close.
+execute unless entity @a[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..6,limit=1] run return run function sgp.kits:abilities/pecking/no_target
 
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^2.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^2.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^2.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+# Each probe runs only until one finds a target; the flag replaces an @a scan per probe.
+scoreboard players set #peck_found sgp.dummy 0
+execute store success score #peck_found sgp.dummy positioned ^ ^ ^1.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^1.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^1.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
 
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^3.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^3.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^3.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^2.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^2.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^2.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
 
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
-execute unless entity @a[tag=sgp.is_being_pecked] positioned ^ ^ ^4.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^3.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^3.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^3.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^4.0 positioned ~ ~-0.3 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^4.0 positioned ~ ~-0.9 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
+execute if score #peck_found sgp.dummy matches 0 store success score #peck_found sgp.dummy positioned ^ ^ ^4.0 positioned ~ ~-1.5 ~ as @p[tag=!sgp.peaceful,tag=!sgp.source_peck,distance=..1.0] run tag @s add sgp.is_being_pecked
 
 tag @s remove sgp.source_peck
 

@@ -27,8 +27,11 @@ execute as @a \
 
 summon tnt ~ ~ ~ {explosion_power:1.3f,fuse:0s,Tags:["sgp.bat_grenade", "sgp.new"]}
 
+data remove storage sgp:macro owner.uuid
 execute as @a[gamemode=!creative] \
     if score @s sgp.id = #damage_owner sgp.dummy \
-        run data modify entity @n[tag=sgp.new,distance=..1,limit=1,type=tnt] owner set from entity @s UUID
+        run function sgp.misc:player_uuid/to_macro
+execute if data storage sgp:macro owner.uuid \
+    run data modify entity @n[tag=sgp.new,distance=..1,limit=1,type=tnt] owner set from storage sgp:macro owner.uuid
 
 tag @e[tag=sgp.new,distance=..1,type=tnt] remove sgp.new

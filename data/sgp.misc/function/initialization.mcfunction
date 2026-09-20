@@ -23,6 +23,10 @@ scoreboard objectives add sgp.ab.hud_ability dummy
 scoreboard objectives add sgp.ab.hud_ability_fill dummy
 scoreboard objectives add sgp.ab.normal_width dummy
 scoreboard objectives add sgp.ab.normal_count dummy
+scoreboard objectives add sgp.ab.hud_sig dummy
+scoreboard objectives add sgp.ab.hud_sig_cached dummy
+# HUD constants and kit visuals below may change on reload: force every cached overlay to rebuild.
+scoreboard players reset * sgp.ab.hud_sig_cached
 
 scoreboard objectives add sgp.just_died deathCount
 scoreboard objectives add sgp.synthetic_death dummy
@@ -58,6 +62,7 @@ scoreboard players set 10 sgp.dummy 10
 scoreboard players set 16 sgp.dummy 16
 scoreboard players set 20 sgp.dummy 20
 scoreboard players set 29 sgp.dummy 29
+scoreboard players set 32 sgp.dummy 32
 scoreboard players set 37 sgp.dummy 37
 scoreboard players set 49 sgp.dummy 49
 scoreboard players set 50 sgp.dummy 50

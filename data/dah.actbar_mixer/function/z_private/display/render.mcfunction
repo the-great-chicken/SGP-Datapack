@@ -3,7 +3,13 @@
 # SGP HUD overlay override for Actionbar Mixer v1.4.
 # Keep Mixer's normal rendering semantics, but prepend the zero-net-width SGP HUD.
 
-function sgp.misc:actionbar/hud/build
+# Rebuilding the overlay costs ~85 commands per player per render; it only depends on the signature below,
+# so it is cached in the player's Mixer entry (data[0]) and reused while the signature is unchanged.
+function sgp.misc:actionbar/hud/build_width
+function sgp.misc:actionbar/hud/signature
+execute unless data storage dah:actbar data[0].sgp_hud run scoreboard players reset @s sgp.ab.hud_sig_cached
+execute if score @s sgp.ab.hud_sig = @s sgp.ab.hud_sig_cached run function sgp.misc:actionbar/hud/restore_cached
+execute unless score @s sgp.ab.hud_sig = @s sgp.ab.hud_sig_cached run function sgp.misc:actionbar/hud/rebuild_cached
 
 # The HUD can exist without any normal Mixer segments, so do not use Mixer's normal empty-content early return until after checking the overlay.
 execute unless data storage dah:actbar data[0].content[0] if data storage sgp:actionbar_hud overlay[0] run return run title @s actionbar {nbt:"overlay[].text",storage:"sgp:actionbar_hud",interpret:true,separator:"",bold:false}

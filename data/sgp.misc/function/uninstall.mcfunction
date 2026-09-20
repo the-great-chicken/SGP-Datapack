@@ -31,6 +31,8 @@ scoreboard objectives remove sgp.ab.ability_cooldown_last_current
 scoreboard objectives remove sgp.ab.hud_ability
 scoreboard objectives remove sgp.ab.hud_ability_fill
 scoreboard objectives remove sgp.ab.normal_width
+scoreboard objectives remove sgp.ab.hud_sig
+scoreboard objectives remove sgp.ab.hud_sig_cached
 scoreboard objectives remove sgp.ab.normal_count
 
 scoreboard objectives remove sgp.just_died
@@ -72,3 +74,4 @@ schedule clear sgp.misc:bossbar/cycle_name
 data remove storage sgp:text prefix
 data remove storage sgp:actionbar_hud overlay
 data remove storage sgp:data misc.actionbar
+data remove storage sgp:data misc.uuid_cache

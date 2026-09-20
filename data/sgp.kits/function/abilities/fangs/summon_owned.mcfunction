@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/fangs/summon_owned
 # Executed as the Vindicateur at the final fang position.
 
-summon evoker_fangs ~ ~ ~ {Tags:["sgp.new"]}
-data modify entity @n[tag=sgp.new,distance=..0.1,limit=1,type=evoker_fangs] Owner set from entity @s UUID
-tag @e[tag=sgp.new,distance=..0.1,type=evoker_fangs] remove sgp.new
+# The owner UUID comes from the per-player cache: reading it from the player entity cost ~40 µs per fang.
+function sgp.misc:player_uuid/to_macro
+function sgp.kits:abilities/fangs/summon_owned_macro with storage sgp:macro owner
