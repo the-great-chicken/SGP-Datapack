@@ -13,6 +13,6 @@ execute positioned ~-16.5 ~0.1 ~-16.5 \
 
 execute as @e[distance=..10,tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] \
     positioned ~ ~0.6 ~ rotated as @s \
-        run function sgp.kits:abilities/rays/update_ray with storage sgp:rays prediction
+        run function sgp.kits:abilities/rays/update_ray_dispatch
 
 tag @a[tag=sgp.ray_target] remove sgp.ray_target
