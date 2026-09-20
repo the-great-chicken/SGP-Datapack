@@ -9,6 +9,8 @@ scoreboard players remove @a[scores={sgp.ability_result_window=1..}] sgp.ability
 
 execute as @a[tag=sgp.in_game,scores={sgp.duration_ability=1..}] at @s run function sgp.kits:abilities/route_tick
 
+execute if entity @a[tag=sgp.ray_hitbox_cached,limit=1] run function sgp.kits:abilities/rays/clear_target_hitboxes
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
 
 # Refresh the visible main ability cooldown after it has been decremented, and after a newly triggered ability may have started its cooldown.
