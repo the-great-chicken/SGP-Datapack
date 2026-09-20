@@ -49,6 +49,7 @@
     {"trees": ["sgp.ci:tnt_batting"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:tnt_batting/cleanup"}},
     {"trees": ["sgp.ci:tnt_clicks"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:tnt_clicks/cleanup"}},
     {"trees": ["sgp.ci:tnt_detonation"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:tnt_detonation/cleanup"}},
+    {"trees": ["sgp.ci:tnt_tracking"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:tnt_tracking/cleanup"}},
     {"ids": ["sgp.ci:water_trident"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:water_trident/cleanup"}},
     {"trees": ["sgp.ci:protect"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:protect/setup", "teardown": "sgp.ci:protect/cleanup"}},
     {"trees": ["sgp.ci:rays"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:rays/setup", "teardown": "sgp.ci:rays/cleanup"}},
