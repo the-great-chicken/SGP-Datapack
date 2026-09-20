@@ -35,5 +35,6 @@ function sgp.kits:abilities/smoke_grenade/tick
 execute as @e[tag=sgp.giant_sweep,type=item_display] run function sgp.kits:abilities/cleave/animation_tick
 
 
+function sgp.kits:abilities/tnt/tick_fire_cooldowns
 execute as @e[tag=sgp.fire_explosion,type=marker] at @s run function sgp.kits:abilities/tnt/tick_fire
 execute as @e[tag=sgp.tnt_interaction,type=interaction] at @s run function sgp.kits:abilities/tnt/follow_interaction

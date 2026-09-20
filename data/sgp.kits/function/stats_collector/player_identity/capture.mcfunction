@@ -3,6 +3,7 @@
 # Executed as a player when their identity snapshot needs to be refreshed.
 
 scoreboard players add @s sgp.leave_game 0
+function sgp.kits:abilities/tnt/clear_fire_cooldown
 
 execute store result storage sgp:macro stats.current_player_identity.player_id int 1 \
     run scoreboard players get @s sgp.id
