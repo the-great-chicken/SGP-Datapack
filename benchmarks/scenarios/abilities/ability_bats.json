@@ -1,6 +1,6 @@
 {
   "name": "ability_bats",
-  "description": "Cancer players: keeps Bats active continuously with a long-lived ten-bat swarm per player and the production explosion scan.",
+  "description": "Cancer players: keeps Bats active continuously with a long-lived eight-bat swarm per player and the production explosion scan.",
   "setup": "sgp.bench:scenarios/abilities/bats/setup",
   "tick": "sgp.bench:scenarios/abilities/bats/tick",
   "teardown": "sgp.bench:scenarios/abilities/bats/teardown",

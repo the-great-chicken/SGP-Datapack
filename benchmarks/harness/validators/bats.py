@@ -8,10 +8,10 @@ from ..errors import BenchmarkError, BenchmarkInvalidError
 from ..server import ServerProcess
 
 SCENARIO = 'ability_bats_detonating'
-BATS_PER_ACTIVATION = 10
+BATS_PER_ACTIVATION = 8
 # The benchmark tick pins every same-cast swarm to one mannequin before the
 # scheduled production scan runs, so the optimized overlap path deterministically
-# emits one physical explosion for each actor's ten-bat activation.
+# emits one physical explosion for each actor's stacked activation.
 EXPLOSIONS_PER_STACKED_ACTIVATION = 1
 # The benchmark driver drops the ability input at the end of the datapack tick,
 # after the production ability router has already run. The bats therefore spawn

@@ -2,6 +2,9 @@
 
 # ---------- Remove Objectives ----------
 
+schedule clear sgp.kits:abilities/bats/check_for_explosion
+schedule clear sgp.kits:abilities/bats/check_explosion_loop
+
 scoreboard objectives remove sgp.pyromane_found
 scoreboard objectives remove sgp.cancer_found
 scoreboard objectives remove sgp.roi_found
@@ -43,6 +46,7 @@ scoreboard objectives remove sgp.damage_owner
 scoreboard objectives remove sgp.tnt_fire_cd
 scoreboard objectives remove sgp.damage_resisted
 scoreboard objectives remove sgp.ability_cast
+scoreboard objectives remove sgp.bat_arm_at
 scoreboard objectives remove sgp.ability_kind
 scoreboard objectives remove sgp.ability_success
 scoreboard objectives remove sgp.last_ability_cast

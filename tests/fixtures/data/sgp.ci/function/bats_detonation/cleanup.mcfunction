@@ -2,6 +2,7 @@
 #> sgp.ci:bats_detonation/cleanup
 
 schedule clear sgp.kits:abilities/bats/check_for_explosion
+schedule clear sgp.kits:abilities/bats/check_explosion_loop
 kill @e[tag=sgp.ci.bat_guard,type=bat]
 kill @e[tag=sgp.ci.bat_guard_tnt,type=tnt]
 kill @e[tag=sgp.bat_grenade,type=tnt]

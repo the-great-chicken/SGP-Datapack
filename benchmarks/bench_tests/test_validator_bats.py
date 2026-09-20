@@ -1,11 +1,22 @@
 from .common import *
+from benchmarks.harness.validators.bats import (
+    BATS_PER_ACTIVATION,
+    EXPLOSIONS_PER_STACKED_ACTIVATION,
+)
+
+
+PLAYERS = 40
+COMPLETE_WAVES = 5
+DEFAULT_SPAWNED = PLAYERS * BATS_PER_ACTIVATION * COMPLETE_WAVES
+SIX_WAVES_SPAWNED = PLAYERS * BATS_PER_ACTIVATION * 6
+DEFAULT_EXPLOSIONS = PLAYERS * EXPLOSIONS_PER_STACKED_ACTIVATION * COMPLETE_WAVES
 
 
 class BatsDetonatingValidatorTests(unittest.TestCase):
     server = staticmethod(make_server)
 
     @staticmethod
-    def plan(players=40, period=40):
+    def plan(players=PLAYERS, period=40):
         return [{
             'scenario': 'ability_bats_detonating',
             'players': players,
@@ -15,7 +26,7 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
         }]
 
     @staticmethod
-    def make_run(ticks=199, spawned=2000, explosions=200, *, validated=True):
+    def make_run(ticks=199, spawned=DEFAULT_SPAWNED, explosions=DEFAULT_EXPLOSIONS, *, validated=True):
         run = {
             'tick_span': ticks,
             'command_function_entries': [{
@@ -35,38 +46,38 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
         }
         if validated:
             run['validated_workload'] = {
-                'bats_players': 40,
+                'bats_players': PLAYERS,
                 'bats_spawned': spawned,
                 'bats_explosions': explosions,
-                'bats_target_mannequins': 40,
-                'bats_targets_in_place': 40,
+                'bats_target_mannequins': PLAYERS,
+                'bats_targets_in_place': PLAYERS,
             }
         return run
 
     def test_profile_validation_accounts_for_driver_to_production_tick_delay(self):
         plan = self.plan()
         self.assertEqual(bench.validate_bats_profile(self.make_run(validated=False), plan), {
-            'bats_players': 40,
-            'bats_spawned': 2000,
-            'bats_explosions': 200,
+            'bats_players': PLAYERS,
+            'bats_spawned': DEFAULT_SPAWNED,
+            'bats_explosions': DEFAULT_EXPLOSIONS,
         })
 
         # The benchmark driver fires on tick 201, after production ability routing
         # already ran. Those bats are not created until tick 202.
-        run = self.make_run(ticks=201, spawned=2000, explosions=200, validated=False)
-        self.assertEqual(bench.validate_bats_profile(run, plan)['bats_spawned'], 2000)
+        run = self.make_run(ticks=201, spawned=DEFAULT_SPAWNED, explosions=DEFAULT_EXPLOSIONS, validated=False)
+        self.assertEqual(bench.validate_bats_profile(run, plan)['bats_spawned'], DEFAULT_SPAWNED)
 
         # A 202-tick capture includes that sixth production activation, but its
         # 1-second detonation deadline remains outside the profile.
-        run = self.make_run(ticks=202, spawned=2400, explosions=200, validated=False)
+        run = self.make_run(ticks=202, spawned=SIX_WAVES_SPAWNED, explosions=DEFAULT_EXPLOSIONS, validated=False)
         validated = bench.validate_bats_profile(run, plan)
-        self.assertEqual(validated['bats_spawned'], 2400)
-        self.assertEqual(validated['bats_explosions'], 200)
+        self.assertEqual(validated['bats_spawned'], SIX_WAVES_SPAWNED)
+        self.assertEqual(validated['bats_explosions'], DEFAULT_EXPLOSIONS)
 
     def test_profile_validation_rejects_missing_coalesced_explosions(self):
         with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'coalesced explosion workload'):
             bench.validate_bats_profile(
-                self.make_run(spawned=2000, explosions=80, validated=False),
+                self.make_run(spawned=DEFAULT_SPAWNED, explosions=80, validated=False),
                 self.plan(),
             )
 
@@ -102,7 +113,8 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
 
     def test_measurement_wait_requires_killed_warmup_bats_to_be_removed(self):
         server = self.server()
-        scores = iter([400, 400, 0])
+        warmup_bats = 2 * BATS_PER_ACTIVATION
+        scores = iter([warmup_bats, warmup_bats, 0])
         with patch.object(server, 'send') as send_mock, \
              patch.object(server, 'score', side_effect=lambda *args, **kwargs: next(scores)), \
              patch.object(server, 'sleep_alive') as sleep_mock:

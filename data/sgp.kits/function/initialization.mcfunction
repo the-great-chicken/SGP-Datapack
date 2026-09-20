@@ -47,6 +47,7 @@ scoreboard objectives add sgp.damage_owner dummy
 scoreboard objectives add sgp.tnt_fire_cd dummy
 scoreboard objectives add sgp.damage_resisted minecraft.custom:minecraft.damage_resisted
 scoreboard objectives add sgp.ability_cast dummy
+scoreboard objectives add sgp.bat_arm_at dummy
 scoreboard objectives add sgp.ability_kind dummy
 scoreboard objectives add sgp.ability_success dummy
 scoreboard objectives add sgp.last_ability_cast dummy

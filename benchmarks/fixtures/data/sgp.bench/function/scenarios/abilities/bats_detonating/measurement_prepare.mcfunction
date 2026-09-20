@@ -4,5 +4,6 @@
 # Quiesce only this benchmark driver while warm-up bats finish their normal
 # death lifecycle. Other composed workloads keep warming normally.
 schedule clear sgp.kits:abilities/bats/check_for_explosion
+schedule clear sgp.kits:abilities/bats/check_explosion_loop
 kill @e[tag=sgp.bat_grenade]
 $scoreboard players set @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] sgp.bench.clock -1000000
