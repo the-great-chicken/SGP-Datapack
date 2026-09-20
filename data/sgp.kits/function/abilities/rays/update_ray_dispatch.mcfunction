@@ -8,6 +8,14 @@ execute unless function sgp.kits:abilities/rays/has_target \
 execute if score #ray_hitbox_cache sgp.dummy matches 0 \
     run function sgp.kits:abilities/rays/cache_target_hitboxes
 
+# Clear cardinal beams can omit block checks entirely; other cached-target beams use the general fast path.
+execute if score #ray_fast_entity sgp.dummy matches 1 \
+    if entity @s[tag=sgp.ray_cardinal] \
+    if function sgp.kits:abilities/rays/cardinal_clear \
+        run return run function sgp.kits:abilities/rays/update_ray_entities_fast with storage sgp:rays prediction
+execute if score #ray_fast_entity sgp.dummy matches 1 \
+    run return run function sgp.kits:abilities/rays/update_ray_fast with storage sgp:rays prediction
+
 execute if entity @s[tag=sgp.ray_cardinal] \
     if function sgp.kits:abilities/rays/cardinal_clear \
         run return run function sgp.kits:abilities/rays/update_ray_entities_only with storage sgp:rays prediction

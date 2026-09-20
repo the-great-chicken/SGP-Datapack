@@ -17,7 +17,10 @@ class DeathCauseContracts(unittest.TestCase):
             match = re.search(r'scoreboard players set @s sgp\.death_cause (-?\d+)', text)
             self.assertIsNotNone(match, path)
             function_ids[path.stem] = int(match.group(1))
-            self.assertIn('function sgp.kits:stats_collector/collect_damage_received', text, path)
+            if path.stem == 'ray':
+                self.assertIn('function sgp.kits:stats_collector/collect_ray_damage_received_valid', text, path)
+            else:
+                self.assertIn('function sgp.kits:stats_collector/collect_damage_received', text, path)
         self.assertEqual(len(set(function_ids.values())), len(function_ids), 'death-cause ids must be unique')
 
         init = (ROOT / 'data/sgp.kits/function/stats_collector/init.mcfunction').read_text(encoding='utf-8')

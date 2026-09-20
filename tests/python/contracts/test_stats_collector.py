@@ -31,3 +31,19 @@ class StatsCollectorContracts(unittest.TestCase):
                 self.assertIn(call, text, path)
             if name in forbidden_helpers:
                 self.assertNotIn(forbidden_helpers[name], text, path)
+
+    def test_rays_damage_uses_specialized_stats_fast_path(self):
+        collector = (ROOT / 'data/sgp.kits/function/stats_collector/collect_ray_damage_received_valid.mcfunction').read_text(encoding='utf-8')
+        marker = (ROOT / 'data/sgp.kits/function/stats_collector/ability/mark_ray_affected.mcfunction').read_text(encoding='utf-8')
+
+        self.assertIn('function sgp.kits:stats_collector/save_damage_received', collector)
+        self.assertIn('store result score #ray_ability_cast sgp.dummy', collector)
+        self.assertIn('if score @s sgp.ability_kind matches 6', collector)
+        self.assertIn('if score @s sgp.ability_cast matches 1..', collector)
+        self.assertIn('function sgp.kits:stats_collector/ability/mark_ray_affected', collector)
+        self.assertNotIn('sgp.ability_damage_target', collector)
+        self.assertNotIn('function sgp.kits:stats_collector/ability/route_damage', collector)
+
+        self.assertIn('sgp.last_ability_cast = #ray_ability_cast sgp.dummy', marker)
+        self.assertIn('execute on attacker run function sgp.kits:stats_collector/ability/mark_success', marker)
+        self.assertIn('execute on attacker run function sgp.kits:stats_collector/ability/increment', marker)
