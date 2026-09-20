@@ -1,6 +1,8 @@
 #> sgp.kits:abilities/rays/init
 # Create the beams and initialize their tracking from the caster.
 
+scoreboard players set @s sgp.ray_anim 70
+
 summon item_display ~ ~0.6 ~ {Tags:["sgp.ray","sgp.ray_cardinal","sgp.south","sgp.new"], item:{id:"minecraft:yellow_stained_glass",count:1}, item_display:"fixed", teleport_duration:2, transformation:{translation:[0.0f, 0.0f, 8.0f], scale:[0.5f, 0.5f, 32.0f], left_rotation:[0f,0f,1f,1f], right_rotation:[0f,0f,0f,1f]}}
 
 summon item_display ~ ~0.6 ~ {Tags:["sgp.ray","sgp.ray_cardinal","sgp.north","sgp.new"], item:{id:"minecraft:yellow_stained_glass",count:1}, item_display:"fixed", teleport_duration:2, transformation:{translation:[0.0f, 0.0f, 8.0f], scale:[0.5f, 0.5f, 32.0f], left_rotation:[0f,0f,-1f,1f], right_rotation:[0f,0f,0f,1f]}, Rotation:[180,0]}

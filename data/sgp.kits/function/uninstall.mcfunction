@@ -27,6 +27,7 @@ scoreboard objectives remove sgp.old_z
 scoreboard objectives remove sgp.dx
 scoreboard objectives remove sgp.dy
 scoreboard objectives remove sgp.dz
+scoreboard objectives remove sgp.ray_anim
 
 scoreboard objectives remove sgp.kills_give_1
 scoreboard objectives remove sgp.kills_give_2

@@ -11,4 +11,4 @@ execute unless score @s sgp.dummy matches 16000 \
         run scoreboard players set @s sgp.dummy 16000
 
 # Animate a rotation around its horizontal axis
-execute store result entity @s transformation.left_rotation[3] float 0.01 run scoreboard players remove @s sgp.timer 2
+data modify entity @s transformation.left_rotation[3] set from storage sgp:rays prediction.rotation

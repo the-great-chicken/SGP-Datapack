@@ -1,5 +1,6 @@
 #> sgp.kits:abilities/bigger/end
 
+execute if entity @s[tag=sgp.ray_hitbox_cached] run function sgp.kits:abilities/rays/clear_target_hitbox
 attribute @s minecraft:scale modifier remove sgp:bigger
 attribute @s minecraft:jump_strength modifier remove sgp:bigger
 attribute @s minecraft:entity_interaction_range modifier remove sgp:bigger

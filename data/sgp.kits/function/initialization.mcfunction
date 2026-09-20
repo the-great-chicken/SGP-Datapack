@@ -30,6 +30,7 @@ scoreboard objectives add sgp.old_z dummy
 scoreboard objectives add sgp.dx dummy
 scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
+scoreboard objectives add sgp.ray_anim dummy
 
 scoreboard objectives add sgp.kills_give_1 playerKillCount
 scoreboard objectives add sgp.kills_give_2 playerKillCount

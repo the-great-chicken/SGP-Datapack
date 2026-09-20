@@ -2,6 +2,9 @@
 
 execute if score @s sgp.duration_ability matches 1 run return run function sgp.kits:abilities/rays/end
 
+execute store result storage sgp:rays prediction.rotation float 0.01 \
+    run scoreboard players remove @s sgp.ray_anim 2
+
 tag @s add sgp.radiator
 
 # Predict visual movement without moving the collision origin.

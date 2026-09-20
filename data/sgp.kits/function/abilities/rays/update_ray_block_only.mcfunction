@@ -16,4 +16,4 @@ execute unless score @s sgp.dummy = #ray_dist sgp.dummy \
         run scoreboard players operation @s sgp.dummy = #ray_dist sgp.dummy
 
 # Animate a rotation around its horizontal axis
-execute store result entity @s transformation.left_rotation[3] float 0.01 run scoreboard players remove @s sgp.timer 2
+data modify entity @s transformation.left_rotation[3] set from storage sgp:rays prediction.rotation

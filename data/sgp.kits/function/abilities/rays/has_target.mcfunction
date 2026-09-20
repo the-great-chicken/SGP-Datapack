@@ -4,6 +4,8 @@
 # Overlapping selector AABBs conservatively cover the complete 16-block ray segment.
 # Their guaranteed local coverage is -0.25..0.75, 0.70..1.70, 1.65..6.75, 6.70..11.80, and 11.75..16.15.
 
+execute if entity @s[tag=sgp.ray_cardinal] run return run function sgp.kits:abilities/rays/has_target_cardinal
+
 execute positioned ^ ^ ^0.25 positioned ~-0.5 ~-0.5 ~-0.5 \
     if entity @a[tag=sgp.ray_target,dx=0,dy=0,dz=0,limit=1] \
         run return 1
