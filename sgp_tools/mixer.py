@@ -5,7 +5,10 @@ import json
 import zipfile
 
 SHA256 = '1765e994bed0da493376938559dbeb4570dc76d8aa6359191e3426f6c66cd7a9'
-OVERRIDES = {'data/dah.actbar_mixer/function/z_private/display/render.mcfunction'}
+OVERRIDES = {
+    'data/dah.actbar_mixer/function/z_private/display/render.mcfunction',
+    'data/dah.actbar_mixer/function/z_private/tick.mcfunction',
+}
 MERGED_TAGS = {'data/minecraft/tags/function/load.json', 'data/minecraft/tags/function/tick.json'}
 
 
