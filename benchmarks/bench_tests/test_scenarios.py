@@ -184,6 +184,28 @@ class ScenarioTests(unittest.TestCase):
         self.assertIn('scoreboard players set #cleave_drop_inputs sgp.bench 0', measurement_reset)
         self.assertIn('scoreboard players set #cleave_waves sgp.bench 0', measurement_reset)
 
+        _, _, bats = bench.resolve_plan(scenarios, 'ability_bats_detonating', players=40)
+        with tempfile.TemporaryDirectory() as temporary:
+            server = Path(temporary)
+            bench.compile_active_plan(server, bats)
+            active = server / 'world/datapacks/SGP-Datapack/data/sgp.bench/function/generated/active'
+            bats_prepare = (active / 'measurement_prepare.mcfunction').read_text(encoding='utf-8')
+            bats_reset = (active / 'measurement_reset.mcfunction').read_text(encoding='utf-8')
+        self.assertIn(
+            'function sgp.bench:scenarios/abilities/bats_detonating/measurement_prepare '
+            '{first:1,last:40,players:40,period:40}',
+            bats_prepare,
+        )
+        self.assertIn(
+            'function sgp.bench:scenarios/abilities/bats_detonating/measurement_reset '
+            '{first:1,last:40,players:40,period:40}',
+            bats_reset,
+        )
+        self.assertLess(
+            bats_reset.index('bats_detonating/measurement_reset'),
+            bats_reset.index('scoreboard players set #bats_detonate_inputs sgp.bench 0'),
+        )
+
     def test_repeated_atomic_scenario_aggregates_same_counter(self):
         scenarios = bench.load_scenarios()
         composite = {
@@ -239,8 +261,11 @@ class ScenarioTests(unittest.TestCase):
         _, _, diorama = bench.resolve_plan(scenarios, 'diorama_giant', players=4)
         self.assertEqual(diorama[0].validators, ('diorama',))
 
+        _, _, bats = bench.resolve_plan(scenarios, 'ability_bats_detonating', players=4)
+        self.assertEqual(bats[0].validators, ('bats_detonating',))
+
         _, _, mixed = bench.resolve_plan(scenarios, 'abilities_4_per_kit')
-        self.assertEqual([validator.name for validator in validators_for_plan(mixed)], ['rays'])
+        self.assertEqual([validator.name for validator in validators_for_plan(mixed)], ['rays', 'bats_detonating'])
 
         with self.assertRaisesRegex(bench.BenchmarkError, 'Unknown benchmark scenario validator'):
             validators_for_names(['does-not-exist'])

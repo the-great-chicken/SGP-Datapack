@@ -4,6 +4,8 @@
   "setup": "sgp.bench:scenarios/abilities/bats_detonating/setup",
   "tick": "sgp.bench:scenarios/abilities/bats_detonating/tick",
   "teardown": "sgp.bench:scenarios/abilities/bats_detonating/teardown",
+  "measurement_prepare": "sgp.bench:scenarios/abilities/bats_detonating/measurement_prepare",
+  "measurement_reset": "sgp.bench:scenarios/abilities/bats_detonating/measurement_reset",
   "parameters": {
     "players": {
       "type": "int",
@@ -19,5 +21,8 @@
   "counters": {
     "drop_inputs": "#bats_detonate_inputs",
     "waves": "#bats_detonate_waves"
-  }
+  },
+  "validators": [
+    "bats_detonating"
+  ]
 }

@@ -35,6 +35,7 @@ class ParsedProfile:
     version: str | None
     command_functions_percent: float | None
     entries: list[ProfileEntry]
+    scheduled_entries: list[ProfileEntry]
     tick_times_ms: list[float]
 
     @property
@@ -74,11 +75,13 @@ class PlanComponent:
     setup: str
     tick: str
     teardown: str
+    measurement_prepare: str | None
+    measurement_reset: str | None
     counters: dict[str, str]
     validators: tuple[str, ...] = ()
 
     def as_dict(self) -> dict:
-        return {
+        data = {
             'scenario': self.scenario,
             'players': self.players,
             'first': self.first,
@@ -89,3 +92,8 @@ class PlanComponent:
             'teardown': self.teardown,
             'counters': self.counters,
         }
+        if self.measurement_prepare is not None:
+            data['measurement_prepare'] = self.measurement_prepare
+        if self.measurement_reset is not None:
+            data['measurement_reset'] = self.measurement_reset
+        return data

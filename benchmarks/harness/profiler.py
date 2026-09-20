@@ -126,16 +126,23 @@ def parse_profile(path: Path) -> ParsedProfile:
             global_percent=float(match.group('global')),
         ))
 
-    command_root_index = next((i for i, item in enumerate(parsed_lines) if item.name == 'commandFunctions'), None)
-    command_percent = None
-    entries: list[ProfileEntry] = []
-    if command_root_index is not None:
-        root = parsed_lines[command_root_index]
-        command_percent = root.global_percent
-        for item in parsed_lines[command_root_index + 1:]:
-            if item.depth <= root.depth:
+    def subtree_entries(root_name: str, *, first_only: bool = False) -> list[ProfileEntry]:
+        entries: list[ProfileEntry] = []
+        for index, root in enumerate(parsed_lines):
+            if root.name != root_name:
+                continue
+            for item in parsed_lines[index + 1:]:
+                if item.depth <= root.depth:
+                    break
+                entries.append(item)
+            if first_only:
                 break
-            entries.append(item)
+        return entries
+
+    command_root = next((item for item in parsed_lines if item.name == 'commandFunctions'), None)
+    command_percent = command_root.global_percent if command_root is not None else None
+    entries = subtree_entries('commandFunctions', first_only=True)
+    scheduled_entries = subtree_entries('scheduledFunctions')
 
     return ParsedProfile(
         archive=path,
@@ -144,6 +151,7 @@ def parse_profile(path: Path) -> ParsedProfile:
         version=version_match.group(1).strip() if version_match else None,
         command_functions_percent=command_percent,
         entries=entries,
+        scheduled_entries=scheduled_entries,
         tick_times_ms=tick_times_ms,
     )
 
@@ -254,6 +262,17 @@ def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
                 'global_percent': item.global_percent,
             }
             for item in profile.entries
+        ],
+        'scheduled_function_entries': [
+            {
+                'depth': item.depth,
+                'name': item.name,
+                'count': item.count,
+                'per_tick': item.per_tick,
+                'parent_percent': item.parent_percent,
+                'global_percent': item.global_percent,
+            }
+            for item in profile.scheduled_entries
         ],
     }
 

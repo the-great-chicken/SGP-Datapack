@@ -13,6 +13,9 @@ Tick span: 200 ticks
 [03] |   |   |   function minecraft:execute_repeating_functions(200/1) - 60.00%/5.40%
 [04] |   |   |   |   execute as @a[tag=sgp.in_game] run function sgp.kits:abilities/tick(8000/40) - 50.00%/2.70%
 [02] |   |   levels(200/1) - 20.00%/18.00%
+[03] |   |   |   scheduledFunctions(200/1) - 10.00%/1.80%
+[04] |   |   |   |   function sgp.kits:abilities/bats/check_for_explosion(5/0) - 80.00%/1.44%
+[05] |   |   |   |   |   execute summon tnt ~ ~ ~ {Tags:["sgp.bat_grenade"]}(2000/10) - 50.00%/0.72%
 '''
         archive = directory / 'profile.zip'
         with zipfile.ZipFile(archive, 'w') as output:
@@ -42,6 +45,11 @@ Tick span: 200 ticks
         self.assertEqual(len(profile.entries), 2)
         self.assertEqual(profile.entries[0].name, 'function minecraft:execute_repeating_functions')
         self.assertEqual(profile.entries[1].count, 8000)
+        self.assertEqual(len(profile.scheduled_entries), 2)
+        self.assertEqual(profile.scheduled_entries[0].name, 'function sgp.kits:abilities/bats/check_for_explosion')
+        self.assertEqual(profile.scheduled_entries[1].count, 2000)
+        serialized = bench.profile_to_dict(profile, {})
+        self.assertEqual(serialized['scheduled_function_entries'][1]['count'], 2000)
 
     def test_profile_wait_preserves_validated_snapshot(self):
         class AliveProcess:

@@ -40,10 +40,13 @@ def validate_scenario_entrypoints(data: Path, scenarios: dict[str, dict]) -> Non
     for scenario in scenarios.values():
         if 'components' in scenario:
             continue
-        for key in ('setup', 'tick', 'teardown'):
-            path = function_file(data, scenario[key])
+        for key in ('setup', 'tick', 'teardown', 'measurement_prepare', 'measurement_reset'):
+            identifier = scenario.get(key)
+            if identifier is None:
+                continue
+            path = function_file(data, identifier)
             if not path.is_file():
-                raise ValueError(f'Scenario {scenario["name"]}: missing {key} function {scenario[key]}')
+                raise ValueError(f'Scenario {scenario["name"]}: missing {key} function {identifier}')
 
 
 def append_tag_value(path: Path, value: str) -> None:

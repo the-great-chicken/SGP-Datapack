@@ -99,6 +99,8 @@ def resolve_plan(scenarios: dict[str, dict], name: str, players: int | None = No
         plan.append(PlanComponent(
             scenario=scenario['name'], players=actor_count, first=first, last=last,
             parameters=params, setup=scenario['setup'], tick=scenario['tick'], teardown=scenario['teardown'],
+            measurement_prepare=scenario.get('measurement_prepare'),
+            measurement_reset=scenario.get('measurement_reset'),
             counters=dict(scenario.get('counters', {})),
             validators=tuple(scenario.get('validators', ())),
         ))

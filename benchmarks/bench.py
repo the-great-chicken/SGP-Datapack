@@ -104,6 +104,14 @@ from benchmarks.harness.suites import (
     run_suite,
     write_suite_summary,
 )
+from benchmarks.harness.validators.bats import (
+    bats_actor_ranges,
+    bats_player_count,
+    require_bat_targets,
+    validate_bats_profile,
+    wait_for_bat_cleanup,
+    validate_bats_workload,
+)
 from benchmarks.harness.validators.diorama import require_diorama_entities, validate_diorama_workload
 from benchmarks.harness.validators.rays import (
     ray_actor_indices,

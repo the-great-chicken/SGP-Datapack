@@ -17,7 +17,8 @@ from .scenarios import load_scenarios, resolve_plan
 from .server import ServerProcess
 from .settings import CONFIG, INVALID_MARKER, SERVER_MARKER
 from .staging import prepare_server
-from .validators import run_live_validators, run_profile_validators, validators_for_plan
+from .validators import (run_live_validators, run_profile_validators,
+                         validators_for_plan, wait_measurement_validators)
 
 def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure: bool = True):
     scenarios = load_scenarios()
@@ -111,6 +112,14 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             run_live_validators(server, plan, validators=validators)
 
             phase = f'run {run_number}/{args.runs} profiling'
+            # Scenario-specific preparation can quiesce warm-up state without
+            # resetting the actual measurement phase. This matters for living
+            # entities such as bats: /kill starts a death lifecycle rather than
+            # removing them immediately.
+            server.send('function sgp.bench:generated/active/measurement_prepare')
+            wait_measurement_validators(
+                server, plan, timeout=args.startup_timeout, validators=validators
+            )
             server.send('function sgp.bench:measurement_reset')
             profile_dir = server_dir / 'debug/profiling'
             previous = {path.resolve() for path in profile_dir.glob('*.zip')} if profile_dir.is_dir() else set()
