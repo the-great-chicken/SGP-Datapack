@@ -9,3 +9,6 @@ execute as @a[tag=sgp.ray_target,tag=!sgp.ray_hitbox_cached,tag=!bs.hitbox.custo
         run function sgp.kits:abilities/rays/cache_target_hitbox
 
 scoreboard players set #ray_hitbox_cache sgp.dummy 1
+
+scoreboard players set #ray_fast_entity sgp.dummy 0
+execute unless entity @a[tag=sgp.ray_target,tag=!sgp.ray_hitbox_cached,limit=1] run scoreboard players set #ray_fast_entity sgp.dummy 1

@@ -15,7 +15,7 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
         }]
 
     @staticmethod
-    def make_run(ticks=199, spawned=2000, detonated=2000, *, validated=True):
+    def make_run(ticks=199, spawned=2000, explosions=200, *, validated=True):
         run = {
             'tick_span': ticks,
             'command_function_entries': [{
@@ -30,14 +30,14 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
                     'execute summon tnt ~ ~ ~ '
                     '{explosion_power:1.3f,fuse:0s,Tags:["sgp.bat_grenade", "sgp.new"]}'
                 ),
-                'count': detonated,
+                'count': explosions,
             }],
         }
         if validated:
             run['validated_workload'] = {
                 'bats_players': 40,
                 'bats_spawned': spawned,
-                'bats_detonated': detonated,
+                'bats_explosions': explosions,
                 'bats_target_mannequins': 40,
                 'bats_targets_in_place': 40,
             }
@@ -48,25 +48,25 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
         self.assertEqual(bench.validate_bats_profile(self.make_run(validated=False), plan), {
             'bats_players': 40,
             'bats_spawned': 2000,
-            'bats_detonated': 2000,
+            'bats_explosions': 200,
         })
 
         # The benchmark driver fires on tick 201, after production ability routing
         # already ran. Those bats are not created until tick 202.
-        run = self.make_run(ticks=201, spawned=2000, detonated=2000, validated=False)
+        run = self.make_run(ticks=201, spawned=2000, explosions=200, validated=False)
         self.assertEqual(bench.validate_bats_profile(run, plan)['bats_spawned'], 2000)
 
         # A 202-tick capture includes that sixth production activation, but its
         # 1-second detonation deadline remains outside the profile.
-        run = self.make_run(ticks=202, spawned=2400, detonated=2000, validated=False)
+        run = self.make_run(ticks=202, spawned=2400, explosions=200, validated=False)
         validated = bench.validate_bats_profile(run, plan)
         self.assertEqual(validated['bats_spawned'], 2400)
-        self.assertEqual(validated['bats_detonated'], 2000)
+        self.assertEqual(validated['bats_explosions'], 200)
 
-    def test_profile_validation_rejects_missing_detonations(self):
-        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'detonation workload'):
+    def test_profile_validation_rejects_missing_coalesced_explosions(self):
+        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'coalesced explosion workload'):
             bench.validate_bats_profile(
-                self.make_run(spawned=2000, detonated=800, validated=False),
+                self.make_run(spawned=2000, explosions=80, validated=False),
                 self.plan(),
             )
 

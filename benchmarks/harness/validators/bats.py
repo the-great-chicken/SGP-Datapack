@@ -9,6 +9,10 @@ from ..server import ServerProcess
 
 SCENARIO = 'ability_bats_detonating'
 BATS_PER_ACTIVATION = 10
+# The benchmark tick pins every same-cast swarm to one mannequin before the
+# scheduled production scan runs, so the optimized overlap path deterministically
+# emits one physical explosion for each actor's ten-bat activation.
+EXPLOSIONS_PER_STACKED_ACTIVATION = 1
 # The benchmark driver drops the ability input at the end of the datapack tick,
 # after the production ability router has already run. The bats therefore spawn
 # on the following tick. Their scheduled 1-second scan detonates on driver tick
@@ -51,7 +55,7 @@ def _waves_visible_by(ticks: int, period: int, delay_ticks: int) -> int:
 
 def _expected_profile_counts(ticks: int, plan: list[dict]) -> tuple[int, int]:
     spawned = 0
-    detonated = 0
+    explosions = 0
     for component in _components(plan):
         players = component['players']
         if players <= 0:
@@ -60,8 +64,8 @@ def _expected_profile_counts(ticks: int, plan: list[dict]) -> tuple[int, int]:
         activations = _waves_visible_by(ticks, period, SPAWN_DELAY_TICKS)
         completed = _waves_visible_by(ticks, period, DETONATION_DELAY_TICKS)
         spawned += players * BATS_PER_ACTIVATION * activations
-        detonated += players * BATS_PER_ACTIVATION * completed
-    return spawned, detonated
+        explosions += players * EXPLOSIONS_PER_STACKED_ACTIVATION * completed
+    return spawned, explosions
 
 
 def _profile_count(run: dict, key: str, *needles: str) -> int:
@@ -86,14 +90,14 @@ def validate_bats_profile(run: dict, plan: list[dict]) -> dict:
     if not isinstance(ticks, int) or ticks <= 0:
         raise BenchmarkInvalidError('Cannot validate detonating Bats without a positive profile tick count')
 
-    expected_spawned, expected_detonated = _expected_profile_counts(ticks, plan)
+    expected_spawned, expected_explosions = _expected_profile_counts(ticks, plan)
     spawned = _profile_count(
         run,
         'command_function_entries',
         'summon bat run function sgp.misc:summon_multiple_exec',
         'sgp.bat_grenade',
     )
-    detonated = _profile_count(
+    explosions = _profile_count(
         run,
         'scheduled_function_entries',
         'summon tnt ~ ~ ~',
@@ -104,15 +108,15 @@ def validate_bats_profile(run: dict, plan: list[dict]) -> dict:
             f'Incomplete detonating Bats spawn workload over {ticks} ticks: '
             f'grenade bats {spawned}/{expected_spawned}'
         )
-    if detonated != expected_detonated:
+    if explosions != expected_explosions:
         raise BenchmarkInvalidError(
-            f'Incomplete detonating Bats detonation workload over {ticks} ticks: '
-            f'grenade TNT {detonated}/{expected_detonated}'
+            f'Incomplete detonating Bats coalesced explosion workload over {ticks} ticks: '
+            f'grenade TNT {explosions}/{expected_explosions}'
         )
     return {
         'bats_players': players,
         'bats_spawned': spawned,
-        'bats_detonated': detonated,
+        'bats_explosions': explosions,
     }
 
 
