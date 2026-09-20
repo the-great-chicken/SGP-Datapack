@@ -53,6 +53,7 @@
     {"ids": ["sgp.ci:water_trident"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:players/cleanup", "teardown": "sgp.ci:water_trident/cleanup"}},
     {"trees": ["sgp.ci:protect"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:protect/setup", "teardown": "sgp.ci:protect/cleanup"}},
     {"trees": ["sgp.ci:rays"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:rays/setup", "teardown": "sgp.ci:rays/cleanup"}},
+    {"trees": ["sgp.ci:rays_far"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:rays_far/setup", "teardown": "sgp.ci:rays_far/cleanup"}},
     {"trees": ["sgp.ci:repulsion"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:repulsion/setup", "teardown": "sgp.ci:repulsion/cleanup"}},
     {"trees": ["sgp.ci:reward_hud"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:reward_hud/setup", "teardown": "sgp.ci:reward_hud/cleanup"}},
     {"trees": ["sgp.ci:round_scheduling"], "definition": {"type": "minecraft:function", "setup": "sgp.ci:round_scheduling/setup", "teardown": "sgp.ci:round_scheduling/cleanup"}},

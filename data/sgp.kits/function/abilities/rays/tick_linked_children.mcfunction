@@ -4,15 +4,20 @@
 
 # Probe the horizontal beam plane first so the common no-target path does not create/remove transient target tags at all.
 execute positioned ~-16.5 ~0.1 ~-16.5 \
-    unless entity @a[tag=!sgp.radiator,tag=!sgp.peaceful,dx=32,dy=0,dz=32,limit=1] \
+    unless entity @a[tag=!sgp.radiator,tag=!sgp.peaceful,gamemode=!spectator,dx=32,dy=0,dz=32,limit=1] \
         at @s run return run function sgp.kits:abilities/rays/tick_linked_children_block_only
 
 
 execute positioned ~-16.5 ~0.1 ~-16.5 \
-    run tag @a[tag=!sgp.radiator,tag=!sgp.peaceful,dx=32,dy=0,dz=32] add sgp.ray_target
+    run tag @a[tag=!sgp.radiator,tag=!sgp.peaceful,gamemode=!spectator,dx=32,dy=0,dz=32] add sgp.ray_target
 
 scoreboard players set #ray_hitbox_cache sgp.dummy 0
 scoreboard players set #ray_fast_entity sgp.dummy 0
+
+# Clear cardinal beams measure along-axis positions relative to the caster's block so far arenas never overflow fixed-point
+# scores. Any integer offset near the caster works; bs.pos.* (scale 1000, computed by rays/tick) avoids a player NBT read.
+execute store result storage sgp:rays origin.x int -0.001 run scoreboard players get @s bs.pos.x
+execute store result storage sgp:rays origin.z int -0.001 run scoreboard players get @s bs.pos.z
 
 execute as @e[distance=..10,tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] \
     positioned ~ ~0.6 ~ rotated as @s \

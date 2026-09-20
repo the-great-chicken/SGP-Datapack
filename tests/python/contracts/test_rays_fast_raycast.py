@@ -42,7 +42,8 @@ class RaysFastRaycastContracts(unittest.TestCase):
             next_fn,
         )
         self.assertIn("scoreboard players reset @a[tag=sgp.ray_target] bs.raycast.id", update)
-        self.assertIn("scoreboard players reset @a[tag=sgp.ray_target] bs.raycast.id", cardinal_update)
+        # The direct cardinal scan never reads bs.raycast.id, so it must not pay for the reset.
+        self.assertNotIn("bs.raycast.id", cardinal_update)
         self.assertIn("tag=bs.raycast.checked,predicate=bs.raycast:internal/id,level=0..", react)
 
     def test_fast_entity_record_contains_only_ordering_fields(self):
@@ -123,6 +124,51 @@ class RaysFastRaycastContracts(unittest.TestCase):
         for text in (east, west, south, north):
             self.assertIn("#x bs.ctx /= 10000 bs.const", text)
             self.assertIn("matches 0..16000", text)
+
+    def test_clear_cardinal_measures_from_collision_origin_relative_to_caster_block(self):
+        tick = read("tick_linked_children.mcfunction")
+        run = read("raycast_fast/cardinal/run.mcfunction")
+
+        for axis in ("x", "z"):
+            # Derived from the bs.pos.* scores rays/tick already computed: no per-caster player NBT read.
+            self.assertIn(
+                f"execute store result storage sgp:rays origin.{axis} int -0.001 run scoreboard players get @s bs.pos.{axis}",
+                tick,
+            )
+        self.assertNotIn("data get entity @s Pos", tick)
+        self.assertLess(tick.index("tick_linked_children_block_only"), tick.index("sgp:rays origin.x"))
+        self.assertLess(tick.index("sgp:rays origin.x"), tick.index("update_ray_dispatch"))
+        self.assertNotIn("bs:data raycast", run)
+
+        for name, axis in (("east", "x"), ("west", "x"), ("south", "z"), ("north", "z")):
+            direction = read(f"raycast_fast/cardinal/{name}.mcfunction")
+            check = read(f"raycast_fast/cardinal/check_{name}.mcfunction")
+            # The origin is the execution position (collision origin), never the predicted display position.
+            self.assertNotIn("positioned as @s", direction)
+            self.assertIn(
+                "execute in minecraft:overworld as B5-0-0-0-1 \\\n"
+                f"    run function sgp.kits:abilities/rays/raycast_fast/cardinal/origin_{axis} with storage sgp:rays origin",
+                direction,
+            )
+            self.assertNotIn("bs:data raycast", direction + check)
+            self.assertIn("positioned as @s as B5-0-0-0-1", check)
+            self.assertIn(f"cardinal/position_{axis} with storage sgp:rays origin", check)
+
+        for name in ("origin_x", "origin_z", "position_x", "position_z"):
+            shuttle = read(f"raycast_fast/cardinal/{name}.mcfunction")
+            self.assertIn("$execute positioned ~$(x) ~ ~$(z) run tp @s ~ ~ ~", shuttle)
+            self.assertIn("tp @s -30000000 0 1600", shuttle)
+            self.assertNotIn("$(y)", shuttle)
+
+    def test_dead_fast_entities_reactor_is_removed(self):
+        self.assertFalse((RAYS / "raycast_fast/react/entities.mcfunction").exists())
+        for path in RAYS.rglob("*.mcfunction"):
+            self.assertNotIn("react/entities", path.read_text(encoding="utf-8"), path)
+
+    def test_ray_targets_exclude_spectators_at_tagging_time(self):
+        tick = read("tick_linked_children.mcfunction")
+        self.assertEqual(tick.count("gamemode=!spectator"), 2)
+        self.assertIn("tag=!sgp.radiator,tag=!sgp.peaceful,gamemode=!spectator,dx=32,dy=0,dz=32", tick)
 
 
 if __name__ == "__main__":

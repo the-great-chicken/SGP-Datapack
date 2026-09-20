@@ -5,8 +5,7 @@
 tag @s add sgp.ray_refreshed
 $teleport @s ~$(x) ~$(y) ~$(z) ~ 0
 
-# Preserve the Bookshelf 4.0.1 stale-ID workaround before every entity-enabled cast.
-scoreboard players reset @a[tag=sgp.ray_target] bs.raycast.id
+# The direct scan never reads raycast IDs, so the Bookshelf stale-ID workaround is not needed here.
 function sgp.kits:abilities/rays/raycast_fast/cardinal/run
 
 execute unless score @s sgp.dummy matches 16000 \
