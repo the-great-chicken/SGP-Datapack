@@ -49,11 +49,15 @@ def write_result_fixture(path: Path, command_percent: float, entry_percent: floa
         'heap': '2G',
         'warmup_seconds': 5.0,
         'minecraft_version': '26.1.2',
+        'git_commit': '0123456789abcdef0123456789abcdef01234567',
+        'git_dirty': False,
     }), encoding='utf-8')
     for i in range(1, 4):
         (path / f'run-{i:02d}.json').write_text(json.dumps({
             'tick_span': 200,
+            'time_span_ms': 10000.0,
             'effective_tps': 20.0,
+            # Legacy key on purpose: comparison must upgrade it to tick_period_ms.
             'tick_time_ms': {'median': 4.0, 'p95': 8.0, 'max': 12.0},
             'command_functions_percent': command_percent,
             'harness_counters_after_profile_write': {

@@ -70,6 +70,8 @@ class ServerIntegrityTests(unittest.TestCase):
 
             thread.return_value.start.assert_called_once_with()
             stop.assert_called_once_with()
+            # A failed startup must not leave the console log open (Windows cannot delete it).
+            self.assertIsNone(server._log)
 
     def test_stop_escalates_after_graceful_timeout(self):
         server = self.server()

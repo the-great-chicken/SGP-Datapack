@@ -2,6 +2,8 @@ from .common import *
 from benchmarks.harness.validators.bats import (
     BATS_PER_ACTIVATION,
     EXPLOSIONS_PER_STACKED_ACTIVATION,
+    WORKLOAD_CONSTANTS,
+    BatsDetonatingValidator,
 )
 
 
@@ -26,7 +28,8 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
         }]
 
     @staticmethod
-    def make_run(ticks=199, spawned=DEFAULT_SPAWNED, explosions=DEFAULT_EXPLOSIONS, *, validated=True):
+    def make_run(ticks=199, spawned=DEFAULT_SPAWNED, explosions=DEFAULT_EXPLOSIONS, *, validated=True,
+                 constants=None):
         run = {
             'tick_span': ticks,
             'command_function_entries': [{
@@ -51,6 +54,7 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
                 'bats_explosions': explosions,
                 'bats_target_mannequins': PLAYERS,
                 'bats_targets_in_place': PLAYERS,
+                **(WORKLOAD_CONSTANTS if constants is None else constants),
             }
         return run
 
@@ -60,6 +64,7 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
             'bats_players': PLAYERS,
             'bats_spawned': DEFAULT_SPAWNED,
             'bats_explosions': DEFAULT_EXPLOSIONS,
+            **WORKLOAD_CONSTANTS,
         })
 
         # The benchmark driver fires on tick 201, after production ability routing
@@ -88,6 +93,31 @@ class BatsDetonatingValidatorTests(unittest.TestCase):
 
         run = self.make_run()
         self.assertEqual(bench.validate_bats_workload(run, self.plan()), run['validated_workload'])
+
+    def test_persisted_validation_uses_recorded_workload_constants(self):
+        plan = self.plan()
+        ten_bats = {'bats_per_activation': 10, 'bats_explosions_per_activation': 1}
+        run = self.make_run(spawned=PLAYERS * 10 * COMPLETE_WAVES, constants=ten_bats)
+        self.assertEqual(bench.validate_bats_workload(run, plan)['bats_per_activation'], 10)
+
+        # A result recorded before constants were stored is checked against the current constants.
+        legacy = self.make_run(spawned=PLAYERS * 10 * COMPLETE_WAVES, constants={})
+        with self.assertRaisesRegex(
+            bench.BenchmarkInvalidError, f'grenade bats {PLAYERS * 10 * COMPLETE_WAVES}/{DEFAULT_SPAWNED}'
+        ):
+            bench.validate_bats_workload(legacy, plan)
+
+        tampered = self.make_run()
+        tampered['validated_workload']['bats_per_activation'] = 9
+        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'grenade bats'):
+            bench.validate_bats_workload(tampered, plan)
+
+    def test_profile_validation_records_workload_constants(self):
+        live = {'bats_target_mannequins': PLAYERS, 'bats_targets_in_place': PLAYERS}
+        result = BatsDetonatingValidator().validate_profile(self.make_run(validated=False), self.plan(), live)
+        self.assertEqual(result['bats_per_activation'], BATS_PER_ACTIVATION)
+        self.assertEqual(result['bats_explosions_per_activation'], EXPLOSIONS_PER_STACKED_ACTIVATION)
+        self.assertEqual(BatsDetonatingValidator.constants, WORKLOAD_CONSTANTS)
 
     def test_live_validation_requires_one_target_at_each_actor(self):
         server = self.server()

@@ -29,7 +29,7 @@ def command_limit_summary(command_limit: int, calibration: dict | None) -> str:
 def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warmup: float,
                   profiles: list[ParsedProfile], counters: list[dict],
                   plan: list[PlanComponent] | None = None, command_limit: int = DEFAULT_COMMAND_LIMIT,
-                  command_limit_calibration: dict | None = None):
+                  command_limit_calibration: dict | None = None, metadata: dict | None = None):
     command_index, function_index = build_source_index()
     lines = [
         f'# SGP benchmark: `{scenario["name"]}`',
@@ -42,6 +42,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         f'- Warm-up: {warmup:g}s',
         command_limit_summary(command_limit, command_limit_calibration),
         '- Profiler: vanilla dedicated-server `/perf`',
+        f'- Source: {describe_source(metadata)}',
         '',
     ]
     if plan:
@@ -54,47 +55,60 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             )
         lines += ['', '## Runs',
         '',
-        '| Run | Profile ticks | Tick median | Tick p95 | Tick max | commandFunctions | Driver ticks |',
-        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+        '| Run | Profile ticks | Mean MSPT | commandFunctions | commandFunctions ms/tick | '
+        'Tick period median | Tick period p95 | Tick period max | Driver ticks |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
     ]
     for i, (profile, count) in enumerate(zip(profiles, counters), 1):
         lines.append(
-            f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.tick_median_ms)} ms | '
-            f'{format_number(profile.tick_p95_ms)} ms | {format_number(profile.tick_max_ms)} ms | '
-            f'{format_number(profile.command_functions_percent)}% | {format_number(count.get("ticks"))} |'
+            f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.mean_mspt_ms)} ms | '
+            f'{format_number(profile.command_functions_percent)}% | '
+            f'{format_number(profile.command_functions_ms_per_tick)} ms | '
+            f'{format_number(profile.tick_period_median_ms)} ms | {format_number(profile.tick_period_p95_ms)} ms | '
+            f'{format_number(profile.tick_period_max_ms)} ms | {format_number(count.get("ticks"))} |'
         )
 
+    mspt_values = [p.mean_mspt_ms for p in profiles if p.mean_mspt_ms is not None]
     command_values = [p.command_functions_percent for p in profiles if p.command_functions_percent is not None]
+    cf_ms_values = [p.command_functions_ms_per_tick for p in profiles if p.command_functions_ms_per_tick is not None]
     tps_values = [p.effective_tps for p in profiles if p.effective_tps is not None]
-    tick_medians = [p.tick_median_ms for p in profiles if p.tick_median_ms is not None]
-    tick_p95s = [p.tick_p95_ms for p in profiles if p.tick_p95_ms is not None]
-    tick_maxes = [p.tick_max_ms for p in profiles if p.tick_max_ms is not None]
-    if command_values or tps_values or tick_medians or tick_p95s or tick_maxes:
+    period_medians = [p.tick_period_median_ms for p in profiles if p.tick_period_median_ms is not None]
+    period_p95s = [p.tick_period_p95_ms for p in profiles if p.tick_period_p95_ms is not None]
+    period_maxes = [p.tick_period_max_ms for p in profiles if p.tick_period_max_ms is not None]
+    if mspt_values or command_values or tps_values or period_medians or period_p95s or period_maxes:
         lines += ['', '## Aggregate', '']
-        if tick_medians:
+        if mspt_values:
             lines.append(
-                f'- Median run tick median: **{median(tick_medians):.3f} ms** '
-                f'(range {min(tick_medians):.3f}–{max(tick_medians):.3f} ms).'
-            )
-        if tick_p95s:
-            lines.append(
-                f'- Median run tick p95: **{median(tick_p95s):.3f} ms** '
-                f'(range {min(tick_p95s):.3f}–{max(tick_p95s):.3f} ms).'
-            )
-        if tick_maxes:
-            lines.append(
-                f'- Median run maximum tick: **{median(tick_maxes):.3f} ms** '
-                f'(range {min(tick_maxes):.3f}–{max(tick_maxes):.3f} ms).'
+                f'- Median run mean MSPT: **{median(mspt_values):.3f} ms** '
+                f'(range {min(mspt_values):.3f}–{max(mspt_values):.3f} ms); '
+                'server work per tick from the `/perf` root `tick` share.'
             )
         if command_values:
+            per_tick = f', **{median(cf_ms_values):.3f} ms/tick**' if cf_ms_values else ''
             lines.append(
                 f'- Median `commandFunctions`: **{median(command_values):.2f}%** '
-                f'(range {min(command_values):.2f}–{max(command_values):.2f}%).'
+                f'(range {min(command_values):.2f}–{max(command_values):.2f}%){per_tick}.'
             )
         if tps_values:
             lines.append(
                 f'- Median effective TPS during capture: **{median(tps_values):.2f}** '
                 f'(range {min(tps_values):.2f}–{max(tps_values):.2f}).'
+            )
+        if period_medians:
+            lines.append(
+                f'- Median run tick period median: **{median(period_medians):.3f} ms** '
+                f'(range {min(period_medians):.3f}–{max(period_medians):.3f} ms). Wall-clock tick interval '
+                'from `ticking.csv`; it only reflects work while the server is saturated.'
+            )
+        if period_p95s:
+            lines.append(
+                f'- Median run tick period p95: **{median(period_p95s):.3f} ms** '
+                f'(range {min(period_p95s):.3f}–{max(period_p95s):.3f} ms).'
+            )
+        if period_maxes:
+            lines.append(
+                f'- Median run maximum tick period: **{median(period_maxes):.3f} ms** '
+                f'(range {min(period_maxes):.3f}–{max(period_maxes):.3f} ms).'
             )
 
     workload_names = sorted({
@@ -198,3 +212,30 @@ def git_commit() -> str | None:
         return result.stdout.strip() or None
     except Exception:
         return None
+
+
+def git_dirty() -> bool | None:
+    """True when tracked or untracked (non-ignored) files differ from HEAD; None outside git.
+
+    Untracked files count: source_fingerprint() hashes them too, so an untracked
+    function changes results without changing the commit. results/, the staged
+    server and the dependency cache are gitignored and never mark a run dirty.
+    """
+    try:
+        result = subprocess.run(
+            ['git', 'status', '--porcelain'], cwd=ROOT, capture_output=True, text=True, check=True, timeout=10
+        )
+        return bool(result.stdout.strip())
+    except Exception:
+        return None
+
+
+def describe_source(metadata: dict | None) -> str:
+    commit = (metadata or {}).get('git_commit')
+    text = f'commit `{commit[:12]}`' if isinstance(commit, str) and commit else 'commit unknown'
+    dirty = (metadata or {}).get('git_dirty')
+    if dirty is True:
+        return text + ' **(dirty working tree)**'
+    if dirty is False:
+        return text + ' (clean)'
+    return text

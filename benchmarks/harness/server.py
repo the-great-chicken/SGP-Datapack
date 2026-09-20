@@ -63,7 +63,7 @@ class ServerProcess:
                 bufsize=1,
             )
         except FileNotFoundError as exc:
-            self._log.close()
+            self._close_log()
             raise BenchmarkError(f'Could not find Java executable {self.java!r}') from exc
         self._reader = threading.Thread(target=self._read_output, name='sgp-bench-server-log', daemon=True)
         self._reader.start()
@@ -74,13 +74,29 @@ class ServerProcess:
                 self.stop()
             except Exception as stop_exc:
                 exc.add_note(f'Additionally failed to stop Minecraft server: {stop_exc}')
+            finally:
+                # stop() only closes the console log when it completes. A failed
+                # startup must never leave benchmark-console.log open: Windows
+                # cannot delete an open file.
+                self._close_log()
             raise
 
+    def _close_log(self):
+        log, self._log = self._log, None
+        if log is not None and not log.closed:
+            log.close()
+
     def _read_output(self):
-        assert self.process is not None and self.process.stdout is not None and self._log is not None
-        for line in self.process.stdout:
-            self._log.write(line)
-            self._log.flush()
+        process, log = self.process, self._log
+        assert process is not None and process.stdout is not None and log is not None
+        for line in process.stdout:
+            if log is not None:
+                try:
+                    log.write(line)
+                    log.flush()
+                except ValueError:
+                    # Closed by a failed startup's cleanup; keep draining stdout.
+                    log = None
             with self._condition:
                 self.lines.append(line.rstrip('\n'))
                 self._condition.notify_all()
@@ -204,8 +220,6 @@ class ServerProcess:
 
         if self._reader is not None:
             self._reader.join(timeout=2)
-        if self._log is not None and not self._log.closed:
-            self._log.close()
+        self._close_log()
         self.process = None
         self._reader = None
-        self._log = None

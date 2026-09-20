@@ -4,7 +4,7 @@ The runner stages a fresh plugin-free Fabric server, uses PackTest dummies to
 create deterministic workloads, starts vanilla /perf, preserves every raw
 profile zip, and writes a compact commandFunctions summary.
 
-Requires Python 3.11+ and Java 25. The first run downloads the same pinned
+Requires Python 3.12+ and Java 25. The first run downloads the same pinned
 Fabric/PackTest/Bookshelf/Actionbar Mixer dependencies used by CI.
 """
 from __future__ import annotations

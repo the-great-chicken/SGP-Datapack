@@ -4,7 +4,7 @@ PackTest fake players generate datapack workloads and vanilla `/perf` records th
 
 ## Run
 
-Requires Python 3.13+ and Java 25. The first run downloads the pinned benchmark dependencies.
+Requires Python 3.12+ and Java 25. The first run downloads the pinned benchmark dependencies.
 
 ```bash
 python benchmarks/bench.py list
@@ -14,6 +14,21 @@ python benchmarks/bench.py suite all_abilities
 ```
 
 Results are written under `benchmarks/results/`. Failed runs keep diagnostics there as well.
+
+## Metrics
+
+- **Mean MSPT**: server work per tick, `Time span × tick% / Tick span` from the `/perf` root split
+  (`tick` vs `nextTickWait`). This is the headline. It is `n/a` for results recorded before the
+  harness stored that split.
+- **`commandFunctions` ms/tick**: absolute datapack cost per tick
+  (`Time span × commandFunctions% / Tick span`). Comparable across runs even when TPS differs.
+- **`commandFunctions` %**: share of the whole server loop, idle waiting included, so it shrinks
+  whenever the server has spare time.
+- **Tick period**: wall-clock interval between ticks from `metrics/ticking.csv`. It floors at 50 ms
+  while the server keeps up, so its median/p95/max only reflect work once the server is saturated.
+  Use p95/max for spike-heavy scenarios.
+- `metadata.json` records `git_commit` and `git_dirty`; a run made from a dirty working tree is
+  flagged in `summary.md` and in comparisons.
 
 Without `--command-limit`, the runner starts at 65536. If the invocation hits only the command-sequence limit, it retries on fresh worlds, probes upward, and binary-searches until the passing limit is within 10% of the highest known failing value; it then reruns the requested benchmark at that limit. The selected value and calibration bounds are recorded in `summary.md` and `metadata.json`. Passing `--command-limit` disables auto-calibration. A limit failure cannot be auto-calibrated with `--reuse-server`, because an interrupted world is not safe to reuse.
 

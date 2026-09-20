@@ -82,7 +82,7 @@ def parse_profile(path: Path) -> ParsedProfile:
         except KeyError as exc:
             raise BenchmarkError(f'{path}: missing server/profiling.txt') from exc
 
-        tick_times_ms: list[float] = []
+        tick_periods_ms: list[float] = []
         try:
             ticking = archive.read('server/metrics/ticking.csv').decode('utf-8', errors='replace')
         except KeyError:
@@ -102,10 +102,11 @@ def parse_profile(path: Path) -> ParsedProfile:
                     if tick_index >= len(row):
                         continue
                     try:
-                        # Minecraft's ticktime metric is emitted in nanoseconds.
+                        # Minecraft's ticktime metric is the wall-clock tick period in
+                        # nanoseconds (work + wait), not the time spent working.
                         value = float(row[tick_index]) / 1_000_000.0
                         if math.isfinite(value) and value >= 0:
-                            tick_times_ms.append(value)
+                            tick_periods_ms.append(value)
                     except ValueError:
                         continue
 
@@ -125,6 +126,13 @@ def parse_profile(path: Path) -> ParsedProfile:
             parent_percent=float(match.group('parent')),
             global_percent=float(match.group('global')),
         ))
+
+    def root_percent(name: str) -> float | None:
+        # The server-loop split (`nextTickWait`, `tick`, `unspecified`) is printed at
+        # depth 0. Use the shallowest occurrence so a nested section with the same
+        # name can never be picked up.
+        matches = [item for item in parsed_lines if item.name == name]
+        return min(matches, key=lambda item: item.depth).global_percent if matches else None
 
     def subtree_entries(root_name: str, *, first_only: bool = False) -> list[ProfileEntry]:
         entries: list[ProfileEntry] = []
@@ -152,7 +160,9 @@ def parse_profile(path: Path) -> ParsedProfile:
         command_functions_percent=command_percent,
         entries=entries,
         scheduled_entries=scheduled_entries,
-        tick_times_ms=tick_times_ms,
+        tick_periods_ms=tick_periods_ms,
+        tick_percent=root_percent('tick'),
+        next_tick_wait_percent=root_percent('nextTickWait'),
     )
 
 
@@ -242,15 +252,20 @@ def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
         'time_span_ms': profile.time_span_ms,
         'tick_span': profile.tick_span,
         'effective_tps': profile.effective_tps,
-        'tick_time_ms': {
-            'samples': len(profile.tick_times_ms),
-            'mean': profile.tick_mean_ms,
-            'median': profile.tick_median_ms,
-            'p95': profile.tick_p95_ms,
-            'p99': profile.tick_p99_ms,
-            'max': profile.tick_max_ms,
-        },
+        'tick_percent': profile.tick_percent,
+        'next_tick_wait_percent': profile.next_tick_wait_percent,
+        'mean_mspt_ms': profile.mean_mspt_ms,
         'command_functions_percent': profile.command_functions_percent,
+        'command_functions_ms_per_tick': profile.command_functions_ms_per_tick,
+        # Wall-clock tick interval statistics (metrics/ticking.csv), not work time.
+        'tick_period_ms': {
+            'samples': len(profile.tick_periods_ms),
+            'mean': profile.tick_period_mean_ms,
+            'median': profile.tick_period_median_ms,
+            'p95': profile.tick_period_p95_ms,
+            'p99': profile.tick_period_p99_ms,
+            'max': profile.tick_period_max_ms,
+        },
         'harness_counters_after_profile_write': counters,
         'command_function_entries': [
             {
@@ -293,14 +308,22 @@ def parse_archives(args):
         print(f'  ticks: {format_number(profile.tick_span)}')
         print(f'  effective TPS: {format_number(profile.effective_tps)}')
         print(
-            '  tick time: '
-            f'median={format_number(profile.tick_median_ms, 3)} ms, '
-            f'p95={format_number(profile.tick_p95_ms, 3)} ms, '
-            f'p99={format_number(profile.tick_p99_ms, 3)} ms, '
-            f'max={format_number(profile.tick_max_ms, 3)} ms '
-            f'({len(profile.tick_times_ms)} samples)'
+            f'  mean MSPT: {format_number(profile.mean_mspt_ms, 3)} ms '
+            f'(tick {format_number(profile.tick_percent)}% / nextTickWait '
+            f'{format_number(profile.next_tick_wait_percent)}% of the loop)'
         )
-        print(f'  commandFunctions: {format_number(profile.command_functions_percent)}%')
+        print(
+            f'  commandFunctions: {format_number(profile.command_functions_percent)}% '
+            f'= {format_number(profile.command_functions_ms_per_tick, 3)} ms/tick'
+        )
+        print(
+            '  tick period (wall clock): '
+            f'median={format_number(profile.tick_period_median_ms, 3)} ms, '
+            f'p95={format_number(profile.tick_period_p95_ms, 3)} ms, '
+            f'p99={format_number(profile.tick_period_p99_ms, 3)} ms, '
+            f'max={format_number(profile.tick_period_max_ms, 3)} ms '
+            f'({len(profile.tick_periods_ms)} samples)'
+        )
         entries = [entry for entry in profile.entries if entry.name not in {'unspecified', 'minecraft:tick'}]
         entries.sort(key=lambda item: item.global_percent, reverse=True)
         for entry in entries[:args.top]:

@@ -1,6 +1,7 @@
 """Scenario-specific benchmark validators."""
 from .base import (
     ScenarioValidator,
+    persisted_validators,
     run_live_validators,
     run_profile_validators,
     wait_measurement_validators,
@@ -12,6 +13,7 @@ from .base import (
 
 __all__ = [
     'ScenarioValidator',
+    'persisted_validators',
     'run_live_validators',
     'run_profile_validators',
     'wait_measurement_validators',

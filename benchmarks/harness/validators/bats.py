@@ -13,6 +13,13 @@ BATS_PER_ACTIVATION = 8
 # scheduled production scan runs, so the optimized overlap path deterministically
 # emits one physical explosion for each actor's stacked activation.
 EXPLOSIONS_PER_STACKED_ACTIVATION = 1
+# Recorded in every run's validated_workload. validate_persisted prefers the
+# recorded values, so a stored result is checked against the workload it actually
+# measured even after these constants change.
+WORKLOAD_CONSTANTS = {
+    'bats_per_activation': BATS_PER_ACTIVATION,
+    'bats_explosions_per_activation': EXPLOSIONS_PER_STACKED_ACTIVATION,
+}
 # The benchmark driver drops the ability input at the end of the datapack tick,
 # after the production ability router has already run. The bats therefore spawn
 # on the following tick. Their scheduled 1-second scan detonates on driver tick
@@ -53,7 +60,19 @@ def _waves_visible_by(ticks: int, period: int, delay_ticks: int) -> int:
     return 1 + (ticks - delay_ticks - 1) // period
 
 
-def _expected_profile_counts(ticks: int, plan: list[dict]) -> tuple[int, int]:
+def stored_workload_constants(run: dict) -> dict[str, int]:
+    """Constants recorded by the harness that measured `run` (empty for older results)."""
+    validated = run.get('validated_workload')
+    if not isinstance(validated, dict):
+        return {}
+    return {
+        key: validated[key]
+        for key in WORKLOAD_CONSTANTS
+        if isinstance(validated.get(key), int) and not isinstance(validated[key], bool) and validated[key] > 0
+    }
+
+
+def _expected_profile_counts(ticks: int, plan: list[dict], constants: dict[str, int]) -> tuple[int, int]:
     spawned = 0
     explosions = 0
     for component in _components(plan):
@@ -63,8 +82,8 @@ def _expected_profile_counts(ticks: int, plan: list[dict]) -> tuple[int, int]:
         period = _period(component)
         activations = _waves_visible_by(ticks, period, SPAWN_DELAY_TICKS)
         completed = _waves_visible_by(ticks, period, DETONATION_DELAY_TICKS)
-        spawned += players * BATS_PER_ACTIVATION * activations
-        explosions += players * EXPLOSIONS_PER_STACKED_ACTIVATION * completed
+        spawned += players * constants['bats_per_activation'] * activations
+        explosions += players * constants['bats_explosions_per_activation'] * completed
     return spawned, explosions
 
 
@@ -82,7 +101,7 @@ def _profile_count(run: dict, key: str, *needles: str) -> int:
     )
 
 
-def validate_bats_profile(run: dict, plan: list[dict]) -> dict:
+def validate_bats_profile(run: dict, plan: list[dict], constants: dict[str, int] | None = None) -> dict:
     players = bats_player_count(plan)
     if not players:
         return {}
@@ -90,7 +109,8 @@ def validate_bats_profile(run: dict, plan: list[dict]) -> dict:
     if not isinstance(ticks, int) or ticks <= 0:
         raise BenchmarkInvalidError('Cannot validate detonating Bats without a positive profile tick count')
 
-    expected_spawned, expected_explosions = _expected_profile_counts(ticks, plan)
+    constants = {**WORKLOAD_CONSTANTS, **(constants or {})}
+    expected_spawned, expected_explosions = _expected_profile_counts(ticks, plan, constants)
     spawned = _profile_count(
         run,
         'command_function_entries',
@@ -117,6 +137,7 @@ def validate_bats_profile(run: dict, plan: list[dict]) -> dict:
         'bats_players': players,
         'bats_spawned': spawned,
         'bats_explosions': explosions,
+        **constants,
     }
 
 
@@ -203,7 +224,8 @@ def wait_for_bat_cleanup(server: ServerProcess, plan: list[dict], *, timeout: fl
 
 
 def validate_bats_workload(run: dict, plan: list[dict]) -> dict:
-    profile = validate_bats_profile(run, plan)
+    stored = stored_workload_constants(run)
+    profile = validate_bats_profile(run, plan, stored)
     if not profile:
         return {}
     players = profile['bats_players']
@@ -212,8 +234,14 @@ def validate_bats_workload(run: dict, plan: list[dict]) -> dict:
         'bats_target_mannequins': players,
         'bats_targets_in_place': players,
     }
+    # Results recorded before constants were stored are checked against the
+    # current constants; only constants that were recorded must match.
+    required = {
+        key: value for key, value in expected.items()
+        if key not in WORKLOAD_CONSTANTS or key in stored
+    }
     validated = run.get('validated_workload')
-    if not isinstance(validated, dict) or any(validated.get(key) != value for key, value in expected.items()):
+    if not isinstance(validated, dict) or any(validated.get(key) != value for key, value in required.items()):
         raise BenchmarkInvalidError(
             'Detonating Bats run is missing complete semantic target validation; '
             'rerun it with the current benchmark harness.'
@@ -223,6 +251,7 @@ def validate_bats_workload(run: dict, plan: list[dict]) -> dict:
 
 class BatsDetonatingValidator(ScenarioValidator):
     name = 'bats_detonating'
+    constants = WORKLOAD_CONSTANTS
 
     @staticmethod
     def _data(plan):

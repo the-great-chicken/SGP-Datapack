@@ -9,7 +9,7 @@ from .diagnostics import copy_if_file, mark_success, write_failure_bundle
 from .errors import BenchmarkError, BenchmarkInvalidError
 from .models import ParsedProfile
 from .profiler import format_number, parse_profile, profile_to_dict, wait_for_new_profile
-from .reporting import git_commit, source_fingerprint, write_summary
+from .reporting import git_commit, git_dirty, source_fingerprint, write_summary
 from .runtime import (compile_active_plan, compile_actor_pool, plan_total_players,
                       read_workload_counters, require_actor_in_game,
                       wait_for_actor_chunks_loaded)
@@ -53,6 +53,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
         'command_limit': args.command_limit,
         'command_limit_mode': getattr(args, 'command_limit_mode', 'explicit'),
         'git_commit': git_commit(),
+        'git_dirty': git_dirty(),
         'source_sha256': source_fingerprint(),
     }
     calibration = getattr(args, 'command_limit_calibration', None)
@@ -167,9 +168,10 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             profiles.append(parsed)
             print(
                 f'Run {run_number}/{args.runs}: captured {parsed.tick_span or "?"} ticks, '
-                f'tick median={format_number(parsed.tick_median_ms, 3)} ms, '
-                f'p95={format_number(parsed.tick_p95_ms, 3)} ms, '
-                f'commandFunctions={format_number(parsed.command_functions_percent)}%'
+                f'mean MSPT={format_number(parsed.mean_mspt_ms, 3)} ms, '
+                f'commandFunctions={format_number(parsed.command_functions_percent)}% '
+                f'({format_number(parsed.command_functions_ms_per_tick, 3)} ms/tick), '
+                f'tick period median={format_number(parsed.tick_period_median_ms, 3)} ms'
             )
 
             phase = f'run {run_number}/{args.runs} teardown'
@@ -187,7 +189,8 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
         copy_if_file(server_dir / 'benchmark-console.log', result_dir / 'diagnostics/benchmark-console.log')
         phase = 'writing summary'
         write_summary(result_dir, scenario, params, args.warmup, profiles, counters, plan=plan,
-                      command_limit=args.command_limit, command_limit_calibration=calibration)
+                      command_limit=args.command_limit, command_limit_calibration=calibration,
+                      metadata=metadata)
         mark_success(result_dir, metadata)
     except Exception as exc:
         stop_error = None

@@ -14,6 +14,10 @@ from ..errors import BenchmarkError
 
 class ScenarioValidator(ABC):
     name: str
+    # Expectation constants a validator records in validated_workload at run
+    # time, so stored results keep validating against the workload they measured
+    # after the constant changes.
+    constants: dict[str, int] = {}
 
     def validate_live(self, server, plan, *, after_reset: bool = False) -> dict:
         return {}
@@ -114,7 +118,16 @@ def run_profile_validators(run: dict, plan, live_validation: dict, *,
     return validated
 
 
+def persisted_validators(plan, validator_names: list[str] | None = None) -> list[ScenarioValidator]:
+    """Validators for a stored result.
+
+    A missing *or empty* list falls back to plan detection: an empty list carries
+    no information, and detection only triggers for plans that contain
+    validator-bearing scenarios, so validator-free plans are unaffected.
+    """
+    return validators_for_names(validator_names or _historical_validator_names(plan))
+
+
 def validate_persisted_run(run: dict, plan, validator_names: list[str] | None = None) -> None:
-    names = _historical_validator_names(plan) if validator_names is None else validator_names
-    for validator in validators_for_names(names):
+    for validator in persisted_validators(plan, validator_names):
         validator.validate_persisted(run, plan)

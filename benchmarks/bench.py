@@ -30,6 +30,8 @@ from benchmarks.harness.comparison import (
     nested_numeric_median,
     numeric_median,
     relative_change,
+    upgrade_run,
+    validated_workload_medians,
     workload_counter_medians,
 )
 from benchmarks.harness.diagnostics import copy_if_file, mark_success, write_failure_bundle
@@ -53,7 +55,9 @@ from benchmarks.harness.profiler import (
 )
 from benchmarks.harness.reporting import (
     command_limit_summary,
+    describe_source,
     git_commit,
+    git_dirty,
     source_fingerprint,
     write_summary,
 )
@@ -104,10 +108,13 @@ from benchmarks.harness.suites import (
     run_suite,
     write_suite_summary,
 )
+from benchmarks.harness.validators import persisted_validators, validate_persisted_run
 from benchmarks.harness.validators.bats import (
+    WORKLOAD_CONSTANTS as BATS_WORKLOAD_CONSTANTS,
     bats_actor_ranges,
     bats_player_count,
     require_bat_targets,
+    stored_workload_constants,
     validate_bats_profile,
     wait_for_bat_cleanup,
     validate_bats_workload,

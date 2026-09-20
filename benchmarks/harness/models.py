@@ -36,7 +36,14 @@ class ParsedProfile:
     command_functions_percent: float | None
     entries: list[ProfileEntry]
     scheduled_entries: list[ProfileEntry]
-    tick_times_ms: list[float]
+    # Wall-clock interval between consecutive ticks (server/metrics/ticking.csv).
+    # This is NOT work time: it sits at ~50 ms whenever the server keeps up, so it
+    # only reflects load once the server is saturated.
+    tick_periods_ms: list[float]
+    # Root split of the captured wall time. Vanilla prints `tick` and
+    # `nextTickWait` at depth 0 of the profiler dump.
+    tick_percent: float | None = None
+    next_tick_wait_percent: float | None = None
 
     @property
     def effective_tps(self) -> float | None:
@@ -44,25 +51,40 @@ class ParsedProfile:
             return None
         return self.tick_span * 1000.0 / self.time_span_ms
 
-    @property
-    def tick_median_ms(self) -> float | None:
-        return float(median(self.tick_times_ms)) if self.tick_times_ms else None
+    def _ms_per_tick(self, percent: float | None) -> float | None:
+        if percent is None or not self.time_span_ms or not self.tick_span:
+            return None
+        return self.time_span_ms * percent / 100.0 / self.tick_span
 
     @property
-    def tick_mean_ms(self) -> float | None:
-        return float(fmean(self.tick_times_ms)) if self.tick_times_ms else None
+    def mean_mspt_ms(self) -> float | None:
+        """Mean server work per tick: the profiler's `tick` share of the captured wall time."""
+        return self._ms_per_tick(self.tick_percent)
 
     @property
-    def tick_p95_ms(self) -> float | None:
-        return percentile(self.tick_times_ms, 0.95)
+    def command_functions_ms_per_tick(self) -> float | None:
+        """Absolute datapack cost per tick; comparable across runs even when TPS differs."""
+        return self._ms_per_tick(self.command_functions_percent)
 
     @property
-    def tick_p99_ms(self) -> float | None:
-        return percentile(self.tick_times_ms, 0.99)
+    def tick_period_median_ms(self) -> float | None:
+        return float(median(self.tick_periods_ms)) if self.tick_periods_ms else None
 
     @property
-    def tick_max_ms(self) -> float | None:
-        return max(self.tick_times_ms) if self.tick_times_ms else None
+    def tick_period_mean_ms(self) -> float | None:
+        return float(fmean(self.tick_periods_ms)) if self.tick_periods_ms else None
+
+    @property
+    def tick_period_p95_ms(self) -> float | None:
+        return percentile(self.tick_periods_ms, 0.95)
+
+    @property
+    def tick_period_p99_ms(self) -> float | None:
+        return percentile(self.tick_periods_ms, 0.99)
+
+    @property
+    def tick_period_max_ms(self) -> float | None:
+        return max(self.tick_periods_ms) if self.tick_periods_ms else None
 
 
 @dataclass

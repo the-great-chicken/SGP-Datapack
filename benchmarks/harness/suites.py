@@ -129,9 +129,10 @@ def result_summary_metrics(result_dir: Path) -> dict:
     _metadata, runs = load_result_directory(result_dir)
     return {
         'status': 'complete',
-        'tick_median_ms': nested_numeric_median(runs, 'tick_time_ms', 'median'),
-        'tick_p95_ms': nested_numeric_median(runs, 'tick_time_ms', 'p95'),
+        'mean_mspt_ms': numeric_median(runs, 'mean_mspt_ms'),
         'command_functions_percent': numeric_median(runs, 'command_functions_percent'),
+        'command_functions_ms_per_tick': numeric_median(runs, 'command_functions_ms_per_tick'),
+        'tick_period_p95_ms': nested_numeric_median(runs, 'tick_period_ms', 'p95'),
         'command_limit': metadata.get('command_limit'),
         'command_limit_mode': metadata.get('command_limit_mode'),
         'workload_counters': workload_counter_medians(runs),
@@ -144,8 +145,9 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
         '',
         suite['description'],
         '',
-        '| # | Scenario | Players | Parameters | Runs | Command limit | Tick median | Tick p95 | commandFunctions | Workload counters | Status | Result |',
-        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |',
+        '| # | Scenario | Players | Parameters | Runs | Command limit | Mean MSPT | commandFunctions | '
+        'commandFunctions ms/tick | Tick period p95 | Workload counters | Status | Result |',
+        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |',
     ]
     for record in records:
         metrics = record.get('metrics', {})
@@ -161,9 +163,10 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
         lines.append(
             f'| {record["index"]} | `{record["case"]["scenario"]}` | {record["case"]["total_players"]} | '
             f'`{params}` | {record["case"]["runs"]} | {format_number(metrics.get("command_limit"), 0)} | '
-            f'{format_number(metrics.get("tick_median_ms"), 3)} ms | '
-            f'{format_number(metrics.get("tick_p95_ms"), 3)} ms | '
-            f'{format_number(metrics.get("command_functions_percent"))}% | {counter_text} | {status} | {result_text} |'
+            f'{format_number(metrics.get("mean_mspt_ms"), 3)} ms | '
+            f'{format_number(metrics.get("command_functions_percent"))}% | '
+            f'{format_number(metrics.get("command_functions_ms_per_tick"), 3)} ms | '
+            f'{format_number(metrics.get("tick_period_p95_ms"), 3)} ms | {counter_text} | {status} | {result_text} |'
         )
     lines.append('')
     (suite_dir / 'summary.md').write_text('\n'.join(lines), encoding='utf-8')

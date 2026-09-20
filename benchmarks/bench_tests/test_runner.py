@@ -47,6 +47,7 @@ class RunnerIntegrityTests(unittest.TestCase):
             with patch.object(benchmark_runner, 'prepare_server', side_effect=prepare), \
                  patch.object(benchmark_runner, 'ServerProcess', InterruptedServer), \
                  patch.object(benchmark_runner, 'git_commit', return_value=None), \
+                 patch.object(benchmark_runner, 'git_dirty', return_value=False), \
                  patch.object(benchmark_runner, 'source_fingerprint', return_value='test-source'), \
                  redirect_stdout(StringIO()):
                 with self.assertRaises(bench.BenchmarkInvalidError):
@@ -55,6 +56,7 @@ class RunnerIntegrityTests(unittest.TestCase):
             metadata = json.loads((result/'metadata.json').read_text())
             self.assertEqual(metadata['status'], 'failed')
             self.assertEqual(metadata['command_limit'], 1000000)
+            self.assertIs(metadata['git_dirty'], False)
             self.assertTrue((result/'failure.json').is_file())
             self.assertFalse((result/'summary.md').exists())
             self.assertTrue((root/'server'/bench.INVALID_MARKER).is_file())

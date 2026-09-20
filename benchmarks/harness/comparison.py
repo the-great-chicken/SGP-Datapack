@@ -8,7 +8,30 @@ import json
 
 from .errors import BenchmarkError, BenchmarkInvalidError
 from .profiler import build_source_index, format_number, source_hint
-from .validators import validate_persisted_run
+from .reporting import describe_source
+from .validators import persisted_validators, validate_persisted_run
+
+def upgrade_run(run: dict) -> dict:
+    """Fill fields introduced after a run was recorded from what it did store.
+
+    `tick_time_ms` was renamed `tick_period_ms` (it is the wall-clock tick
+    interval from ticking.csv, not work time). commandFunctions ms/tick is
+    derivable from stored fields; mean MSPT needs the profiler root split, which
+    only newer run JSON files carry.
+    """
+    run = dict(run)
+    if 'tick_period_ms' not in run and isinstance(run.get('tick_time_ms'), dict):
+        run['tick_period_ms'] = run['tick_time_ms']
+    span, ticks = run.get('time_span_ms'), run.get('tick_span')
+    if isinstance(span, (int, float)) and span > 0 and isinstance(ticks, int) and ticks > 0:
+        for target, source in (
+            ('command_functions_ms_per_tick', 'command_functions_percent'),
+            ('mean_mspt_ms', 'tick_percent'),
+        ):
+            if target not in run and isinstance(run.get(source), (int, float)):
+                run[target] = span * run[source] / 100.0 / ticks
+    return run
+
 
 def load_result_directory(path: Path) -> tuple[dict, list[dict]]:
     path = path.resolve()
@@ -18,7 +41,7 @@ def load_result_directory(path: Path) -> tuple[dict, list[dict]]:
     metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
     runs = []
     for run_path in sorted(path.glob('run-*.json')):
-        runs.append(json.loads(run_path.read_text(encoding='utf-8')))
+        runs.append(upgrade_run(json.loads(run_path.read_text(encoding='utf-8'))))
     if not runs:
         raise BenchmarkError(f'{path}: no run-*.json files found')
     return metadata, runs
@@ -51,6 +74,22 @@ def workload_counter_medians(runs: list[dict]) -> dict[str, float]:
             if isinstance(name, str) and isinstance(value, (int, float)):
                 values[name].append(float(value))
     return {name: float(median(items)) for name, items in values.items()}
+
+
+def validated_workload_medians(runs: list[dict]) -> dict[str, float]:
+    values: dict[str, list[float]] = defaultdict(list)
+    for run in runs:
+        validated = run.get('validated_workload')
+        if not isinstance(validated, dict):
+            continue
+        for name, value in validated.items():
+            if isinstance(name, str) and isinstance(value, (int, float)) and not isinstance(value, bool):
+                values[name].append(float(value))
+    return {name: float(median(items)) for name, items in values.items()}
+
+
+def _plain_number(value: float | None) -> str:
+    return 'n/a' if value is None else f'{value:g}'
 
 
 def entry_medians(runs: list[dict]) -> dict[str, tuple[float, int, float]]:
@@ -109,18 +148,47 @@ def compare_results(args):
 
     before_cf = numeric_median(before_runs, 'command_functions_percent')
     after_cf = numeric_median(after_runs, 'command_functions_percent')
-    before_tick_median = nested_numeric_median(before_runs, 'tick_time_ms', 'median')
-    after_tick_median = nested_numeric_median(after_runs, 'tick_time_ms', 'median')
-    before_tick_p95 = nested_numeric_median(before_runs, 'tick_time_ms', 'p95')
-    after_tick_p95 = nested_numeric_median(after_runs, 'tick_time_ms', 'p95')
-    before_tick_max = nested_numeric_median(before_runs, 'tick_time_ms', 'max')
-    after_tick_max = nested_numeric_median(after_runs, 'tick_time_ms', 'max')
+    before_cf_ms = numeric_median(before_runs, 'command_functions_ms_per_tick')
+    after_cf_ms = numeric_median(after_runs, 'command_functions_ms_per_tick')
+    before_mspt = numeric_median(before_runs, 'mean_mspt_ms')
+    after_mspt = numeric_median(after_runs, 'mean_mspt_ms')
+    before_period_median = nested_numeric_median(before_runs, 'tick_period_ms', 'median')
+    after_period_median = nested_numeric_median(after_runs, 'tick_period_ms', 'median')
+    before_period_p95 = nested_numeric_median(before_runs, 'tick_period_ms', 'p95')
+    after_period_p95 = nested_numeric_median(after_runs, 'tick_period_ms', 'p95')
+    before_period_max = nested_numeric_median(before_runs, 'tick_period_ms', 'max')
+    after_period_max = nested_numeric_median(after_runs, 'tick_period_ms', 'max')
     before_tps = numeric_median(before_runs, 'effective_tps')
     after_tps = numeric_median(after_runs, 'effective_tps')
     before_ticks = numeric_median(before_runs, 'tick_span')
     after_ticks = numeric_median(after_runs, 'tick_span')
     before_workload = workload_counter_medians(before_runs)
     after_workload = workload_counter_medians(after_runs)
+    before_validated = validated_workload_medians(before_runs)
+    after_validated = validated_workload_medians(after_runs)
+
+    # A validator constant that changed between the two results (for example the
+    # number of bats per activation) means they did not measure the same workload,
+    # even though each result validates against the constants it recorded.
+    constant_keys = {
+        key
+        for metadata in (before_meta, after_meta)
+        for validator in persisted_validators(metadata.get('plan', []), metadata.get('validators'))
+        for key in validator.constants
+    }
+    differing = [
+        key for key in sorted(constant_keys)
+        if before_validated.get(key) != after_validated.get(key)
+    ]
+    if differing and not args.allow_mismatch:
+        raise BenchmarkError(
+            'Validated workload constants differ, so the two results did not measure the same workload: '
+            + ', '.join(
+                f'{key} {_plain_number(before_validated.get(key))} vs {_plain_number(after_validated.get(key))}'
+                for key in differing
+            )
+            + '. Use --allow-mismatch only when that is intentional.'
+        )
 
     lines = [
         '# SGP benchmark comparison',
@@ -132,6 +200,8 @@ def compare_results(args):
         f'- Parameters after: `{json.dumps(after_meta.get("parameters"), sort_keys=True)}`',
         f'- Runs before/after: {len(before_runs)} / {len(after_runs)}',
         f'- Command sequence limit before/after: {before_meta.get("command_limit")} / {after_meta.get("command_limit")}',
+        f'- Source before: {describe_source(before_meta)}',
+        f'- Source after: {describe_source(after_meta)}',
         '',
         '## Aggregate',
         '',
@@ -139,16 +209,12 @@ def compare_results(args):
         '| --- | ---: | ---: | ---: |',
     ]
     lines.append(
-        f'| Tick median | {format_number(before_tick_median, 3)} ms | {format_number(after_tick_median, 3)} ms | '
-        f'{relative_change(before_tick_median, after_tick_median)} |'
+        f'| Mean MSPT (server work per tick) | {format_number(before_mspt, 3)} ms | '
+        f'{format_number(after_mspt, 3)} ms | {relative_change(before_mspt, after_mspt)} |'
     )
     lines.append(
-        f'| Tick p95 | {format_number(before_tick_p95, 3)} ms | {format_number(after_tick_p95, 3)} ms | '
-        f'{relative_change(before_tick_p95, after_tick_p95)} |'
-    )
-    lines.append(
-        f'| Tick max | {format_number(before_tick_max, 3)} ms | {format_number(after_tick_max, 3)} ms | '
-        f'{relative_change(before_tick_max, after_tick_max)} |'
+        f'| `commandFunctions` ms/tick | {format_number(before_cf_ms, 3)} ms | '
+        f'{format_number(after_cf_ms, 3)} ms | {relative_change(before_cf_ms, after_cf_ms)} |'
     )
     cf_delta = None if before_cf is None or after_cf is None else after_cf - before_cf
     lines.append(
@@ -163,6 +229,34 @@ def compare_results(args):
         f'| Profile ticks | {format_number(before_ticks)} | {format_number(after_ticks)} | '
         f'{relative_change(before_ticks, after_ticks)} |'
     )
+    lines.append(
+        f'| Tick period median | {format_number(before_period_median, 3)} ms | '
+        f'{format_number(after_period_median, 3)} ms | {relative_change(before_period_median, after_period_median)} |'
+    )
+    lines.append(
+        f'| Tick period p95 | {format_number(before_period_p95, 3)} ms | '
+        f'{format_number(after_period_p95, 3)} ms | {relative_change(before_period_p95, after_period_p95)} |'
+    )
+    lines.append(
+        f'| Tick period max | {format_number(before_period_max, 3)} ms | '
+        f'{format_number(after_period_max, 3)} ms | {relative_change(before_period_max, after_period_max)} |'
+    )
+    lines += [
+        '',
+        'Mean MSPT is `Time span × tick% / Tick span` from the `/perf` root split and is `n/a` for results '
+        'recorded before the harness stored that split. Tick period is the wall-clock interval between ticks '
+        'from `metrics/ticking.csv`; it only reflects work once the server is saturated (period above 50 ms).',
+    ]
+    if before_validated or after_validated:
+        lines += ['', '## Validated workload', '', '| Field | Before median | After median | Change |',
+                  '| --- | ---: | ---: | ---: |']
+        for name in sorted(set(before_validated) | set(after_validated)):
+            before_value = before_validated.get(name)
+            after_value = after_validated.get(name)
+            lines.append(
+                f'| `{name}` | {_plain_number(before_value)} | {_plain_number(after_value)} | '
+                f'{relative_change(before_value, after_value)} |'
+            )
     if before_workload or after_workload:
         lines += ['', '## Workload counters', '', '| Counter | Before median | After median | Change |',
                   '| --- | ---: | ---: | ---: |']
