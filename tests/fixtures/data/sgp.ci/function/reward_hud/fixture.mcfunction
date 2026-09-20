@@ -1,6 +1,6 @@
 #> sgp.ci:reward_hud/fixture
-# Reset the actionbar output and verify the mixer starts from its canonical root component.
+# Reset SGP-owned actionbar output and verify no normal Mixer segments remain.
 
 function sgp.misc:actionbar/clear
 function dah.actbar_mixer:get_data
-assert data storage dah:actbar data[0].content[{id:"dah_actbar:ROOT_RESET"}]
+assert not data storage dah:actbar data[0].content[0]

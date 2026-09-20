@@ -15,7 +15,7 @@ function dah.actbar_mixer:get_data
 assert data storage dah:actbar data[0].content[{id:"sgp:reward_1",text:{text:"Replacement"}}]
 assert not data storage dah:actbar data[0].content[{text:{text:"Original"}}]
 execute store result score #ci.reward.count sgp.dummy run data get storage dah:actbar data[0].content
-assert score #ci.reward.count sgp.dummy matches 2
+assert score #ci.reward.count sgp.dummy matches 1
 function sgp.ci:reward_hud/advance {ticks:59}
 function dah.actbar_mixer:get_data
 assert data storage dah:actbar data[0].content[{id:"sgp:reward_1",text:{text:"Replacement"}}]

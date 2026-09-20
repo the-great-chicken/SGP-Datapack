@@ -11,9 +11,9 @@ function sgp.misc:actionbar/reward {id:"sgp:reward_3",slot:3,text:'{text:"Third"
 function sgp.misc:actionbar/reward {id:"sgp:reward_1",slot:1,text:'{text:"First"}',width:30}
 function sgp.misc:actionbar/reward {id:"sgp:reward_2",slot:2,text:'{text:"Second"}',width:30}
 function dah.actbar_mixer:get_data
-data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[1].text
+data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[0].text
 assert data storage sgp.ci:reward_hud shown{text:"First"}
-data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[2].text
+data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[1].text
 assert data storage sgp.ci:reward_hud shown{text:"Second"}
-data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[3].text
+data modify storage sgp.ci:reward_hud shown set from storage dah:actbar data[0].content[2].text
 assert data storage sgp.ci:reward_hud shown{text:"Third"}

@@ -4,14 +4,14 @@ import hashlib
 import json
 import zipfile
 
-SHA256 = '5adc9b3d60967ee3e0238b4ce65806fabf7168eecfdaea5632f349921595073d'
-OVERRIDES = {'data/dah.actbar_mixer/function/z_private/display/self.mcfunction'}
+SHA256 = '1765e994bed0da493376938559dbeb4570dc76d8aa6359191e3426f6c66cd7a9'
+OVERRIDES = {'data/dah.actbar_mixer/function/z_private/display/render.mcfunction'}
 MERGED_TAGS = {'data/minecraft/tags/function/load.json', 'data/minecraft/tags/function/tick.json'}
 
 
 def install(server, archive):
     if hashlib.sha256(archive.read_bytes()).hexdigest() != SHA256:
-        raise ValueError('Actionbar Mixer v1.3.3 checksum mismatch')
+        raise ValueError('Actionbar Mixer checksum mismatch')
     pack = server / 'world/datapacks/SGP-Datapack'
     if not (pack / 'pack.mcmeta').is_file():
         raise ValueError('Prepare the CI datapack before installing Mixer')
@@ -39,4 +39,4 @@ def install(server, archive):
     for target, data in writes.items():
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
-    print('Installed Actionbar Mixer v1.3.3 beneath SGP overrides; merged load/tick tags.')
+    print('Installed Actionbar Mixer beneath SGP overrides; merged load/tick tags.')
