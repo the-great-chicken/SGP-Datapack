@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import re
 import subprocess
 import threading
@@ -68,8 +69,11 @@ class ServerProcess:
         self._reader.start()
         try:
             self.wait_for(lambda line: 'Done (' in line and 'For help, type' in line, timeout)
-        except Exception:
-            self.stop(force=True)
+        except Exception as exc:
+            try:
+                self.stop()
+            except Exception as stop_exc:
+                exc.add_note(f'Additionally failed to stop Minecraft server: {stop_exc}')
             raise
 
     def _read_output(self):
@@ -143,25 +147,65 @@ class ServerProcess:
             )
         return value
 
+    def _force_stop(self, process: subprocess.Popen[str]):
+        if os.name == 'nt':
+            try:
+                subprocess.run(
+                    ['taskkill', '/PID', str(process.pid), '/T', '/F'],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                    timeout=10,
+                )
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+            try:
+                process.wait(timeout=10)
+                return
+            except subprocess.TimeoutExpired:
+                process.kill()
+                try:
+                    process.wait(timeout=5)
+                    return
+                except subprocess.TimeoutExpired as exc:
+                    raise BenchmarkError(
+                        f'Failed to stop Minecraft server process tree (PID {process.pid})'
+                    ) from exc
+
+        process.terminate()
+        try:
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired as exc:
+                raise BenchmarkError(
+                    f'Failed to stop Minecraft server process (PID {process.pid})'
+                ) from exc
+
     def stop(self, force: bool = False):
         process = self.process
         if process is None:
             return
+
         if process.poll() is None and not force:
             try:
                 self.send('stop')
                 process.wait(timeout=30)
             except Exception:
                 force = True
+
         if process.poll() is None and force:
-            process.terminate()
-            try:
-                process.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait(timeout=5)
+            self._force_stop(process)
+
+        if process.poll() is None:
+            raise BenchmarkError(f'Minecraft server process is still running (PID {process.pid})')
+
         if self._reader is not None:
             self._reader.join(timeout=2)
         if self._log is not None and not self._log.closed:
             self._log.close()
         self.process = None
+        self._reader = None
+        self._log = None
