@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/cache_invalidation
 # @dummy
-# @environment sgp.ci:pyromane_fire/damage
+# @environment sgp.ci:pyromane_fire/cache_invalidation
 #
 # Damage that bypasses vanilla's cooldown can replace lastHurt/invulnerability state,
 # so its existing death-cause callback must invalidate TNT fire's shortcut immediately.

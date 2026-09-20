@@ -1,6 +1,6 @@
 #> sgp.kits:rays/prediction
 # @dummy
-# @environment sgp.ci:rays/movement
+# @environment sgp.ci:rays/prediction
 # Visual prediction preserves fractional positions and does not move the collision origin.
 
 gamemode spectator @s

@@ -24,7 +24,7 @@ data remove storage dah:actbar parsing
 data remove storage dah:actbar display
 function dah.actbar_mixer:z_private/display/prepare
 function sgp.ci:cooldown_hud/expect {kit:"archer",frame:20}
-assert data storage dah:actbar parsing[0].extra[0]{text:"Updated"}
+assert data storage dah:actbar parsing[0].extra[{text:"Updated"}]
 assert data storage dah:actbar display{nbt:"parsing[]",storage:"dah:actbar",interpret:true}
 
 scoreboard players set @s sgp.ab.reward_1 1

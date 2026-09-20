@@ -1,6 +1,6 @@
 #> sgp.kits:rays/orphan_cleanup
 # @dummy
-# @environment sgp.ci:rays/expiry_isolation
+# @environment sgp.ci:rays/orphan_cleanup
 # A generic teleport strands one caster's beams; sweeps remove them while refreshed beams survive.
 
 gamemode spectator @s

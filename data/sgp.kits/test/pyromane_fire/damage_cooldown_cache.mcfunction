@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/damage_cooldown_cache
 # @dummy
-# @environment sgp.ci:pyromane_fire/damage
+# @environment sgp.ci:pyromane_fire/damage_cooldown_cache
 #
 # Overlapping fire markers skip only damage attempts that vanilla is guaranteed to reject.
 

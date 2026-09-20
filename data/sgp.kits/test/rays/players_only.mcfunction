@@ -1,6 +1,6 @@
 #> sgp.kits:rays/players_only
 # @dummy
-# @environment sgp.ci:rays/damage_stale_ids
+# @environment sgp.ci:rays/players_only
 # Non-player hitboxes and their raycast IDs are untouched; stale player IDs cannot redirect damage.
 
 gamemode spectator @s
