@@ -1,4 +1,5 @@
 from .common import *
+from benchmarks.harness.validators.rays import RaysValidator
 
 
 class RaysValidatorTests(unittest.TestCase):
@@ -6,7 +7,7 @@ class RaysValidatorTests(unittest.TestCase):
     server = staticmethod(make_server)
 
     def test_recorded_rays_validation_is_semantic_not_profiler_text(self):
-        plan = [{'scenario': 'ability_rays', 'players': 25}, {'scenario': 'ability_rays_dense', 'players': 15}]
+        plan = [{'scenario': 'ability_rays', 'players': 40}]
         run = {
             'tick_span': 108,
             'validated_workload': {
@@ -36,6 +37,41 @@ class RaysValidatorTests(unittest.TestCase):
 
     def test_rays_validation_is_a_noop_for_non_rays_workloads(self):
         self.assertEqual(bench.validate_ray_workload({}, [{'scenario': 'idle', 'players': 40}]), {})
+
+
+    def test_dense_rays_requires_real_damage_callbacks(self):
+        plan = [{'scenario': 'ability_rays_dense', 'players': 40}]
+        ownership = {
+            'ray_players': 40,
+            'ray_entities': 320,
+            'ray_valid_owners': 40,
+        }
+        live = dict(ownership)
+
+        validator = RaysValidator()
+        good = {
+            'tick_span': 100,
+            'command_function_entries': [{
+                'name': 'execute damage @s 0.25 sgp.kits:ray by @a[tag=sgp.radiator,limit=1]',
+                'count': 100800,
+            }],
+        }
+        self.assertEqual(validator.validate_profile(good, plan, live), ownership)
+        self.assertEqual(bench.validate_ray_workload({
+            **good,
+            'validated_workload': ownership,
+        }, plan), ownership)
+
+        bad = {'tick_span': 100, 'command_function_entries': []}
+        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'no real Rays damage callbacks'):
+            validator.validate_profile(bad, plan, live)
+
+        persisted = {
+            **bad,
+            'validated_workload': ownership,
+        }
+        with self.assertRaisesRegex(bench.BenchmarkInvalidError, 'no real Rays damage callbacks'):
+            bench.validate_ray_workload(persisted, plan)
 
     def test_ray_entity_checks_use_aggregate_fast_path_and_diagnose_failures(self):
         server = self.server()

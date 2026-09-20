@@ -32,9 +32,6 @@ scoreboard players operation #raycast.lx bs.data /= #raycast.ux bs.data
 scoreboard players operation #raycast.ly bs.data /= #raycast.uy bs.data
 scoreboard players operation #raycast.lz bs.data /= #raycast.uz bs.data
 
-execute if score #ray_fast_blocks sgp.dummy matches 0 \
-    align xyz run function sgp.kits:abilities/rays/raycast_fast/recurse/entities/next with storage bs:data raycast
-execute if score #ray_fast_blocks sgp.dummy matches 1 \
-    align xyz run function sgp.kits:abilities/rays/raycast_fast/recurse/next with storage bs:data raycast
+execute align xyz run function sgp.kits:abilities/rays/raycast_fast/recurse/next with storage bs:data raycast
 tp @s ~ -100000 ~
 kill @s

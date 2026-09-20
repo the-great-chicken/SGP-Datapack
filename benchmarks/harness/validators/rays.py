@@ -7,10 +7,25 @@ from ..runtime import actor_name
 from ..server import ServerProcess
 
 RAY_SCENARIOS = {'ability_rays', 'ability_rays_dense'}
+DENSE_RAY_SCENARIO = 'ability_rays_dense'
+RAY_DAMAGE_COMMAND = 'damage @s 0.25 sgp.kits:ray'
 
 def ray_player_count(plan: list[dict]) -> int:
     return sum(component['players'] for component in plan
                if component['scenario'] in RAY_SCENARIOS)
+
+
+def ray_dense_player_count(plan: list[dict]) -> int:
+    return sum(component['players'] for component in plan
+               if component['scenario'] == DENSE_RAY_SCENARIO)
+
+
+def ray_damage_callback_count(run: dict) -> int:
+    return sum(
+        entry.get('count', 0)
+        for entry in run.get('command_function_entries', [])
+        if RAY_DAMAGE_COMMAND in entry.get('name', '')
+    )
 
 
 def validate_ray_workload(run: dict, plan: list[dict]) -> dict:
@@ -35,6 +50,11 @@ def validate_ray_workload(run: dict, plan: list[dict]) -> dict:
         raise BenchmarkInvalidError(
             'Rays run is missing a complete semantic ownership validation; '
             'rerun it with the current benchmark harness.'
+        )
+    if ray_dense_player_count(plan) and ray_damage_callback_count(run) <= 0:
+        raise BenchmarkInvalidError(
+            'Dense Rays run recorded no real Rays damage callbacks; '
+            'the measured workload is not valid.'
         )
     return expected
 
@@ -176,6 +196,11 @@ class RaysValidator(ScenarioValidator):
         }
         if any(live_validation.get(key) != value for key, value in expected.items()):
             raise BenchmarkInvalidError('Rays live validation did not produce the expected semantic result')
+        if ray_dense_player_count(data) and ray_damage_callback_count(run) <= 0:
+            raise BenchmarkInvalidError(
+                'Dense Rays profile recorded no real Rays damage callbacks; '
+                'the measured workload is not valid.'
+            )
         return expected
 
     def validate_persisted(self, run, plan):

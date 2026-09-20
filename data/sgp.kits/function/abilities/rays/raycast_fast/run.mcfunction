@@ -5,7 +5,6 @@
 
 data modify storage bs:data raycast set value {sx:1,sy:1,sz:1,blocks:"function #bs.hitbox:callback/get_block_shape",entities:"sgp.ray_target,level=0..",max_distance:16.0,ignored_blocks:"#bs.hitbox:can_pass_through",ignored_entities:"#bs.hitbox:intangible",piercing:{entities:50},on_targeted_block:"scoreboard players operation #ray_dist sgp.dummy = $raycast.entry_distance bs.lambda"}
 
-scoreboard players set #ray_fast_blocks sgp.dummy 1
 scoreboard players set #raycast.dm bs.data 16000
 scoreboard players set #raycast.pb bs.data 1
 scoreboard players set #raycast.pe bs.data 51
