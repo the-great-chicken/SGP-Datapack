@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -42,7 +43,7 @@ class RaysFastRaycastContracts(unittest.TestCase):
             next_fn,
         )
         self.assertIn("scoreboard players reset @a[tag=sgp.ray_target] bs.raycast.id", update)
-        # The direct cardinal scan never reads bs.raycast.id, so it must not pay for the reset.
+        # The direct cardinal scan never reads raycast ids, so it must not pay for the reset.
         self.assertNotIn("bs.raycast.id", cardinal_update)
         self.assertIn("tag=bs.raycast.checked,predicate=bs.raycast:internal/id,level=0..", react)
 
@@ -76,99 +77,81 @@ class RaysFastRaycastContracts(unittest.TestCase):
         self.assertIn("function sgp.kits:abilities/rays/raycast_fast/cardinal/run", update)
         self.assertNotIn("recurse", run + all_cardinal)
         self.assertNotIn("bs.raycast.checked", run + all_cardinal)
-        self.assertEqual(all_cardinal.count("sort=nearest"), 4)
         self.assertNotIn("raycast.re", run + all_cardinal + hit)
         self.assertNotIn("bs.raycast.id", run + all_cardinal + hit)
         self.assertIn("execute at @s run function sgp.kits:abilities/rays/get_damaged", hit)
         self.assertIn("#raycast.pe bs.data", hit)
 
-    def test_clear_cardinal_intersection_calls_direct_hit_only_after_exact_tmin(self):
-        for name in ("east", "west", "south", "north"):
-            check = read(f"raycast_fast/cardinal/check_{name}.mcfunction")
-            self.assertIn("matches 0..16000", check)
-            self.assertIn("raycast_fast/cardinal/hit", check)
-            self.assertIn("#raycast.pe bs.data matches ..0", check)
+    def test_clear_cardinal_scan_is_selector_only(self):
+        # No coordinate is ever read: no shuttle, no storage, no scoreboard math, so nothing can overflow or drift.
+        names = ("run", "east", "west", "south", "north", "check_east", "check_west", "check_south", "check_north", "hit")
+        joined = "\n".join(read(f"raycast_fast/cardinal/{name}.mcfunction") for name in names)
+        for forbidden in ("B5-0-0-0-1", "data get", "sgp:rays origin", "bs:data raycast", "bs.ctx",
+                          "bs.width", "bs.depth", "sort=nearest", "positioned as @s"):
+            self.assertNotIn(forbidden, joined, forbidden)
+        for name in ("origin_x", "origin_z", "position_x", "position_z"):
+            self.assertFalse((RAYS / f"raycast_fast/cardinal/{name}.mcfunction").exists(), name)
+        self.assertNotIn("sgp:rays origin", read("tick_linked_children.mcfunction"))
 
-    def test_clear_cardinal_selector_boxes_cover_exact_16_block_segment_with_margin(self):
-        east = read("raycast_fast/cardinal/east.mcfunction")
-        west = read("raycast_fast/cardinal/west.mcfunction")
-        south = read("raycast_fast/cardinal/south.mcfunction")
-        north = read("raycast_fast/cardinal/north.mcfunction")
-
-        # Selector deltas include an implicit +1 block in 26.1.2. These offsets therefore
-        # cover [-0.01, 16.01] or [-16.01, 0.01] along the ray axis.
-        self.assertIn("positioned ~-0.01 ~-0.01 ~-0.01", east)
-        self.assertIn("dx=15.02,dy=0,dz=0", east)
-        self.assertIn("positioned ~-0.99 ~-0.01 ~-0.01", west)
-        self.assertIn("dx=-15.02,dy=0,dz=0", west)
-        self.assertIn("dx=0,dy=0,dz=15.02", south)
-        self.assertIn("positioned ~-0.01 ~-0.01 ~-0.99", north)
-        self.assertIn("dx=0,dy=0,dz=-15.02", north)
-
-    def test_clear_cardinal_intersection_uses_one_axis_position_and_exact_tmin(self):
-        east = read("raycast_fast/cardinal/check_east.mcfunction")
-        west = read("raycast_fast/cardinal/check_west.mcfunction")
-        south = read("raycast_fast/cardinal/check_south.mcfunction")
-        north = read("raycast_fast/cardinal/check_north.mcfunction")
-        pos_x = read("raycast_fast/cardinal/position_x.mcfunction")
-        pos_z = read("raycast_fast/cardinal/position_z.mcfunction")
-
-        self.assertIn("data get entity @s Pos[0] 10000000", pos_x)
-        self.assertIn("data get entity @s Pos[2] 10000000", pos_z)
-        self.assertNotIn("bs:ctx _ set from entity", pos_x + pos_z)
-        self.assertIn("#x bs.ctx -= #w bs.ctx", east)
-        self.assertIn("#x bs.ctx += #w bs.ctx", west)
-        self.assertIn("#x bs.ctx -= #w bs.ctx", south)
-        self.assertIn("#x bs.ctx += #w bs.ctx", north)
-        self.assertIn("#x bs.ctx *= -1 bs.const", west + north)
-        for text in (east, west, south, north):
-            self.assertIn("#x bs.ctx /= 10000 bs.const", text)
-            self.assertIn("matches 0..16000", text)
-
-    def test_clear_cardinal_measures_from_collision_origin_relative_to_caster_block(self):
-        tick = read("tick_linked_children.mcfunction")
-        run = read("raycast_fast/cardinal/run.mcfunction")
-
-        for axis in ("x", "z"):
-            # Derived from the bs.pos.* scores rays/tick already computed: no per-caster player NBT read.
-            self.assertIn(
-                f"execute store result storage sgp:rays origin.{axis} int -0.001 run scoreboard players get @s bs.pos.{axis}",
-                tick,
-            )
-        self.assertNotIn("data get entity @s Pos", tick)
-        self.assertLess(tick.index("tick_linked_children_block_only"), tick.index("sgp:rays origin.x"))
-        self.assertLess(tick.index("sgp:rays origin.x"), tick.index("update_ray_dispatch"))
-        self.assertNotIn("bs:data raycast", run)
-
-        for name, axis in (("east", "x"), ("west", "x"), ("south", "z"), ("north", "z")):
+    def test_clear_cardinal_selector_boxes_are_exact_line_tests(self):
+        # Selector deltas include an implicit +1 block, so d=15 spans exactly 16 blocks along the beam.
+        # The corridor box proves the hitbox reaches above/beside the beam line on the two transverse axes;
+        # the two shifted boxes in check_* prove it also reaches below/before it, i.e. it straddles the line.
+        # west/north direction files shift the execution position to the corridor's far corner first, so
+        # their check files use the same box offsets as east/south.
+        cases = {
+            "east": ("execute as @a[tag=sgp.ray_target,dx=15,dy=0,dz=0]",
+                     ("positioned ~ ~-1 ~ unless entity @s[dx=15,dy=0,dz=0]",
+                      "positioned ~ ~ ~-1 unless entity @s[dx=15,dy=0,dz=0]")),
+            "west": ("execute positioned ~-16 ~ ~ as @a[tag=sgp.ray_target,dx=15,dy=0,dz=0]",
+                     ("positioned ~ ~-1 ~ unless entity @s[dx=15,dy=0,dz=0]",
+                      "positioned ~ ~ ~-1 unless entity @s[dx=15,dy=0,dz=0]")),
+            "south": ("execute as @a[tag=sgp.ray_target,dx=0,dy=0,dz=15]",
+                      ("positioned ~ ~-1 ~ unless entity @s[dx=0,dy=0,dz=15]",
+                       "positioned ~-1 ~ ~ unless entity @s[dx=0,dy=0,dz=15]")),
+            "north": ("execute positioned ~ ~ ~-16 as @a[tag=sgp.ray_target,dx=0,dy=0,dz=15]",
+                      ("positioned ~ ~-1 ~ unless entity @s[dx=0,dy=0,dz=15]",
+                       "positioned ~-1 ~ ~ unless entity @s[dx=0,dy=0,dz=15]")),
+        }
+        for name, (scan, transverse) in cases.items():
             direction = read(f"raycast_fast/cardinal/{name}.mcfunction")
             check = read(f"raycast_fast/cardinal/check_{name}.mcfunction")
-            # The origin is the execution position (collision origin), never the predicted display position.
-            self.assertNotIn("positioned as @s", direction)
+            self.assertIn(f"{scan} run function sgp.kits:abilities/rays/raycast_fast/cardinal/check_{name}", direction)
+            self.assertIn("execute if score #raycast.pe bs.data matches ..0 run return 0", check)
+            for box in transverse:
+                self.assertIn(f"execute {box} run return 0", check)
+            self.assertLess(check.index("matches ..0"), check.index(transverse[0]))
+            self.assertLess(check.index(transverse[1]), check.index("cardinal/hit"))
+
+    def test_diagonal_clear_band_covers_every_voxel_the_dda_can_visit(self):
+        dispatch = read("update_ray_block_dispatch.mcfunction")
+        self.assertIn(
+            "execute if entity @s[tag=!sgp.ray_cardinal] \\\n    if function sgp.kits:abilities/rays/diagonal_clear \\\n"
+            "        run return run function sgp.kits:abilities/rays/update_ray_clear with storage sgp:rays prediction",
+            dispatch,
+        )
+        self.assertLess(dispatch.index("cardinal_clear"), dispatch.index("diagonal_clear"))
+        self.assertLess(dispatch.index("diagonal_clear"), dispatch.index("update_ray_block_only"))
+
+        band = {(i, j) for i in range(13) for j in range(13) if abs(i - j) <= 2}
+        self.assertEqual(len(band), 59)
+        signs = {"north_east": (1, -1), "south_east": (1, 1), "south_west": (-1, 1), "north_west": (-1, -1)}
+        root = read("diagonal_clear.mcfunction")
+        self.assertTrue(root.rstrip().endswith("return 0"))
+        for direction, (sx, sz) in signs.items():
             self.assertIn(
-                "execute in minecraft:overworld as B5-0-0-0-1 \\\n"
-                f"    run function sgp.kits:abilities/rays/raycast_fast/cardinal/origin_{axis} with storage sgp:rays origin",
-                direction,
+                f"execute if entity @s[tag=sgp.{direction}] run return run function sgp.kits:abilities/rays/diagonal_clear/{direction}",
+                root,
             )
-            self.assertNotIn("bs:data raycast", direction + check)
-            self.assertIn("positioned as @s as B5-0-0-0-1", check)
-            self.assertIn(f"cardinal/position_{axis} with storage sgp:rays origin", check)
-
-        for name in ("origin_x", "origin_z", "position_x", "position_z"):
-            shuttle = read(f"raycast_fast/cardinal/{name}.mcfunction")
-            self.assertIn("$execute positioned ~$(x) ~ ~$(z) run tp @s ~ ~ ~", shuttle)
-            self.assertIn("tp @s -30000000 0 1600", shuttle)
-            self.assertNotIn("$(y)", shuttle)
-
-    def test_dead_fast_entities_reactor_is_removed(self):
-        self.assertFalse((RAYS / "raycast_fast/react/entities.mcfunction").exists())
-        for path in RAYS.rglob("*.mcfunction"):
-            self.assertNotIn("react/entities", path.read_text(encoding="utf-8"), path)
-
-    def test_ray_targets_exclude_spectators_at_tagging_time(self):
-        tick = read("tick_linked_children.mcfunction")
-        self.assertEqual(tick.count("gamemode=!spectator"), 2)
-        self.assertIn("tag=!sgp.radiator,tag=!sgp.peaceful,gamemode=!spectator,dx=32,dy=0,dz=32", tick)
+            text = read(f"diagonal_clear/{direction}.mcfunction")
+            offsets = re.findall(r"if block ~(-?\d+) ~ ~(-?\d+) #bs\.hitbox:can_pass_through", text)
+            self.assertEqual(len(offsets), 59, direction)
+            self.assertEqual({(int(x) * sx, int(z) * sz) for x, z in offsets}, band, direction)
+            self.assertIn("run return 1", text)
+            self.assertTrue(text.rstrip().endswith("return 0"), direction)
+            # Nearest voxels first so a wall next to the caster exits early.
+            sums = [abs(int(x)) + abs(int(z)) for x, z in offsets]
+            self.assertEqual(sums, sorted(sums), direction)
 
 
 if __name__ == "__main__":

@@ -14,11 +14,6 @@ execute positioned ~-16.5 ~0.1 ~-16.5 \
 scoreboard players set #ray_hitbox_cache sgp.dummy 0
 scoreboard players set #ray_fast_entity sgp.dummy 0
 
-# Clear cardinal beams measure along-axis positions relative to the caster's block so far arenas never overflow fixed-point
-# scores. Any integer offset near the caster works; bs.pos.* (scale 1000, computed by rays/tick) avoids a player NBT read.
-execute store result storage sgp:rays origin.x int -0.001 run scoreboard players get @s bs.pos.x
-execute store result storage sgp:rays origin.z int -0.001 run scoreboard players get @s bs.pos.z
-
 execute as @e[distance=..10,tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] \
     positioned ~ ~0.6 ~ rotated as @s \
         run function sgp.kits:abilities/rays/update_ray_dispatch

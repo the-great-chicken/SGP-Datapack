@@ -1,6 +1,6 @@
 #> sgp.kits:abilities/rays/update_ray_clear
 # {x, y, z}: predicted displacement, relative to the caster's beam origin.
-# Used after a cardinal voxel scan proves the full 16-block beam is unobstructed.
+# Used after a cardinal or diagonal voxel scan proves the full 16-block beam is unobstructed.
 
 tag @s add sgp.ray_refreshed
 $teleport @s ~$(x) ~$(y) ~$(z) ~ 0
