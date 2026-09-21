@@ -19,6 +19,17 @@ scoreboard players operation #sgp.ab.current sgp.dummy = @s sgp.cooldown_ability
 scoreboard players operation #sgp.ab.max sgp.dummy = @s sgp.ab.ability_cooldown_max
 function sgp.misc:actionbar/cooldown_frame/calculate
 scoreboard players operation @s sgp.ab.ability_cooldown_last_current = @s sgp.cooldown_ability
+# Cooldown value at which the frame next changes: max - ceil((filled + 1) * max / bar_length).
+# ability_cooldown_gate skips this whole function until the cooldown reaches it.
+scoreboard players operation #sgp.ab.next sgp.dummy = #sgp.ab.filled sgp.dummy
+scoreboard players add #sgp.ab.next sgp.dummy 1
+scoreboard players operation #sgp.ab.next sgp.dummy *= #sgp.ab.max sgp.dummy
+scoreboard players operation #sgp.ab.next_rem sgp.dummy = #sgp.ab.next sgp.dummy
+scoreboard players operation #sgp.ab.next_rem sgp.dummy %= #sgp.ab.bar_length sgp.dummy
+scoreboard players operation #sgp.ab.next sgp.dummy /= #sgp.ab.bar_length sgp.dummy
+execute unless score #sgp.ab.next_rem sgp.dummy matches 0 run scoreboard players add #sgp.ab.next sgp.dummy 1
+scoreboard players operation @s sgp.ab.ability_cooldown_next = #sgp.ab.max sgp.dummy
+scoreboard players operation @s sgp.ab.ability_cooldown_next -= #sgp.ab.next sgp.dummy
 
 # The HUD display override reads these scores each Actionbar Mixer render.
 execute if score @s sgp.ab.hud_ability matches 1 \

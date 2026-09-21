@@ -14,8 +14,9 @@ execute if entity @a[tag=sgp.ray_hitbox_cached,limit=1] run function sgp.kits:ab
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
 
 # Refresh the visible main ability cooldown after it has been decremented, and after a newly triggered ability may have started its cooldown.
+# The gate skips the ~21-command frame recompute on the ticks where the frame cannot change.
 execute as @a[tag=sgp.in_game,scores={sgp.cooldown_ability=1..}] \
-    run function sgp.misc:actionbar/ability_cooldown
+    run function sgp.misc:actionbar/ability_cooldown_gate
 
 # Keep the ability HUD visible as a full bar while the ability is ready.
 execute as @a[tag=sgp.in_game,scores={sgp.kit_id=0..}] \

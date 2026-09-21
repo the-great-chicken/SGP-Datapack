@@ -28,6 +28,7 @@ scoreboard objectives remove sgp.ab.ability_cooldown
 scoreboard objectives remove sgp.ab.ability_cooldown_max
 scoreboard objectives remove sgp.ab.ability_cooldown_last_fill
 scoreboard objectives remove sgp.ab.ability_cooldown_last_current
+scoreboard objectives remove sgp.ab.ability_cooldown_next
 scoreboard objectives remove sgp.ab.hud_ability
 scoreboard objectives remove sgp.ab.hud_ability_fill
 scoreboard objectives remove sgp.ab.normal_width

@@ -19,6 +19,7 @@ scoreboard objectives add sgp.ab.ability_cooldown dummy
 scoreboard objectives add sgp.ab.ability_cooldown_max dummy
 scoreboard objectives add sgp.ab.ability_cooldown_last_fill dummy
 scoreboard objectives add sgp.ab.ability_cooldown_last_current dummy
+scoreboard objectives add sgp.ab.ability_cooldown_next dummy
 scoreboard objectives add sgp.ab.hud_ability dummy
 scoreboard objectives add sgp.ab.hud_ability_fill dummy
 scoreboard objectives add sgp.ab.normal_width dummy
