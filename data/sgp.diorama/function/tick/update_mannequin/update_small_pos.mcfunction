@@ -3,7 +3,7 @@
 
 # Grab the player's exact position and rotation
 # We scale by 1000 (milliblocks/millidegrees) to prevent the division by 16 from wiping out fractional precision!
-function #bs.position:get_pos_and_rot {scale:1000}
+function sgp.diorama:tick/update_mannequin/read_pos_and_rot
 
 $function sgp.diorama:tick/update_mannequin/compute_diorama_pos {id:$(id)}
 

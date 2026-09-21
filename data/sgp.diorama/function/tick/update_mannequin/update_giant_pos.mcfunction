@@ -2,7 +2,7 @@
 # `{id: int}`
 
 # Grab the player's exact position and rotation
-function #bs.position:get_pos_and_rot {scale:1000}
+function sgp.diorama:tick/update_mannequin/read_pos_and_rot
 
 # Subtract the miniature map's origin to get the relative offset
 $scoreboard players operation @s bs.pos.x -= #model_$(id)_x sgp.dummy
