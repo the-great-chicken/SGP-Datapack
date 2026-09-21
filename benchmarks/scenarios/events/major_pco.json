@@ -1,6 +1,6 @@
 {
   "name": "major_pco",
-  "description": "The Poule-Canard-Oie major event started through sgp.majeurs:pco/_start on a synthetic location set, with every actor dispatched into the three teams and standing on the arena grid, so minecraft:execute_repeating_functions runs the real per-tick round: three looking_at raycast predicates over all players, the refuge check and actionbar segment per participant, the cage checks and the win checks.",
+  "description": "The Poule-Canard-Oie major event started through sgp.majeurs:pco/_start on a synthetic location set, with every actor dispatched into the three teams and standing on the arena grid, so minecraft:execute_repeating_functions runs the real per-tick round: three looking_at raycast predicates over all players, the refuge check and actionbar segment per participant, the cage checks and the win checks. `restart` > 0 stops and starts the event again every that many ticks, so the round-end and round-start bursts land inside the profiling window.",
   "setup": "sgp.bench:scenarios/events/major_pco/setup",
   "tick": "sgp.bench:scenarios/events/major_pco/tick",
   "teardown": "sgp.bench:scenarios/events/major_pco/teardown",
@@ -8,10 +8,17 @@
     "players": {
       "type": "int",
       "min": 3
+    },
+    "restart": {
+      "type": "int",
+      "min": 0,
+      "max": 400,
+      "default": 0
     }
   },
   "counters": {
     "participant_ticks": "#pco_participant_ticks",
-    "stopped_ticks": "#pco_stopped_ticks"
+    "stopped_ticks": "#pco_stopped_ticks",
+    "restarts": "#pco_restarts"
   }
 }

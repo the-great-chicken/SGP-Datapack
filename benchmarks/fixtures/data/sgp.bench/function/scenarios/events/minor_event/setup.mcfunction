@@ -13,9 +13,11 @@ scoreboard players set #minor_c20 sgp.bench 20
 scoreboard players set #minor_c40 sgp.bench 40
 scoreboard players set #minor_c60 sgp.bench 60
 scoreboard players set #minor_c90 sgp.bench 90
+scoreboard players set #minor_c100 sgp.bench 100
 execute if score #minor_event sgp.bench matches 1 run function sgp.bench:scenarios/events/minor_event/lootdrop/setup with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 2 run function sgp.bench:scenarios/events/minor_event/confinement/setup with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 3 run function sgp.bench:scenarios/events/minor_event/reflexes/setup with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 4 run function sgp.bench:scenarios/events/minor_event/frenzy/setup with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 5 run function sgp.bench:scenarios/events/minor_event/magic/setup with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 6 run function sgp.bench:scenarios/events/minor_event/bounty/setup with storage sgp.bench:minor args
+execute if score #minor_event sgp.bench matches 7 run function sgp.bench:scenarios/events/minor_event/swap/setup with storage sgp.bench:minor args

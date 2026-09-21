@@ -10,3 +10,4 @@ execute if score #minor_event sgp.bench matches 3 run function sgp.bench:scenari
 execute if score #minor_event sgp.bench matches 4 run function sgp.bench:scenarios/events/minor_event/frenzy/tick with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 5 run function sgp.bench:scenarios/events/minor_event/magic/tick with storage sgp.bench:minor args
 execute if score #minor_event sgp.bench matches 6 run function sgp.bench:scenarios/events/minor_event/bounty/tick with storage sgp.bench:minor args
+execute if score #minor_event sgp.bench matches 7 run function sgp.bench:scenarios/events/minor_event/swap/tick with storage sgp.bench:minor args

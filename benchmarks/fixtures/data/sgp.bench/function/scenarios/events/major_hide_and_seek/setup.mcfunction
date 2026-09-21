@@ -13,3 +13,6 @@ scoreboard players set #rounds sgp.dummy 0
 function sgp.majeurs:hide_and_seek/_start
 $execute as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] run function sgp.bench:scenarios/abilities/common/reset_actor_position
 scoreboard players set #hns_stopped_ticks sgp.bench 0
+$scoreboard players set #hns_restart sgp.bench $(restart)
+scoreboard players set #hns_restart_phase sgp.bench 0
+$data modify storage sgp.bench:events hns set value {first:$(first),last:$(last)}

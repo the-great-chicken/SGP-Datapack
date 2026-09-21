@@ -23,3 +23,6 @@ execute as @a[tag=sgp.major_participant,team=sgp.bleue,limit=1] run function sgp
 $execute as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)},tag=!sgp.roi_rouge,tag=!sgp.roi_bleu] run function sgp.bench:scenarios/abilities/common/reset_actor_position
 $execute positioned 0 81 0 as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)},distance=..3] at @s run tp @s ~ ~ ~5
 scoreboard players set #protect_stopped_ticks sgp.bench 0
+$scoreboard players set #protect_restart sgp.bench $(restart)
+scoreboard players set #protect_restart_phase sgp.bench 0
+$data modify storage sgp.bench:events protect set value {first:$(first),last:$(last)}

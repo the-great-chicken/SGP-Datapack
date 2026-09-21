@@ -54,3 +54,6 @@ function sgp.majeurs:pco/_start
 $execute as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)}] run function sgp.bench:scenarios/abilities/common/reset_actor_position
 $execute positioned 0 81 0 as @a[tag=sgp.bench.actor,scores={sgp.bench=$(first)..$(last)},distance=..3] at @s run tp @s ~ ~ ~5
 scoreboard players set #pco_stopped_ticks sgp.bench 0
+$scoreboard players set #pco_restart sgp.bench $(restart)
+scoreboard players set #pco_restart_phase sgp.bench 0
+$data modify storage sgp.bench:events pco set value {first:$(first),last:$(last)}
