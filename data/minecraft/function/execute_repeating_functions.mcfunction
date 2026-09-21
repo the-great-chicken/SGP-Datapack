@@ -81,6 +81,9 @@ execute as @a[scores={sgp.share_item=1..}] run function sgp.mineurs:lootdrop/sho
 
 function sgp.misc:players_in_game/macro with storage sgp:data markers_lists.pvp_arena[0]
 
+# Every lootdrop chest gets the empty loot table back each tick, before the players tick: an open
+# menu consumes it again, a closed chest keeps it, which is how lootdrop/close_detection/tick/init
+# detects the close. Nothing else must re-apply it (a scheduled chain doing so used to multiply).
 function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.lootdrop", command:"if block ~ ~ ~ trapped_chest run data modify block ~ ~ ~ LootTable set value 'sgp.misc:empty'"}
 
 scoreboard players set @a sgp.ab.location 0
