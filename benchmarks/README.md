@@ -20,6 +20,8 @@ Results are written under `benchmarks/results/`. Failed runs keep diagnostics th
 - **Mean MSPT**: server work per tick, `Time span × tick% / Tick span` from the `/perf` root split
   (`tick` vs `nextTickWait`). This is the headline. It is `n/a` for results recorded before the
   harness stored that split.
+- **Commands per tick**: datapack commands whose `execute` section ran, from the `/perf` command sections (`prepared` also counts lines whose conditions failed). Dispatch cost follows this count.
+- **Entity ticking ms/tick**: the level `entities` section, outside command functions, with a per-type table (players, bats, TNT, items, displays...) so datapack-spawned entities are visible.
 - **GC pauses ms/tick**: JVM stop-the-world pause time during the capture (from `-Xlog:gc`), which `/perf` attributes to whatever section was running. **Heap after GC** is the live heap after the last pause: PackTest dummy players never drain the packets sent to them, so heavy scenarios (rays) retain memory for the whole session and later runs of a session become GC-bound. When more than half the heap is still live after a run, the runner restarts the JVM before the next run (recorded in `metadata.json` and the summary); the GC ms/tick column shows what remains inside a run.
 - **`commandFunctions` ms/tick**: absolute datapack cost per tick
   (`Time span × commandFunctions% / Tick span`). Comparable across runs even when TPS differs.

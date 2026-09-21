@@ -221,6 +221,20 @@ def compare_results(args):
         f'| `commandFunctions` global % | {format_number(before_cf)}% | {format_number(after_cf)}% | '
         f'{format_number(cf_delta, 3)} pp ({relative_change(before_cf, after_cf)}) |'
     )
+    before_commands = nested_numeric_median(before_runs, 'commands_per_tick', 'executed')
+    after_commands = nested_numeric_median(after_runs, 'commands_per_tick', 'executed')
+    if before_commands is not None or after_commands is not None:
+        lines.append(
+            f'| Commands executed per tick | {format_number(before_commands, 0)} | {format_number(after_commands, 0)} | '
+            f'{relative_change(before_commands, after_commands)} |'
+        )
+    before_entities = nested_numeric_median(before_runs, 'entities', 'ms_per_tick')
+    after_entities = nested_numeric_median(after_runs, 'entities', 'ms_per_tick')
+    if before_entities is not None or after_entities is not None:
+        lines.append(
+            f'| Entity ticking ms/tick | {format_number(before_entities, 3)} ms | {format_number(after_entities, 3)} ms | '
+            f'{relative_change(before_entities, after_entities)} |'
+        )
     before_gc = nested_numeric_median(before_runs, 'gc', 'ms_per_tick')
     after_gc = nested_numeric_median(after_runs, 'gc', 'ms_per_tick')
     if before_gc is not None or after_gc is not None:

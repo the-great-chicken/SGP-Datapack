@@ -66,16 +66,18 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             )
         lines += ['', '## Runs',
         '',
-        '| Run | Profile ticks | Mean MSPT | commandFunctions | commandFunctions ms/tick | '
-        'GC pauses ms/tick | Heap after GC | '
+        '| Run | Profile ticks | Mean MSPT | commandFunctions | commandFunctions ms/tick | Commands/tick | '
+        'Entities ms/tick | GC pauses ms/tick | Heap after GC | '
         'Tick period median | Tick period p95 | Tick period max | Driver ticks |',
-        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
     ]
     for i, (profile, count) in enumerate(zip(profiles, counters), 1):
         lines.append(
             f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.mean_mspt_ms)} ms | '
             f'{format_number(profile.command_functions_percent)}% | '
             f'{format_number(profile.command_functions_ms_per_tick)} ms | '
+            f'{format_number(profile.commands_executed_per_tick, 0)} | '
+            f'{format_number(profile.entities_ms_per_tick, 3)} ms | '
             f'{format_number(profile.gc_ms_per_tick, 3)} ms | {_megabytes(profile.gc_heap_after_mb)} | '
             f'{format_number(profile.tick_period_median_ms)} ms | {format_number(profile.tick_period_p95_ms)} ms | '
             f'{format_number(profile.tick_period_max_ms)} ms | {format_number(count.get("ticks"))} |'
@@ -88,6 +90,8 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
     period_medians = [p.tick_period_median_ms for p in profiles if p.tick_period_median_ms is not None]
     period_p95s = [p.tick_period_p95_ms for p in profiles if p.tick_period_p95_ms is not None]
     period_maxes = [p.tick_period_max_ms for p in profiles if p.tick_period_max_ms is not None]
+    command_counts = [p.commands_executed_per_tick for p in profiles if p.commands_executed_per_tick is not None]
+    entity_values = [p.entities_ms_per_tick for p in profiles if p.entities_ms_per_tick is not None]
     gc_values = [p.gc_ms_per_tick for p in profiles if p.gc_ms_per_tick is not None]
     heap_values = [p.gc_heap_after_mb for p in profiles if p.gc_heap_after_mb is not None]
     if mspt_values or command_values or tps_values or period_medians or period_p95s or period_maxes:
@@ -125,6 +129,18 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
                 f'- Median run maximum tick period: **{median(period_maxes):.3f} ms** '
                 f'(range {min(period_maxes):.3f}–{max(period_maxes):.3f} ms).'
             )
+        if command_counts:
+            lines.append(
+                f'- Median commands executed per tick: **{median(command_counts):.0f}** '
+                f'(range {min(command_counts):.0f}–{max(command_counts):.0f}); datapack commands whose '
+                'execute section ran, from the `/perf` command sections.'
+            )
+        if entity_values:
+            lines.append(
+                f'- Median entity ticking: **{median(entity_values):.3f} ms/tick** '
+                f'(range {min(entity_values):.3f}–{max(entity_values):.3f} ms/tick), outside command functions; '
+                'see the entity table below.'
+            )
         if gc_values:
             lines.append(
                 f'- Median GC pause time: **{median(gc_values):.3f} ms/tick** '
@@ -139,6 +155,19 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
                 f'{capacity_text}. Growth across runs means the session retains memory (PackTest '
                 'dummies never drain their packets) and later runs are GC-bound.'
             )
+
+    type_values: dict[str, list[float]] = defaultdict(list)
+    for profile in profiles:
+        for name, value in profile.entity_type_ms_per_tick().items():
+            type_values[name].append(value)
+    if type_values:
+        lines += ['', '## Entity ticking by type', '',
+                  'Median ms/tick of the vanilla per-entity-type profiler sections (players included).', '',
+                  '| Entity type | Median ms/tick |', '| --- | ---: |']
+        ranked = sorted(type_values.items(), key=lambda item: median(item[1]), reverse=True)
+        for name, values in ranked[:12]:
+            if median(values) >= 0.005:
+                lines.append(f'| `{name}` | {median(values):.3f} ms |')
 
     workload_names = sorted({
         name

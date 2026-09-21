@@ -14,6 +14,10 @@ Tick span: 200 ticks
 [02] |   |   function minecraft:execute_repeating_functions(200/1) - 60.00%/5.40%
 [03] |   |   |   execute as @a[tag=sgp.in_game] run function sgp.kits:abilities/tick(8000/40) - 50.00%/2.70%
 [01] |   levels(200/1) - 20.00%/18.00%
+[02] |   |   entities(200/1) - 50.00%/9.00%
+[03] |   |   |   minecraft:player(8000/40) - 60.00%/5.40%
+[03] |   |   |   minecraft:bat(2000/10) - 10.00%/0.90%
+[04] |   |   |   |   minecraft:player(400/2) - 5.00%/0.05%
 [02] |   |   scheduledFunctions(200/1) - 10.00%/1.80%
 [03] |   |   |   function sgp.kits:abilities/bats/check_for_explosion(5/0) - 80.00%/1.44%
 [04] |   |   |   |   execute summon tnt ~ ~ ~ {Tags:["sgp.bat_grenade"]}(2000/10) - 50.00%/0.72%
@@ -49,6 +53,13 @@ Tick span: 200 ticks
         self.assertAlmostEqual(profile.tick_period_median_ms, 3.0)
         self.assertAlmostEqual(profile.tick_period_p95_ms, 5.0)
         self.assertAlmostEqual(profile.tick_period_max_ms, 5.0)
+        self.assertAlmostEqual(profile.commands_executed_per_tick, 40.0)
+        self.assertAlmostEqual(profile.commands_prepared_per_tick, 0.0)
+        self.assertAlmostEqual(profile.entities_percent, 9.0)
+        self.assertAlmostEqual(profile.entities_ms_per_tick, 4.5)
+        # The nested passenger occurrence of minecraft:player is not double counted.
+        self.assertEqual(profile.entity_type_percent, {'minecraft:player': 5.4, 'minecraft:bat': 0.9})
+        self.assertAlmostEqual(profile.entity_type_ms_per_tick()['minecraft:bat'], 0.45)
         self.assertEqual(len(profile.entries), 2)
         self.assertEqual(profile.entries[0].name, 'function minecraft:execute_repeating_functions')
         self.assertEqual(profile.entries[1].count, 8000)
@@ -61,6 +72,8 @@ Tick span: 200 ticks
         self.assertAlmostEqual(serialized['command_functions_ms_per_tick'], 4.5)
         self.assertAlmostEqual(serialized['tick_period_ms']['median'], 3.0)
         self.assertNotIn('tick_time_ms', serialized)
+        self.assertAlmostEqual(serialized['commands_per_tick']['executed'], 40.0)
+        self.assertAlmostEqual(serialized['entities']['by_type_ms_per_tick']['minecraft:player'], 2.7)
 
     def test_profile_wait_preserves_validated_snapshot(self):
         class AliveProcess:

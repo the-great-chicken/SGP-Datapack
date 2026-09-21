@@ -44,6 +44,13 @@ class ParsedProfile:
     # `nextTickWait` at depth 0 of the profiler dump.
     tick_percent: float | None = None
     next_tick_wait_percent: float | None = None
+    # Commands the datapack ran per tick (`execute` sections under commandFunctions);
+    # `prepared` also counts lines whose conditions failed before execution.
+    commands_executed_per_tick: float | None = None
+    commands_prepared_per_tick: float | None = None
+    # Entity ticking (`entities` under the level tick), global % and per entity type.
+    entities_percent: float | None = None
+    entity_type_percent: dict[str, float] | None = None
     # JVM stop-the-world pauses during the capture (gc_log.summarize_gc); the
     # runner fills it in, archives parsed on their own have none.
     gc: dict | None = None
@@ -88,6 +95,18 @@ class ParsedProfile:
     @property
     def tick_period_max_ms(self) -> float | None:
         return max(self.tick_periods_ms) if self.tick_periods_ms else None
+
+    @property
+    def entities_ms_per_tick(self) -> float | None:
+        return self._ms_per_tick(self.entities_percent)
+
+    def entity_type_ms_per_tick(self) -> dict[str, float]:
+        result = {}
+        for name, percent in (self.entity_type_percent or {}).items():
+            value = self._ms_per_tick(percent)
+            if value is not None:
+                result[name] = value
+        return result
 
     @property
     def gc_ms_per_tick(self) -> float | None:

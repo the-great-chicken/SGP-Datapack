@@ -151,6 +151,24 @@ def parse_profile(path: Path) -> ParsedProfile:
     command_percent = command_root.global_percent if command_root is not None else None
     entries = subtree_entries('commandFunctions', first_only=True)
     scheduled_entries = subtree_entries('scheduledFunctions')
+    tick_span = int(tick_match.group(1)) if tick_match else None
+    executed = sum(item.count for item in entries if item.name.startswith('execute '))
+    prepared = sum(item.count for item in entries if item.name.startswith('prepare '))
+    # Vanilla profiles entity ticking per entity type (`minecraft:player`, `minecraft:bat`,
+    # ...) under the level's `entities` section; keep each type's shallowest occurrences.
+    entity_root = next((item for item in parsed_lines if item.name == 'entities'), None)
+    entity_types: dict[str, float] = {}
+    if entity_root is not None:
+        depths: dict[str, int] = {}
+        for item in subtree_entries('entities', first_only=True):
+            if not re.fullmatch(r'minecraft:[a-z0-9_]+', item.name):
+                continue
+            best = depths.get(item.name)
+            if best is None or item.depth < best:
+                depths[item.name] = item.depth
+                entity_types[item.name] = item.global_percent
+            elif item.depth == best:
+                entity_types[item.name] += item.global_percent
 
     return ParsedProfile(
         archive=path,
@@ -158,6 +176,10 @@ def parse_profile(path: Path) -> ParsedProfile:
         tick_span=int(tick_match.group(1)) if tick_match else None,
         version=version_match.group(1).strip() if version_match else None,
         command_functions_percent=command_percent,
+        commands_executed_per_tick=(executed / tick_span) if tick_span else None,
+        commands_prepared_per_tick=(prepared / tick_span) if tick_span else None,
+        entities_percent=entity_root.global_percent if entity_root is not None else None,
+        entity_type_percent=entity_types or None,
         entries=entries,
         scheduled_entries=scheduled_entries,
         tick_periods_ms=tick_periods_ms,
@@ -257,6 +279,18 @@ def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
         'mean_mspt_ms': profile.mean_mspt_ms,
         'command_functions_percent': profile.command_functions_percent,
         'command_functions_ms_per_tick': profile.command_functions_ms_per_tick,
+        # Datapack commands per tick: `executed` ran, `prepared` includes lines whose
+        # execute conditions failed. Dispatch cost scales with these, not with ms.
+        'commands_per_tick': {
+            'executed': profile.commands_executed_per_tick,
+            'prepared': profile.commands_prepared_per_tick,
+        },
+        # Entity ticking outside command functions (players plus datapack-spawned entities).
+        'entities': {
+            'percent': profile.entities_percent,
+            'ms_per_tick': profile.entities_ms_per_tick,
+            'by_type_ms_per_tick': profile.entity_type_ms_per_tick(),
+        },
         # Wall-clock tick interval statistics (metrics/ticking.csv), not work time.
         'tick_period_ms': {
             'samples': len(profile.tick_periods_ms),
@@ -317,6 +351,11 @@ def parse_archives(args):
         print(
             f'  commandFunctions: {format_number(profile.command_functions_percent)}% '
             f'= {format_number(profile.command_functions_ms_per_tick, 3)} ms/tick'
+        )
+        print(
+            f'  commands per tick: {format_number(profile.commands_executed_per_tick, 0)} executed, '
+            f'{format_number(profile.commands_prepared_per_tick, 0)} prepared; '
+            f'entity ticking {format_number(profile.entities_ms_per_tick, 3)} ms/tick'
         )
         print(
             '  tick period (wall clock): '
