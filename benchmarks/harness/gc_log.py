@@ -6,7 +6,7 @@ server starts with `-Xlog:gc:file=gc.log:time,uptime`, which prints one line per
 
     [2026-09-21T08:13:06.123+0200][12.345s] GC(5) Pause Young (Normal) (G1 Evacuation Pause) 300M->250M(6144M) 45.678ms
 
-The live heap after the last pause matters as much as the pauses: PackTest dummy
+The heap left after the last pause matters as much as the pauses: PackTest dummy
 players never drain the packets sent to them (their Connection has no channel, so
 vanilla queues every packet as a pending action), which makes heavy scenarios retain
 memory for the whole session and later runs GC-bound.
@@ -62,7 +62,11 @@ def parse_gc_log(path: Path) -> list[GcPause]:
 
 
 def summarize_gc(pauses: list[GcPause], start: datetime, end: datetime, tick_span: int | None) -> dict:
-    """Pauses inside [start, end] plus the live heap after the last pause up to `end`."""
+    """Pauses inside [start, end] plus the heap used after the last pause up to `end`.
+
+    `heap_after_mb` is the occupancy right after that pause, which may be a young
+    collection: it is an upper bound on what is reachable, not a liveness measurement.
+    """
     window = [pause for pause in pauses if start <= pause.at <= end]
     total_ms = sum(pause.pause_ms for pause in window)
     seen = [pause for pause in pauses if pause.at <= end]

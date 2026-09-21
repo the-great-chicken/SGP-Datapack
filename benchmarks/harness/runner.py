@@ -147,8 +147,19 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             profile_dir = server_dir / 'debug/profiling'
             previous = {path.resolve() for path in profile_dir.glob('*.zip')} if profile_dir.is_dir() else set()
             print(f'Run {run_number}/{args.runs}: /perf')
+            console_index = len(server.lines)
             perf_started_at = datetime.now().astimezone()
             server.send('perf start')
+            # Stop the workload the moment the capture ends, before waiting for the
+            # archive: Minecraft writes it asynchronously, and a slow or failed write
+            # must not keep a heavy workload running for the whole profile timeout.
+            server.wait_for(
+                lambda line: 'Stopped performance profiling' in line,
+                args.profile_timeout,
+                start_at=console_index,
+            )
+            perf_ended_at = datetime.now().astimezone()
+            server.send('scoreboard players set #enabled sgp.bench 0')
             # Preserve the raw profile as part of the wait itself. Minecraft writes
             # profiling archives asynchronously and, on Windows, a just-validated
             # source path can briefly disappear before a separate copy operation.
@@ -156,8 +167,6 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             wait_for_new_profile(
                 server_dir, previous, server, timeout=args.profile_timeout, destination=destination
             )
-            perf_ended_at = datetime.now().astimezone()
-            server.send('scoreboard players set #enabled sgp.bench 0')
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
             server.require_score('#actual_players', total_players)
@@ -200,7 +209,8 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
                 f'entities={format_number(parsed.entities_ms_per_tick, 3)} ms/tick, '
                 f'tick period median={format_number(parsed.tick_period_median_ms, 3)} ms, '
                 f'GC pauses={parsed.gc["pauses"]} ({format_number(parsed.gc_ms_per_tick, 3)} ms/tick), '
-                f'heap after GC={format_number(parsed.gc_heap_after_mb, 0)} MB'
+                f'heap after last GC pause={format_number(parsed.gc_heap_after_mb, 0)} MB, '
+                f'heap floor={format_number(parsed.jvm_heap_min_mb, 0)} MB'
             )
 
             phase = f'run {run_number}/{args.runs} teardown'
@@ -213,8 +223,8 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             if run_number < args.runs and _heap_retained(parsed):
                 print(
                     f'Run {run_number}/{args.runs}: {parsed.gc_heap_after_mb:.0f} MB of the '
-                    f'{parsed.gc_heap_capacity_mb:.0f} MB heap is still live after GC; restarting the JVM so '
-                    f'run {run_number + 1} does not start GC-bound (PackTest dummies never drain their packets).'
+                    f'{parsed.gc_heap_capacity_mb:.0f} MB heap was still in use after the last GC pause; restarting '
+                    f'the JVM so run {run_number + 1} does not start GC-bound (PackTest dummies retain their packets).'
                 )
                 phase = f'run {run_number}/{args.runs} JVM restart'
                 server.stop()

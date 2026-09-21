@@ -246,8 +246,15 @@ def compare_results(args):
     after_heap = nested_numeric_median(after_runs, 'gc', 'heap_after_mb')
     if before_heap is not None or after_heap is not None:
         lines.append(
-            f'| Heap live after GC | {format_number(before_heap, 0)} MB | {format_number(after_heap, 0)} MB | '
+            f'| Heap after last GC pause | {format_number(before_heap, 0)} MB | {format_number(after_heap, 0)} MB | '
             f'{relative_change(before_heap, after_heap)} |'
+        )
+    before_floor = nested_numeric_median(before_runs, 'jvm_heap_mb', 'min')
+    after_floor = nested_numeric_median(after_runs, 'jvm_heap_mb', 'min')
+    if before_floor is not None or after_floor is not None:
+        lines.append(
+            f'| Heap floor during capture | {format_number(before_floor, 0)} MB | {format_number(after_floor, 0)} MB | '
+            f'{relative_change(before_floor, after_floor)} |'
         )
     lines.append(
         f'| Effective TPS | {format_number(before_tps)} | {format_number(after_tps)} | '

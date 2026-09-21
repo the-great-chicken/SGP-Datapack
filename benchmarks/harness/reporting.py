@@ -52,7 +52,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
     if restarts:
         lines.append(
             f'- JVM restarted before run(s) {", ".join(str(run) for run in restarts)}: more than half the heap '
-            'was still live after the previous run (PackTest dummies never drain their packets), so each of '
+            'was still in use after the previous run (PackTest dummies retain their packets), so each of '
             'those runs starts on a fresh heap.'
         )
     lines.append('')
@@ -67,9 +67,9 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         lines += ['', '## Runs',
         '',
         '| Run | Profile ticks | Mean MSPT | commandFunctions | commandFunctions ms/tick | Commands/tick | '
-        'Entities ms/tick | GC pauses ms/tick | Heap after GC | '
+        'Entities ms/tick | GC pauses ms/tick | Heap after GC pause | Heap floor | '
         'Tick period median | Tick period p95 | Tick period max | Driver ticks |',
-        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
     ]
     for i, (profile, count) in enumerate(zip(profiles, counters), 1):
         lines.append(
@@ -79,6 +79,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             f'{format_number(profile.commands_executed_per_tick, 0)} | '
             f'{format_number(profile.entities_ms_per_tick, 3)} ms | '
             f'{format_number(profile.gc_ms_per_tick, 3)} ms | {_megabytes(profile.gc_heap_after_mb)} | '
+            f'{_megabytes(profile.jvm_heap_min_mb)} | '
             f'{format_number(profile.tick_period_median_ms)} ms | {format_number(profile.tick_period_p95_ms)} ms | '
             f'{format_number(profile.tick_period_max_ms)} ms | {format_number(count.get("ticks"))} |'
         )
@@ -94,6 +95,7 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
     entity_values = [p.entities_ms_per_tick for p in profiles if p.entities_ms_per_tick is not None]
     gc_values = [p.gc_ms_per_tick for p in profiles if p.gc_ms_per_tick is not None]
     heap_values = [p.gc_heap_after_mb for p in profiles if p.gc_heap_after_mb is not None]
+    floor_values = [p.jvm_heap_min_mb for p in profiles if p.jvm_heap_min_mb is not None]
     if mspt_values or command_values or tps_values or period_medians or period_p95s or period_maxes:
         lines += ['', '## Aggregate', '']
         if mspt_values:
@@ -151,9 +153,15 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             capacity = next((p.gc_heap_capacity_mb for p in profiles if p.gc_heap_capacity_mb), None)
             capacity_text = f' of {capacity:.0f} MB' if capacity else ''
             lines.append(
-                f'- Heap live after GC, per run: {", ".join(f"{value:.0f}" for value in heap_values)} MB'
-                f'{capacity_text}. Growth across runs means the session retains memory (PackTest '
-                'dummies never drain their packets) and later runs are GC-bound.'
+                f'- Heap used after the last GC pause, per run: {", ".join(f"{value:.0f}" for value in heap_values)} MB'
+                f'{capacity_text}. An upper bound on what is reachable (the pause may be a young collection).'
+            )
+        if floor_values:
+            lines.append(
+                f'- Heap floor during capture (minimum of the profiler heap samples), per run: '
+                f'{", ".join(f"{value:.0f}" for value in floor_values)} MB. Growth across runs means the '
+                'session retains memory (PackTest dummies retain their packets and stay reachable after '
+                'leaving) and later runs are GC-bound.'
             )
 
     type_values: dict[str, list[float]] = defaultdict(list)

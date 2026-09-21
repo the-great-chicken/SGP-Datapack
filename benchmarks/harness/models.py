@@ -48,6 +48,15 @@ class ParsedProfile:
     # `prepared` also counts lines whose conditions failed before execution.
     commands_executed_per_tick: float | None = None
     commands_prepared_per_tick: float | None = None
+    # JVM heap occupancy sampled every tick by the profiler (server/metrics/jvm.csv,
+    # MiB). The minimum is the post-collection floor: retention shows up here.
+    jvm_heap_samples_mb: list[float] | None = None
+    # JVM heap occupancy sampled every tick by the profiler (server/metrics/jvm.csv,
+    # MiB). The minimum is the post-collection floor: retention shows up here.
+    jvm_heap_samples_mb: list[float] | None = None
+    # JVM heap occupancy sampled every tick by the profiler (server/metrics/jvm.csv,
+    # MiB). The minimum is the post-collection floor: retention shows up here.
+    jvm_heap_samples_mb: list[float] | None = None
     # Entity ticking (`entities` under the level tick), global % and per entity type.
     entities_percent: float | None = None
     entity_type_percent: dict[str, float] | None = None
@@ -95,6 +104,30 @@ class ParsedProfile:
     @property
     def tick_period_max_ms(self) -> float | None:
         return max(self.tick_periods_ms) if self.tick_periods_ms else None
+
+    @property
+    def jvm_heap_min_mb(self) -> float | None:
+        return min(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
+
+    @property
+    def jvm_heap_max_mb(self) -> float | None:
+        return max(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
+
+    @property
+    def jvm_heap_min_mb(self) -> float | None:
+        return min(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
+
+    @property
+    def jvm_heap_max_mb(self) -> float | None:
+        return max(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
+
+    @property
+    def jvm_heap_min_mb(self) -> float | None:
+        return min(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
+
+    @property
+    def jvm_heap_max_mb(self) -> float | None:
+        return max(self.jvm_heap_samples_mb) if self.jvm_heap_samples_mb else None
 
     @property
     def entities_ms_per_tick(self) -> float | None:

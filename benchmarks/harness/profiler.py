@@ -110,6 +110,84 @@ def parse_profile(path: Path) -> ParsedProfile:
                     except ValueError:
                         continue
 
+        jvm_heap_mb: list[float] = []
+        try:
+            jvm = archive.read('server/metrics/jvm.csv').decode('utf-8', errors='replace')
+        except KeyError:
+            jvm = ''
+        if jvm:
+            rows = csv.reader(jvm.splitlines())
+            try:
+                header = next(rows)
+            except StopIteration:
+                header = []
+            heap_index = next(
+                (index for index, name in enumerate(header) if 'heap' in name.strip().lower()),
+                None,
+            )
+            if heap_index is not None:
+                for row in rows:
+                    if heap_index >= len(row):
+                        continue
+                    try:
+                        value = float(row[heap_index])
+                    except ValueError:
+                        continue
+                    if math.isfinite(value) and value >= 0:
+                        jvm_heap_mb.append(value)
+
+        jvm_heap_mb: list[float] = []
+        try:
+            jvm = archive.read('server/metrics/jvm.csv').decode('utf-8', errors='replace')
+        except KeyError:
+            jvm = ''
+        if jvm:
+            rows = csv.reader(jvm.splitlines())
+            try:
+                header = next(rows)
+            except StopIteration:
+                header = []
+            heap_index = next(
+                (index for index, name in enumerate(header) if 'heap' in name.strip().lower()),
+                None,
+            )
+            if heap_index is not None:
+                for row in rows:
+                    if heap_index >= len(row):
+                        continue
+                    try:
+                        value = float(row[heap_index])
+                    except ValueError:
+                        continue
+                    if math.isfinite(value) and value >= 0:
+                        jvm_heap_mb.append(value)
+
+        jvm_heap_mb: list[float] = []
+        try:
+            jvm = archive.read('server/metrics/jvm.csv').decode('utf-8', errors='replace')
+        except KeyError:
+            jvm = ''
+        if jvm:
+            rows = csv.reader(jvm.splitlines())
+            try:
+                header = next(rows)
+            except StopIteration:
+                header = []
+            heap_index = next(
+                (index for index, name in enumerate(header) if 'heap' in name.strip().lower()),
+                None,
+            )
+            if heap_index is not None:
+                for row in rows:
+                    if heap_index >= len(row):
+                        continue
+                    try:
+                        value = float(row[heap_index])
+                    except ValueError:
+                        continue
+                    if math.isfinite(value) and value >= 0:
+                        jvm_heap_mb.append(value)
+
     time_match = TIME_SPAN.search(text)
     tick_match = TICK_SPAN.search(text)
     version_match = VERSION.search(text)
@@ -183,6 +261,7 @@ def parse_profile(path: Path) -> ParsedProfile:
         entries=entries,
         scheduled_entries=scheduled_entries,
         tick_periods_ms=tick_periods_ms,
+        jvm_heap_samples_mb=jvm_heap_mb or None,
         tick_percent=root_percent('tick'),
         next_tick_wait_percent=root_percent('nextTickWait'),
     )
@@ -300,6 +379,27 @@ def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
             'p99': profile.tick_period_p99_ms,
             'max': profile.tick_period_max_ms,
         },
+        # JVM heap occupancy sampled per tick by the profiler; the minimum is the floor
+        # left after collections, i.e. what the session retains.
+        'jvm_heap_mb': {
+            'samples': len(profile.jvm_heap_samples_mb or []),
+            'min': profile.jvm_heap_min_mb,
+            'max': profile.jvm_heap_max_mb,
+        },
+        # JVM heap occupancy sampled per tick by the profiler; the minimum is the floor
+        # left after collections, i.e. what the session retains.
+        'jvm_heap_mb': {
+            'samples': len(profile.jvm_heap_samples_mb or []),
+            'min': profile.jvm_heap_min_mb,
+            'max': profile.jvm_heap_max_mb,
+        },
+        # JVM heap occupancy sampled per tick by the profiler; the minimum is the floor
+        # left after collections, i.e. what the session retains.
+        'jvm_heap_mb': {
+            'samples': len(profile.jvm_heap_samples_mb or []),
+            'min': profile.jvm_heap_min_mb,
+            'max': profile.jvm_heap_max_mb,
+        },
         # JVM stop-the-world pauses during the capture (None when no GC log was read).
         'gc': profile.gc,
         'harness_counters_after_profile_write': counters,
@@ -355,7 +455,8 @@ def parse_archives(args):
         print(
             f'  commands per tick: {format_number(profile.commands_executed_per_tick, 0)} executed, '
             f'{format_number(profile.commands_prepared_per_tick, 0)} prepared; '
-            f'entity ticking {format_number(profile.entities_ms_per_tick, 3)} ms/tick'
+            f'entity ticking {format_number(profile.entities_ms_per_tick, 3)} ms/tick; '
+            f'heap floor {format_number(profile.jvm_heap_min_mb, 0)} MB, peak {format_number(profile.jvm_heap_max_mb, 0)} MB'
         )
         print(
             '  tick period (wall clock): '

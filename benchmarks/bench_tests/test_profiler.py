@@ -27,6 +27,7 @@ Tick span: 200 ticks
         archive = directory / 'profile.zip'
         with zipfile.ZipFile(archive, 'w') as output:
             output.writestr('server/profiling.txt', text)
+            output.writestr('server/metrics/jvm.csv', '@tick,heap MiB\n1,900.5\n2,1200.0\n3,850.25\n')
             output.writestr(
                 'server/metrics/ticking.csv',
                 '@timestamp,ticktime\n'
@@ -53,6 +54,8 @@ Tick span: 200 ticks
         self.assertAlmostEqual(profile.tick_period_median_ms, 3.0)
         self.assertAlmostEqual(profile.tick_period_p95_ms, 5.0)
         self.assertAlmostEqual(profile.tick_period_max_ms, 5.0)
+        self.assertAlmostEqual(profile.jvm_heap_min_mb, 850.25)
+        self.assertAlmostEqual(profile.jvm_heap_max_mb, 1200.0)
         self.assertAlmostEqual(profile.commands_executed_per_tick, 40.0)
         self.assertAlmostEqual(profile.commands_prepared_per_tick, 0.0)
         self.assertAlmostEqual(profile.entities_percent, 9.0)
@@ -73,6 +76,8 @@ Tick span: 200 ticks
         self.assertAlmostEqual(serialized['tick_period_ms']['median'], 3.0)
         self.assertNotIn('tick_time_ms', serialized)
         self.assertAlmostEqual(serialized['commands_per_tick']['executed'], 40.0)
+        self.assertAlmostEqual(serialized['jvm_heap_mb']['min'], 850.25)
+        self.assertEqual(serialized['jvm_heap_mb']['samples'], 3)
         self.assertAlmostEqual(serialized['entities']['by_type_ms_per_tick']['minecraft:player'], 2.7)
 
     def test_profile_wait_preserves_validated_snapshot(self):
