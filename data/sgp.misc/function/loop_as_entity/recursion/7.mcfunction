@@ -1,5 +1,8 @@
-#> sgp.misc:loop_as_entity/recursion
+#> sgp.misc:loop_as_entity/recursion/7
 # `{uuid: entity uuid, command: "run kill @s"}`
+# Shard 7 of 8 (generated; all shards are identical apart from their successor). Elements
+# 7, 15, ... of every list run through this file, so its macro cache only ever holds
+# their (uuid, command) pairs.
 
 # 1. Run the dynamic command directly as the entity!
 $execute as $(uuid) at @s $(command)
@@ -12,4 +15,4 @@ execute unless data storage sgp:data temp.loop_list[0] run return 1
 
 data modify storage sgp:data temp.run_args set from storage sgp:data temp.loop_list[0]
 data modify storage sgp:data temp.run_args.command set from storage sgp:data temp.current_command
-function sgp.misc:loop_as_entity/recursion with storage sgp:data temp.run_args
+function sgp.misc:loop_as_entity/recursion/0 with storage sgp:data temp.run_args
