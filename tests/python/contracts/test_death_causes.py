@@ -31,6 +31,10 @@ class DeathCauseContracts(unittest.TestCase):
 
         concrete_members = {}
         for name in sorted(function_ids):
+            if name == 'ray':
+                # Rays call their death-cause function directly after a successful /damage; no advancement.
+                self.assertFalse((advancements / 'ray.json').exists())
+                continue
             advancement = json.loads((advancements / f'{name}.json').read_text(encoding='utf-8'))
             self.assertEqual(advancement['rewards']['function'], f'sgp.kits:stats_collector/death_cause/{name}')
             condition = advancement['criteria']['track']['conditions']['damage']['type']['tags']

@@ -20,8 +20,11 @@ assert score FireOwner sgp.tnt_fire_cd matches 10
 
 # ray is in minecraft:bypasses_cooldown. Its smaller hit replaces lastHurt below
 # TNT fire's 2 damage, making the next fire hit immediately valid for the difference.
-damage FireOwner 1 sgp.kits:ray
-assert entity @a[name=FireOwner,nbt={Health:17.0f}]
+# Ray damage only comes from the Rays ability; go through its real hit path.
+tag @s add sgp.radiator
+execute as FireOwner at @s run function sgp.kits:abilities/rays/get_damaged
+tag @s remove sgp.radiator
+assert entity @a[name=FireOwner,nbt={Health:17.75f}]
 assert not entity @a[name=FireOwner,tag=sgp.tnt_fire_cached]
 assert score FireOwner sgp.tnt_fire_cd matches 0
 function sgp.ci:pyromane_fire/tick

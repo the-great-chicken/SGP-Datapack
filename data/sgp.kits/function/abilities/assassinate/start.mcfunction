@@ -7,6 +7,8 @@ function sgp.kits:stats_collector/ability/start {kit_id:9,ability_path:"assassin
 scoreboard players set @s sgp.damage_resisted 0
 
 tag @s add sgp.assassin
+# Mirrors the tag for the advancement prefilter: non-assassins never trigger it.
+scoreboard players set @s sgp.assassin_stance 1
 
 effect give @s minecraft:resistance infinite 4 true
 attribute @s minecraft:knockback_resistance modifier add sgp:assassinate 1 add_value

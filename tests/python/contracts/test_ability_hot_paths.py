@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -74,6 +75,22 @@ class AbilityHotPathContracts(unittest.TestCase):
         init = read("sgp.misc/function/initialization.mcfunction")
         self.assertIn("scoreboard players reset * sgp.ab.hud_sig_cached", init)
         self.assertIn("scoreboard players set 32 sgp.dummy 32", init)
+
+    def test_assassinate_advancement_is_prefiltered_by_stance_score(self):
+        advancement = json.loads(read("sgp.kits/advancement/assassinate.json"))
+        conditions = advancement["criteria"]["took_hit"]["conditions"]
+        self.assertEqual(conditions["player"], [{
+            "condition": "minecraft:entity_scores",
+            "entity": "this",
+            "scores": {"sgp.assassin_stance": {"min": 1}},
+        }])
+        self.assertEqual(conditions["damage"], {"source_entity": {}})
+        self.assertIn("scoreboard players set @s sgp.assassin_stance 1", read("sgp.kits/function/abilities/assassinate/start.mcfunction"))
+        self.assertIn("scoreboard players reset @s sgp.assassin_stance", read("sgp.kits/function/abilities/assassinate/end.mcfunction"))
+        self.assertIn("scoreboard objectives add sgp.assassin_stance dummy", read("sgp.kits/function/initialization.mcfunction"))
+        self.assertIn("scoreboard objectives remove sgp.assassin_stance", read("sgp.kits/function/uninstall.mcfunction"))
+        # The tag remains the source of truth inside the reward function.
+        self.assertIn("execute if entity @s[tag=sgp.assassin] run function", read("sgp.kits/function/abilities/assassinate/trigger_check.mcfunction"))
 
 
 if __name__ == "__main__":

@@ -8,6 +8,9 @@ execute positioned ~-16.5 ~0.1 ~-16.5 \
         at @s run return run function sgp.kits:abilities/rays/tick_linked_children_block_only
 
 
+# Resolve the attacker-side statistics context once; every hit below has this caster as its source.
+function sgp.kits:stats_collector/ability/ray_caster_context
+
 execute positioned ~-16.5 ~0.1 ~-16.5 \
     run tag @a[tag=!sgp.radiator,tag=!sgp.peaceful,gamemode=!spectator,dx=32,dy=0,dz=32] add sgp.ray_target
 

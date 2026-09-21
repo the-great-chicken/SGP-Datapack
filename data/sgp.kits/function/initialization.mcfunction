@@ -52,6 +52,7 @@ scoreboard objectives add sgp.bat_arm_at dummy
 scoreboard objectives add sgp.ability_kind dummy
 scoreboard objectives add sgp.ability_success dummy
 scoreboard objectives add sgp.last_ability_cast dummy
+scoreboard objectives add sgp.assassin_stance dummy
 scoreboard objectives add sgp.ability_result_window dummy
 scoreboard objectives add sgp.peck_lock_ticks dummy
 

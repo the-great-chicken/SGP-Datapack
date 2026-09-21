@@ -51,6 +51,7 @@ scoreboard objectives remove sgp.bat_arm_at
 scoreboard objectives remove sgp.ability_kind
 scoreboard objectives remove sgp.ability_success
 scoreboard objectives remove sgp.last_ability_cast
+scoreboard objectives remove sgp.assassin_stance
 scoreboard objectives remove sgp.ability_result_window
 scoreboard objectives remove sgp.peck_lock_ticks
 
