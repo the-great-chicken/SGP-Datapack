@@ -266,6 +266,8 @@ def profile_to_dict(profile: ParsedProfile, counters: dict) -> dict:
             'p99': profile.tick_period_p99_ms,
             'max': profile.tick_period_max_ms,
         },
+        # JVM stop-the-world pauses during the capture (None when no GC log was read).
+        'gc': profile.gc,
         'harness_counters_after_profile_write': counters,
         'command_function_entries': [
             {

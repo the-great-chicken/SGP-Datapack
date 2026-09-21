@@ -44,6 +44,9 @@ class ParsedProfile:
     # `nextTickWait` at depth 0 of the profiler dump.
     tick_percent: float | None = None
     next_tick_wait_percent: float | None = None
+    # JVM stop-the-world pauses during the capture (gc_log.summarize_gc); the
+    # runner fills it in, archives parsed on their own have none.
+    gc: dict | None = None
 
     @property
     def effective_tps(self) -> float | None:
@@ -85,6 +88,18 @@ class ParsedProfile:
     @property
     def tick_period_max_ms(self) -> float | None:
         return max(self.tick_periods_ms) if self.tick_periods_ms else None
+
+    @property
+    def gc_ms_per_tick(self) -> float | None:
+        return (self.gc or {}).get('ms_per_tick')
+
+    @property
+    def gc_heap_after_mb(self) -> float | None:
+        return (self.gc or {}).get('heap_after_mb')
+
+    @property
+    def gc_heap_capacity_mb(self) -> float | None:
+        return (self.gc or {}).get('heap_capacity_mb')
 
 
 @dataclass

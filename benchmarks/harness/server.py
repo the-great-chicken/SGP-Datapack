@@ -10,11 +10,17 @@ import time
 
 from .errors import BenchmarkError, BenchmarkInvalidError, CommandLimitError
 
+# Written by the JVM in the server directory (relative: a drive letter would clash
+# with -Xlog's option separator) and parsed per run by gc_log.py.
+GC_LOG_NAME = 'gc.log'
+
+
 class ServerProcess:
     def __init__(self, server: Path, java: str, heap: str):
         self.server = server
         self.java = java
         self.heap = heap
+        self.gc_log = server / GC_LOG_NAME
         self.process: subprocess.Popen[str] | None = None
         self.lines: list[str] = []
         self._condition = threading.Condition()
@@ -48,7 +54,18 @@ class ServerProcess:
     def start(self, timeout: float = 120.0):
         if not (self.server / 'server.jar').is_file():
             raise BenchmarkError(f'Missing {self.server / "server.jar"}; prepare the server first')
-        command = [self.java, f'-Xms{self.heap}', f'-Xmx{self.heap}', '-jar', 'server.jar', 'nogui']
+        command = [
+            self.java, f'-Xms{self.heap}', f'-Xmx{self.heap}',
+            # GC pauses stall the server thread inside whatever /perf section was
+            # running; the log lets every run report them (gc_log.py).
+            f'-Xlog:gc:file={GC_LOG_NAME}:time,uptime:filecount=0',
+            '-jar', 'server.jar', 'nogui',
+        ]
+        for stale in self.server.glob(f'{GC_LOG_NAME}*'):
+            try:
+                stale.unlink()
+            except OSError:
+                pass
         self._log = (self.server / 'benchmark-console.log').open('w', encoding='utf-8')
         try:
             self.process = subprocess.Popen(

@@ -221,6 +221,20 @@ def compare_results(args):
         f'| `commandFunctions` global % | {format_number(before_cf)}% | {format_number(after_cf)}% | '
         f'{format_number(cf_delta, 3)} pp ({relative_change(before_cf, after_cf)}) |'
     )
+    before_gc = nested_numeric_median(before_runs, 'gc', 'ms_per_tick')
+    after_gc = nested_numeric_median(after_runs, 'gc', 'ms_per_tick')
+    if before_gc is not None or after_gc is not None:
+        lines.append(
+            f'| GC pauses ms/tick | {format_number(before_gc, 3)} ms | {format_number(after_gc, 3)} ms | '
+            f'{relative_change(before_gc, after_gc)} |'
+        )
+    before_heap = nested_numeric_median(before_runs, 'gc', 'heap_after_mb')
+    after_heap = nested_numeric_median(after_runs, 'gc', 'heap_after_mb')
+    if before_heap is not None or after_heap is not None:
+        lines.append(
+            f'| Heap live after GC | {format_number(before_heap, 0)} MB | {format_number(after_heap, 0)} MB | '
+            f'{relative_change(before_heap, after_heap)} |'
+        )
     lines.append(
         f'| Effective TPS | {format_number(before_tps)} | {format_number(after_tps)} | '
         f'{relative_change(before_tps, after_tps)} |'

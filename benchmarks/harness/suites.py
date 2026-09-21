@@ -132,6 +132,7 @@ def result_summary_metrics(result_dir: Path) -> dict:
         'mean_mspt_ms': numeric_median(runs, 'mean_mspt_ms'),
         'command_functions_percent': numeric_median(runs, 'command_functions_percent'),
         'command_functions_ms_per_tick': numeric_median(runs, 'command_functions_ms_per_tick'),
+        'gc_ms_per_tick': nested_numeric_median(runs, 'gc', 'ms_per_tick'),
         'tick_period_p95_ms': nested_numeric_median(runs, 'tick_period_ms', 'p95'),
         'command_limit': metadata.get('command_limit'),
         'command_limit_mode': metadata.get('command_limit_mode'),
@@ -146,8 +147,8 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
         suite['description'],
         '',
         '| # | Scenario | Players | Parameters | Runs | Command limit | Mean MSPT | commandFunctions | '
-        'commandFunctions ms/tick | Tick period p95 | Workload counters | Status | Result |',
-        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |',
+        'commandFunctions ms/tick | GC pauses ms/tick | Tick period p95 | Workload counters | Status | Result |',
+        '| ---: | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |',
     ]
     for record in records:
         metrics = record.get('metrics', {})
@@ -166,6 +167,7 @@ def write_suite_summary(suite_dir: Path, suite: dict, records: list[dict]):
             f'{format_number(metrics.get("mean_mspt_ms"), 3)} ms | '
             f'{format_number(metrics.get("command_functions_percent"))}% | '
             f'{format_number(metrics.get("command_functions_ms_per_tick"), 3)} ms | '
+            f'{format_number(metrics.get("gc_ms_per_tick"), 3)} ms | '
             f'{format_number(metrics.get("tick_period_p95_ms"), 3)} ms | {counter_text} | {status} | {result_text} |'
         )
     lines.append('')

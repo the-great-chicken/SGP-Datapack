@@ -11,6 +11,11 @@ import argparse
 import importlib.util
 import sys
 
+if hasattr(sys.stdout, 'reconfigure'):
+    # Windows consoles and redirected pipes default to a legacy code page that
+    # cannot encode the Δ and – used by the reports.
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -36,6 +41,7 @@ from benchmarks.harness.comparison import (
 )
 from benchmarks.harness.diagnostics import copy_if_file, mark_success, write_failure_bundle
 from benchmarks.harness.errors import BenchmarkError, BenchmarkInvalidError, CommandLimitError
+from benchmarks.harness.gc_log import GcPause, parse_gc_log, summarize_gc
 from benchmarks.harness.models import ParsedProfile, PlanComponent, ProfileEntry, percentile
 from benchmarks.harness.profiler import (
     FUNCTION_CALL,

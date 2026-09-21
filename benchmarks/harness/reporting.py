@@ -13,6 +13,10 @@ from .profiler import benchmark_source_files, build_source_index, format_number,
 from .runtime import plan_total_players
 from .settings import BENCHMARKS, DEFAULT_COMMAND_LIMIT, ROOT
 
+def _megabytes(value: float | None) -> str:
+    return 'n/a' if value is None else f'{value:.0f} MB'
+
+
 def command_limit_summary(command_limit: int, calibration: dict | None) -> str:
     if not calibration:
         return f'- Command sequence limit: {command_limit} (explicit)'
@@ -43,8 +47,15 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         command_limit_summary(command_limit, command_limit_calibration),
         '- Profiler: vanilla dedicated-server `/perf`',
         f'- Source: {describe_source(metadata)}',
-        '',
     ]
+    restarts = (metadata or {}).get('jvm_restarts_before_runs') or []
+    if restarts:
+        lines.append(
+            f'- JVM restarted before run(s) {", ".join(str(run) for run in restarts)}: more than half the heap '
+            'was still live after the previous run (PackTest dummies never drain their packets), so each of '
+            'those runs starts on a fresh heap.'
+        )
+    lines.append('')
     if plan:
         lines += ['## Workload plan', '']
         for component in plan:
@@ -56,14 +67,16 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
         lines += ['', '## Runs',
         '',
         '| Run | Profile ticks | Mean MSPT | commandFunctions | commandFunctions ms/tick | '
+        'GC pauses ms/tick | Heap after GC | '
         'Tick period median | Tick period p95 | Tick period max | Driver ticks |',
-        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
+        '| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |',
     ]
     for i, (profile, count) in enumerate(zip(profiles, counters), 1):
         lines.append(
             f'| {i} | {format_number(profile.tick_span)} | {format_number(profile.mean_mspt_ms)} ms | '
             f'{format_number(profile.command_functions_percent)}% | '
             f'{format_number(profile.command_functions_ms_per_tick)} ms | '
+            f'{format_number(profile.gc_ms_per_tick, 3)} ms | {_megabytes(profile.gc_heap_after_mb)} | '
             f'{format_number(profile.tick_period_median_ms)} ms | {format_number(profile.tick_period_p95_ms)} ms | '
             f'{format_number(profile.tick_period_max_ms)} ms | {format_number(count.get("ticks"))} |'
         )
@@ -75,6 +88,8 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
     period_medians = [p.tick_period_median_ms for p in profiles if p.tick_period_median_ms is not None]
     period_p95s = [p.tick_period_p95_ms for p in profiles if p.tick_period_p95_ms is not None]
     period_maxes = [p.tick_period_max_ms for p in profiles if p.tick_period_max_ms is not None]
+    gc_values = [p.gc_ms_per_tick for p in profiles if p.gc_ms_per_tick is not None]
+    heap_values = [p.gc_heap_after_mb for p in profiles if p.gc_heap_after_mb is not None]
     if mspt_values or command_values or tps_values or period_medians or period_p95s or period_maxes:
         lines += ['', '## Aggregate', '']
         if mspt_values:
@@ -109,6 +124,20 @@ def write_summary(result_dir: Path, scenario: dict, params: dict[str, int], warm
             lines.append(
                 f'- Median run maximum tick period: **{median(period_maxes):.3f} ms** '
                 f'(range {min(period_maxes):.3f}–{max(period_maxes):.3f} ms).'
+            )
+        if gc_values:
+            lines.append(
+                f'- Median GC pause time: **{median(gc_values):.3f} ms/tick** '
+                f'(range {min(gc_values):.3f}–{max(gc_values):.3f} ms/tick). JVM stop-the-world pauses '
+                'during the capture; `/perf` attributes them to whatever section was running.'
+            )
+        if heap_values:
+            capacity = next((p.gc_heap_capacity_mb for p in profiles if p.gc_heap_capacity_mb), None)
+            capacity_text = f' of {capacity:.0f} MB' if capacity else ''
+            lines.append(
+                f'- Heap live after GC, per run: {", ".join(f"{value:.0f}" for value in heap_values)} MB'
+                f'{capacity_text}. Growth across runs means the session retains memory (PackTest '
+                'dummies never drain their packets) and later runs are GC-bound.'
             )
 
     workload_names = sorted({

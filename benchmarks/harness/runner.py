@@ -7,6 +7,7 @@ import sys
 
 from .diagnostics import copy_if_file, mark_success, write_failure_bundle
 from .errors import BenchmarkError, BenchmarkInvalidError
+from .gc_log import parse_gc_log, summarize_gc
 from .models import ParsedProfile
 from .profiler import format_number, parse_profile, profile_to_dict, wait_for_new_profile
 from .reporting import git_commit, git_dirty, source_fingerprint, write_summary
@@ -19,6 +20,34 @@ from .settings import CONFIG, INVALID_MARKER, SERVER_MARKER
 from .staging import prepare_server
 from .validators import (run_live_validators, run_profile_validators,
                          validators_for_plan, wait_measurement_validators)
+
+# PackTest dummy players never drain the packets sent to them, so a heavy scenario
+# keeps most of what it allocated alive for the whole session. Above this share of
+# the heap the next run would start GC-bound, so the JVM is restarted first.
+RETAINED_HEAP_RESTART_FRACTION = 0.5
+
+
+def _heap_retained(profile: ParsedProfile) -> bool:
+    heap_after, capacity = profile.gc_heap_after_mb, profile.gc_heap_capacity_mb
+    return bool(heap_after and capacity and heap_after > RETAINED_HEAP_RESTART_FRACTION * capacity)
+
+
+def _boot_server(server: ServerProcess, args, set_phase) -> None:
+    """Start the JVM, pin the command limit and (re)build the fixture; also used mid-session."""
+    set_phase('starting Minecraft server')
+    print('Starting Minecraft server ...')
+    server.start(timeout=args.startup_timeout)
+
+    set_phase('setting benchmark command limit')
+    server.send(f'gamerule minecraft:max_command_sequence_length {args.command_limit}')
+    server.send('execute store result score #command_limit sgp.bench run gamerule minecraft:max_command_sequence_length')
+    server.require_score('#command_limit', args.command_limit)
+
+    set_phase('creating benchmark fixture')
+    print('Server ready; creating benchmark fixture.')
+    server.send('function sgp.bench:fixture/setup')
+    server.require_score('#fixture_ready', 1)
+
 
 def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure: bool = True):
     scenarios = load_scenarios()
@@ -65,6 +94,11 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
     profiles: list[ParsedProfile] = []
     counters: list[dict] = []
     phase = 'preparing benchmark server'
+
+    def set_phase(value: str) -> None:
+        nonlocal phase
+        phase = value
+
     try:
         if not args.reuse_server:
             prepare_server(server_dir, cache_dir)
@@ -78,19 +112,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
         compile_active_plan(server_dir, plan)
 
         server = ServerProcess(server_dir, args.java, args.heap)
-        phase = 'starting Minecraft server'
-        print('Starting Minecraft server ...')
-        server.start(timeout=args.startup_timeout)
-
-        phase = 'setting benchmark command limit'
-        server.send(f'gamerule minecraft:max_command_sequence_length {args.command_limit}')
-        server.send('execute store result score #command_limit sgp.bench run gamerule minecraft:max_command_sequence_length')
-        server.require_score('#command_limit', args.command_limit)
-
-        phase = 'creating benchmark fixture'
-        print('Server ready; creating benchmark fixture.')
-        server.send('function sgp.bench:fixture/setup')
-        server.require_score('#fixture_ready', 1)
+        _boot_server(server, args, set_phase)
 
         for run_number in range(1, args.runs + 1):
             phase = f'run {run_number}/{args.runs} setup'
@@ -125,6 +147,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             profile_dir = server_dir / 'debug/profiling'
             previous = {path.resolve() for path in profile_dir.glob('*.zip')} if profile_dir.is_dir() else set()
             print(f'Run {run_number}/{args.runs}: /perf')
+            perf_started_at = datetime.now().astimezone()
             server.send('perf start')
             # Preserve the raw profile as part of the wait itself. Minecraft writes
             # profiling archives asynchronously and, on Windows, a just-validated
@@ -133,6 +156,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             wait_for_new_profile(
                 server_dir, previous, server, timeout=args.profile_timeout, destination=destination
             )
+            perf_ended_at = datetime.now().astimezone()
             server.send('scoreboard players set #enabled sgp.bench 0')
 
             server.send('execute store result score #actual_players sgp.bench if entity @a[tag=sgp.bench.actor]')
@@ -153,6 +177,7 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
 
             phase = f'run {run_number}/{args.runs} parsing profile'
             parsed = parse_profile(destination)
+            parsed.gc = summarize_gc(parse_gc_log(server.gc_log), perf_started_at, perf_ended_at, parsed.tick_span)
             run_data = profile_to_dict(parsed, count)
             (result_dir / f'run-{run_number:02d}.json').write_text(
                 json.dumps(run_data, indent=2) + '\n', encoding='utf-8'
@@ -171,7 +196,9 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
                 f'mean MSPT={format_number(parsed.mean_mspt_ms, 3)} ms, '
                 f'commandFunctions={format_number(parsed.command_functions_percent)}% '
                 f'({format_number(parsed.command_functions_ms_per_tick, 3)} ms/tick), '
-                f'tick period median={format_number(parsed.tick_period_median_ms, 3)} ms'
+                f'tick period median={format_number(parsed.tick_period_median_ms, 3)} ms, '
+                f'GC pauses={parsed.gc["pauses"]} ({format_number(parsed.gc_ms_per_tick, 3)} ms/tick), '
+                f'heap after GC={format_number(parsed.gc_heap_after_mb, 0)} MB'
             )
 
             phase = f'run {run_number}/{args.runs} teardown'
@@ -180,6 +207,18 @@ def _run_benchmark_once(args, *, announce_result: bool = True, announce_failure:
             server.require_score('#plan_ready', 0)
             server.require_score('#players', 0)
             run_live_validators(server, plan, validators=validators, after_reset=True)
+
+            if run_number < args.runs and _heap_retained(parsed):
+                print(
+                    f'Run {run_number}/{args.runs}: {parsed.gc_heap_after_mb:.0f} MB of the '
+                    f'{parsed.gc_heap_capacity_mb:.0f} MB heap is still live after GC; restarting the JVM so '
+                    f'run {run_number + 1} does not start GC-bound (PackTest dummies never drain their packets).'
+                )
+                phase = f'run {run_number}/{args.runs} JVM restart'
+                server.stop()
+                _boot_server(server, args, set_phase)
+                metadata.setdefault('jvm_restarts_before_runs', []).append(run_number + 1)
+                (result_dir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
 
         if not profiles:
             raise BenchmarkError('No profiles were captured')
