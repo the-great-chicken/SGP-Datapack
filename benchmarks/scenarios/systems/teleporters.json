@@ -1,0 +1,29 @@
+{
+  "name": "teleporters",
+  "description": "Production `teleporter` markers registered exactly as sgp.world:initialization does, so minecraft:execute_repeating_functions drives the real per-tick teleporter loop (particles, countdown, arrival). `markers` scales the registry (macro-cache knee); `standing` actors stand on pads whose destination is the pad itself, so they cycle through the 3-second countdown and arrival forever; the other pads contain nobody, like most of a real map's teleporters at any instant.",
+  "setup": "sgp.bench:scenarios/systems/teleporters/setup",
+  "tick": "sgp.bench:scenarios/systems/teleporters/tick",
+  "teardown": "sgp.bench:scenarios/systems/teleporters/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 1
+    },
+    "markers": {
+      "type": "int",
+      "min": 0,
+      "max": 64,
+      "default": 16
+    },
+    "standing": {
+      "type": "int",
+      "min": 0,
+      "max": 4,
+      "default": 0
+    }
+  },
+  "counters": {
+    "marker_ticks": "#teleporters_marker_ticks",
+    "waiting_player_ticks": "#teleporters_waiting_ticks"
+  }
+}
