@@ -1,0 +1,17 @@
+{
+  "name": "major_protect",
+  "description": "The protect-the-king major event started through sgp.majeurs:protect/_start with every actor split into the two teams, both kings forced through protect/select_king so the running phase is active: per tick the king particles and the team aura within 5 blocks of each king, the king-death and team-elimination checks, and sgp.majeurs:tick.",
+  "setup": "sgp.bench:scenarios/events/major_protect/setup",
+  "tick": "sgp.bench:scenarios/events/major_protect/tick",
+  "teardown": "sgp.bench:scenarios/events/major_protect/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    }
+  },
+  "counters": {
+    "participant_ticks": "#protect_participant_ticks",
+    "stopped_ticks": "#protect_stopped_ticks"
+  }
+}

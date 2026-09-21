@@ -1,0 +1,30 @@
+{
+  "name": "deaths",
+  "description": "Kit players (the kits_idle roster) killed by another player every `period` ticks, `victims` at a time, through a real player_attack damage so the whole death path runs: vanilla death counters, the death-cause advancement, stats collection and kill attribution, elo, kill_streak rewards, cosmetics death effects, cleanup_after_death and the diorama owner cleanup. The dead actor respawns on the next tick (PackTest respawn), is put back on its grid slot and re-equips its kit like a player leaving the lobby.",
+  "setup": "sgp.bench:scenarios/systems/deaths/setup",
+  "tick": "sgp.bench:scenarios/systems/deaths/tick",
+  "teardown": "sgp.bench:scenarios/systems/deaths/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    },
+    "period": {
+      "type": "int",
+      "min": 1,
+      "max": 400,
+      "default": 20
+    },
+    "victims": {
+      "type": "int",
+      "min": 1,
+      "max": 8,
+      "default": 2
+    }
+  },
+  "counters": {
+    "kills": "#deaths_kills",
+    "respawns": "#deaths_respawns",
+    "waves": "#deaths_waves"
+  }
+}
