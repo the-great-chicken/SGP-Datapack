@@ -8,7 +8,7 @@ class SuiteTests(unittest.TestCase):
         scenarios = bench.load_scenarios()
         cases = bench.expand_suite_cases(suite, scenarios)
         expected = {name for name in scenarios if name.startswith('ability_')}
-        self.assertEqual(len(cases), 19)
+        self.assertEqual(len(cases), 20)
         self.assertEqual({case['scenario'] for case in cases}, expected)
         self.assertTrue(all(case['players'] == 40 for case in cases))
 

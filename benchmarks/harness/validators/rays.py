@@ -6,7 +6,7 @@ from ..errors import BenchmarkError, BenchmarkInvalidError
 from ..runtime import actor_name
 from ..server import ServerProcess
 
-RAY_SCENARIOS = {'ability_rays', 'ability_rays_dense'}
+RAY_SCENARIOS = {'ability_rays', 'ability_rays_dense', 'ability_rays_moving'}
 DENSE_RAY_SCENARIO = 'ability_rays_dense'
 RAY_DAMAGE_COMMAND = 'damage @s 0.25 sgp.kits:ray'
 

@@ -51,6 +51,10 @@
       "players": 40
     },
     {
+      "scenario": "ability_rays_moving",
+      "players": 40
+    },
+    {
       "scenario": "ability_smoke_grenade",
       "players": 40
     },

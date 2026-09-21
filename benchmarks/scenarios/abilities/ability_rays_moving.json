@@ -1,0 +1,20 @@
+{
+  "name": "ability_rays_moving",
+  "description": "Roi players keep Rays active in isolated cells while walking in different directions every tick, so each caster's predicted beam displacement differs like in a real game (macro cache misses that stationary scenarios hide).",
+  "validators": [
+    "rays"
+  ],
+  "setup": "sgp.bench:scenarios/abilities/rays_moving/setup",
+  "tick": "sgp.bench:scenarios/abilities/rays_moving/tick",
+  "teardown": "sgp.bench:scenarios/abilities/rays_moving/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0,
+      "max": 80
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#rays_moving_player_ticks"
+  }
+}
