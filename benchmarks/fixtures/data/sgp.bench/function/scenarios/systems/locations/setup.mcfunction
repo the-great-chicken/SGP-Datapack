@@ -30,8 +30,7 @@ function sgp.bench:scenarios/systems/locations/spawn_loop
 
 # Production registration (sgp.world:initialization), byte for byte.
 data remove storage sgp:data markers_lists.location
-execute as @e[tag=sgp.marker,name="lieu",type=marker] \
-    run function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data markers_lists.location"}
+execute as @e[tag=sgp.marker,name="lieu",type=marker] run function sgp.world:lieu/register
 
 # Production per-player bootstrap (sgp.misc:scoreboards/player_initialization, lieu part):
 # without a sgp.lieu_<name> row a player is invisible to lieu/main.

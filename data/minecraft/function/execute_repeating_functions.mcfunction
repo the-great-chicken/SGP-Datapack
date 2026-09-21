@@ -86,7 +86,7 @@ function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.loo
 scoreboard players set @a sgp.ab.location 0
 scoreboard players set @a sgp.ab.location_width 0
 
-function sgp.misc:loop_as_entity/init {list_location:"sgp:data markers_lists.location", command:"run function sgp.world:lieu/lieu_trouve with entity @s data"}
+function sgp.world:lieu/tick
 
 function #sgp.hooks:tab/tick
 

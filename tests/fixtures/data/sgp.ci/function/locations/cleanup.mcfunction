@@ -20,4 +20,5 @@ kill @e[tag=sgp.test.location_overlap,type=marker]
 kill @e[tag=sgp.test.location_bounds,type=marker]
 kill @e[tag=sgp.test.location_players,type=marker]
 data remove storage sgp.ci:locations player_isolation
+execute if data storage sgp.ci:locations previous_registry run function sgp.ci:locations/cleanup_loop
 function sgp.ci:players/cleanup
