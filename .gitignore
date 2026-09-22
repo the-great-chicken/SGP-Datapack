@@ -5,3 +5,6 @@
 __pycache__
 /stats_analysis/edition-*.json
 /.packtest-server/
+/.packtest-bench-server/
+/.bench-cache/
+/benchmarks/results/

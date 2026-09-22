@@ -1,0 +1,23 @@
+{
+  "name": "ability_bigger",
+  "description": "Tank players repeatedly execute Bigger start and normal production end, measuring attribute modifier application/removal instead of the nearly-free sustained state.",
+  "setup": "sgp.bench:scenarios/abilities/bigger/setup",
+  "tick": "sgp.bench:scenarios/abilities/bigger/tick",
+  "teardown": "sgp.bench:scenarios/abilities/bigger/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    },
+    "period": {
+      "type": "int",
+      "min": 3,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "lifecycles": "#bigger_lifecycles",
+    "waves": "#bigger_waves"
+  }
+}

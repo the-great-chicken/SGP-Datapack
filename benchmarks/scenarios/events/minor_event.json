@@ -1,0 +1,23 @@
+{
+  "name": "minor_event",
+  "description": "One minor event started directly (the random scheduler stays off) on the kits_idle roster: 1 lootdrop (four Lootdrop markers registered, two chests summoned, actors within 12 blocks, two actors share an item every 2 s; the open-chest close detection is not simulated because dummies cannot open containers), 2 confinement (damage phase forced: 14 block checks per player every second, unprotected title and starve damage, actors healed), 3 reflexes (nobody clicks, one sound per player per tick, restarted every 90 ticks), 4 frenzy (start/stop every 60 ticks: the SNBT cooldown walker), 5 magic (a health-boost roll applied to everyone every 60 ticks), 6 bounty (six wanted players, timed event running), 7 swap (the twelve kit-selection interactions provided, every kit unlocked, a random kit given to every player every 100 ticks: a one-tick burst). The per-second experience timer of timed events is included where the event uses it.",
+  "setup": "sgp.bench:scenarios/events/minor_event/setup",
+  "tick": "sgp.bench:scenarios/events/minor_event/tick",
+  "teardown": "sgp.bench:scenarios/events/minor_event/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    },
+    "event": {
+      "type": "int",
+      "min": 1,
+      "max": 7,
+      "default": 1
+    }
+  },
+  "counters": {
+    "event_ticks": "#minor_event_ticks",
+    "actions": "#minor_actions"
+  }
+}

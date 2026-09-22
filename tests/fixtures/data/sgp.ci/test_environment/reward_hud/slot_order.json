@@ -1,1 +1,0 @@
-{"type": "minecraft:function", "setup": "sgp.ci:reward_hud/setup", "teardown": "sgp.ci:reward_hud/cleanup"}

@@ -30,6 +30,8 @@ scoreboard objectives add sgp.old_z dummy
 scoreboard objectives add sgp.dx dummy
 scoreboard objectives add sgp.dy dummy
 scoreboard objectives add sgp.dz dummy
+scoreboard objectives add sgp.ray_anim dummy
+scoreboard objectives add sgp.illusion_pose dummy
 
 scoreboard objectives add sgp.kills_give_1 playerKillCount
 scoreboard objectives add sgp.kills_give_2 playerKillCount
@@ -43,11 +45,14 @@ scoreboard objectives add sgp.last_kill_count playerKillCount
 scoreboard objectives add sgp.death_cause dummy
 scoreboard objectives add sgp.damage_taken minecraft.custom:minecraft.damage_taken
 scoreboard objectives add sgp.damage_owner dummy
+scoreboard objectives add sgp.tnt_fire_cd dummy
 scoreboard objectives add sgp.damage_resisted minecraft.custom:minecraft.damage_resisted
 scoreboard objectives add sgp.ability_cast dummy
+scoreboard objectives add sgp.bat_arm_at dummy
 scoreboard objectives add sgp.ability_kind dummy
 scoreboard objectives add sgp.ability_success dummy
 scoreboard objectives add sgp.last_ability_cast dummy
+scoreboard objectives add sgp.assassin_stance dummy
 scoreboard objectives add sgp.ability_result_window dummy
 scoreboard objectives add sgp.peck_lock_ticks dummy
 
@@ -59,6 +64,9 @@ scoreboard objectives add sgp.elo_deaths_seen dummy
 scoreboard objectives add sgp.leave_game minecraft.custom:minecraft.leave_game
 scoreboard objectives add sgp.leave_seen dummy
 
+
+
+tag @a remove sgp.tnt_fire_cached
 
 
 # ---------- Create Teams ----------

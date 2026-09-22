@@ -1,0 +1,54 @@
+{
+  "name": "abilities_4_per_kit",
+  "description": "Forty-eight players total: four players on each of the twelve ability-bearing kits, using a high-load representative workload for that kit concurrently.",
+  "components": [
+    {
+      "scenario": "ability_pecking",
+      "players": 4
+    },
+    {
+      "scenario": "ability_cleave",
+      "players": 4
+    },
+    {
+      "scenario": "ability_repulsion",
+      "players": 4
+    },
+    {
+      "scenario": "ability_fangs_rough_terrain",
+      "players": 4
+    },
+    {
+      "scenario": "ability_tnt_batting",
+      "players": 4
+    },
+    {
+      "scenario": "ability_bigger",
+      "players": 4
+    },
+    {
+      "scenario": "ability_rays_dense",
+      "players": 4
+    },
+    {
+      "scenario": "ability_smoke_grenade",
+      "players": 4
+    },
+    {
+      "scenario": "ability_illusions",
+      "players": 4
+    },
+    {
+      "scenario": "ability_assassinate_triggered",
+      "players": 4
+    },
+    {
+      "scenario": "ability_bats_detonating",
+      "players": 4
+    },
+    {
+      "scenario": "ability_water_trident",
+      "players": 4
+    }
+  ]
+}

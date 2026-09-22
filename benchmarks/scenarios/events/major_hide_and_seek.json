@@ -1,0 +1,25 @@
+{
+  "name": "major_hide_and_seek",
+  "description": "The hide-and-seek major event started through sgp.majeurs:hide_and_seek/_start with every actor participating (about one seeker per ten players, hider groups of four or five), measured during the 60-second hiding phase: the per-second hider actionbar segment through the Actionbar Mixer, the seeker countdown title, the per-second experience timer for everyone, and sgp.majeurs:tick each tick. `restart` > 0 stops and starts the event again every that many ticks, so the round-end and round-start bursts land inside the profiling window.",
+  "setup": "sgp.bench:scenarios/events/major_hide_and_seek/setup",
+  "tick": "sgp.bench:scenarios/events/major_hide_and_seek/tick",
+  "teardown": "sgp.bench:scenarios/events/major_hide_and_seek/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    },
+    "restart": {
+      "type": "int",
+      "min": 0,
+      "max": 400,
+      "default": 0
+    }
+  },
+  "counters": {
+    "hider_ticks": "#hns_hider_ticks",
+    "seeker_ticks": "#hns_seeker_ticks",
+    "stopped_ticks": "#hns_stopped_ticks",
+    "restarts": "#hns_restarts"
+  }
+}

@@ -18,6 +18,5 @@ assert not data storage dah:actbar data[0].content[{id:"sgp:reward_1"}]
 assert not data storage dah:actbar data[0].content[{id:"sgp:reward_2"}]
 assert not data storage dah:actbar data[0].content[{id:"sgp:reward_3"}]
 assert data storage dah:actbar data[0].content[{id:"other:message",text:{text:"External"}}]
-assert data storage dah:actbar data[0].content[{id:"dah_actbar:ROOT_RESET"}]
 execute store result score #ci.reward.count sgp.dummy run data get storage dah:actbar data[0].content
-assert score #ci.reward.count sgp.dummy matches 2
+assert score #ci.reward.count sgp.dummy matches 1

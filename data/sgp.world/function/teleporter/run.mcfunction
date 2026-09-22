@@ -13,4 +13,6 @@ execute as @a[distance=..1,tag=!sgp.to_teleport] run function sgp.world:teleport
 
 execute as @a[tag=sgp.to_teleport,distance=..1] if score @s sgp.teleport_source = #teleport_source sgp.dummy run scoreboard players add @s sgp.teleporteur 1
 
-function sgp.world:teleporter/teleported with entity @s data
+# The arrival macro re-parses per teleporter (one argument set each) and reads the marker's
+# NBT; only enter it when someone on this pad has actually reached the end of the countdown.
+execute if entity @a[tag=sgp.to_teleport,distance=..1,scores={sgp.teleporteur=60}] run function sgp.world:teleporter/teleported with entity @s data

@@ -10,5 +10,7 @@ scoreboard players add #next_ability_cast sgp.dummy 1
 scoreboard players operation @s sgp.ability_cast = #next_ability_cast sgp.dummy
 $scoreboard players set @s sgp.ability_kind $(kit_id)
 scoreboard players set @s sgp.ability_success 0
+execute store result storage sgp:macro stats.affected.id int 1 run scoreboard players get @s sgp.id
+function sgp.kits:stats_collector/ability/clear_affected with storage sgp:macro stats.affected
 
 $function sgp.kits:stats_collector/ability/increment {kit_id:$(kit_id),ability_path:"$(ability_path)",metric:"uses",amount:1}

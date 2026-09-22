@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/creation
 # @dummy
-# @environment sgp.ci:pyromane_fire
+# @environment sgp.ci:pyromane_fire/creation
 #
 # Detonation creates a full-duration fire carrying the projectile's owner and removes its interaction target.
 

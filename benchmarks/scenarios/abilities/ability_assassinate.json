@@ -1,0 +1,16 @@
+{
+  "name": "ability_assassinate",
+  "description": "Enderman players: keeps Assassinate active continuously, exercising its defensive state and per-tick visual work.",
+  "setup": "sgp.bench:scenarios/abilities/assassinate/setup",
+  "tick": "sgp.bench:scenarios/abilities/assassinate/tick",
+  "teardown": "sgp.bench:scenarios/abilities/assassinate/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#assassinate_player_ticks"
+  }
+}

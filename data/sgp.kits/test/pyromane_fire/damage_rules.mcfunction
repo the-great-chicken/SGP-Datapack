@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/damage_rules
 # @dummy
-# @environment sgp.ci:pyromane_fire/damage
+# @environment sgp.ci:pyromane_fire/damage_rules
 #
 # Fire respects range and participation, attributes damage, and remains dangerous after its owner leaves.
 

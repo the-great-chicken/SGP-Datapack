@@ -33,6 +33,7 @@ scoreboard players reset * sgp.last_kill_count
 scoreboard players reset * sgp.death_cause
 scoreboard players reset * sgp.damage_taken
 scoreboard players reset * sgp.damage_owner
+scoreboard players reset * sgp.tnt_fire_cd
 scoreboard players reset * sgp.damage_resisted
 scoreboard players reset * sgp.ability_cast
 scoreboard players reset * sgp.ability_kind
@@ -84,6 +85,7 @@ tag @a remove sgp.ability_damage_target
 tag @a remove sgp.stats_pecking_active
 tag @a remove sgp.stats_tank_boost_active
 tag @a remove sgp.current_damage_owner
+tag @a remove sgp.tnt_fire_cached
 tag @a remove sgp.elo_victim
 tag @a remove sgp.elo_touched
 

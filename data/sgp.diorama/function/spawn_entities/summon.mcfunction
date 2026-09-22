@@ -1,7 +1,7 @@
 #> sgp.diorama:spawn_entities/summon
 # `{id: int}`
 
-data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper"], response:true, width:0.14f, height:0.14f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
+$data merge entity @s {Tags:["sgp.interaction","sgp.spawn_tper","sgp.spawn_tper_$(id)"], response:true, width:0.14f, height:0.14f, data:{function:"sgp.misc:interactions/tp_to_spawn"}}
 scoreboard players set @s sgp.hover_time 0
 $function sgp.misc:uuid_array_to_string/init {list_location:"sgp:data misc.diorama.spawn_interactions.id_$(id)"}
 

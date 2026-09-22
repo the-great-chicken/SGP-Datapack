@@ -10,16 +10,19 @@ summon tnt ~ ~0.5 ~ {fuse:40, explosion_power:2.5f, Tags:["sgp.tnt", "sgp.new"]}
 
 # Native TNT ownership makes the explosion's causing entity the caster.
 # The checks are just to avoid accidents in dev env.
+function sgp.misc:player_uuid/to_macro
 execute unless entity @s[gamemode=creative] run \
-    data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from entity @s UUID
+    data modify entity @n[tag=sgp.new,distance=..2,limit=1,type=tnt] owner set from storage sgp:macro owner.uuid
 
 # The TNT is gone by the time its lingering fire deals damage, so also carry the stable player id.
 scoreboard players operation @n[tag=sgp.new,distance=..2,limit=1,type=tnt] sgp.damage_owner = @s sgp.id
-tag @e[tag=sgp.new,distance=..2,type=tnt] remove sgp.new
 
+# Keep sgp.new on the charge until its interaction is linked. setup_interaction uses it to distinguish
+# this charge from older TNT that may be closer to the caster or occupying the same position.
 # Summon an interaction with a link to the TNT. We can't use Passengers as it would be sitting *above* the TNT.
 summon interaction ~ ~0.5 ~ {width:1.1f, height:1.1f, Tags:["sgp.tnt_interaction", "sgp.new"]}
 execute as @e[tag=sgp.new,distance=..1,limit=1,type=interaction] run function sgp.kits:abilities/tnt/setup_interaction
+tag @e[tag=sgp.new,distance=..2,type=tnt] remove sgp.new
 
 playsound entity.tnt.primed master @a[tag=sgp.in_game] ~ ~ ~ 1
 schedule function sgp.kits:abilities/tnt/explode_at 40t append

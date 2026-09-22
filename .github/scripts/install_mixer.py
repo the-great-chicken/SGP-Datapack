@@ -1,46 +1,14 @@
+#!/usr/bin/env python3
 """Install pinned Mixer resources beneath SGP, merging load/tick tags explicitly."""
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import argparse
-import hashlib
-import json
-import zipfile
+import sys
 
-SHA256 = '5adc9b3d60967ee3e0238b4ce65806fabf7168eecfdaea5632f349921595073d'
-OVERRIDES = {'data/dah.actbar_mixer/function/z_private/display/self.mcfunction'}
-MERGED_TAGS = {'data/minecraft/tags/function/load.json', 'data/minecraft/tags/function/tick.json'}
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-
-def install(server, archive):
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != SHA256:
-        raise ValueError('Actionbar Mixer v1.3.3 checksum mismatch')
-    pack = server / 'world/datapacks/SGP-Datapack'
-    if not (pack / 'pack.mcmeta').is_file():
-        raise ValueError('Prepare the CI datapack before installing Mixer')
-    writes = {}
-    with zipfile.ZipFile(archive) as source:
-        for entry in source.infolist():
-            name = entry.filename
-            if entry.is_dir() or not name.startswith('data/'):
-                continue
-            if '..' in PurePosixPath(name).parts or '\\' in name:
-                raise ValueError(f'Unsafe archive path: {name}')
-            target = pack / name
-            data = source.read(entry)
-            if target.exists():
-                if name in OVERRIDES:
-                    continue
-                if name not in MERGED_TAGS:
-                    raise ValueError(f'Unexpected Mixer collision: {name}')
-                dependency = json.loads(data)
-                sgp = json.loads(target.read_text(encoding='utf-8'))
-                if dependency.get('replace') or sgp.get('replace'):
-                    raise ValueError(f'Cannot merge replacing tag: {name}')
-                data = (json.dumps({'values': dependency['values'] + sgp['values']}, indent=2) + '\n').encode()
-            writes[target] = data
-    for target, data in writes.items():
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data)
-    print('Installed Actionbar Mixer v1.3.3 beneath SGP overrides; merged load/tick tags.')
+from sgp_tools.mixer import *  # noqa: F401,F403
 
 
 if __name__ == '__main__':

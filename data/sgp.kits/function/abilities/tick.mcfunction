@@ -9,11 +9,14 @@ scoreboard players remove @a[scores={sgp.ability_result_window=1..}] sgp.ability
 
 execute as @a[tag=sgp.in_game,scores={sgp.duration_ability=1..}] at @s run function sgp.kits:abilities/route_tick
 
+execute if entity @a[tag=sgp.ray_hitbox_cached,limit=1] run function sgp.kits:abilities/rays/clear_target_hitboxes
+
 execute as @a[scores={sgp.drop_any=1..}] at @s run function sgp.kits:abilities/main_trigger
 
 # Refresh the visible main ability cooldown after it has been decremented, and after a newly triggered ability may have started its cooldown.
+# The gate skips the ~21-command frame recompute on the ticks where the frame cannot change.
 execute as @a[tag=sgp.in_game,scores={sgp.cooldown_ability=1..}] \
-    run function sgp.misc:actionbar/ability_cooldown
+    run function sgp.misc:actionbar/ability_cooldown_gate
 
 # Keep the ability HUD visible as a full bar while the ability is ready.
 execute as @a[tag=sgp.in_game,scores={sgp.kit_id=0..}] \
@@ -33,5 +36,6 @@ function sgp.kits:abilities/smoke_grenade/tick
 execute as @e[tag=sgp.giant_sweep,type=item_display] run function sgp.kits:abilities/cleave/animation_tick
 
 
+function sgp.kits:abilities/tnt/tick_fire_cooldowns
 execute as @e[tag=sgp.fire_explosion,type=marker] at @s run function sgp.kits:abilities/tnt/tick_fire
-execute as @e[tag=sgp.tnt_interaction,type=interaction] run function #bs.link:imitate_pos
+execute as @e[tag=sgp.tnt_interaction,type=interaction] at @s run function sgp.kits:abilities/tnt/follow_interaction

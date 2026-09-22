@@ -1,0 +1,23 @@
+{
+  "name": "diorama_ingame",
+  "description": "The Diorama as it runs during a match: the playable map covers the arena, so every in-game actor on the grid owns a small mannequin on the model that production updates every tick (position, pose, held items every 4 ticks), `lobby` actors stand around the model looking at its spawn buttons (giant mannequins plus the hover raycasts), 16 buttons exist, and the piercing-weapon add/remove pass runs for everyone with a sword in hand.",
+  "setup": "sgp.bench:scenarios/systems/diorama_ingame/setup",
+  "tick": "sgp.bench:scenarios/systems/diorama_ingame/tick",
+  "teardown": "sgp.bench:scenarios/systems/diorama_ingame/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 1
+    },
+    "lobby": {
+      "type": "int",
+      "min": 0,
+      "max": 16,
+      "default": 4
+    }
+  },
+  "counters": {
+    "small_mannequin_ticks": "#diorama_small_ticks",
+    "giant_mannequin_ticks": "#diorama_giant_ticks"
+  }
+}

@@ -1,1 +1,0 @@
-{"type":"minecraft:function","setup":"sgp.ci:ability_entrypoints/setup","teardown":"sgp.ci:ability_entrypoints/cleanup"}

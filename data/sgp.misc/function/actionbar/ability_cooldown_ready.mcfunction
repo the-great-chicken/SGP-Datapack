@@ -15,3 +15,4 @@ scoreboard players set @s sgp.ab.ability_cooldown 0
 scoreboard players set @s sgp.ab.ability_cooldown_last_fill 20
 scoreboard players reset @s sgp.ab.ability_cooldown_max
 scoreboard players reset @s sgp.ab.ability_cooldown_last_current
+scoreboard players reset @s sgp.ab.ability_cooldown_next

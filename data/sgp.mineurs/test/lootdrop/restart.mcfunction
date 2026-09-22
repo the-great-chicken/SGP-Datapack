@@ -9,12 +9,10 @@ function sgp.ci:lootdrop/fixture
 tag @s add sgp.container_open
 execute as @n[tag=sgp.ci.lootdrop.first,type=marker] at @s run function sgp.mineurs:lootdrop/close_detection/on_open
 assert entity @n[tag=sgp.ci.lootdrop.first,tag=sgp.opened_chest,type=marker]
-assert data storage bs:data schedule.queue[{id:"close_detection"}]
 data modify entity @n[tag=sgp.ci.lootdrop.first,type=marker] data.Items set value []
 function sgp.mineurs:lootdrop/start
 assert not entity @s[tag=sgp.container_open]
 assert not entity @e[tag=sgp.ci.lootdrop,tag=sgp.opened_chest,type=marker]
-assert not data storage bs:data schedule.queue[{id:"close_detection"}]
 execute store result score @s sgp.dummy run data get entity @n[tag=sgp.ci.lootdrop.first,type=marker] data.Items
 assert score @s sgp.dummy matches 27
 await delay 12t

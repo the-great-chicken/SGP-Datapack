@@ -1,1 +1,0 @@
-{"type": "minecraft:function", "setup": "sgp.ci:hider_reveal/cleanup", "teardown": "sgp.ci:hider_reveal/cleanup"}

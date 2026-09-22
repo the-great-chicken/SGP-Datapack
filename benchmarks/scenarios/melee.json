@@ -1,0 +1,23 @@
+{
+  "name": "melee",
+  "description": "Players split into two nearby groups and repeatedly attack the opposite group with PackTest.",
+  "setup": "sgp.bench:scenarios/melee/setup",
+  "tick": "sgp.bench:scenarios/melee/tick",
+  "teardown": "sgp.bench:scenarios/melee/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 2
+    },
+    "period": {
+      "type": "int",
+      "min": 10,
+      "max": 400,
+      "default": 20
+    }
+  },
+  "counters": {
+    "attack_inputs": "#melee_attack_inputs",
+    "waves": "#melee_waves"
+  }
+}

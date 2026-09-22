@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/owner_isolation
 # @dummy
-# @environment sgp.ci:pyromane_fire
+# @environment sgp.ci:pyromane_fire/owner_isolation
 #
 # Two projectiles preserve separate fire owners and durations.
 

@@ -2,10 +2,12 @@
 
 execute if score @s sgp.duration_ability matches 1 run return run function sgp.kits:abilities/rays/end
 
+execute store result storage sgp:rays prediction.rotation float 0.01 \
+    run scoreboard players remove @s sgp.ray_anim 2
+
 tag @s add sgp.radiator
 
-# Extrapolation system to be able to smooth the rays movement with teleport-duration
-# While having them not lag behind too much
+# Predict visual movement without moving the collision origin.
 function #bs.position:get_pos {scale:1000}
 
 # 2. Calculate the Delta (Velocity)
@@ -21,27 +23,18 @@ scoreboard players operation @s sgp.old_x = @s bs.pos.x
 scoreboard players operation @s sgp.old_y = @s bs.pos.y
 scoreboard players operation @s sgp.old_z = @s bs.pos.z
 
-# 4. Predict the Future (Multiply Delta by teleport_duration, e.g., 3)
+# Match the existing two-tick horizontal and one-tick vertical prediction.
 scoreboard players operation @s sgp.dx *= 2 sgp.dummy
-scoreboard players operation @s sgp.dy *= 1 sgp.dummy
 scoreboard players operation @s sgp.dz *= 2 sgp.dummy
 
-# 5. Move the Predictor Marker
-summon marker ~ ~ ~ {Tags:["sgp.predictor"]}
+execute store result storage sgp:rays prediction.x double 0.001 run scoreboard players get @s sgp.dx
+execute store result storage sgp:rays prediction.y double 0.001 run scoreboard players get @s sgp.dy
+execute store result storage sgp:rays prediction.z double 0.001 run scoreboard players get @s sgp.dz
 
-# Pass the extrapolated delta to the marker
-scoreboard players operation @e[tag=sgp.predictor,limit=1,type=marker] bs.pos.x = @s sgp.dx
-scoreboard players operation @e[tag=sgp.predictor,limit=1,type=marker] bs.pos.y = @s sgp.dy
-scoreboard players operation @e[tag=sgp.predictor,limit=1,type=marker] bs.pos.z = @s sgp.dz
-
-# Use Bookshelf to offset the marker by those delta scores
-execute as @e[tag=sgp.predictor,limit=1,type=marker] run function #bs.position:add_pos {scale:0.001}
-
-# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
+# Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type.
+# The linked-child dispatcher also skips entity collision entirely when no damageable player is nearby.
 scoreboard players operation $link.to bs.in = @s bs.id
-execute as @e[tag=sgp.ray,predicate=bs.link:link_equal,limit=8,type=item_display] run function sgp.kits:abilities/rays/tick_children
-
-kill @e[tag=sgp.predictor,limit=1,type=marker]
+function sgp.kits:abilities/rays/tick_linked_children
 
 playsound entity.ender_eye.death master @a ~ ~ ~ 1 0
 

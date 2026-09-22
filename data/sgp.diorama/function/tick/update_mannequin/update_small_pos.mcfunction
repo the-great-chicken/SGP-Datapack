@@ -3,7 +3,7 @@
 
 # Grab the player's exact position and rotation
 # We scale by 1000 (milliblocks/millidegrees) to prevent the division by 16 from wiping out fractional precision!
-function #bs.position:get_pos_and_rot {scale:1000}
+function sgp.diorama:tick/update_mannequin/read_pos_and_rot
 
 $function sgp.diorama:tick/update_mannequin/compute_diorama_pos {id:$(id)}
 
@@ -22,9 +22,9 @@ execute if predicate sgp.misc:is_fall_flying run scoreboard players set $pose sg
 
 # Don't directly use `#bs.link:as_children`, as the @e is too expensive without the type
 scoreboard players operation $link.to bs.in = @s bs.id
-$execute as @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),type=mannequin] run function sgp.diorama:tick/update_mannequin/apply_mannequin_pos
+$execute as @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),limit=1,type=mannequin] run function sgp.diorama:tick/update_mannequin/apply_mannequin_pos
 
 # Only update weapons once every few ticks else it's too performance-intensive
 execute unless score #mannequin_update_time sgp.dummy matches 4.. run return 1
-$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),type=mannequin] weapon.mainhand from entity @s weapon.mainhand
-$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),type=mannequin] weapon.offhand from entity @s weapon.offhand
+$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),limit=1,type=mannequin] weapon.mainhand from entity @s weapon.mainhand
+$item replace entity @e[predicate=bs.link:link_equal,tag=sgp.small_mannequin_$(id),limit=1,type=mannequin] weapon.offhand from entity @s weapon.offhand

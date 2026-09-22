@@ -1,0 +1,20 @@
+{
+  "name": "ability_rays",
+  "description": "Roi players keep Rays active in isolated cells across stacked planes, exercising linked displays and the block-only raycast fast path without target collisions.",
+  "validators": [
+    "rays"
+  ],
+  "setup": "sgp.bench:scenarios/abilities/rays/setup",
+  "tick": "sgp.bench:scenarios/abilities/rays/tick",
+  "teardown": "sgp.bench:scenarios/abilities/rays/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0,
+      "max": 80
+    }
+  },
+  "counters": {
+    "active_player_ticks": "#rays_player_ticks"
+  }
+}

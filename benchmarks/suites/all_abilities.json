@@ -1,0 +1,90 @@
+{
+  "name": "all_abilities",
+  "description": "Runs every ability benchmark workload and variant once at 40 players, including TNT batting and the shared cooldown path.",
+  "defaults": {
+    "runs": 5,
+    "warmup": 5
+  },
+  "benchmarks": [
+    {
+      "scenario": "ability_pecking",
+      "players": 40
+    },
+    {
+      "scenario": "ability_pecking_miss",
+      "players": 40
+    },
+    {
+      "scenario": "ability_cleave",
+      "players": 40
+    },
+    {
+      "scenario": "ability_repulsion",
+      "players": 40
+    },
+    {
+      "scenario": "ability_fangs",
+      "players": 40
+    },
+    {
+      "scenario": "ability_fangs_rough_terrain",
+      "players": 40
+    },
+    {
+      "scenario": "ability_tnt",
+      "players": 40
+    },
+    {
+      "scenario": "ability_tnt_batting",
+      "players": 40
+    },
+    {
+      "scenario": "ability_bigger",
+      "players": 40
+    },
+    {
+      "scenario": "ability_rays",
+      "players": 40
+    },
+    {
+      "scenario": "ability_rays_dense",
+      "players": 40
+    },
+    {
+      "scenario": "ability_rays_moving",
+      "players": 40
+    },
+    {
+      "scenario": "ability_smoke_grenade",
+      "players": 40
+    },
+    {
+      "scenario": "ability_illusions",
+      "players": 40
+    },
+    {
+      "scenario": "ability_assassinate",
+      "players": 40
+    },
+    {
+      "scenario": "ability_assassinate_triggered",
+      "players": 40
+    },
+    {
+      "scenario": "ability_bats",
+      "players": 40
+    },
+    {
+      "scenario": "ability_bats_detonating",
+      "players": 40
+    },
+    {
+      "scenario": "ability_water_trident",
+      "players": 40
+    },
+    {
+      "scenario": "ability_cooldown",
+      "players": 40
+    }
+  ]
+}

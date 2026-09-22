@@ -8,7 +8,8 @@ function sgp.kits:stats_collector/ability/start {kit_id:8,ability_path:"illusion
 team join sgp.Illusion @s
 
 # Summon mannequins with the player's profile
-data modify storage sgp:data kits.illusion.current_uuid set from entity @s UUID
+function sgp.misc:player_uuid/to_macro
+data modify storage sgp:data kits.illusion.current_uuid set from storage sgp:macro owner.uuid
 data modify storage sgp:data kits.illusion.current_direction set value "opposite"
 execute positioned ~ ~ ~0.001 run function sgp.kits:abilities/illusions/summon with storage sgp:data kits.illusion
 

@@ -1,6 +1,6 @@
 #> sgp.kits:pyromane_fire/expiry
 # @dummy
-# @environment sgp.ci:pyromane_fire
+# @environment sgp.ci:pyromane_fire/expiry
 #
 # Fire exists for its remaining updates and disappears when its duration expires.
 

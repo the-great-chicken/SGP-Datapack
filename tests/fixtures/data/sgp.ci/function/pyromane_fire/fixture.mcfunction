@@ -1,6 +1,7 @@
 #> sgp.ci:pyromane_fire/fixture
 # Reset fire fixtures and build the clear arena used for lingering-fire behavior.
 
+execute as @a[tag=sgp.ci.fire_actor] run function sgp.kits:abilities/tnt/clear_fire_cooldown
 execute as @a[tag=sgp.ci.fire_actor] run dummy @s leave
 kill @e[tag=sgp.ci.fire,type=marker]
 kill @e[tag=sgp.ci.fire,type=tnt]

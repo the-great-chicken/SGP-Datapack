@@ -10,6 +10,8 @@ scoreboard players operation #seconds_duration sgp.dummy = #backup_duration sgp.
 scoreboard players operation #seconds_duration sgp.dummy /= 20 sgp.dummy
 scoreboard players operation #damage_owner sgp.dummy = @s sgp.id
 scoreboard players operation #bat_ability_cast sgp.dummy = @s sgp.ability_cast
+execute store result score #bat_arm_at sgp.dummy run time query gametime
+scoreboard players add #bat_arm_at sgp.dummy 20
 execute store result storage sgp:data kits.ability_cooldowns.bats.duration short 1 run scoreboard players get #seconds_duration sgp.dummy
 function sgp.kits:abilities/bats/invisible_for_time with storage sgp:data kits.ability_cooldowns.bats
 execute store result storage sgp:data kits.ability_cooldowns.bats.duration short 1 run scoreboard players get #backup_duration sgp.dummy
@@ -20,6 +22,5 @@ execute summon armor_stand run function sgp.kits:abilities/bats/hide/equipment
 
 tag @s remove sgp.processing
 
-# Bats can only detonate after 1s (although if another cancer casted the ability earlier, the explosion check will already be running)
-# And I'm too lazy to fix this concurrency bug, it doesn't really matter
+# Each cast gets an exact +1s wake. The wake only scans bats whose own arm timestamp has elapsed, then feeds one shared 8-tick follow-up loop.
 schedule function sgp.kits:abilities/bats/check_for_explosion 1s append

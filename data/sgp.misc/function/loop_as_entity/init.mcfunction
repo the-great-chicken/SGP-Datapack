@@ -10,5 +10,8 @@ $data modify storage sgp:data temp.current_command set value "$(command)"
 data modify storage sgp:data temp.run_args set from storage sgp:data temp.loop_list[0]
 data modify storage sgp:data temp.run_args.command set from storage sgp:data temp.current_command
 
-# 4. Start the loop
-function sgp.misc:loop_as_entity/recursion with storage sgp:data temp.run_args
+# 4. Start the loop. Elements rotate through eight shard copies of the recursion so a
+# list of up to 64 entries never evicts its own (uuid, command) pairs from the 8-entry
+# macro cache of one function (the single-file loop re-parsed its macro line for every
+# element of any list longer than 8).
+function sgp.misc:loop_as_entity/recursion/0 with storage sgp:data temp.run_args

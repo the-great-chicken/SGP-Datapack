@@ -23,15 +23,8 @@ execute if data entity @s equipment.head.id run item replace entity @p[tag=sgp.p
 
 
 # --- HIDE HELD ITEMS (Mainhand, Offhand) ---
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.0}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.1}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.2}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.3}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.4}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.5}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.6}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.7}
-function sgp.kits:abilities/bats/hide/held_item {slot:hotbar.8}
-function sgp.kits:abilities/bats/hide/held_item {slot:weapon.offhand}
+# Only held stacks can render on an invisible player. Newly selected stacks are hidden lazily by the ability tick instead of rewriting the entire hotbar.
+execute if items entity @p[tag=sgp.processing] weapon.mainhand * run function sgp.kits:abilities/bats/hide/held_item {slot:weapon.mainhand}
+execute if items entity @p[tag=sgp.processing] weapon.offhand * run function sgp.kits:abilities/bats/hide/held_item {slot:weapon.offhand}
 
 kill @s

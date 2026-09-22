@@ -1,0 +1,16 @@
+{
+  "name": "cosmetic_smoke",
+  "description": "Players wear the super-heavy Smoke particle cosmetic continuously.",
+  "setup": "sgp.bench:scenarios/cosmetic_smoke/setup",
+  "tick": "sgp.bench:scenarios/cosmetic_smoke/tick",
+  "teardown": "sgp.bench:scenarios/cosmetic_smoke/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 0
+    }
+  },
+  "counters": {
+    "particle_player_ticks": "#smoke_particle_ticks"
+  }
+}

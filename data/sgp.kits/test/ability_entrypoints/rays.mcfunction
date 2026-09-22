@@ -18,8 +18,7 @@ assert score #ci.ability.count sgp.dummy matches 8
 scoreboard players operation $link.to bs.in = @s bs.id
 execute store result score #ci.ability.linked sgp.dummy if entity @e[tag=sgp.ci.ability_entrypoint,tag=sgp.ray,predicate=bs.link:link_equal,distance=..3,type=item_display]
 assert score #ci.ability.linked sgp.dummy matches 8
-execute store result score #ci.ability.timed sgp.dummy if entity @e[tag=sgp.ci.ability_entrypoint,tag=sgp.ray,scores={sgp.timer=70},distance=..3,type=item_display]
-assert score #ci.ability.timed sgp.dummy matches 8
+assert score @s sgp.ray_anim matches 70
 
 function sgp.kits:abilities/rays/end
 assert not entity @e[tag=sgp.ci.ability_entrypoint,tag=sgp.ray,type=item_display]

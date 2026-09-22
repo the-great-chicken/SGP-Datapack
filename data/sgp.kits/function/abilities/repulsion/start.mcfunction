@@ -12,7 +12,8 @@ scoreboard players operation @s sgp.old_z = @s bs.pos.z
 
 # Fire a free, unenchanted full-speed arrow in the direction the Archer is looking.
 execute anchored eyes positioned ^ ^ ^ positioned ~ ~-0.1 ~ run summon arrow ~ ~ ~ {Motion:[0.0d,0.0d,3.0d],damage:2.0d,crit:0b,pickup:0b,Tags:["sgp.repulsion_arrow","sgp.new"]}
-data modify entity @n[tag=sgp.repulsion_arrow,tag=sgp.new,distance=..2,limit=1,type=arrow] Owner set from entity @s UUID
+function sgp.misc:player_uuid/to_macro
+data modify entity @n[tag=sgp.repulsion_arrow,tag=sgp.new,distance=..2,limit=1,type=arrow] Owner set from storage sgp:macro owner.uuid
 # Make the arrow have the correct rotation
 execute store result entity @n[tag=sgp.repulsion_arrow,tag=sgp.new,distance=..2,limit=1,type=arrow] Rotation[0] float -0.001 run data get entity @s Rotation[0] 1000
 execute store result entity @n[tag=sgp.repulsion_arrow,tag=sgp.new,distance=..2,limit=1,type=arrow] Rotation[1] float -0.001 run data get entity @s Rotation[1] 1000

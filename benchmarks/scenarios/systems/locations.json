@@ -1,0 +1,42 @@
+{
+  "name": "locations",
+  "description": "Production `lieu` markers registered exactly as sgp.world:initialization does, so minecraft:execute_repeating_functions drives the real per-tick location loop. `markers` scales the registry (macro-cache knee), `occupied` how many boxes contain actors, `exclusions` how many carry an exclusion_box, and `period` how often a quarter of the actors crosses a boundary (0 = steady state).",
+  "setup": "sgp.bench:scenarios/systems/locations/setup",
+  "tick": "sgp.bench:scenarios/systems/locations/tick",
+  "teardown": "sgp.bench:scenarios/systems/locations/teardown",
+  "parameters": {
+    "players": {
+      "type": "int",
+      "min": 1
+    },
+    "markers": {
+      "type": "int",
+      "min": 0,
+      "max": 64,
+      "default": 24
+    },
+    "occupied": {
+      "type": "int",
+      "min": 0,
+      "max": 5,
+      "default": 2
+    },
+    "exclusions": {
+      "type": "int",
+      "min": 0,
+      "max": 5,
+      "default": 1
+    },
+    "period": {
+      "type": "int",
+      "min": 0,
+      "max": 400,
+      "default": 0
+    }
+  },
+  "counters": {
+    "marker_ticks": "#locations_marker_ticks",
+    "inside_player_ticks": "#locations_inside_ticks",
+    "crossings": "#locations_crossings"
+  }
+}

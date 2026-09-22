@@ -11,9 +11,9 @@ permissions:
 env:
   TEST_FABRIC_SERVER: https://meta.fabricmc.net/v2/versions/loader/26.1.2/0.19.5/1.1.2/server/jar
   TEST_FABRIC_API: https://cdn.modrinth.com/data/P7dR8mSH/versions/uLkEd5dr/fabric-api-0.155.2%2B26.1.2.jar
-  TEST_PACKTEST: https://github.com/the-great-chicken/packtest/releases/download/v2.5.0-tgc.1/packtest-2.5.0-tgc.1.jar
+  TEST_PACKTEST: https://github.com/the-great-chicken/packtest/releases/download/v2.5.0-tgc.2/packtest-2.5.0-tgc.2.jar
   TEST_BOOKSHELF: https://cdn.modrinth.com/data/VCwEWhIk/versions/J3O5mUQ0/bookshelf-suite-26.1-v4.0.1.zip
-  TEST_MIXER: https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.3.3/Actionbar-Mixer.v1.3.3.zip
+  TEST_MIXER: https://github.com/Dahesor/Actionbar-Mixer-for-Minecraft/releases/download/v1.4.0/Actionbar-Mixer.v1.4.0.zip
 
 jobs:
   test:
@@ -25,9 +25,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-      - name: Validate integration boundaries and prepare core
+      - name: Run offline Python tests and prepare core
         run: |
-          python3 .github/scripts/test_ci_staging.py
+          python3 -m unittest discover -s tests/python -p 'test_*.py'
+          python3 benchmarks/test_bench.py
           python3 .github/scripts/prepare_core.py . .packtest-server
           python3 .github/scripts/datapack_coverage.py instrument . .packtest-server
       - name: Download test dependencies

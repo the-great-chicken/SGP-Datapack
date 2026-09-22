@@ -2,6 +2,7 @@
 # End the active ability before removing its kit identity, then clear the loadout and reward progress.
 
 # Reset ability
+function sgp.kits:abilities/tnt/clear_fire_cooldown
 function sgp.kits:abilities/end_active
 scoreboard players set @s sgp.cooldown_ability 0
 
